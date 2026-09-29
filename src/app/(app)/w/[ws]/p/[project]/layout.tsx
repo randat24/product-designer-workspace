@@ -3,6 +3,7 @@ import { getMyRole, getProjectBySlug, getWorkspaceBySlug, listProjects } from "@
 import { setProjectArchived } from "@/domains/projects/actions";
 import { briefCompleteness, getBrief } from "@/domains/briefs";
 import { COMPETITORS_TARGET, isAssessed, listCompetitors } from "@/domains/competitors";
+import { getResearchStats, listParticipants, participantTitle, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
 import { CURRENT_PHASE, visibleNav } from "@/shared/navigation";
 import type { CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/ru";
@@ -23,11 +24,15 @@ export default async function ProjectLayout({ children, params }: {
   ]);
   if (!project) notFound();
 
-  const [brief, competitors] = await Promise.all([getBrief(project.id), listCompetitors(project.id)]);
+  const [brief, competitors, research, participants] = await Promise.all([
+    getBrief(project.id), listCompetitors(project.id), getResearchStats(project.id), listParticipants(project.id),
+  ]);
+  const researchPercent = Math.round(Math.min(research.conducted / (research.target ?? RESEARCH_TARGET_DEFAULT), 1) * 100);
   const briefProgress = briefCompleteness(brief);
   const progress: Record<string, number> = {
     brief: Math.round((briefProgress.filled / briefProgress.total) * 100),
     competitors: Math.round(Math.min(competitors.filter(isAssessed).length / COMPETITORS_TARGET, 1) * 100),
+    research: researchPercent,
   };
 
   const base = `/w/${workspace.slug}/p/${project.slug}`;
@@ -50,6 +55,19 @@ export default async function ProjectLayout({ children, params }: {
       href: `${base}/competitors/${c.code}`,
       group: t.palette.entities,
     })),
+    ...participants.map((p) => ({
+      id: `participant:${p.id}`,
+      label: `${p.code} ${participantTitle(p)}`,
+      href: `${base}/research/participants/${p.code}`,
+      group: t.palette.entities,
+    })),
+    ...participants.flatMap((p) => (p.interview ? [{
+      id: `interview:${p.interview.id}`,
+      label: `${p.interview.code} ${p.code} ${participantTitle(p)}`,
+      href: `${base}/research/interviews/${p.interview.code}`,
+      group: t.palette.entities,
+    }] : [])),
+    { id: "action:research-matrix", label: t.research.matrix.title, href: `${base}/research/matrix`, group: t.palette.actions, keywords: "матрица ответов research" },
     { id: "action:matrix", label: t.palette.matrix, href: `${base}/competitors/matrix`, group: t.palette.actions, keywords: "matrix сравнение" },
     { id: "action:settings", label: t.palette.settings, href: `${base}/settings`, group: t.palette.actions, keywords: "settings archive архив удалить" },
     { id: "action:new", label: t.palette.newProject, href: `/w/${workspace.slug}#new-h`, group: t.palette.actions, keywords: "new project создать" },

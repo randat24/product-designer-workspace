@@ -59,6 +59,28 @@ type AttachmentRow = {
   storage_path: string; file_name: string; mime_type: string; size_bytes: number; caption: string | null;
   position: number; created_by: string | null; created_at: string;
 };
+type Base = { id: string; workspace_id: string; project_id: string; created_by: string | null; updated_by: string | null; created_at: string; updated_at: string };
+type ResearchPlanRow = Base & {
+  code: string; title: string; goal: string | null; questions: Json; hypotheses_text: string | null; audience: string | null;
+  method: Database["public"]["Enums"]["research_method"]; participants_target: number | null; success_criteria: string | null;
+  status: Database["public"]["Enums"]["research_status"]; archived_at: string | null;
+};
+type InterviewGuideRow = Base & { research_plan_id: string | null; title: string; intro: string | null; outro: string | null };
+type InterviewQuestionRow = Base & {
+  guide_id: string; section: Database["public"]["Enums"]["guide_section"]; position: number; text: string; probes: string[]; is_key: boolean;
+};
+type ParticipantRow = Base & {
+  code: string; display_name: string | null; role: string | null; segment_label: string | null; age_range: string | null;
+  context: string | null; contact: string | null; consent_at: string | null; tags: string[]; notes: string | null; archived_at: string | null;
+};
+type InterviewRow = Base & {
+  code: string; participant_id: string; guide_id: string | null; research_plan_id: string | null; conducted_at: string | null;
+  duration_min: number | null; interviewer_id: string | null; mode: Database["public"]["Enums"]["interview_mode"];
+  status: Database["public"]["Enums"]["interview_status"]; notes: string | null;
+};
+type InterviewAnswerRow = Base & { code: string; interview_id: string; question_id: string | null; body_text: string; position: number };
+type Ins<T, R extends keyof T> = Partial<Omit<T, "id" | "workspace_id" | "code">> & Pick<T, R>;
+type Upd<T> = Partial<Omit<T, "id" | "workspace_id" | "project_id" | "code">>;
 type ProjectCounterRow = { project_id: string; entity_type: string; last_value: number };
 type TraceRelationRow = { relation: string; label_forward: string; label_backward: string };
 type TraceRuleRow = { source_type: string; target_type: string; relation: string };
@@ -114,6 +136,24 @@ export type Database = {
         Insert: Insert<AttachmentRow, "project_id" | "entity_type" | "entity_id" | "storage_path" | "file_name" | "mime_type" | "size_bytes">;
         Update: Partial<Pick<AttachmentRow, "caption" | "position">>; Relationships: [];
       };
+      research_plans: { Row: ResearchPlanRow; Insert: Ins<ResearchPlanRow, "project_id" | "title">; Update: Upd<ResearchPlanRow>; Relationships: [] };
+      interview_guides: { Row: InterviewGuideRow; Insert: Ins<InterviewGuideRow, "project_id" | "title">; Update: Upd<InterviewGuideRow>; Relationships: [] };
+      interview_questions: {
+        Row: InterviewQuestionRow; Insert: Ins<InterviewQuestionRow, "guide_id" | "project_id" | "text">; Update: Upd<InterviewQuestionRow>;
+        Relationships: [];
+      };
+      participants: { Row: ParticipantRow; Insert: Ins<ParticipantRow, "project_id">; Update: Upd<ParticipantRow>; Relationships: [] };
+      interviews: {
+        Row: InterviewRow; Insert: Ins<InterviewRow, "project_id" | "participant_id">; Update: Upd<InterviewRow>;
+        Relationships: [
+          { foreignKeyName: "interviews_participant_id_fkey"; columns: ["participant_id"]; isOneToOne: false; referencedRelation: "participants"; referencedColumns: ["id"] },
+          { foreignKeyName: "interviews_guide_id_fkey"; columns: ["guide_id"]; isOneToOne: false; referencedRelation: "interview_guides"; referencedColumns: ["id"] },
+        ];
+      };
+      interview_answers: {
+        Row: InterviewAnswerRow; Insert: Ins<InterviewAnswerRow, "project_id" | "interview_id">; Update: Upd<InterviewAnswerRow>;
+        Relationships: [];
+      };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -148,6 +188,11 @@ export type Database = {
       trace_origin: "manual" | "ai_accepted" | "system";
       competitor_kind: "direct" | "indirect" | "substitute";
       feature_value: "yes" | "partial" | "no" | "unknown";
+      research_method: "interview" | "usability" | "survey" | "diary" | "other";
+      research_status: "draft" | "active" | "done";
+      guide_section: "intro" | "context" | "current_behavior" | "problems" | "motivation" | "experience" | "expectations" | "closing";
+      interview_mode: "in_person" | "remote" | "phone";
+      interview_status: "planned" | "in_progress" | "done" | "synthesized";
     };
     CompositeTypes: { [_ in never]: never };
   };

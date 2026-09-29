@@ -1,6 +1,6 @@
 // Project navigation (docs/IA.md §1). Items outside the MVP are hidden until their phase ships.
 
-export const CURRENT_PHASE = 3;
+export const CURRENT_PHASE = 4;
 
 export type NavItem = { segment: string; label: string; phase: number; mvp: boolean };
 export type NavGroup = { title: string; items: NavItem[] };

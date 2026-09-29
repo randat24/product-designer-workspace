@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PROJECT_STATUSES, type ActivityItem } from "@/domains/projects";
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
 import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/domains/competitors";
+import { getResearchStats, listInterviews, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
+import { createClient } from "@/shared/lib/supabase/server";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -34,9 +36,12 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
   const project = workspace && (await getProjectBySlug(workspace.id, slug));
   if (!workspace || !project) notFound();
 
-  const [brief, activity, competitors, matrix] = await Promise.all([
+  const [brief, activity, competitors, matrix, research, interviews] = await Promise.all([
     getBrief(project.id), listRecentActivity(project.id), listCompetitors(project.id), getMatrix(project.id),
+    getResearchStats(project.id), listInterviews(project.id),
   ]);
+  const researchTarget = research.target ?? RESEARCH_TARGET_DEFAULT;
+  const emptyInterviews = await countDoneWithoutAnswers(interviews.filter((i) => i.status === "done").map((i) => i.id));
   const assessed = competitors.filter(isAssessed).length;
   const hasOwn = competitors.some((c) => c.is_own_product);
   const matrixFilled = matrix.features.length > 0 && Object.values(matrix.cells).some((v) => v !== "unknown");
@@ -57,6 +62,11 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
       const state: StageState = assessed >= COMPETITORS_TARGET && matrixFilled ? "done" : competitors.length > 0 ? "active" : "todo";
       return [{ segment, label: item.label, phase: item.phase, state, percent, detail: t.competitors.progress(assessed, COMPETITORS_TARGET) }];
     }
+    if (segment === "research") {
+      const percent = Math.min(research.conducted / researchTarget, 1) * 100;
+      const state: StageState = research.conducted >= researchTarget ? "done" : research.plans + research.guides + research.participants > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, percent, detail: t.research.progress(research.conducted, researchTarget) }];
+    }
     return [{ segment, label: item.label, phase: item.phase, state: item.phase > CURRENT_PHASE ? "soon" : "todo" }];
   });
 
@@ -74,6 +84,13 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
   if (competitors.length > 0 && !matrixFilled) {
     nextActions.push({ key: "matrix", label: t.nextAction.matrix, href: `${base}/competitors/matrix` });
   }
+  if (research.plans === 0) nextActions.push({ key: "plan", label: t.nextAction.plan, href: `${base}/research` });
+  if (research.questions === 0) nextActions.push({ key: "guide", label: t.nextAction.guide, href: `${base}/research` });
+  if (research.participants === 0) nextActions.push({ key: "participants", label: t.nextAction.participants, href: `${base}/research/participants` });
+  else if (research.conducted < researchTarget) {
+    nextActions.push({ key: "interviews", label: t.nextAction.interviews(research.conducted, researchTarget), href: `${base}/research/participants` });
+  }
+  if (emptyInterviews > 0) nextActions.push({ key: "empty", label: t.nextAction.emptyInterviews(emptyInterviews), href: `${base}/research` });
 
   // Average over stages that have shipped; later phases join as they land.
   const shipped = stages.filter((s) => s.state !== "soon");
@@ -177,4 +194,13 @@ function ActivityRow({ item }: { item: ActivityItem }) {
       </span>
     </li>
   );
+}
+
+/** Interviews marked done that have no answer text at all (a gap in the research record). */
+async function countDoneWithoutAnswers(ids: string[]) {
+  if (!ids.length) return 0;
+  const supabase = await createClient();
+  const { data } = await supabase.from("interview_answers").select("interview_id").in("interview_id", ids).neq("body_text", "");
+  const withAnswers = new Set((data ?? []).map((a) => a.interview_id));
+  return ids.filter((id) => !withAnswers.has(id)).length;
 }

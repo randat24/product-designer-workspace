@@ -7,7 +7,20 @@
 
 ## Статус
 
-**Phase 3 — Competitors: готово, ждёт ревью.** Phase 1–2: в `main`.
+**Phase 4 — Research: готово, ждёт ревью.** Phase 1–3: в `main`.
+
+| Phase 4 | Проверено |
+|---|---|
+| Планы исследований `RP-##`: цель, исследовательские вопросы, гипотезы, аудитория, метод, число участников, критерии | e2e |
+| Сценарий интервью: 8 секций, уточняющие вопросы, «ключевой», перенос между секциями, порядок ↑↓, шаблон | e2e |
+| Участники `P##`: таблица, профиль, личные данные отдельно, согласие, теги | e2e, pgTAP |
+| Интервью `INT-##`: детали, ответы по секциям, свободные заметки; ответы `ANS-####` сохраняются по полю | e2e, pgTAP |
+| Live-режим: вопрос за вопросом, таймер, Alt+←/→, завершение ставит статус и длительность; планшет 768px | e2e |
+| Матрица «вопрос × участник» в стиле тетради: стикеры-колонки, ответы в ячейках, «+ Участник» | e2e |
+| Импорт JSON из «Рабочей тетради»: бриф (только пустые поля), конкуренты, вопросы, респонденты, ответы | e2e |
+| Демо: план, сценарий из 5 вопросов, 7 участников и их ответы из материалов тетради | pgTAP + e2e |
+
+Phase 3 — Competitors:
 
 | Phase 3 | Проверено |
 |---|---|
@@ -61,7 +74,7 @@ npm run db:types   # сгенерировать src/types/database.ts (заме�
 
 ## Облако (развёрнуто)
 
-Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–006 применены, smoke-тест и security advisor пройдены.
+Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–007 применены, smoke-тест и security advisor пройдены.
 Vercel: https://product-designer-workspace.vercel.app (деплой из `main`).
 URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key из Project Settings → API.
 
@@ -75,7 +88,7 @@ URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key и�
 
 ```
 docs/                    PRD, ARCHITECTURE, DATABASE, IA, MVP, ROADMAP, DESIGN-SYSTEM, AI, adr/
-supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo · 006 competitors + matrix + attachments
+supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo · 006 competitors + matrix + attachments · 007 research
 supabase/tests/database/ pgTAP
 src/app/                 маршруты (docs/IA.md)
 src/domains/<name>/      schema.ts (Zod) · queries.ts · actions.ts · компоненты · index.ts (public API)
@@ -112,6 +125,15 @@ select public.attach_domain_table('public.insights', 'insight');
 - Интерфейс на русском; строки вынесены в `src/shared/i18n/ru.ts` для будущих uk/en.
 - В MVP цепочка идёт Opportunity → Flow напрямую; правила для Features уже заведены.
 - AI в MVP нет; таблицы AI появятся в Phase 12.
+
+## Допущения Phase 4
+
+- Вступление и завершение сценария, ответы и заметки — plain text (`body_text`); TipTap-JSON появится вместе с rich text.
+- Вопросы сценария двигаются кнопками ↑↓ и выбором секции (доступно с клавиатуры); drag-and-drop — позже.
+- В списках и матрице участник показывается кодом и ролью; имя и контакт видны только в карточке.
+- Удаление вопроса оставляет ответы на него как свободные заметки интервью.
+- Импорт кладёт вопросы тетради в секцию «Текущее поведение» (в тетради секций нет); инсайты, шаги сценария и экраны импортируются в своих фазах.
+- Быстрые метки (боль / потребность / цитата) в live-режиме появятся в Phase 5 вместе с наблюдениями.
 
 ## Допущения Phase 3
 

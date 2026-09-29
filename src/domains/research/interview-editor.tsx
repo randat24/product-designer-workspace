@@ -1,0 +1,138 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useAutosave, SaveToast } from "@/shared/ui/autosave";
+import { TextField } from "@/shared/ui/form-section";
+import { ChipGroup } from "@/shared/ui/chips";
+import { Input } from "@/shared/ui/field";
+import { cn } from "@/shared/lib/cn";
+import { t } from "@/shared/i18n/ru";
+import { deleteAnswer, deleteInterview, saveInterviewMeta } from "./actions";
+import { AnswerField } from "./answer-field";
+import { GUIDE_SECTIONS, INTERVIEW_MODES, INTERVIEW_STATUSES, type InterviewMeta } from "./schema";
+import type { GuideQuestion, InterviewAnswer } from "./queries";
+
+const iv = t.research.interview;
+
+export function InterviewEditor({ interviewId, meta, questions, answers, canEdit }: {
+  interviewId: string;
+  meta: InterviewMeta;
+  questions: GuideQuestion[] | null;
+  answers: InterviewAnswer[];
+  canEdit: boolean;
+}) {
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const { value: m, update, status, error } = useAutosave(meta, (v) => saveInterviewMeta(interviewId, v), canEdit);
+  const [newNotes, setNewNotes] = useState<number[]>([]);
+  const [armed, setArmed] = useState(false);
+
+  const byQuestion = new Map(answers.filter((a) => a.question_id).map((a) => [a.question_id!, a]));
+  const questionIds = new Set((questions ?? []).map((q) => q.id));
+  const notes = answers.filter((a) => !a.question_id || !questionIds.has(a.question_id));
+
+  return (
+    <div className="flex flex-col gap-8">
+      <SaveToast id="interview-status" status={status} error={error?.message} readOnly={!canEdit} />
+
+      <section aria-labelledby="meta-h" className="flex flex-col gap-3">
+        <h2 id="meta-h" className="text-heading font-semibold">{iv.meta}</h2>
+        <div className="flex flex-col gap-5 rounded-[14px] border border-line bg-surface p-5">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="conducted_at" className="text-[13px] font-semibold text-fg-secondary">{iv.fields.conducted_at}</label>
+              <Input id="conducted_at" type="date" className="w-44" readOnly={!canEdit} value={m.conducted_at?.slice(0, 10) ?? ""}
+                onChange={(e) => update({ conducted_at: e.target.value || null })} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="duration_min" className="text-[13px] font-semibold text-fg-secondary">{iv.fields.duration_min}</label>
+              <Input id="duration_min" type="number" min={1} max={600} inputMode="numeric" className="w-24" readOnly={!canEdit}
+                value={m.duration_min ?? ""} onChange={(e) => update({ duration_min: e.target.value ? Number(e.target.value) : null })} />
+            </div>
+          </div>
+          <ChipGroup label={iv.fields.mode} options={INTERVIEW_MODES} value={m.mode} disabled={!canEdit} onChange={(mode) => update({ mode })} />
+          <ChipGroup label={iv.fields.status} options={INTERVIEW_STATUSES} value={m.status} disabled={!canEdit} onChange={(s) => update({ status: s })} />
+        </div>
+      </section>
+
+      <section aria-labelledby="answers-h" className="flex flex-col gap-3">
+        <h2 id="answers-h" className="text-heading font-semibold">{iv.answers}</h2>
+        {!questions ? (
+          <p className="text-fg-secondary">{iv.noGuide}</p>
+        ) : (
+          <ol className="flex flex-col gap-6">
+            {GUIDE_SECTIONS.filter((s) => questions.some((q) => q.section === s.value)).map((s) => (
+              <li key={s.value} className="flex flex-col gap-3">
+                <h3 className="text-caption font-bold tracking-wide text-fg-secondary uppercase">{s.label}</h3>
+                <ul className="flex flex-col gap-3">
+                  {questions.filter((q) => q.section === s.value).map((q) => {
+                    const a = byQuestion.get(q.id);
+                    return (
+                      <li key={q.id} className="flex flex-col gap-2 rounded-[14px] border border-line bg-surface p-4">
+                        <p className="font-bold">
+                          {q.text}
+                          {q.is_key && <span className="ml-2 rounded-full bg-fg px-2 py-0.5 align-middle text-caption font-semibold text-canvas">{iv.key}</span>}
+                        </p>
+                        {q.probes.length > 0 && (
+                          <p className="text-[13px] text-fg-secondary">{iv.probes}: {q.probes.join(" · ")}</p>
+                        )}
+                        <AnswerField interviewId={interviewId} questionId={q.id} answerId={a?.id ?? null} initial={a?.body_text ?? ""}
+                          readOnly={!canEdit} label={`${iv.answers}: ${q.text}`} className="text-[15px]" />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+
+      <section aria-labelledby="notes-h" className="flex flex-col gap-3">
+        <h2 id="notes-h" className="text-heading font-semibold">{iv.freeNotes}</h2>
+        <ul className="flex flex-col gap-2">
+          {notes.map((n, i) => (
+            <li key={n.id} className="flex items-start gap-1">
+              <div className="flex-1">
+                <AnswerField interviewId={interviewId} questionId={null} answerId={n.id} initial={n.body_text} readOnly={!canEdit}
+                  label={`${iv.freeNotes} ${i + 1}`} placeholder={iv.notePlaceholder} />
+              </div>
+              {canEdit && (
+                <button type="button" aria-label={`${iv.removeNote} ${i + 1}`}
+                  onClick={() => startTransition(async () => { await deleteAnswer(n.id); router.refresh(); })}
+                  className="grid size-9 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+              )}
+            </li>
+          ))}
+          {newNotes.map((k, i) => (
+            <li key={`new-${k}`}>
+              <AnswerField interviewId={interviewId} questionId={null} answerId={null} initial="" readOnly={!canEdit} autoFocus
+                label={`${iv.freeNotes} ${notes.length + i + 1}`} placeholder={iv.notePlaceholder} />
+            </li>
+          ))}
+        </ul>
+        {canEdit && (
+          <button type="button" onClick={() => setNewNotes((n) => [...n, Date.now()])}
+            className="self-start rounded-[9px] border-[1.5px] border-fg px-3 py-1.5 text-[13px] font-semibold hover:bg-subtle">
+            + {iv.addNote}
+          </button>
+        )}
+        <div className="rounded-[14px] border border-line bg-surface p-5">
+          <TextField id="notes" label={iv.fields.notes} value={m.notes ?? ""} readOnly={!canEdit} onChange={(notes) => update({ notes })} />
+        </div>
+      </section>
+
+      {canEdit && (
+        <form action={deleteInterview} onSubmit={(e) => { if (!armed) { e.preventDefault(); setArmed(true); } }}>
+          <input type="hidden" name="id" value={interviewId} />
+          <button type="submit" onBlur={() => setArmed(false)}
+            className={cn("rounded-[9px] border-[1.5px] px-3.5 py-1.5 text-sm font-semibold",
+              armed ? "border-danger bg-danger text-white" : "border-line text-danger hover:border-danger")}>
+            {armed ? iv.deleteConfirm : iv.delete}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
