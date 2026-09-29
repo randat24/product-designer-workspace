@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PROJECT_STATUSES, type ActivityItem } from "@/domains/projects";
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
+import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/domains/competitors";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -33,7 +34,12 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
   const project = workspace && (await getProjectBySlug(workspace.id, slug));
   if (!workspace || !project) notFound();
 
-  const [brief, activity] = await Promise.all([getBrief(project.id), listRecentActivity(project.id)]);
+  const [brief, activity, competitors, matrix] = await Promise.all([
+    getBrief(project.id), listRecentActivity(project.id), listCompetitors(project.id), getMatrix(project.id),
+  ]);
+  const assessed = competitors.filter(isAssessed).length;
+  const hasOwn = competitors.some((c) => c.is_own_product);
+  const matrixFilled = matrix.features.length > 0 && Object.values(matrix.cells).some((v) => v !== "unknown");
   const briefProgress = briefCompleteness(brief);
   const base = `/w/${ws}/p/${slug}`;
 
@@ -46,14 +52,28 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
       return [{ segment, label: item.label, phase: item.phase, state, detail: t.project.briefProgress(briefProgress.filled, briefProgress.total),
         percent: (briefProgress.filled / briefProgress.total) * 100 }];
     }
+    if (segment === "competitors") {
+      const percent = Math.min(assessed / COMPETITORS_TARGET, 1) * 100;
+      const state: StageState = assessed >= COMPETITORS_TARGET && matrixFilled ? "done" : competitors.length > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, percent, detail: t.competitors.progress(assessed, COMPETITORS_TARGET) }];
+    }
     return [{ segment, label: item.label, phase: item.phase, state: item.phase > CURRENT_PHASE ? "soon" : "todo" }];
   });
 
-  const nextActions = briefProgress.missing.map((key) => ({
+  const nextActions: { key: string; label: string; href: string }[] = briefProgress.missing.map((key) => ({
     key,
     label: t.nextAction[key],
     href: `${base}/brief#${BRIEF_ANCHOR[key]}`,
   }));
+  if (assessed < COMPETITORS_TARGET) {
+    nextActions.push({ key: "competitors", label: t.nextAction.competitors(assessed, COMPETITORS_TARGET), href: `${base}/competitors` });
+  }
+  if (competitors.length > 0 && !hasOwn) {
+    nextActions.push({ key: "own", label: t.nextAction.ownProduct, href: `${base}/competitors/matrix` });
+  }
+  if (competitors.length > 0 && !matrixFilled) {
+    nextActions.push({ key: "matrix", label: t.nextAction.matrix, href: `${base}/competitors/matrix` });
+  }
 
   // Average over stages that have shipped; later phases join as they land.
   const shipped = stages.filter((s) => s.state !== "soon");

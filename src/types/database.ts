@@ -37,6 +37,28 @@ type ProjectBriefRow = {
   existing_product: string | null; business_requirements: string | null; technical_constraints: string | null;
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
 };
+type CompetitorRow = {
+  id: string; workspace_id: string; project_id: string; code: string;
+  name: string; url: string | null; kind: Database["public"]["Enums"]["competitor_kind"]; is_own_product: boolean;
+  positioning: string | null; target_audience: string | null; pricing: string | null;
+  onboarding_notes: string | null; navigation_notes: string | null; ux_patterns: string | null; ui_patterns: string | null;
+  strengths: string | null; weaknesses: string | null; reviews_summary: string | null;
+  opportunities: string | null; borrow: string | null; position: number;
+  created_by: string | null; updated_by: string | null; created_at: string; updated_at: string; archived_at: string | null;
+};
+type ComparisonFeatureRow = {
+  id: string; workspace_id: string; project_id: string; name: string; group_name: string | null; position: number;
+  created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
+};
+type FeatureValueRow = {
+  competitor_id: string; comparison_feature_id: string; workspace_id: string; project_id: string;
+  value: Database["public"]["Enums"]["feature_value"]; note: string | null; updated_by: string | null; updated_at: string;
+};
+type AttachmentRow = {
+  id: string; workspace_id: string; project_id: string; entity_type: string; entity_id: string;
+  storage_path: string; file_name: string; mime_type: string; size_bytes: number; caption: string | null;
+  position: number; created_by: string | null; created_at: string;
+};
 type ProjectCounterRow = { project_id: string; entity_type: string; last_value: number };
 type TraceRelationRow = { relation: string; label_forward: string; label_backward: string };
 type TraceRuleRow = { source_type: string; target_type: string; relation: string };
@@ -75,6 +97,23 @@ export type Database = {
           { foreignKeyName: "project_briefs_project_id_fkey"; columns: ["project_id"]; isOneToOne: true; referencedRelation: "projects"; referencedColumns: ["id"] },
         ];
       };
+      competitors: {
+        Row: CompetitorRow; Insert: Insert<CompetitorRow, "project_id" | "name">;
+        Update: Partial<Omit<CompetitorRow, "id" | "workspace_id" | "project_id" | "code">>; Relationships: [];
+      };
+      comparison_features: {
+        Row: ComparisonFeatureRow; Insert: Insert<ComparisonFeatureRow, "project_id" | "name">;
+        Update: Partial<Omit<ComparisonFeatureRow, "id" | "workspace_id" | "project_id">>; Relationships: [];
+      };
+      competitor_feature_values: {
+        Row: FeatureValueRow; Insert: Insert<FeatureValueRow, "competitor_id" | "comparison_feature_id">;
+        Update: Partial<Pick<FeatureValueRow, "value" | "note">>; Relationships: [];
+      };
+      attachments: {
+        Row: AttachmentRow;
+        Insert: Insert<AttachmentRow, "project_id" | "entity_type" | "entity_id" | "storage_path" | "file_name" | "mime_type" | "size_bytes">;
+        Update: Partial<Pick<AttachmentRow, "caption" | "position">>; Relationships: [];
+      };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -107,6 +146,8 @@ export type Database = {
       workspace_role: "owner" | "editor" | "viewer";
       project_status: "active" | "paused" | "done" | "archived";
       trace_origin: "manual" | "ai_accepted" | "system";
+      competitor_kind: "direct" | "indirect" | "substitute";
+      feature_value: "yes" | "partial" | "no" | "unknown";
     };
     CompositeTypes: { [_ in never]: never };
   };

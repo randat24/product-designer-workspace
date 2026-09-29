@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getMyRole, getProjectBySlug, getWorkspaceBySlug, listProjects } from "@/domains/projects";
 import { setProjectArchived } from "@/domains/projects/actions";
 import { briefCompleteness, getBrief } from "@/domains/briefs";
+import { COMPETITORS_TARGET, isAssessed, listCompetitors } from "@/domains/competitors";
 import { CURRENT_PHASE, visibleNav } from "@/shared/navigation";
 import type { CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/ru";
@@ -22,10 +23,11 @@ export default async function ProjectLayout({ children, params }: {
   ]);
   if (!project) notFound();
 
-  const brief = await getBrief(project.id);
+  const [brief, competitors] = await Promise.all([getBrief(project.id), listCompetitors(project.id)]);
   const briefProgress = briefCompleteness(brief);
   const progress: Record<string, number> = {
     brief: Math.round((briefProgress.filled / briefProgress.total) * 100),
+    competitors: Math.round(Math.min(competitors.filter(isAssessed).length / COMPETITORS_TARGET, 1) * 100),
   };
 
   const base = `/w/${workspace.slug}/p/${project.slug}`;
@@ -42,6 +44,13 @@ export default async function ProjectLayout({ children, params }: {
     ...projects
       .filter((p) => !p.archived_at && p.id !== project.id)
       .map((p) => ({ id: `project:${p.id}`, label: p.name, href: `/w/${workspace.slug}/p/${p.slug}`, group: t.palette.projects })),
+    ...competitors.map((c) => ({
+      id: `competitor:${c.id}`,
+      label: `${c.code} ${c.name}`,
+      href: `${base}/competitors/${c.code}`,
+      group: t.palette.entities,
+    })),
+    { id: "action:matrix", label: t.palette.matrix, href: `${base}/competitors/matrix`, group: t.palette.actions, keywords: "matrix сравнение" },
     { id: "action:settings", label: t.palette.settings, href: `${base}/settings`, group: t.palette.actions, keywords: "settings archive архив удалить" },
     { id: "action:new", label: t.palette.newProject, href: `/w/${workspace.slug}#new-h`, group: t.palette.actions, keywords: "new project создать" },
     { id: "action:all", label: t.palette.allProjects, href: `/w/${workspace.slug}`, group: t.palette.actions, keywords: "projects" },

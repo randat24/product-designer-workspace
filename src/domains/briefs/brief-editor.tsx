@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Input, Textarea } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { useAutosave, SaveToast } from "@/shared/ui/autosave";
+import { Section, TextField } from "@/shared/ui/form-section";
 import { saveBrief } from "./actions";
 import type { Brief } from "./schema";
 
 const f = t.brief.fields;
-const AUTOSAVE_MS = 800;
-
-type Status = "idle" | "dirty" | "saving" | "saved" | "error";
 type TextKey = {
   [K in keyof Brief]: Brief[K] extends string | null ? K : never;
 }[keyof Brief];
@@ -23,45 +22,7 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
   platforms: string[];
   settingsHref: string;
 }) {
-  const [brief, setBrief] = useState(initial);
-  const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState<{ message: string; field?: string } | null>(null);
-  const version = useRef(0);
-  const saved = useRef(0);
-
-  const update = (patch: Partial<Brief>) => {
-    version.current += 1;
-    setBrief((b) => ({ ...b, ...patch }));
-    setStatus("dirty");
-  };
-
-  // Debounced autosave. Each save carries the whole brief; a stale response never overwrites a newer status.
-  useEffect(() => {
-    if (!canEdit || version.current === saved.current) return;
-    const v = version.current;
-    const timer = setTimeout(async () => {
-      setStatus("saving");
-      const res = await saveBrief(projectId, brief).catch(() => ({ ok: false as const, error: t.brief.saveFailed }));
-      if (v !== version.current) return;
-      if (res.ok) {
-        saved.current = v;
-        setStatus("saved");
-        setError(null);
-      } else {
-        setStatus("error");
-        setError({ message: res.error, field: "field" in res ? res.field : undefined });
-      }
-    }, AUTOSAVE_MS);
-    return () => clearTimeout(timer);
-  }, [brief, canEdit, projectId]);
-
-  // Warn before leaving with unsaved edits.
-  useEffect(() => {
-    if (status !== "dirty" && status !== "saving" && status !== "error") return;
-    const onBeforeUnload = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", onBeforeUnload);
-    return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, [status]);
+  const { value: brief, update, status, error } = useAutosave(initial, (b) => saveBrief(projectId, b), canEdit);
 
   const text = (key: TextKey, label: string, hint?: string) => (
     <TextField id={key} label={label} hint={hint} value={brief[key] ?? ""} readOnly={!canEdit}
@@ -70,7 +31,7 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
 
   return (
     <div className="flex flex-col gap-8">
-      <SaveStatus status={status} error={error?.message} canEdit={canEdit} />
+      <SaveToast id="brief-status" status={status} error={error?.message} readOnly={!canEdit} />
 
       <Section id="product" title={t.brief.sections.product}>
         {text("product_description", f.product_description, f.product_descriptionHint)}
@@ -153,44 +114,6 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
             </>
           )} />
       </Section>
-    </div>
-  );
-}
-
-function SaveStatus({ status, error, canEdit }: { status: Status; error?: string; canEdit: boolean }) {
-  const label = !canEdit
-    ? t.brief.readOnly
-    : { idle: "", dirty: t.brief.unsaved, saving: t.brief.saving, saved: t.brief.saved, error: error ?? t.brief.saveFailed }[status];
-  return (
-    <p id="brief-status" role="status" aria-live="polite"
-      className={cn(
-        "fixed bottom-5 left-1/2 z-10 max-w-sm -translate-x-1/2 rounded-[10px] bg-fg px-4 py-2 text-sm font-semibold text-canvas shadow-lg",
-        !label && "opacity-0",
-        status === "error" && "bg-danger text-white",
-      )}>
-      {label}
-    </p>
-  );
-}
-
-function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
-  return (
-    <section id={id} aria-labelledby={`${id}-h`} className="flex scroll-mt-8 flex-col gap-3">
-      <h2 id={`${id}-h`} className="text-heading font-semibold">{title}</h2>
-      <div className="flex flex-col gap-5 rounded-[14px] border border-line bg-surface p-5">{children}</div>
-    </section>
-  );
-}
-
-function TextField({ id, label, hint, value, readOnly, onChange }: {
-  id: string; label: string; hint?: string; value: string; readOnly: boolean; onChange: (v: string) => void;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[13px] font-semibold text-fg-secondary">{label}</label>
-      <Textarea id={id} value={value} readOnly={readOnly} maxLength={5000} rows={2} placeholder={hint}
-        onChange={(e) => onChange(e.target.value)}
-        className="min-h-16 resize-y [field-sizing:content]" />
     </div>
   );
 }
