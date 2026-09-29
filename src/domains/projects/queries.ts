@@ -105,3 +105,18 @@ export const listRecentActivity = cache(async (projectId: string, limit = 8): Pr
     createdAt: a.created_at,
   }));
 });
+
+/** Workspace + project + role for a project page, or null (not found / no access). */
+export const getProjectContext = cache(async (wsSlug: string, projectSlug: string) => {
+  const workspace = await getWorkspaceBySlug(wsSlug);
+  if (!workspace) return null;
+  const [project, role] = await Promise.all([getProjectBySlug(workspace.id, projectSlug), getMyRole(workspace.id)]);
+  if (!project) return null;
+  return {
+    workspace,
+    project,
+    role,
+    canEdit: role === "owner" || role === "editor",
+    base: `/w/${workspace.slug}/p/${project.slug}`,
+  };
+});

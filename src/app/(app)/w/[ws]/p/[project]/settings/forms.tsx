@@ -25,7 +25,7 @@ export function GeneralForm({ project, readOnly }: { project: Project; readOnly:
           <Textarea id="description" name="description" rows={3} maxLength={2000} defaultValue={project.description ?? ""} />
         </Field>
         <fieldset className="flex flex-col gap-1.5">
-          <legend className="mb-1.5 text-[13px] font-medium text-fg-secondary">{t.workspace.platforms}</legend>
+          <legend className="mb-1.5 text-[13px] font-semibold text-fg-secondary">{t.workspace.platforms}</legend>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {PLATFORMS.map((p) => (
               <label key={p.value} className="flex items-center gap-1.5">
@@ -38,7 +38,7 @@ export function GeneralForm({ project, readOnly }: { project: Project; readOnly:
         </fieldset>
         <Field label={t.settings.status} htmlFor="status">
           <select id="status" name="status" defaultValue={project.status === "archived" ? "active" : project.status}
-            className="h-8 w-48 rounded-[4px] border border-transparent bg-subtle px-2 text-sm hover:border-line focus:border-accent focus:outline-none">
+            className="h-9 w-48 rounded-lg border border-transparent bg-subtle px-2.5 text-[14.5px] font-medium hover:border-line focus:border-fg focus:outline-none">
             {PROJECT_STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
         </Field>

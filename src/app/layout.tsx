@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/inter";
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/oswald";
 import "./globals.css";
 import { t } from "@/shared/i18n/ru";
 

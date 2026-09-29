@@ -7,7 +7,15 @@
 
 ## Статус
 
-**Phase 2 — Projects: готово, ждёт ревью.** Phase 1 — Foundation: в `main`.
+**Phase 3 — Competitors: готово, ждёт ревью.** Phase 1–2: в `main`.
+
+| Phase 3 | Проверено |
+|---|---|
+| Визуальный язык «Рабочей тетради»: тёмная навигация с прогрессом этапов, Oswald/Manrope, панели, стикеры (DESIGN-SYSTEM v0.2) | скриншоты light/dark/mobile |
+| Конкуренты `CP-##`: карточки с фильтром по типу, карточка с автосохранением, «наш продукт» | e2e, pgTAP |
+| Скриншоты: приватный бакет `attachments`, загрузка из браузера по RLS, галерея, удаление вместе с файлами | e2e, pgTAP (политики Storage) |
+| Матрица Feature × Product: группы, переключение ячеек кликом, переименование строк, итог по продуктам | e2e, pgTAP |
+| Overview, навигация и ⌘K знают о конкурентах; демо-проект с 3 конкурентами и заполненной матрицей | e2e |
 
 | Phase 2 | Проверено |
 |---|---|
@@ -53,7 +61,7 @@ npm run db:types   # сгенерировать src/types/database.ts (заме�
 
 ## Облако (развёрнуто)
 
-Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–005 применены, smoke-тест и security advisor пройдены.
+Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–006 применены, smoke-тест и security advisor пройдены.
 Vercel: https://product-designer-workspace.vercel.app (деплой из `main`).
 URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key из Project Settings → API.
 
@@ -67,7 +75,7 @@ URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key и�
 
 ```
 docs/                    PRD, ARCHITECTURE, DATABASE, IA, MVP, ROADMAP, DESIGN-SYSTEM, AI, adr/
-supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo
+supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo · 006 competitors + matrix + attachments
 supabase/tests/database/ pgTAP
 src/app/                 маршруты (docs/IA.md)
 src/domains/<name>/      schema.ts (Zod) · queries.ts · actions.ts · компоненты · index.ts (public API)
@@ -104,6 +112,13 @@ select public.attach_domain_table('public.insights', 'insight');
 - Интерфейс на русском; строки вынесены в `src/shared/i18n/ru.ts` для будущих uk/en.
 - В MVP цепочка идёт Opportunity → Flow напрямую; правила для Features уже заведены.
 - AI в MVP нет; таблицы AI появятся в Phase 12.
+
+## Допущения Phase 3
+
+- Визуальный язык взят из прототипа «Рабочая тетрадь дизайнера» по решению владельца продукта; правая панель «Связи» вернётся на страницы сущностей в Phase 5.
+- «Наш продукт» — строка `competitors` с `is_own_product`, у неё тоже есть код `CP-##`.
+- Файлы загружаются браузером прямо в Storage (путь `<project_id>/competitor/<uuid>.<ext>`, RLS по проекту), затем сервер регистрирует `attachments`. При удалении конкурента приложение сначала удаляет файлы.
+- `attach_project_table()` — подключение не-трассируемых таблиц проекта (строки матрицы, дальше — вопросы гайда и т. п.).
 
 ## Допущения Phase 2
 

@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Input, Textarea } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { useAutosave, SaveToast } from "@/shared/ui/autosave";
+import { Section, TextField } from "@/shared/ui/form-section";
 import { saveBrief } from "./actions";
 import type { Brief } from "./schema";
 
 const f = t.brief.fields;
-const AUTOSAVE_MS = 800;
-
-type Status = "idle" | "dirty" | "saving" | "saved" | "error";
 type TextKey = {
   [K in keyof Brief]: Brief[K] extends string | null ? K : never;
 }[keyof Brief];
@@ -23,45 +22,7 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
   platforms: string[];
   settingsHref: string;
 }) {
-  const [brief, setBrief] = useState(initial);
-  const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState<{ message: string; field?: string } | null>(null);
-  const version = useRef(0);
-  const saved = useRef(0);
-
-  const update = (patch: Partial<Brief>) => {
-    version.current += 1;
-    setBrief((b) => ({ ...b, ...patch }));
-    setStatus("dirty");
-  };
-
-  // Debounced autosave. Each save carries the whole brief; a stale response never overwrites a newer status.
-  useEffect(() => {
-    if (!canEdit || version.current === saved.current) return;
-    const v = version.current;
-    const timer = setTimeout(async () => {
-      setStatus("saving");
-      const res = await saveBrief(projectId, brief).catch(() => ({ ok: false as const, error: t.brief.saveFailed }));
-      if (v !== version.current) return;
-      if (res.ok) {
-        saved.current = v;
-        setStatus("saved");
-        setError(null);
-      } else {
-        setStatus("error");
-        setError({ message: res.error, field: "field" in res ? res.field : undefined });
-      }
-    }, AUTOSAVE_MS);
-    return () => clearTimeout(timer);
-  }, [brief, canEdit, projectId]);
-
-  // Warn before leaving with unsaved edits.
-  useEffect(() => {
-    if (status !== "dirty" && status !== "saving" && status !== "error") return;
-    const onBeforeUnload = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", onBeforeUnload);
-    return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, [status]);
+  const { value: brief, update, status, error } = useAutosave(initial, (b) => saveBrief(projectId, b), canEdit);
 
   const text = (key: TextKey, label: string, hint?: string) => (
     <TextField id={key} label={label} hint={hint} value={brief[key] ?? ""} readOnly={!canEdit}
@@ -70,16 +31,16 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
 
   return (
     <div className="flex flex-col gap-8">
-      <SaveStatus status={status} error={error?.message} canEdit={canEdit} />
+      <SaveToast id="brief-status" status={status} error={error?.message} readOnly={!canEdit} />
 
       <Section id="product" title={t.brief.sections.product}>
         {text("product_description", f.product_description, f.product_descriptionHint)}
         {text("existing_product", f.existing_product, f.existing_productHint)}
         <div className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium text-fg-secondary">{f.platforms}</span>
+          <span className="text-[13px] font-semibold text-fg-secondary">{f.platforms}</span>
           <p className="flex flex-wrap items-baseline gap-x-3">
             <span>{platforms.length ? platforms.join(", ") : <span className="text-fg-secondary">{f.platformsNone}</span>}</span>
-            <Link href={settingsHref} className="text-[13px] text-accent hover:underline">{f.platformsEdit}</Link>
+            <Link href={settingsHref} className="text-[13px] font-semibold underline underline-offset-2">{f.platformsEdit}</Link>
           </p>
         </div>
       </Section>
@@ -122,7 +83,7 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
         <div className="grid gap-4 sm:grid-cols-2 sm:max-w-md">
           {(["timeline_start", "timeline_end"] as const).map((key) => (
             <div key={key} className="flex flex-col gap-1.5">
-              <label htmlFor={key} className="text-[13px] font-medium text-fg-secondary">{f[key]}</label>
+              <label htmlFor={key} className="text-[13px] font-semibold text-fg-secondary">{f[key]}</label>
               <Input id={key} type="date" value={brief[key] ?? ""} readOnly={!canEdit}
                 aria-invalid={error?.field === key}
                 aria-describedby={error?.field === key ? "brief-status" : undefined}
@@ -157,44 +118,6 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
   );
 }
 
-function SaveStatus({ status, error, canEdit }: { status: Status; error?: string; canEdit: boolean }) {
-  const label = !canEdit
-    ? t.brief.readOnly
-    : { idle: "", dirty: t.brief.unsaved, saving: t.brief.saving, saved: t.brief.saved, error: error ?? t.brief.saveFailed }[status];
-  return (
-    <p id="brief-status" role="status" aria-live="polite"
-      className={cn(
-        "fixed right-4 bottom-4 z-10 max-w-sm rounded-md border border-line bg-surface px-3 py-1.5 text-[13px] shadow-md xl:right-[316px]",
-        !label && "opacity-0",
-        status === "error" ? "text-danger" : "text-fg-secondary",
-      )}>
-      {label}
-    </p>
-  );
-}
-
-function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
-  return (
-    <section id={id} aria-labelledby={`${id}-h`} className="flex scroll-mt-8 flex-col gap-4">
-      <h2 id={`${id}-h`} className="border-b border-line pb-2 text-heading font-semibold">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-function TextField({ id, label, hint, value, readOnly, onChange }: {
-  id: string; label: string; hint?: string; value: string; readOnly: boolean; onChange: (v: string) => void;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[13px] font-medium text-fg-secondary">{label}</label>
-      <Textarea id={id} value={value} readOnly={readOnly} maxLength={5000} rows={2} placeholder={hint}
-        onChange={(e) => onChange(e.target.value)}
-        className="min-h-[60px] [field-sizing:content] text-[15px] leading-6" />
-    </div>
-  );
-}
-
 function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, render, readOnly, columns, gridClass }: {
   id: string;
   label: string;
@@ -212,7 +135,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
   const set = (i: number) => (row: T) => onChange(rows.map((r, j) => (j === i ? row : r)));
   return (
     <fieldset id={id} className="flex flex-col gap-1.5">
-      <legend className={cn("mb-1.5 text-[13px] font-medium text-fg-secondary", hideLegend && "sr-only")}>{label}</legend>
+      <legend className={cn("mb-1.5 text-[13px] font-semibold text-fg-secondary", hideLegend && "sr-only")}>{label}</legend>
       {columns && rows.length > 0 && (
         <div aria-hidden className={cn("hidden gap-2 pr-9 text-caption text-fg-secondary sm:grid", gridClass)}>
           {columns.map((c) => <span key={c}>{c}</span>)}
@@ -225,7 +148,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
             {!readOnly && (
               <button type="button" onClick={() => onChange(rows.filter((_, j) => j !== i))}
                 aria-label={`${t.brief.fields.remove}: ${label} ${i + 1}`}
-                className="grid size-8 shrink-0 place-items-center rounded-md text-fg-secondary hover:bg-subtle hover:text-fg">
+                className="grid size-9 shrink-0 place-items-center rounded-[7px] text-base text-fg-secondary hover:bg-subtle hover:text-fg">
                 <span aria-hidden>×</span>
               </button>
             )}
@@ -234,7 +157,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
       </ul>
       {!readOnly && (
         <button type="button" onClick={() => onChange([...rows, empty])}
-          className="self-start rounded-md px-1 py-1 text-[13px] font-medium text-accent hover:underline">
+          className="self-start rounded-[9px] border-[1.5px] border-fg px-3 py-1.5 text-[13px] font-semibold hover:bg-subtle">
           + {addLabel}
         </button>
       )}
