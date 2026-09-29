@@ -10,7 +10,7 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
   const [state, action, pending] = useActionState<LoginState, FormData>(sendMagicLink, initialError ? { error: initialError } : undefined);
 
   if (state?.sentTo) {
-    return <p role="status" className="rounded-md border border-line bg-surface p-4">{t.auth.sent(state.sentTo)}</p>;
+    return <p role="status" className="rounded-[14px] border border-line bg-surface p-5">{t.auth.sent(state.sentTo)}</p>;
   }
 
   return (

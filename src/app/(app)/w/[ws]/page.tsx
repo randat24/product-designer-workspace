@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getWorkspaceBySlug, listMyWorkspaces, listProjects, getCurrentUser, PLATFORMS } from "@/domains/projects";
 import { createDemoProject } from "@/domains/projects/actions";
 import { Button } from "@/shared/ui/button";
+import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 import { NewProjectForm } from "./new-project-form";
 import { WorkspaceSwitcher } from "./workspace-switcher";
@@ -22,25 +23,28 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
 
   return (
     <div className="min-h-screen">
-      <header className="flex h-12 items-center justify-between border-b border-line bg-surface px-4">
-        <WorkspaceSwitcher current={workspace.slug} workspaces={workspaces} />
-        <form action="/auth/signout" method="post" className="flex items-center gap-3 text-caption text-fg-secondary">
-          <span className="hidden sm:inline">{user?.email}</span>
-          <button className="rounded px-2 py-1 hover:bg-subtle hover:text-fg">{t.auth.signOut}</button>
+      <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
+        <span className="flex min-w-0 items-center gap-4">
+          <span className="font-display text-lg leading-none font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
+          <WorkspaceSwitcher current={workspace.slug} workspaces={workspaces} />
+        </span>
+        <form action="/auth/signout" method="post" className="flex items-center gap-3 text-[13px]">
+          <span className="hidden opacity-70 sm:inline">{user?.email}</span>
+          <button className="rounded-lg border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
         </form>
       </header>
 
-      <main className="mx-auto grid max-w-5xl gap-10 px-6 py-8 lg:grid-cols-[1fr_320px]">
+      <main className="mx-auto grid max-w-6xl gap-10 px-[clamp(18px,4vw,56px)] py-10 lg:grid-cols-[1fr_340px]">
         <section aria-labelledby="projects-h" className="min-w-0">
-          <h1 id="projects-h" className="mb-4 text-title font-semibold">{t.workspace.projects}</h1>
+          <div id="projects-h"><PageHeader title={t.workspace.projects} /></div>
           {projects.length === 0 ? (
-            <p className="max-w-prose rounded-md border border-dashed border-line p-6 text-fg-secondary">{t.workspace.empty}</p>
+            <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{t.workspace.empty}</p>
           ) : (
             <ProjectList wsSlug={workspace.slug} projects={projects} />
           )}
           {archived.length > 0 && (
             <details className="mt-6">
-              <summary className="cursor-pointer text-[13px] font-medium text-fg-secondary hover:text-fg">
+              <summary className="cursor-pointer text-sm font-semibold text-fg-secondary hover:text-fg">
                 {t.workspace.archived(archived.length)}
               </summary>
               <div className="mt-2"><ProjectList wsSlug={workspace.slug} projects={archived} /></div>
@@ -48,7 +52,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
           )}
         </section>
 
-        <section aria-labelledby="new-h" className="h-fit rounded-md border border-line bg-surface p-4">
+        <section aria-labelledby="new-h" className="h-fit rounded-[14px] border border-line bg-surface p-5 lg:mt-[76px]">
           <h2 id="new-h" className="mb-3 text-heading font-semibold">{t.workspace.newProject}</h2>
           <NewProjectForm workspaceId={workspace.id} />
           <div className="mt-5 flex flex-col gap-2 border-t border-line pt-4">
@@ -70,15 +74,16 @@ type ProjectListItem = Awaited<ReturnType<typeof listProjects>>[number];
 function ProjectList({ wsSlug, projects }: { wsSlug: string; projects: ProjectListItem[] }) {
   const platformLabel = (v: string) => PLATFORMS.find((p) => p.value === v)?.label ?? v;
   return (
-    <ul className="divide-y divide-line rounded-md border border-line bg-surface">
+    <ul className="grid gap-4 sm:grid-cols-2">
       {projects.map((p) => (
         <li key={p.id}>
-          <Link href={`/w/${wsSlug}/p/${p.slug}`} className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-0.5 px-4 py-3 hover:bg-subtle">
-            <span className="truncate font-medium">{p.name}</span>
+          <Link href={`/w/${wsSlug}/p/${p.slug}`}
+            className="grid h-full grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-1 rounded-[14px] border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg">
+            <span className="truncate text-base font-bold">{p.name}</span>
             <span className="text-caption text-fg-secondary tabular-nums">
               {p.archived_at ? t.workspace.archivedBadge : `${t.workspace.updated} ${dateFmt.format(new Date(p.updated_at))}`}
             </span>
-            <span className="col-span-2 truncate text-[13px] text-fg-secondary">
+            <span className="col-span-2 line-clamp-2 text-[13px] text-fg-secondary">
               {[p.platforms.map(platformLabel).join(", "), p.description].filter(Boolean).join(" — ")}
             </span>
           </Link>

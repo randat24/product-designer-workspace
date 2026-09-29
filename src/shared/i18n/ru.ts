@@ -3,6 +3,9 @@ export const ru = {
   app: { name: "Product Designer Workspace" },
   auth: {
     title: "Вход",
+    brand: "Рабочая тетрадь дизайнера",
+    brandLede: "От исследования до передачи в разработку",
+    chain: "Интервью → цитата → инсайт → боль → возможность → сценарий → экран → решение",
     lede: "Отправим ссылку для входа на почту. Пароль не нужен.",
     email: "Эл. почта",
     emailPlaceholder: "you@example.com",
@@ -50,6 +53,7 @@ export const ru = {
     stageActive: "В работе",
     stageTodo: "Не начато",
     stageSoon: (phase: number) => `Появится в фазе ${phase}`,
+    overallProgress: "готовность проекта",
     briefProgress: (filled: number, total: number) => `${filled} из ${total} ключевых полей`,
     nextActions: "Что сделать дальше",
     nextActionsEmpty: "Бриф заполнен. Следующий шаг — анализ конкурентов, он появится в фазе 3.",

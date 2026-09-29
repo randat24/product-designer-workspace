@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getMyRole, getProjectBySlug, getWorkspaceBySlug } from "@/domains/projects";
 import { setProjectArchived } from "@/domains/projects/actions";
 import { Button } from "@/shared/ui/button";
+import { Panel } from "@/shared/ui/field";
+import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 import { DeleteForm, GeneralForm } from "./forms";
 
@@ -18,18 +20,20 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
   const canEdit = role === "owner" || role === "editor";
 
   return (
-    <div className="flex max-w-2xl flex-col gap-10">
-      <h1 className="text-title font-semibold">{t.settings.title}</h1>
+    <div className="flex max-w-3xl flex-col gap-10">
+      <PageHeader title={t.settings.title} />
 
       <section aria-labelledby="general-h" className="flex flex-col gap-4">
-        <h2 id="general-h" className="border-b border-line pb-2 text-heading font-semibold">{t.settings.general}</h2>
-        <GeneralForm project={project} readOnly={!canEdit} />
-        <p className="text-[13px] text-fg-secondary">{t.settings.slugNote(project.slug)}</p>
+        <h2 id="general-h" className="text-heading font-semibold">{t.settings.general}</h2>
+        <Panel className="flex flex-col gap-4">
+          <GeneralForm project={project} readOnly={!canEdit} />
+          <p className="text-[13px] text-fg-secondary">{t.settings.slugNote(project.slug)}</p>
+        </Panel>
       </section>
 
       {canEdit && (
         <section aria-labelledby="archive-h" className="flex flex-col gap-3">
-          <h2 id="archive-h" className="border-b border-line pb-2 text-heading font-semibold">{t.settings.archive}</h2>
+          <h2 id="archive-h" className="text-heading font-semibold">{t.settings.archive}</h2>
           <p className="max-w-prose text-fg-secondary">{t.settings.archiveBody}</p>
           <form action={setProjectArchived}>
             <input type="hidden" name="projectId" value={project.id} />
@@ -43,7 +47,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
 
       {role === "owner" && (
         <section aria-labelledby="delete-h" className="flex flex-col gap-3">
-          <h2 id="delete-h" className="border-b border-line pb-2 text-heading font-semibold text-danger">{t.settings.delete}</h2>
+          <h2 id="delete-h" className="text-heading font-semibold text-danger">{t.settings.delete}</h2>
           <p className="max-w-prose text-fg-secondary">{t.settings.deleteBody}</p>
           <DeleteForm projectId={project.id} name={project.name} />
         </section>

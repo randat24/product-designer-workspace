@@ -4,10 +4,11 @@ import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PR
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
+import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 
 type StageState = "done" | "active" | "todo" | "soon";
-type Stage = { segment: string; label: string; phase: number; state: StageState; detail?: string };
+type Stage = { segment: string; label: string; phase: number; state: StageState; detail?: string; percent?: number };
 
 // MVP chain in working order (docs/MVP.md §2). Each phase adds its own progress rule.
 const STAGE_SEGMENTS = ["brief", "competitors", "research", "synthesis", "insights", "opportunities", "flows", "screens", "decisions"];
@@ -42,7 +43,8 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
     if (segment === "brief") {
       const state: StageState =
         briefProgress.filled === briefProgress.total ? "done" : briefProgress.filled > 0 ? "active" : "todo";
-      return [{ segment, label: item.label, phase: item.phase, state, detail: t.project.briefProgress(briefProgress.filled, briefProgress.total) }];
+      return [{ segment, label: item.label, phase: item.phase, state, detail: t.project.briefProgress(briefProgress.filled, briefProgress.total),
+        percent: (briefProgress.filled / briefProgress.total) * 100 }];
     }
     return [{ segment, label: item.label, phase: item.phase, state: item.phase > CURRENT_PHASE ? "soon" : "todo" }];
   });
@@ -53,30 +55,45 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
     href: `${base}/brief#${BRIEF_ANCHOR[key]}`,
   }));
 
+  // Average over stages that have shipped; later phases join as they land.
+  const shipped = stages.filter((s) => s.state !== "soon");
+  const overall = shipped.length
+    ? shipped.reduce((sum, s) => sum + (s.state === "done" ? 100 : s.percent ?? 0), 0) / shipped.length
+    : 0;
+
   const status = PROJECT_STATUSES.find((s) => s.value === project.status)?.label;
   const meta = [status, project.platforms.map((p) => PLATFORMS.find((x) => x.value === p)?.label ?? p).join(", ")].filter(Boolean);
 
   return (
-    <div className="flex max-w-3xl flex-col gap-8">
-      <header className="flex flex-col gap-1">
-        <p className="text-caption text-fg-secondary">{t.project.overview}</p>
-        <h1 className="text-title font-semibold">{project.name}</h1>
-        {meta.length > 0 && <p className="text-[13px] text-fg-secondary">{meta.join(" · ")}</p>}
-        {project.description && <p className="max-w-prose text-fg-secondary">{project.description}</p>}
-      </header>
+    <div className="flex max-w-4xl flex-col gap-10">
+      <PageHeader eyebrow={[t.project.overview, ...meta].join(" · ")} title={project.name}
+        lede={project.description}
+        progress={{ value: overall, caption: t.project.overallProgress }} />
 
       <section aria-labelledby="stages-h" className="flex flex-col gap-3">
         <h2 id="stages-h" className="text-heading font-semibold">{t.project.stages}</h2>
-        <ol className="divide-y divide-line rounded-md border border-line bg-surface">
-          {stages.map((s) => (
+        <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {stages.map((s, i) => (
             <li key={s.segment}>
               <Link href={`${base}/${s.segment}`}
-                className={cn("grid grid-cols-[20px_1fr_auto] items-baseline gap-x-2 px-4 py-2 hover:bg-subtle", s.state === "soon" && "text-fg-secondary")}>
-                <StageIcon state={s.state} />
-                <span className={cn(s.state !== "soon" && "font-medium")}>{s.label}</span>
-                <span className="text-caption text-fg-secondary tabular-nums">
+                className={cn(
+                  "flex h-full flex-col gap-2 rounded-[14px] border border-line bg-surface p-4 transition-colors duration-[120ms] hover:border-fg",
+                  s.state === "done" && "border-success",
+                  s.state === "soon" && "bg-transparent text-fg-secondary",
+                )}>
+                <span className="flex items-baseline gap-3">
+                  <span className="display-num text-[22px] leading-none tabular-nums">{i + 1}</span>
+                  <span className="font-bold">{s.label}</span>
+                  <StageIcon state={s.state} />
+                </span>
+                <span className="text-[13px] text-fg-secondary tabular-nums">
                   {s.detail ?? (s.state === "soon" ? t.project.stageSoon(s.phase) : t.project.stageTodo)}
                 </span>
+                {s.percent !== undefined && (
+                  <span className="mt-auto block h-[3px] overflow-hidden rounded-sm bg-line" aria-hidden>
+                    <i className={cn("block h-full", s.state === "done" ? "bg-success" : "bg-fg")} style={{ width: `${s.percent}%` }} />
+                  </span>
+                )}
               </Link>
             </li>
           ))}
@@ -88,10 +105,10 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
         {nextActions.length === 0 ? (
           <p className="text-fg-secondary">{t.project.nextActionsEmpty}</p>
         ) : (
-          <ul className="divide-y divide-line rounded-md border border-line bg-surface">
+          <ul className="flex flex-col gap-2">
             {nextActions.map((a) => (
               <li key={a.key}>
-                <Link href={a.href} className="flex items-center justify-between gap-3 px-4 py-2 hover:bg-subtle">
+                <Link href={a.href} className="flex items-center justify-between gap-3 rounded-[12px] border border-line bg-surface px-4 py-2.5 font-medium hover:border-fg">
                   <span>{a.label}</span>
                   <span aria-hidden className="text-fg-secondary">→</span>
                 </Link>
@@ -106,7 +123,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
         {activity.length === 0 ? (
           <p className="text-fg-secondary">{t.project.activityEmpty}</p>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-2 rounded-[14px] border border-line bg-surface p-4">
             {activity.map((a) => <ActivityRow key={a.id} item={a} />)}
           </ul>
         )}
@@ -119,7 +136,7 @@ function StageIcon({ state }: { state: StageState }) {
   const label = { done: t.project.stageDone, active: t.project.stageActive, todo: t.project.stageTodo, soon: t.project.stageTodo }[state];
   return (
     <span role="img" aria-label={label}
-      className={cn("text-center", state === "done" ? "text-success" : state === "active" ? "text-accent" : "text-fg-secondary")}>
+      className={cn("ml-auto", state === "done" ? "text-success" : state === "active" ? "text-accent" : "text-fg-secondary")}>
       {state === "done" ? "✓" : state === "active" ? "●" : "○"}
     </span>
   );

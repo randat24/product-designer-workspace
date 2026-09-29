@@ -11,7 +11,7 @@ export type CommandItem = { id: string; label: string; href: string; group: stri
  * ⌘K / Ctrl+K palette (docs/DESIGN-SYSTEM.md §3). v1: navigation and simple actions.
  * Entity search by code joins once entity tables exist.
  */
-export function CommandPalette({ items }: { items: CommandItem[] }) {
+export function CommandPalette({ items, triggerClassName }: { items: CommandItem[]; triggerClassName?: string }) {
   const router = useRouter();
   const dialog = useRef<HTMLDialogElement>(null);
   const [query, setQuery] = useState("");
@@ -67,14 +67,14 @@ export function CommandPalette({ items }: { items: CommandItem[] }) {
   return (
     <>
       <button type="button" onClick={open}
-        className="flex h-7 w-full items-center justify-between gap-2 rounded-md border border-line bg-canvas px-2 text-[13px] text-fg-secondary hover:bg-subtle hover:text-fg">
+        className={cn("flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-line bg-canvas px-2.5 text-[13px] text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
         {t.palette.open}
         <kbd className="font-sans text-caption">⌘K</kbd>
       </button>
 
       <dialog ref={dialog} aria-label={t.palette.open}
         onClick={(e) => e.target === dialog.current && dialog.current.close()}
-        className="mx-auto mt-[12vh] w-[min(560px,calc(100vw-32px))] rounded-lg border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
+        className="mx-auto mt-[12vh] w-[min(560px,calc(100vw-32px))] rounded-[14px] border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
         <input autoFocus value={query} placeholder={t.palette.placeholder}
           onChange={(e) => { setQuery(e.target.value); setActive(0); }}
           onKeyDown={onInputKey}
@@ -90,7 +90,7 @@ export function CommandPalette({ items }: { items: CommandItem[] }) {
                 {header && <p role="presentation" className="px-3 pt-2 pb-1 text-caption font-medium text-fg-secondary">{header}</p>}
                 <div id={`cmd-${item.id}`} role="option" aria-selected={i === active}
                   onMouseMove={() => setActive(i)} onClick={() => go(item)}
-                  className={cn("flex h-8 cursor-pointer items-center justify-between gap-3 rounded-md px-3", i === active && "bg-subtle")}>
+                  className={cn("flex h-9 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 font-medium", i === active && "bg-subtle")}>
                   <span className="truncate">{item.label}</span>
                   {item.hint && <span className="shrink-0 text-caption text-fg-secondary">{item.hint}</span>}
                 </div>

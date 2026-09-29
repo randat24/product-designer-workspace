@@ -22,7 +22,7 @@ export function NewProjectForm({ workspaceId }: { workspaceId: string }) {
         <Textarea id="description" name="description" rows={3} placeholder={t.workspace.descriptionPlaceholder} />
       </Field>
       <fieldset className="flex flex-col gap-1.5">
-        <legend className="mb-1.5 text-[13px] font-medium text-fg-secondary">{t.workspace.platforms}</legend>
+        <legend className="mb-1.5 text-[13px] font-semibold text-fg-secondary">{t.workspace.platforms}</legend>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {PLATFORMS.map((p) => (
             <label key={p.value} className="flex items-center gap-1.5">

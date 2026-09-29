@@ -1,19 +1,34 @@
 @import "tailwindcss";
 
-/* Tokens: docs/DESIGN-SYSTEM.md §2. Light by default, dark via system preference. */
+/* Tokens: docs/DESIGN-SYSTEM.md §2 — visual language of the "Designer's notebook" prototype.
+   Light by default, dark via system preference. */
 :root {
-  --canvas: #f7f7f8;
+  --canvas: #eef0f3;
   --surface: #ffffff;
-  --subtle: #f0f0f2;
-  --line: #e3e3e7;
-  --fg: #17181c;
-  --fg-secondary: #5e6069;
-  --accent: #3b5bdb;
-  --accent-hover: #3451c7;
+  --subtle: #f5f6f8;
+  --line: #d6d9e0;
+  --fg: #151a33;
+  --fg-secondary: #5b6078;
+  --accent: #151a33;
+  --accent-hover: #2a3158;
   --on-accent: #ffffff;
-  --danger: #c92a2a;
+  --danger: #c8433a;
   --warning: #9c6a12;
-  --success: #2b8a3e;
+  --success: #2e8a5b;
+
+  /* Navigation rail: inverted ink */
+  --rail: #151a33;
+  --rail-fg: #eef0f3;
+
+  /* Sticky-note palette: participants, products in matrices */
+  --s1: #f2a6ae;
+  --s2: #f6a94f;
+  --s3: #f7dc52;
+  --s4: #6fb9b9;
+  --s5: #d9ee8f;
+  --s6: #a99bf5;
+  --s7: #8fd3f2;
+  --on-sticky: #1b1b2a;
 
   --entity-research: #0b7285;
   --entity-synthesis: #6741d9;
@@ -25,18 +40,20 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #0f1013;
-    --surface: #17181c;
-    --subtle: #1f2025;
-    --line: #2a2b31;
-    --fg: #ececef;
-    --fg-secondary: #9a9ca6;
-    --accent: #7c93f0;
-    --accent-hover: #93a6f3;
-    --on-accent: #0f1013;
-    --danger: #ff8787;
+    --canvas: #10132a;
+    --surface: #1a1e3a;
+    --subtle: #222747;
+    --line: #2e3356;
+    --fg: #eceef7;
+    --fg-secondary: #a0a5c0;
+    --accent: #eceef7;
+    --accent-hover: #ffffff;
+    --on-accent: #10132a;
+    --danger: #ff8a80;
     --warning: #f2c46b;
-    --success: #69db7c;
+    --success: #5cc98f;
+    --rail: #eceef7;
+    --rail-fg: #10132a;
     --entity-research: #3bc9db;
     --entity-synthesis: #9775fa;
     --entity-problem: #ff8a4c;
@@ -60,12 +77,16 @@
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
+  --color-rail: var(--rail);
+  --color-rail-fg: var(--rail-fg);
+  --color-on-sticky: var(--on-sticky);
 
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Oswald Variable", "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
 
   --text-title: 20px;
   --text-title--line-height: 28px;
-  --text-heading: 16px;
+  --text-heading: 18px;
   --text-heading--line-height: 24px;
   --text-sm: 14px;
   --text-sm--line-height: 20px;
@@ -78,11 +99,22 @@ body {
   background: var(--canvas);
   color: var(--fg);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 20px;
-  font-feature-settings: "cv11", "tnum" 0;
+  font-size: 15px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 .tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* Page title: condensed display type, uppercase (the notebook's signature). */
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+.display-num { font-family: var(--font-display); font-weight: 700; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

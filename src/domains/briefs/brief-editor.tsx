@@ -76,10 +76,10 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
         {text("product_description", f.product_description, f.product_descriptionHint)}
         {text("existing_product", f.existing_product, f.existing_productHint)}
         <div className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium text-fg-secondary">{f.platforms}</span>
+          <span className="text-[13px] font-semibold text-fg-secondary">{f.platforms}</span>
           <p className="flex flex-wrap items-baseline gap-x-3">
             <span>{platforms.length ? platforms.join(", ") : <span className="text-fg-secondary">{f.platformsNone}</span>}</span>
-            <Link href={settingsHref} className="text-[13px] text-accent hover:underline">{f.platformsEdit}</Link>
+            <Link href={settingsHref} className="text-[13px] font-semibold underline underline-offset-2">{f.platformsEdit}</Link>
           </p>
         </div>
       </Section>
@@ -122,7 +122,7 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
         <div className="grid gap-4 sm:grid-cols-2 sm:max-w-md">
           {(["timeline_start", "timeline_end"] as const).map((key) => (
             <div key={key} className="flex flex-col gap-1.5">
-              <label htmlFor={key} className="text-[13px] font-medium text-fg-secondary">{f[key]}</label>
+              <label htmlFor={key} className="text-[13px] font-semibold text-fg-secondary">{f[key]}</label>
               <Input id={key} type="date" value={brief[key] ?? ""} readOnly={!canEdit}
                 aria-invalid={error?.field === key}
                 aria-describedby={error?.field === key ? "brief-status" : undefined}
@@ -164,9 +164,9 @@ function SaveStatus({ status, error, canEdit }: { status: Status; error?: string
   return (
     <p id="brief-status" role="status" aria-live="polite"
       className={cn(
-        "fixed right-4 bottom-4 z-10 max-w-sm rounded-md border border-line bg-surface px-3 py-1.5 text-[13px] shadow-md xl:right-[316px]",
+        "fixed bottom-5 left-1/2 z-10 max-w-sm -translate-x-1/2 rounded-[10px] bg-fg px-4 py-2 text-sm font-semibold text-canvas shadow-lg",
         !label && "opacity-0",
-        status === "error" ? "text-danger" : "text-fg-secondary",
+        status === "error" && "bg-danger text-white",
       )}>
       {label}
     </p>
@@ -175,9 +175,9 @@ function SaveStatus({ status, error, canEdit }: { status: Status; error?: string
 
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className="flex scroll-mt-8 flex-col gap-4">
-      <h2 id={`${id}-h`} className="border-b border-line pb-2 text-heading font-semibold">{title}</h2>
-      {children}
+    <section id={id} aria-labelledby={`${id}-h`} className="flex scroll-mt-8 flex-col gap-3">
+      <h2 id={`${id}-h`} className="text-heading font-semibold">{title}</h2>
+      <div className="flex flex-col gap-5 rounded-[14px] border border-line bg-surface p-5">{children}</div>
     </section>
   );
 }
@@ -187,10 +187,10 @@ function TextField({ id, label, hint, value, readOnly, onChange }: {
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[13px] font-medium text-fg-secondary">{label}</label>
+      <label htmlFor={id} className="text-[13px] font-semibold text-fg-secondary">{label}</label>
       <Textarea id={id} value={value} readOnly={readOnly} maxLength={5000} rows={2} placeholder={hint}
         onChange={(e) => onChange(e.target.value)}
-        className="min-h-[60px] [field-sizing:content] text-[15px] leading-6" />
+        className="min-h-16 resize-y [field-sizing:content]" />
     </div>
   );
 }
@@ -212,7 +212,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
   const set = (i: number) => (row: T) => onChange(rows.map((r, j) => (j === i ? row : r)));
   return (
     <fieldset id={id} className="flex flex-col gap-1.5">
-      <legend className={cn("mb-1.5 text-[13px] font-medium text-fg-secondary", hideLegend && "sr-only")}>{label}</legend>
+      <legend className={cn("mb-1.5 text-[13px] font-semibold text-fg-secondary", hideLegend && "sr-only")}>{label}</legend>
       {columns && rows.length > 0 && (
         <div aria-hidden className={cn("hidden gap-2 pr-9 text-caption text-fg-secondary sm:grid", gridClass)}>
           {columns.map((c) => <span key={c}>{c}</span>)}
@@ -225,7 +225,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
             {!readOnly && (
               <button type="button" onClick={() => onChange(rows.filter((_, j) => j !== i))}
                 aria-label={`${t.brief.fields.remove}: ${label} ${i + 1}`}
-                className="grid size-8 shrink-0 place-items-center rounded-md text-fg-secondary hover:bg-subtle hover:text-fg">
+                className="grid size-9 shrink-0 place-items-center rounded-[7px] text-base text-fg-secondary hover:bg-subtle hover:text-fg">
                 <span aria-hidden>×</span>
               </button>
             )}
@@ -234,7 +234,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
       </ul>
       {!readOnly && (
         <button type="button" onClick={() => onChange([...rows, empty])}
-          className="self-start rounded-md px-1 py-1 text-[13px] font-medium text-accent hover:underline">
+          className="self-start rounded-[9px] border-[1.5px] border-fg px-3 py-1.5 text-[13px] font-semibold hover:bg-subtle">
           + {addLabel}
         </button>
       )}
