@@ -1,0 +1,2 @@
+-- Local seed data. The demo project "Restaurant App" is added in Phase 2
+-- (docs/MVP.md §4), once briefs and research tables exist.
