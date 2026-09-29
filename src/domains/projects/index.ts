@@ -1,3 +1,3 @@
 export * from "./queries";
-export { createProjectSchema } from "./schema";
-export { PLATFORMS } from "./constants";
+export { createProjectSchema, updateProjectSchema } from "./schema";
+export { PLATFORMS, PROJECT_STATUSES } from "./constants";

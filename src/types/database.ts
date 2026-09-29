@@ -28,6 +28,15 @@ type ProjectRow = {
 type EntityTypeRow = {
   type: string; table_name: string; prefix: string; code_sep: string; code_pad: number; domain: string; phase: number;
 };
+type ProjectBriefRow = {
+  id: string; workspace_id: string; project_id: string;
+  product_description: string | null; business: string | null; target_audience: string | null; problem: string | null;
+  goals: Json; kpis: Json; constraints: string | null;
+  timeline_start: string | null; timeline_end: string | null;
+  team: Json; links: Json;
+  existing_product: string | null; business_requirements: string | null; technical_constraints: string | null;
+  created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
+};
 type ProjectCounterRow = { project_id: string; entity_type: string; last_value: number };
 type TraceRelationRow = { relation: string; label_forward: string; label_backward: string };
 type TraceRuleRow = { source_type: string; target_type: string; relation: string };
@@ -60,6 +69,12 @@ export type Database = {
           { foreignKeyName: "projects_workspace_id_fkey"; columns: ["workspace_id"]; isOneToOne: false; referencedRelation: "workspaces"; referencedColumns: ["id"] },
         ];
       };
+      project_briefs: {
+        Row: ProjectBriefRow; Insert: never; Update: Partial<Omit<ProjectBriefRow, "id" | "workspace_id" | "project_id">>;
+        Relationships: [
+          { foreignKeyName: "project_briefs_project_id_fkey"; columns: ["project_id"]; isOneToOne: true; referencedRelation: "projects"; referencedColumns: ["id"] },
+        ];
+      };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -77,6 +92,7 @@ export type Database = {
         Args: { ws: string; min_role?: Database["public"]["Enums"]["workspace_role"] };
         Returns: boolean;
       };
+      create_demo_project: { Args: { p_workspace: string }; Returns: string };
       next_code: { Args: { p_project: string; p_entity: string }; Returns: string };
       trace_graph: {
         Args: { p_type: string; p_id: string; p_direction?: string; p_max_depth?: number };
