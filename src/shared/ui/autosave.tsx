@@ -73,3 +73,44 @@ export function SaveToast({ id, status, error, readOnly }: { id: string; status:
     </p>
   );
 }
+
+/**
+ * A single text field that saves itself (answers, matrix cells, question text).
+ * Keeps typing local; saves after a pause and on blur; reports failures inline.
+ */
+export function useFieldAutosave(initial: string, save: (value: string) => Promise<AutosaveResult>, enabled: boolean) {
+  const [value, setValue] = useState(initial);
+  const [status, setStatus] = useState<AutosaveStatus>("idle");
+  const lastSaved = useRef(initial);
+  const saveRef = useRef(save);
+  saveRef.current = save;
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latest = useRef(initial);
+  const enabledRef = useRef(enabled);
+  enabledRef.current = enabled;
+
+  const flush = async (v: string) => {
+    if (timer.current) clearTimeout(timer.current);
+    if (!enabled || v === lastSaved.current) return;
+    setStatus("saving");
+    const res = await saveRef.current(v).catch((): AutosaveResult => ({ ok: false, error: t.autosave.failed }));
+    if (res.ok) lastSaved.current = v;
+    setStatus(res.ok ? "saved" : "error");
+  };
+
+  const onChange = (v: string) => {
+    latest.current = v;
+    setValue(v);
+    setStatus("dirty");
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => flush(v), AUTOSAVE_MS);
+  };
+
+  // Unmounting mid-pause (e.g. moving to the next question) still sends the last text.
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+    if (enabledRef.current && latest.current !== lastSaved.current) void saveRef.current(latest.current);
+  }, []);
+
+  return { value, onChange, onBlur: () => flush(value), status };
+}

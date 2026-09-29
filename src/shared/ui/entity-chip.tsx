@@ -7,7 +7,7 @@ export function EntityChip({ type, code, title, className }: { type: EntityType;
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center gap-1.5 rounded-[4px] border border-line bg-surface px-1.5 text-caption font-medium tabular-nums",
+        "inline-flex h-6 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[4px] border border-line bg-surface px-1.5 text-caption font-medium tabular-nums",
         className,
       )}
       title={title ? `${def.label}: ${title}` : def.label}

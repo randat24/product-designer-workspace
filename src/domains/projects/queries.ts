@@ -79,16 +79,29 @@ export type ActivityItem = {
   createdAt: string;
 };
 
-/** Latest changes in a project (written by DB triggers). */
+/**
+ * Latest changes in a project (written by DB triggers). Consecutive updates of the
+ * same entity (autosave) collapse into one row with the union of changed fields.
+ */
 export const listRecentActivity = cache(async (projectId: string, limit = 8): Promise<ActivityItem[]> => {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const { data: raw, error } = await supabase
     .from("activity_log")
-    .select("id, entity_type, action, changed_keys, actor_id, created_at")
+    .select("id, entity_type, entity_id, action, changed_keys, actor_id, created_at")
     .eq("project_id", projectId)
     .order("created_at", { ascending: false })
-    .limit(limit);
+    .limit(limit * 10);
   if (error) throw error;
+  const data: typeof raw = [];
+  for (const a of raw) {
+    const prev = data.at(-1);
+    if (prev && a.action === "update" && prev.action === "update" && prev.entity_id === a.entity_id && prev.actor_id === a.actor_id) {
+      prev.changed_keys = [...new Set([...(prev.changed_keys ?? []), ...(a.changed_keys ?? [])])].sort();
+      continue;
+    }
+    if (data.length === limit) break;
+    data.push({ ...a });
+  }
 
   const actorIds = [...new Set(data.map((a) => a.actor_id).filter((id): id is string => !!id))];
   const { data: actors } = actorIds.length
