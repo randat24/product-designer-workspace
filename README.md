@@ -88,14 +88,18 @@ npm run db:types   # сгенерировать src/types/database.ts (заме�
 
 ## Облако (развёрнуто)
 
-Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–008 применены, smoke-тест и security advisor пройдены.
+Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–009 применены, smoke-тест и advisors пройдены. Остаются только осознанные замечания: `is_workspace_member`, `can_access_project_file` и `next_code` вызываются из RLS и триггеров, поэтому роль `authenticated` должна иметь к ним доступ (`next_code` сам проверяет права editor). У `project_counters` нет политик, доступ к нему только через `next_code`. Проверка утёкших паролей не нужна: входа по паролю нет.
 Vercel: https://product-designer-workspace.vercel.app (деплой из `main`).
 URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key из Project Settings → API.
 
 ## Деплой
 
 1. Создайте проект в Supabase → `npx supabase link --project-ref <ref>` → `npx supabase db push`.
-2. Auth → URL Configuration: Site URL = адрес Vercel, Redirect URL = `https://<домен>/auth/callback`. Для Google — включите провайдера в Auth → Providers.
+2. Auth → URL Configuration:
+   - Site URL = `https://product-designer-workspace.vercel.app`.
+   - Redirect URLs: `https://product-designer-workspace.vercel.app/**`, `https://*-randat24s-projects.vercel.app/**` (превью) и `http://localhost:3000/**`.
+   - Если адреса нет в списке, Supabase молча отправит ссылку из письма на Site URL. Если там стоит `localhost`, вход не завершится.
+   - Google (необязательно): включите провайдера в Auth → Providers, затем задайте в Vercel `NEXT_PUBLIC_AUTH_GOOGLE=on`, чтобы показать кнопку.
 3. Vercel: импортируйте репозиторий, задайте `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL`.
 
 ## Структура
