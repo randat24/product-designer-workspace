@@ -7,7 +7,18 @@
 
 ## Статус
 
-**Phase 1 — Foundation: готово, ждёт ревью.**
+**Phase 2 — Projects: готово, ждёт ревью.** Phase 1 — Foundation: в `main`.
+
+| Phase 2 | Проверено |
+|---|---|
+| Project Brief: 7 секций, списки целей/метрик/команды/ссылок, автосохранение, режим только чтения для viewer | e2e в браузере, 16 pgTAP-тестов |
+| `project_briefs` 1:1 с проектом (создаётся триггером), RLS, activity log | pgTAP |
+| Overview: этапы ✓ ● ○, прогресс брифа, next actions v1 (ссылки на пустые поля), недавние изменения | e2e |
+| Настройки проекта: название, описание, платформы, статус; архив и возврат; удаление с подтверждением (только owner) | e2e |
+| ⌘K v1: разделы, проекты пространства, действия | e2e |
+| Демо-проект «Restaurant App» (`create_demo_project`) с заполненным брифом | pgTAP + e2e |
+
+Phase 1 — Foundation:
 
 | Есть | Проверено |
 |---|---|
@@ -42,7 +53,8 @@ npm run db:types   # сгенерировать src/types/database.ts (заме�
 
 ## Облако (развёрнуто)
 
-Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–004 применены, smoke-тест и security advisor пройдены.
+Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–005 применены, smoke-тест и security advisor пройдены.
+Vercel: https://product-designer-workspace.vercel.app (деплой из `main`).
 URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key из Project Settings → API.
 
 ## Деплой
@@ -55,7 +67,7 @@ URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key и�
 
 ```
 docs/                    PRD, ARCHITECTURE, DATABASE, IA, MVP, ROADMAP, DESIGN-SYSTEM, AI, adr/
-supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening
+supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo
 supabase/tests/database/ pgTAP
 src/app/                 маршруты (docs/IA.md)
 src/domains/<name>/      schema.ts (Zod) · queries.ts · actions.ts · компоненты · index.ts (public API)
@@ -92,3 +104,12 @@ select public.attach_domain_table('public.insights', 'insight');
 - Интерфейс на русском; строки вынесены в `src/shared/i18n/ru.ts` для будущих uk/en.
 - В MVP цепочка идёт Opportunity → Flow напрямую; правила для Features уже заведены.
 - AI в MVP нет; таблицы AI появятся в Phase 12.
+
+## Допущения Phase 2
+
+- Длинные поля брифа пока plain text; в `jsonb` (TipTap) переедут вместе с rich text.
+- Платформы хранятся только в `projects.platforms`, в брифе не дублируются.
+- Бриф — не traceable-сущность (нет кода и trace-связей); изменения пишутся в activity log как `project_brief`.
+- Адрес проекта (slug) не меняется при переименовании, чтобы ссылки не ломались.
+- Демо-проект пока содержит только бриф; исследование, синтез, сценарии и экраны добавятся в `create_demo_project` в своих фазах.
+- Next actions v1 — только по брифу; правила для интервью, инсайтов и экранов добавляются с их фазами.

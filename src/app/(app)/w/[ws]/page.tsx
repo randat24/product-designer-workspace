@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getWorkspaceBySlug, listMyWorkspaces, listProjects, getCurrentUser, PLATFORMS } from "@/domains/projects";
+import { createDemoProject } from "@/domains/projects/actions";
+import { Button } from "@/shared/ui/button";
 import { t } from "@/shared/i18n/ru";
 import { NewProjectForm } from "./new-project-form";
 import { WorkspaceSwitcher } from "./workspace-switcher";
@@ -14,8 +16,9 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
   const { ws } = await params;
   const [workspace, workspaces, user] = await Promise.all([getWorkspaceBySlug(ws), listMyWorkspaces(), getCurrentUser()]);
   if (!workspace) notFound();
-  const projects = await listProjects(workspace.id);
-  const platformLabel = (v: string) => PLATFORMS.find((p) => p.value === v)?.label ?? v;
+  const all = await listProjects(workspace.id);
+  const projects = all.filter((p) => !p.archived_at);
+  const archived = all.filter((p) => p.archived_at);
 
   return (
     <div className="min-h-screen">
@@ -33,29 +36,54 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
           {projects.length === 0 ? (
             <p className="max-w-prose rounded-md border border-dashed border-line p-6 text-fg-secondary">{t.workspace.empty}</p>
           ) : (
-            <ul className="divide-y divide-line rounded-md border border-line bg-surface">
-              {projects.map((p) => (
-                <li key={p.id}>
-                  <Link href={`/w/${workspace.slug}/p/${p.slug}`} className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-0.5 px-4 py-3 hover:bg-subtle">
-                    <span className="truncate font-medium">{p.name}</span>
-                    <span className="text-caption text-fg-secondary tabular-nums">
-                      {t.workspace.updated} {dateFmt.format(new Date(p.updated_at))}
-                    </span>
-                    <span className="truncate text-[13px] text-fg-secondary">
-                      {[p.platforms.map(platformLabel).join(", "), p.description].filter(Boolean).join(" — ")}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <ProjectList wsSlug={workspace.slug} projects={projects} />
+          )}
+          {archived.length > 0 && (
+            <details className="mt-6">
+              <summary className="cursor-pointer text-[13px] font-medium text-fg-secondary hover:text-fg">
+                {t.workspace.archived(archived.length)}
+              </summary>
+              <div className="mt-2"><ProjectList wsSlug={workspace.slug} projects={archived} /></div>
+            </details>
           )}
         </section>
 
         <section aria-labelledby="new-h" className="h-fit rounded-md border border-line bg-surface p-4">
           <h2 id="new-h" className="mb-3 text-heading font-semibold">{t.workspace.newProject}</h2>
           <NewProjectForm workspaceId={workspace.id} />
+          <div className="mt-5 flex flex-col gap-2 border-t border-line pt-4">
+            <h2 className="text-sm font-semibold">{t.workspace.demoTitle}</h2>
+            <p className="text-[13px] text-fg-secondary">{t.workspace.demoBody}</p>
+            <form action={createDemoProject}>
+              <input type="hidden" name="workspaceId" value={workspace.id} />
+              <Button type="submit" variant="secondary">{t.workspace.demoCreate}</Button>
+            </form>
+          </div>
         </section>
       </main>
     </div>
+  );
+}
+
+type ProjectListItem = Awaited<ReturnType<typeof listProjects>>[number];
+
+function ProjectList({ wsSlug, projects }: { wsSlug: string; projects: ProjectListItem[] }) {
+  const platformLabel = (v: string) => PLATFORMS.find((p) => p.value === v)?.label ?? v;
+  return (
+    <ul className="divide-y divide-line rounded-md border border-line bg-surface">
+      {projects.map((p) => (
+        <li key={p.id}>
+          <Link href={`/w/${wsSlug}/p/${p.slug}`} className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-0.5 px-4 py-3 hover:bg-subtle">
+            <span className="truncate font-medium">{p.name}</span>
+            <span className="text-caption text-fg-secondary tabular-nums">
+              {p.archived_at ? t.workspace.archivedBadge : `${t.workspace.updated} ${dateFmt.format(new Date(p.updated_at))}`}
+            </span>
+            <span className="col-span-2 truncate text-[13px] text-fg-secondary">
+              {[p.platforms.map(platformLabel).join(", "), p.description].filter(Boolean).join(" — ")}
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }
