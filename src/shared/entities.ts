@@ -22,7 +22,7 @@ export const ENTITIES = {
   interview:         { type: "interview",         prefix: "INT",  label: "Интервью",         labelPlural: "Интервью",          group: "research",    segment: "research/interviews",   phase: 4 },
   answer:            { type: "answer",            prefix: "ANS",  label: "Ответ",            labelPlural: "Ответы",            group: "research",    segment: "research/matrix",       phase: 4 },
   quote:             { type: "quote",             prefix: "Q",    label: "Цитата",           labelPlural: "Цитаты",            group: "research",    segment: "synthesis/quotes",      phase: 5 },
-  observation:       { type: "observation",       prefix: "OBS",  label: "Наблюдение",       labelPlural: "Наблюдения",        group: "research",    segment: "synthesis",             phase: 5 },
+  observation:       { type: "observation",       prefix: "OBS",  label: "Наблюдение",       labelPlural: "Наблюдения",        group: "research",    segment: "synthesis/observations", phase: 5 },
   pattern:           { type: "pattern",           prefix: "PAT",  label: "Паттерн",          labelPlural: "Паттерны",          group: "synthesis",   segment: "synthesis",             phase: 5 },
   insight:           { type: "insight",           prefix: "INS",  label: "Инсайт",           labelPlural: "Инсайты",           group: "synthesis",   segment: "insights",              phase: 5 },
   pain_point:        { type: "pain_point",        prefix: "PP",   label: "Боль",             labelPlural: "Боли",              group: "problem",     segment: "pain-points",           phase: 5 },

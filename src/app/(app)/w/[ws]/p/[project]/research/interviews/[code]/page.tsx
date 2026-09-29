@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { getInterviewByCode, participantTitle } from "@/domains/research";
 import { InterviewEditor } from "@/domains/research/interview-editor";
+import { listInterviewSynthesis } from "@/domains/synthesis";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { t } from "@/shared/i18n/ru";
@@ -20,6 +21,7 @@ export default async function InterviewPage({ params }: { params: Promise<Params
   const iv = await getInterviewByCode(ctx.project.id, decodeURIComponent(code));
   if (!iv || !iv.participants) notFound();
   const p = iv.participants;
+  const synthesis = await listInterviewSynthesis(iv.id);
 
   return (
     <div className="max-w-4xl">
@@ -33,7 +35,8 @@ export default async function InterviewPage({ params }: { params: Promise<Params
       </div>
       <PageHeader title={`${p.code} · ${participantTitle(p)}`}
         eyebrow={<span className="flex items-center gap-2"><EntityChip type="interview" code={iv.code} />{iv.guide?.title}</span>} />
-      <InterviewEditor key={iv.id} interviewId={iv.id} canEdit={ctx.canEdit}
+      <p className="-mt-4 mb-6 text-[13px] text-fg-secondary">{t.synthesis.quotes.selectHint} · ⌥Q / ⌥O</p>
+      <InterviewEditor key={iv.id} interviewId={iv.id} canEdit={ctx.canEdit} projectId={ctx.project.id} base={ctx.base} synthesis={synthesis}
         meta={{ conducted_at: iv.conducted_at, duration_min: iv.duration_min, mode: iv.mode, status: iv.status, notes: iv.notes }}
         questions={iv.guide?.questions ?? null} answers={iv.answers} />
     </div>

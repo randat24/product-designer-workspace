@@ -12,10 +12,21 @@ import { deleteAnswer, deleteInterview, saveInterviewMeta } from "./actions";
 import { AnswerField } from "./answer-field";
 import { GUIDE_SECTIONS, INTERVIEW_MODES, INTERVIEW_STATUSES, type InterviewMeta } from "./schema";
 import type { GuideQuestion, InterviewAnswer } from "./queries";
+import Link from "next/link";
+import { EntityChip } from "@/shared/ui/entity-chip";
+import { SelectionActions } from "@/domains/synthesis/client";
 
 const iv = t.research.interview;
 
-export function InterviewEditor({ interviewId, meta, questions, answers, canEdit }: {
+type InterviewSynthesis = {
+  quotes: { id: string; code: string; text: string; answer_id: string | null }[];
+  observations: { id: string; code: string; kind: string; body_text: string }[];
+};
+
+export function InterviewEditor({ projectId, base, interviewId, meta, questions, answers, synthesis, canEdit }: {
+  projectId: string;
+  base: string;
+  synthesis: InterviewSynthesis;
   interviewId: string;
   meta: InterviewMeta;
   questions: GuideQuestion[] | null;
@@ -31,6 +42,12 @@ export function InterviewEditor({ interviewId, meta, questions, answers, canEdit
   const byQuestion = new Map(answers.filter((a) => a.question_id).map((a) => [a.question_id!, a]));
   const questionIds = new Set((questions ?? []).map((q) => q.id));
   const notes = answers.filter((a) => !a.question_id || !questionIds.has(a.question_id));
+  const selectionActions = canEdit
+    ? (sel: Parameters<typeof SelectionActions>[0]["selection"]) => (
+        <SelectionActions selection={sel} projectId={projectId} interviewId={interviewId} base={base} />
+      )
+    : undefined;
+  const quotesOf = (answerId: string | undefined) => synthesis.quotes.filter((q) => answerId && q.answer_id === answerId);
 
   return (
     <div className="flex flex-col gap-8">
@@ -78,7 +95,8 @@ export function InterviewEditor({ interviewId, meta, questions, answers, canEdit
                           <p className="text-[13px] text-fg-secondary">{iv.probes}: {q.probes.join(" · ")}</p>
                         )}
                         <AnswerField interviewId={interviewId} questionId={q.id} answerId={a?.id ?? null} initial={a?.body_text ?? ""}
-                          readOnly={!canEdit} label={`${iv.answers}: ${q.text}`} className="text-[15px]" />
+                          readOnly={!canEdit} label={`${iv.answers}: ${q.text}`} className="text-[15px]" selectionActions={selectionActions} />
+                        <QuoteChips base={base} quotes={quotesOf(a?.id)} />
                       </li>
                     );
                   })}
@@ -96,7 +114,8 @@ export function InterviewEditor({ interviewId, meta, questions, answers, canEdit
             <li key={n.id} className="flex items-start gap-1">
               <div className="flex-1">
                 <AnswerField interviewId={interviewId} questionId={null} answerId={n.id} initial={n.body_text} readOnly={!canEdit}
-                  label={`${iv.freeNotes} ${i + 1}`} placeholder={iv.notePlaceholder} />
+                  label={`${iv.freeNotes} ${i + 1}`} placeholder={iv.notePlaceholder} selectionActions={selectionActions} />
+                <QuoteChips base={base} quotes={quotesOf(n.id)} />
               </div>
               {canEdit && (
                 <button type="button" aria-label={`${iv.removeNote} ${i + 1}`}
@@ -123,6 +142,28 @@ export function InterviewEditor({ interviewId, meta, questions, answers, canEdit
         </div>
       </section>
 
+      {(synthesis.quotes.length > 0 || synthesis.observations.length > 0) && (
+        <section aria-labelledby="int-synth-h" className="flex flex-col gap-3">
+          <h2 id="int-synth-h" className="text-heading font-semibold">{t.synthesis.quotes.inInterview}</h2>
+          <ul className="flex flex-col gap-1.5 rounded-[14px] border border-line bg-surface p-4">
+            {synthesis.quotes.map((q) => (
+              <li key={q.id}>
+                <Link href={`${base}/synthesis/quotes/${q.code}`} className="flex items-start gap-2 rounded-md px-1 py-0.5 hover:bg-subtle">
+                  <EntityChip type="quote" code={q.code} /><span className="text-[13.5px]">«{q.text}»</span>
+                </Link>
+              </li>
+            ))}
+            {synthesis.observations.map((o) => (
+              <li key={o.id}>
+                <Link href={`${base}/synthesis/observations/${o.code}`} className="flex items-start gap-2 rounded-md px-1 py-0.5 hover:bg-subtle">
+                  <EntityChip type="observation" code={o.code} /><span className="text-[13.5px]">{o.body_text}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {canEdit && (
         <form action={deleteInterview} onSubmit={(e) => { if (!armed) { e.preventDefault(); setArmed(true); } }}>
           <input type="hidden" name="id" value={interviewId} />
@@ -134,5 +175,18 @@ export function InterviewEditor({ interviewId, meta, questions, answers, canEdit
         </form>
       )}
     </div>
+  );
+}
+
+function QuoteChips({ base, quotes }: { base: string; quotes: InterviewSynthesis["quotes"] }) {
+  if (!quotes.length) return null;
+  return (
+    <ul className="flex flex-wrap gap-1.5">
+      {quotes.map((q) => (
+        <li key={q.id}>
+          <Link href={`${base}/synthesis/quotes/${q.code}`} title={q.text}><EntityChip type="quote" code={q.code} title={q.text} /></Link>
+        </li>
+      ))}
+    </ul>
   );
 }

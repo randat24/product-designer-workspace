@@ -4,6 +4,7 @@ import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PR
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
 import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/domains/competitors";
 import { getResearchStats, listInterviews, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
+import { getSynthesisOverview } from "@/domains/synthesis";
 import { createClient } from "@/shared/lib/supabase/server";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
@@ -41,6 +42,8 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
     getResearchStats(project.id), listInterviews(project.id),
   ]);
   const researchTarget = research.target ?? RESEARCH_TARGET_DEFAULT;
+  const synth = await getSynthesisOverview(project.id);
+  const cards = synth.quotes + synth.observations;
   const emptyInterviews = await countDoneWithoutAnswers(interviews.filter((i) => i.status === "done").map((i) => i.id));
   const assessed = competitors.filter(isAssessed).length;
   const hasOwn = competitors.some((c) => c.is_own_product);
@@ -67,6 +70,21 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
       const state: StageState = research.conducted >= researchTarget ? "done" : research.plans + research.guides + research.participants > 0 ? "active" : "todo";
       return [{ segment, label: item.label, phase: item.phase, state, percent, detail: t.research.progress(research.conducted, researchTarget) }];
     }
+    if (segment === "synthesis") {
+      const detail = `${synth.quotes} ${t.synthesis.stats.quotes} · ${synth.observations} ${t.synthesis.stats.observations} · ${synth.patterns} ${t.synthesis.stats.patterns}`;
+      const state: StageState = synth.patterns > 0 && synth.interviewsWithoutSynthesis.length === 0 ? "done" : cards > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, detail }];
+    }
+    if (segment === "insights") {
+      const supported = synth.insights - synth.unsupported.length;
+      const state: StageState = synth.insights > 0 && synth.unsupported.length === 0 ? "done" : synth.insights > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, percent: synth.insights ? (supported / synth.insights) * 100 : 0,
+        detail: `${supported} / ${synth.insights} с источниками` }];
+    }
+    if (segment === "opportunities") {
+      const state: StageState = synth.opportunities > 0 ? "done" : synth.painPoints > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, detail: `${synth.painPoints} болей · ${synth.opportunities} возможностей` }];
+    }
     return [{ segment, label: item.label, phase: item.phase, state: item.phase > CURRENT_PHASE ? "soon" : "todo" }];
   });
 
@@ -91,6 +109,17 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
     nextActions.push({ key: "interviews", label: t.nextAction.interviews(research.conducted, researchTarget), href: `${base}/research/participants` });
   }
   if (emptyInterviews > 0) nextActions.push({ key: "empty", label: t.nextAction.emptyInterviews(emptyInterviews), href: `${base}/research` });
+  if (synth.interviewsWithoutSynthesis.length > 0) {
+    const [first] = synth.interviewsWithoutSynthesis;
+    nextActions.push({ key: "nosynth", label: t.nextAction.noSynthesis(synth.interviewsWithoutSynthesis.slice(0, 3).join(", ")), href: `${base}/research/interviews/${first}` });
+  }
+  if (cards > 0 && synth.patterns === 0) nextActions.push({ key: "board", label: t.nextAction.board, href: `${base}/synthesis` });
+  if (synth.patterns > 0 && synth.insights === 0) nextActions.push({ key: "insight", label: t.nextAction.insight, href: `${base}/synthesis` });
+  for (const code of synth.unsupported.slice(0, 3)) {
+    nextActions.push({ key: `uns-${code}`, label: t.nextAction.unsupported(code), href: `${base}/insights/${code}` });
+  }
+  if (synth.insights > 0 && synth.painPoints === 0) nextActions.push({ key: "pp", label: t.nextAction.painPoint, href: `${base}/insights` });
+  if (synth.painPoints > 0 && synth.opportunities === 0) nextActions.push({ key: "opp", label: t.nextAction.opportunity, href: `${base}/pain-points` });
 
   // Average over stages that have shipped; later phases join as they land.
   const shipped = stages.filter((s) => s.state !== "soon");

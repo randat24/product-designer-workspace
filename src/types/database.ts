@@ -79,6 +79,27 @@ type InterviewRow = Base & {
   status: Database["public"]["Enums"]["interview_status"]; notes: string | null;
 };
 type InterviewAnswerRow = Base & { code: string; interview_id: string; question_id: string | null; body_text: string; position: number };
+type E = Database["public"]["Enums"];
+type PatternRow = Base & { code: string; title: string; description: string | null; color: string | null; position: number };
+type QuoteRow = Base & {
+  code: string; interview_id: string; answer_id: string | null; participant_id: string | null; text: string;
+  start_offset: number | null; end_offset: number | null; pattern_id: string | null; position: number;
+};
+type ObservationRow = Base & {
+  code: string; interview_id: string | null; participant_id: string | null; kind: E["observation_kind"]; body_text: string;
+  pattern_id: string | null; position: number;
+};
+type InsightRow = Base & {
+  code: string; title: string; statement: string | null; confidence: E["confidence_level"]; status: E["insight_status"];
+  origin: E["trace_origin"]; archived_at: string | null;
+};
+type PainPointRow = Base & {
+  code: string; title: string; description: string | null; severity: E["severity_level"]; segment_label: string | null; archived_at: string | null;
+};
+type OpportunityRow = Base & {
+  code: string; title: string; description: string | null; hmw: string | null; impact: E["confidence_level"];
+  effort: E["confidence_level"]; status: E["opportunity_status"]; archived_at: string | null;
+};
 type Ins<T, R extends keyof T> = Partial<Omit<T, "id" | "workspace_id" | "code">> & Pick<T, R>;
 type Upd<T> = Partial<Omit<T, "id" | "workspace_id" | "project_id" | "code">>;
 type ProjectCounterRow = { project_id: string; entity_type: string; last_value: number };
@@ -154,6 +175,18 @@ export type Database = {
         Row: InterviewAnswerRow; Insert: Ins<InterviewAnswerRow, "project_id" | "interview_id">; Update: Upd<InterviewAnswerRow>;
         Relationships: [];
       };
+      patterns: { Row: PatternRow; Insert: Ins<PatternRow, "project_id" | "title">; Update: Upd<PatternRow>; Relationships: [] };
+      quotes: {
+        Row: QuoteRow; Insert: Ins<QuoteRow, "project_id" | "interview_id" | "text">; Update: Upd<QuoteRow>;
+        Relationships: [{ foreignKeyName: "quotes_participant_id_fkey"; columns: ["participant_id"]; isOneToOne: false; referencedRelation: "participants"; referencedColumns: ["id"] }, { foreignKeyName: "quotes_interview_id_fkey"; columns: ["interview_id"]; isOneToOne: false; referencedRelation: "interviews"; referencedColumns: ["id"] }];
+      };
+      observations: {
+        Row: ObservationRow; Insert: Ins<ObservationRow, "project_id" | "body_text">; Update: Upd<ObservationRow>;
+        Relationships: [{ foreignKeyName: "observations_participant_id_fkey"; columns: ["participant_id"]; isOneToOne: false; referencedRelation: "participants"; referencedColumns: ["id"] }, { foreignKeyName: "observations_interview_id_fkey"; columns: ["interview_id"]; isOneToOne: false; referencedRelation: "interviews"; referencedColumns: ["id"] }];
+      };
+      insights: { Row: InsightRow; Insert: Ins<InsightRow, "project_id" | "title">; Update: Upd<InsightRow>; Relationships: [] };
+      pain_points: { Row: PainPointRow; Insert: Ins<PainPointRow, "project_id" | "title">; Update: Upd<PainPointRow>; Relationships: [] };
+      opportunities: { Row: OpportunityRow; Insert: Ins<OpportunityRow, "project_id" | "title">; Update: Upd<OpportunityRow>; Relationships: [] };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -172,6 +205,11 @@ export type Database = {
         Returns: boolean;
       };
       create_demo_project: { Args: { p_workspace: string }; Returns: string };
+      synthesis_stats: {
+        Args: { p_project: string };
+        Returns: { entity_type: string; entity_id: string; source_count: number; participant_count: number }[];
+      };
+      upstream_participants: { Args: { p_type: string; p_id: string }; Returns: { participant_id: string }[] };
       next_code: { Args: { p_project: string; p_entity: string }; Returns: string };
       trace_graph: {
         Args: { p_type: string; p_id: string; p_direction?: string; p_max_depth?: number };
@@ -193,6 +231,11 @@ export type Database = {
       guide_section: "intro" | "context" | "current_behavior" | "problems" | "motivation" | "experience" | "expectations" | "closing";
       interview_mode: "in_person" | "remote" | "phone";
       interview_status: "planned" | "in_progress" | "done" | "synthesized";
+      observation_kind: "pain" | "need" | "behavior" | "emotion" | "fact" | "workaround";
+      confidence_level: "low" | "medium" | "high";
+      insight_status: "draft" | "validated" | "rejected";
+      severity_level: "critical" | "high" | "medium" | "low";
+      opportunity_status: "open" | "in_design" | "addressed" | "dropped";
     };
     CompositeTypes: { [_ in never]: never };
   };

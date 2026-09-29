@@ -80,6 +80,13 @@
   --color-rail: var(--rail);
   --color-rail-fg: var(--rail-fg);
   --color-on-sticky: var(--on-sticky);
+  --color-entity-research: var(--entity-research);
+  --color-entity-synthesis: var(--entity-synthesis);
+  --color-entity-problem: var(--entity-problem);
+  --color-entity-opportunity: var(--entity-opportunity);
+  --color-entity-structure: var(--entity-structure);
+  --color-entity-design: var(--entity-design);
+  --color-entity-decision: var(--entity-decision);
 
   --font-sans: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Oswald Variable", "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
