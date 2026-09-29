@@ -6,6 +6,9 @@ import { Field, Input } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
 import { sendMagicLink, signInWithGoogle, type LoginState } from "./actions";
 
+// Show the Google button only once the provider is enabled in Supabase → Authentication → Providers.
+const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "on";
+
 export function LoginForm({ next, initialError }: { next: string; initialError?: string }) {
   const [state, action, pending] = useActionState<LoginState, FormData>(sendMagicLink, initialError ? { error: initialError } : undefined);
 
@@ -24,13 +27,17 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
         </Field>
         <Button type="submit" disabled={pending}>{t.auth.sendLink}</Button>
       </form>
-      <div className="flex items-center gap-3 text-caption text-fg-secondary">
-        <span className="h-px flex-1 bg-line" />{t.auth.or}<span className="h-px flex-1 bg-line" />
-      </div>
-      <form action={signInWithGoogle}>
-        <input type="hidden" name="next" value={next} />
-        <Button type="submit" variant="secondary" className="w-full">{t.auth.google}</Button>
-      </form>
+      {GOOGLE_ENABLED && (
+        <>
+          <div className="flex items-center gap-3 text-caption text-fg-secondary">
+            <span className="h-px flex-1 bg-line" />{t.auth.or}<span className="h-px flex-1 bg-line" />
+          </div>
+          <form action={signInWithGoogle}>
+            <input type="hidden" name="next" value={next} />
+            <Button type="submit" variant="secondary" className="w-full">{t.auth.google}</Button>
+          </form>
+        </>
+      )}
     </div>
   );
 }
