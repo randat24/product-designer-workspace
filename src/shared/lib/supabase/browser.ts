@@ -2,9 +2,9 @@
 
 import { createBrowserClient } from "@supabase/ssr";
 import type { Database } from "@/types/database";
+import { env } from "@/shared/lib/env";
 
 /** Client Components. Uses the session cookie; RLS applies. Used for direct uploads to Storage. */
 export function createBrowserSupabase() {
-  // NEXT_PUBLIC_* are inlined at build time.
-  return createBrowserClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+  return createBrowserClient<Database>(env.supabaseUrl, env.supabaseAnonKey);
 }
