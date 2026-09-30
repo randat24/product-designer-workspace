@@ -7,6 +7,7 @@ import { t } from "@/shared/i18n/ru";
 import { deleteScreenshot, registerScreenshot } from "./actions";
 import { ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME } from "./schema";
 import type { Screenshot } from "./queries";
+import { Button } from "@/shared/ui/button";
 
 const EXT: Record<string, string> = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
 
@@ -66,10 +67,9 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
           <>
             <input ref={input} type="file" accept={ATTACHMENT_MIME.join(",")} multiple hidden
               onChange={(e) => { upload([...(e.target.files ?? [])]); e.target.value = ""; }} />
-            <button type="button" disabled={busy} onClick={() => input.current?.click()}
-              className="rounded-control border-[1.5px] border-fg px-3.5 py-1.5 text-sm font-semibold hover:bg-subtle disabled:opacity-50">
+            <Button variant="secondary" disabled={busy} onClick={() => input.current?.click()}>
               {busy ? t.competitors.uploading : t.competitors.upload}
-            </button>
+            </Button>
           </>
         )}
       </div>

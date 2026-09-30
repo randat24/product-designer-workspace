@@ -1,5 +1,5 @@
 import type React from "react";
-import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/shared/lib/cn";
 
 const control =
@@ -11,6 +11,21 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(function Textarea({ className, ...p }, ref) {
   return <textarea ref={ref} className={cn(control, "min-h-16 py-2 leading-normal", className)} {...p} />;
+});
+
+/**
+ * A select styled as a field (same fill, border, focus as Input). size="sm" for selects inside cards and rows
+ * (moving a card to a column, a step's type): 32 px, meta text. Always give it a label or aria-label.
+ */
+export const Select = forwardRef<HTMLSelectElement, Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> & { size?: "md" | "sm" }>(
+  function Select({ className, size = "md", ...p }, ref) {
+    return <select ref={ref} className={cn(control, "min-w-0 cursor-pointer disabled:cursor-default disabled:opacity-60", size === "md" ? "h-9" : "h-8 px-1.5 text-meta", className)} {...p} />;
+  },
+);
+
+/** A checkbox in the ink colour, 16 px; wrap it with its text in a <label>. */
+export const Checkbox = forwardRef<HTMLInputElement, Omit<InputHTMLAttributes<HTMLInputElement>, "type">>(function Checkbox({ className, ...p }, ref) {
+  return <input ref={ref} type="checkbox" className={cn("size-4 shrink-0 cursor-pointer accent-fg disabled:cursor-default", className)} {...p} />;
 });
 
 export function Field({ label, htmlFor, error, children }: { label: string; htmlFor: string; error?: string; children: ReactNode }) {

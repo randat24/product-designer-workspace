@@ -7,6 +7,7 @@ import { FieldError, Input } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
 import { savePlan } from "./actions";
 import { RESEARCH_METHODS, RESEARCH_STATUSES, type PlanFields } from "./schema";
+import { Button, IconButton } from "@/shared/ui/button";
 
 const f = t.research.plan.fields;
 
@@ -41,18 +42,16 @@ export function PlanEditor({ id, initial, canEdit }: { id: string; initial: Plan
                 <Input aria-label={`${f.questions} ${i + 1}`} value={q} readOnly={!canEdit} maxLength={500} placeholder={f.questionPlaceholder}
                   onChange={(e) => update({ questions: p.questions.map((x, j) => (j === i ? e.target.value : x)) })} />
                 {canEdit && (
-                  <button type="button" aria-label={`${t.brief.fields.remove}: ${f.questions} ${i + 1}`}
-                    onClick={() => update({ questions: p.questions.filter((_, j) => j !== i) })}
-                    className="grid size-9 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-fg"><span aria-hidden>×</span></button>
+                  <IconButton tone="danger" label={`${t.brief.fields.remove}: ${f.questions} ${i + 1}`}
+                    onClick={() => update({ questions: p.questions.filter((_, j) => j !== i) })}>×</IconButton>
                 )}
               </li>
             ))}
           </ol>
           {canEdit && (
-            <button type="button" onClick={() => update({ questions: [...p.questions, ""] })}
-              className="self-start rounded-control border-[1.5px] border-fg px-3 py-1.5 text-meta font-semibold hover:bg-subtle">
+            <Button variant="secondary" size="sm" className="self-start" onClick={() => update({ questions: [...p.questions, ""] })}>
               + {f.addQuestion}
-            </button>
+            </Button>
           )}
         </fieldset>
         {text("hypotheses_text", f.hypotheses_text, f.hypothesesHint)}

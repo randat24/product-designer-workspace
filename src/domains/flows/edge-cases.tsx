@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/shared/ui/field";
-import { Button } from "@/shared/ui/button";
+import { Input, Select } from "@/shared/ui/field";
+import { Button, IconButton } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { addEdgeCase, deleteEdgeCase, saveEdgeCase } from "./actions";
@@ -79,27 +79,21 @@ export function EdgeCasesPanel({ flowId, initial, nodes, canEdit, onFocusNode }:
                 ) : <span />}
                 <div className="flex items-center gap-1.5">
                   <label htmlFor={`node-${c.id}`} className="sr-only">{`${ec.node}: ${title}`}</label>
-                  <select id={`node-${c.id}`} value={c.nodeId ?? ""} disabled={!canEdit}
+                  <Select id={`node-${c.id}`} value={c.nodeId ?? ""} disabled={!canEdit}
                     onChange={(e) => patch(c.id, { nodeId: e.target.value || null })}
-                    className="h-9 min-w-0 flex-1 rounded-control border border-line bg-surface px-2 text-meta disabled:opacity-70">
+                    className="flex-1">
                     <option value="">{ec.nodeNone}</option>
                     {nodes.map((n) => <option key={n.id} value={n.id}>{n.label}</option>)}
-                  </select>
+                  </Select>
                   {node && (
-                    <button type="button" onClick={() => onFocusNode(node.id)} aria-label={`${ec.node}: ${node.label}`}
-                      className="grid size-9 shrink-0 place-items-center rounded-control border border-line text-fg-secondary hover:border-fg hover:text-fg">
-                      <span aria-hidden>◎</span>
-                    </button>
+                    <IconButton onClick={() => onFocusNode(node.id)} label={`${ec.node}: ${node.label}`} className="border border-line hover:border-fg">◎</IconButton>
                   )}
                   {canEdit && c.kind === "custom" && (
-                    <button type="button" aria-label={`${ec.remove}: ${title}`}
+                    <IconButton tone="danger" label={`${ec.remove}: ${title}`}
                       onClick={async () => {
                         const res = await deleteEdgeCase(c.id);
                         if (res.ok) setCases((cs) => cs.filter((x) => x.id !== c.id)); else setError(res.error);
-                      }}
-                      className="grid size-9 shrink-0 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger">
-                      <span aria-hidden>×</span>
-                    </button>
+                      }}>×</IconButton>
                   )}
                 </div>
               </div>

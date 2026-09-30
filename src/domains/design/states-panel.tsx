@@ -7,6 +7,7 @@ import { t } from "@/shared/i18n/ru";
 import { addState, deleteState, saveState } from "./actions";
 import { KEY_STATES, STATE_KINDS, STATE_STATUSES, type StateKind, type StateStatus } from "./schema";
 import type { ScreenState } from "./queries";
+import { IconButton } from "@/shared/ui/button";
 
 const st = t.screens.states;
 const STANDARD = ["default", "loading", "empty", "error", "success"];
@@ -64,12 +65,11 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                     ))}
                   </div>
                   {canEdit && !STANDARD.includes(s.kind) && (
-                    <button type="button" aria-label={`${st.remove}: ${label}`}
+                    <IconButton tone="danger" size="sm" label={`${st.remove}: ${label}`}
                       onClick={async () => {
                         const res = await deleteState(s.id);
                         if (res.ok) setStates((ss) => ss.filter((x) => x.id !== s.id)); else setError(res.error);
-                      }}
-                      className="grid size-8 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                      }}>×</IconButton>
                   )}
                 </div>
               </div>

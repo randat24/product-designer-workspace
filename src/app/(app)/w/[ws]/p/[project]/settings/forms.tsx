@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { deleteProject, updateProject, type DeleteProjectState, type UpdateProjectState } from "@/domains/projects/actions";
 import { PLATFORMS, PROJECT_STATUSES } from "@/domains/projects/constants";
 import { Button } from "@/shared/ui/button";
-import { Field, Input, Textarea } from "@/shared/ui/field";
+import { Field, Input, Textarea, Select, Checkbox } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
 
 type Project = { id: string; name: string; description: string | null; platforms: string[]; status: string };
@@ -29,18 +29,17 @@ export function GeneralForm({ project, readOnly }: { project: Project; readOnly:
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {PLATFORMS.map((p) => (
               <label key={p.value} className="flex items-center gap-1.5">
-                <input type="checkbox" name="platforms" value={p.value} defaultChecked={project.platforms.includes(p.value)}
-                  className="size-4 accent-[var(--accent)]" />
+                <Checkbox name="platforms" value={p.value} defaultChecked={project.platforms.includes(p.value)} />
                 {p.label}
               </label>
             ))}
           </div>
         </fieldset>
         <Field label={t.settings.status} htmlFor="status">
-          <select id="status" name="status" defaultValue={project.status === "archived" ? "active" : project.status}
-            className="h-9 w-48 rounded-control border border-transparent bg-subtle px-2.5 text-body font-medium hover:border-line focus:border-fg focus:outline-none">
+          <Select id="status" name="status" defaultValue={project.status === "archived" ? "active" : project.status}
+            className="w-48">
             {PROJECT_STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
+          </Select>
         </Field>
       </fieldset>
       {!readOnly && (

@@ -21,6 +21,11 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
   const pathname = usePathname();
   const base = `/w/${wsSlug}/p/${projectSlug}`;
 
+  const nav = visibleNav();
+  // One highlighted item: the longest section path the URL starts with (Research vs. Research › Participants).
+  const activeHref = nav.flatMap((g) => g.items.map((i) => (i.segment ? `${base}/${i.segment}` : base)))
+    .filter((h) => pathname === h || (h !== base && pathname.startsWith(h + "/")))
+    .sort((a, b) => b.length - a.length)[0];
   return (
     <nav aria-label="Разделы проекта"
       className="z-20 bg-rail text-rail-fg md:sticky md:top-0 md:h-screen md:overflow-y-auto">
@@ -43,13 +48,13 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
       </div>
 
       <div className="flex gap-4 overflow-x-auto px-3 pb-3 [scrollbar-width:none] md:flex-col md:gap-5 md:overflow-visible md:pb-8">
-        {visibleNav().map((group) => (
+        {nav.map((group) => (
           <div key={group.title} className="min-w-max md:min-w-0">
             <p className="px-2.5 pb-1 text-caption font-semibold tracking-wide uppercase opacity-60">{group.title}</p>
             <ul className="flex gap-1 md:flex-col">
               {group.items.map((item) => {
                 const href = item.segment ? `${base}/${item.segment}` : base;
-                const active = item.segment ? pathname === href || pathname.startsWith(href + "/") : pathname === base;
+                const active = href === activeHref;
                 const pending = item.phase > CURRENT_PHASE;
                 const value = progress[item.segment];
                 return (

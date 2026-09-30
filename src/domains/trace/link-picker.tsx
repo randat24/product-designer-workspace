@@ -10,6 +10,7 @@ import { t } from "@/shared/i18n/ru";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { linkEntities, unlinkEntities } from "./actions";
 import type { LinkRule, ResolvedEntity } from "./queries";
+import { Button } from "@/shared/ui/button";
 
 /**
  * "Связать…": pick any entity of an allowed type; the direction and relation come
@@ -52,10 +53,9 @@ export function LinkPicker({ projectId, entity, candidates, upRules, downRules }
 
   if (!open) {
     return (
-      <button type="button" onClick={() => setOpen(true)}
-        className="self-start rounded-control border-[1.5px] border-fg px-3 py-1.5 text-meta font-semibold hover:bg-subtle">
+      <Button variant="secondary" size="sm" className="self-start" onClick={() => setOpen(true)}>
         + {t.trace.link}
-      </button>
+      </Button>
     );
   }
   return (
@@ -75,9 +75,7 @@ export function LinkPicker({ projectId, entity, candidates, upRules, downRules }
         ))}
       </ul>
       {error && <p role="alert" className="text-meta text-danger">{t.trace.linkFailed}</p>}
-      <button type="button" onClick={() => setOpen(false)} className="self-start text-meta font-semibold text-fg-secondary hover:text-fg">
-        {t.trace.close}
-      </button>
+      <Button variant="ghost" size="sm" className="self-start" onClick={() => setOpen(false)}>{t.trace.close}</Button>
     </div>
   );
 }

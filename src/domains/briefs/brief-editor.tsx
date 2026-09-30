@@ -9,6 +9,7 @@ import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { saveBrief } from "./actions";
 import type { Brief } from "./schema";
+import { Button, IconButton } from "@/shared/ui/button";
 
 const f = t.brief.fields;
 type TextKey = {
@@ -144,23 +145,20 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
       )}
       <ul className="flex flex-col gap-1.5">
         {rows.map((row, i) => (
-          <li key={i} className="flex items-start gap-1">
+          // Multi-column rows (metrics, team, links) stack on a phone: a hairline box keeps each row together.
+          <li key={i} className={cn("flex items-start gap-1", columns && "rounded-control border border-line p-1.5 sm:border-0 sm:p-0")}>
             <div className={cn("grid flex-1 gap-2", gridClass)}>{render(row, set(i), i)}</div>
             {!readOnly && (
-              <button type="button" onClick={() => onChange(rows.filter((_, j) => j !== i))}
-                aria-label={`${t.brief.fields.remove}: ${label} ${i + 1}`}
-                className="grid size-9 shrink-0 place-items-center rounded-control text-base text-fg-secondary hover:bg-subtle hover:text-fg">
-                <span aria-hidden>×</span>
-              </button>
+              <IconButton tone="danger" onClick={() => onChange(rows.filter((_, j) => j !== i))}
+                label={`${t.brief.fields.remove}: ${label} ${i + 1}`}>×</IconButton>
             )}
           </li>
         ))}
       </ul>
       {!readOnly && (
-        <button type="button" onClick={() => onChange([...rows, empty])}
-          className="self-start rounded-control border-[1.5px] border-fg px-3 py-1.5 text-meta font-semibold hover:bg-subtle">
+        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...rows, empty])}>
           + {addLabel}
-        </button>
+        </Button>
       )}
     </fieldset>
   );

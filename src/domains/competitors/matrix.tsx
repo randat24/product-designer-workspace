@@ -273,8 +273,8 @@ function NoteEditor({ initial, label, placeholder, onSave, onCancel }: {
         }}
         className="w-full resize-none rounded-chip border border-line bg-surface px-1.5 py-1 text-caption leading-snug focus:border-fg focus:outline-none" />
       <div className="flex gap-1">
-        <button type="button" onClick={() => onSave(text)} className="rounded-chip bg-fg px-2 py-0.5 text-caption font-semibold text-canvas">{m.saveNote}</button>
-        <button type="button" onClick={onCancel} className="rounded-chip px-2 py-0.5 text-caption font-semibold text-fg-secondary hover:text-fg">{m.cancelNote}</button>
+        <Button size="sm" className="h-7 px-2 text-caption" onClick={() => onSave(text)}>{m.saveNote}</Button>
+        <Button variant="ghost" size="sm" className="h-7 px-2 text-caption" onClick={onCancel}>{m.cancelNote}</Button>
       </div>
     </div>
   );

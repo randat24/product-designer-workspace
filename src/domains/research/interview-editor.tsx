@@ -16,6 +16,7 @@ import type { GuideQuestion, InterviewAnswer } from "./queries";
 import Link from "next/link";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { SelectionActions } from "@/domains/synthesis/client";
+import { Button } from "@/shared/ui/button";
 
 const iv = t.research.interview;
 
@@ -132,10 +133,9 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
           ))}
         </ul>
         {canEdit && (
-          <button type="button" onClick={() => setNewNotes((n) => [...n, Date.now()])}
-            className="self-start rounded-control border-[1.5px] border-fg px-3 py-1.5 text-meta font-semibold hover:bg-subtle">
+          <Button variant="secondary" size="sm" className="self-start" onClick={() => setNewNotes((n) => [...n, Date.now()])}>
             + {iv.addNote}
-          </button>
+          </Button>
         )}
         <div className="rounded-panel border border-line bg-surface p-5">
           <TextField id="notes" label={iv.fields.notes} value={m.notes ?? ""} readOnly={!canEdit} onChange={(notes) => update({ notes })} />

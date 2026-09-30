@@ -8,7 +8,7 @@ import {
   type Connection, type Edge, type Node, type NodeProps, type Viewport,
 } from "@xyflow/react";
 import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/field";
+import { Input, Select } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import {
@@ -292,7 +292,6 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
 
 // ---------------------------------------------------------------- inspectors
 
-const selectClass = "h-9 w-full rounded-control border border-line bg-surface px-2 text-sm disabled:opacity-70";
 const fieldLabel = "text-meta font-semibold text-fg-secondary";
 
 function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPatch, onScreenCreated, onDelete, report }: {
@@ -320,14 +319,14 @@ function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPat
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="node-kind" className={fieldLabel}>{f.kind}</label>
-        <select id="node-kind" className={selectClass} disabled={!editable} value={node.data.kind}
+        <Select id="node-kind" disabled={!editable} value={node.data.kind}
           onChange={async (e) => {
             const kind = e.target.value as NodeKind;
             onPatch({ kind, ...(kind !== "screen" ? { screen: null } : {}) });
             report(await updateNode(node.id, { kind }));
           }}>
           {NODE_KINDS.map((k) => <option key={k.value} value={k.value}>{f.kinds[k.value]}</option>)}
-        </select>
+        </Select>
       </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="node-label" className={fieldLabel}>{f.label}</label>
@@ -339,7 +338,7 @@ function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPat
       {node.data.kind === "screen" && (
         <div className="flex flex-col gap-1.5">
           <label htmlFor="node-screen" className={fieldLabel}>{f.screen}</label>
-          <select id="node-screen" className={selectClass} disabled={!editable || busy} value={node.data.screen?.id ?? ""}
+          <Select id="node-screen" disabled={!editable || busy} value={node.data.screen?.id ?? ""}
             onChange={async (e) => {
               const s = screens.find((x) => x.id === e.target.value) ?? null;
               setBusy(true);
@@ -349,7 +348,7 @@ function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPat
             }}>
             <option value="">{f.screenNone}</option>
             {screens.map((s) => <option key={s.id} value={s.id}>{s.code} {s.name}</option>)}
-          </select>
+          </Select>
           {node.data.screen && (
             <a href={`${base}/screens/${node.data.screen.code}`} className="self-start text-meta font-semibold underline underline-offset-2">
               {f.openScreen(node.data.screen.code)}
@@ -374,19 +373,18 @@ function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPat
         // Linking without dragging: for touch screens and the keyboard.
         <div className="flex flex-col gap-1.5">
           <label htmlFor="node-link" className={fieldLabel}>{f.linkTo}</label>
-          <select id="node-link" className={selectClass} value=""
+          <Select id="node-link" value=""
             onChange={(e) => { if (e.target.value) onLinkTo(e.target.value); }}>
             <option value="">{f.linkToPlaceholder}</option>
             {targets.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
-          </select>
+          </Select>
         </div>
       )}
 
       {editable && (
-        <button type="button" onClick={onDelete}
-          className="self-start rounded-control border-[1.5px] border-line px-3 py-1.5 text-meta font-semibold text-danger hover:border-danger">
+        <Button variant="danger" size="sm" className="self-start" onClick={onDelete}>
           {f.deleteNode}
-        </button>
+        </Button>
       )}
     </div>
   );
@@ -415,14 +413,14 @@ function EdgeInspector({ edge, from, to, editable, onPatch, onDelete, report }: 
       <p className="text-meta"><span className="font-semibold">{from}</span> → <span className="font-semibold">{to}</span></p>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="edge-branch" className={fieldLabel}>{f.branch}</label>
-        <select id="edge-branch" className={selectClass} disabled={!editable} value={d.branch}
+        <Select id="edge-branch" disabled={!editable} value={d.branch}
           onChange={async (e) => {
             const branch = e.target.value as Branch;
             onPatch({ branch });
             report(await updateEdge(edge.id, { branch }));
           }}>
           {BRANCHES.map((b) => <option key={b.value} value={b.value}>{f.branches[b.value]}</option>)}
-        </select>
+        </Select>
       </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="edge-label" className={fieldLabel}>{f.edgeLabel}</label>
@@ -436,10 +434,9 @@ function EdgeInspector({ edge, from, to, editable, onPatch, onDelete, report }: 
           onChange={(e) => setCondition(e.target.value)} onBlur={() => saveText("condition", condition)} />
       </div>
       {editable && (
-        <button type="button" onClick={onDelete}
-          className="self-start rounded-control border-[1.5px] border-line px-3 py-1.5 text-meta font-semibold text-danger hover:border-danger">
+        <Button variant="danger" size="sm" className="self-start" onClick={onDelete}>
           {f.deleteEdge}
-        </button>
+        </Button>
       )}
     </div>
   );

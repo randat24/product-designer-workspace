@@ -3,12 +3,13 @@
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
-import { FieldError, Input } from "@/shared/ui/field";
+import { FieldError, Input, Select } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { t } from "@/shared/i18n/ru";
 import { deleteDecision, deleteScreen, saveDecision, saveScreen } from "./actions";
+import { Button, IconButton } from "@/shared/ui/button";
 import {
   DECISION_STATUSES, SCREEN_STATUSES,
   type Alternative, type AnalyticsEvent, type DecisionFields, type ScreenSpec,
@@ -48,15 +49,13 @@ function StringList({ id, label, hint, items, readOnly, onChange }: {
             <Input id={i === 0 ? id : undefined} aria-label={`${label} ${i + 1}`} value={v} readOnly={readOnly} maxLength={300}
               placeholder={sc.itemPlaceholder} onChange={(e) => onChange(items.map((x, j) => (j === i ? e.target.value : x)))} />
             {!readOnly && (
-              <button type="button" aria-label={`${sc.removeItem} ${i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}
-                className="grid size-9 shrink-0 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+              <IconButton tone="danger" label={`${sc.removeItem} ${i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}>×</IconButton>
             )}
           </li>
         ))}
       </ol>
       {!readOnly && (
-        <button type="button" onClick={() => onChange([...items, ""])}
-          className="self-start rounded-control border-[1.5px] border-line px-3 py-1 text-meta font-semibold hover:border-fg">+ {sc.addItem}</button>
+        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...items, ""])}>+ {sc.addItem}</Button>
       )}
     </fieldset>
   );
@@ -78,15 +77,13 @@ function EventList({ items, readOnly, onChange }: { items: AnalyticsEvent[]; rea
             <Input aria-label={`${e.props} ${i + 1}`} placeholder={e.props} value={ev.props} readOnly={readOnly} maxLength={300}
               className="font-mono text-meta" onChange={(x) => set(i, { props: x.target.value })} />
             {!readOnly && (
-              <button type="button" aria-label={`${sc.removeItem}: ${ev.name || i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}
-                className="grid size-9 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+              <IconButton tone="danger" label={`${sc.removeItem}: ${ev.name || i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}>×</IconButton>
             )}
           </li>
         ))}
       </ul>
       {!readOnly && (
-        <button type="button" onClick={() => onChange([...items, { name: "", trigger: "", props: "" }])}
-          className="self-start rounded-control border-[1.5px] border-line px-3 py-1 text-meta font-semibold hover:border-fg">+ {e.add}</button>
+        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...items, { name: "", trigger: "", props: "" }])}>+ {e.add}</Button>
       )}
     </fieldset>
   );
@@ -174,8 +171,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
                 <Input aria-label={`${f.option} ${i + 1}`} placeholder={f.option} value={a.option} readOnly={ro} maxLength={300}
                   className="font-semibold" onChange={(e) => setAlt(i, { option: e.target.value })} />
                 {!ro && (
-                  <button type="button" aria-label={`${dc.removeAlternative} ${i + 1}`} onClick={() => update({ alternatives: alts.filter((_, j) => j !== i) })}
-                    className="grid size-9 shrink-0 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                  <IconButton tone="danger" label={`${dc.removeAlternative} ${i + 1}`} onClick={() => update({ alternatives: alts.filter((_, j) => j !== i) })}>×</IconButton>
                 )}
               </div>
               <Input aria-label={`${f.why_rejected} ${i + 1}`} placeholder={f.why_rejected} value={a.why_rejected} readOnly={ro} maxLength={1000}
@@ -184,8 +180,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
           ))}
         </ul>
         {!ro && (
-          <button type="button" onClick={() => update({ alternatives: [...alts, { option: "", why_rejected: "" }] })}
-            className="self-start rounded-control border-[1.5px] border-line px-3 py-1 text-meta font-semibold hover:border-fg">+ {dc.addAlternative}</button>
+          <Button variant="secondary" size="sm" className="self-start" onClick={() => update({ alternatives: [...alts, { option: "", why_rejected: "" }] })}>+ {dc.addAlternative}</Button>
         )}
       </Section>
 
@@ -199,12 +194,12 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
           </div>
           <div className="flex min-w-64 flex-1 flex-col gap-1.5">
             <label htmlFor="superseded_by" className={labelClass}>{f.superseded_by}</label>
-            <select id="superseded_by" disabled={ro} value={v.superseded_by_id ?? ""} aria-invalid={error?.field === "superseded_by_id"}
+            <Select id="superseded_by" disabled={ro} value={v.superseded_by_id ?? ""} aria-invalid={error?.field === "superseded_by_id"}
               onChange={(e) => update({ superseded_by_id: e.target.value || null, ...(e.target.value ? { status: "superseded" as const } : {}) })}
-              className="h-9 rounded-control border border-line bg-surface px-2 text-sm disabled:opacity-70">
+              >
               <option value="">{dc.supersededNone}</option>
               {others.map((o) => <option key={o.id} value={o.id}>{o.code} {o.title}</option>)}
-            </select>
+            </Select>
           </div>
         </div>
       </Section>
