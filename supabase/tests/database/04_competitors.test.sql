@@ -106,7 +106,8 @@ select is((select count(*)::int from competitors c join projects p on p.id = c.p
            where p.slug = (select slug from demo)), 4, 'demo has 4 competitors incl. own product');
 
 select is((select count(*)::int from competitor_feature_values v join projects p on p.id = v.project_id
-           where p.slug = (select slug from demo)), 28, 'demo matrix is filled');
+           join comparison_features f on f.id = v.comparison_feature_id
+           where p.slug = (select slug from demo) and f.kind = 'feature'), 28, 'demo matrix is filled');
 
 select * from finish();
 rollback;

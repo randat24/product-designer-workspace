@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { KEY_STATES, listKeyStates, listScreens, SCREEN_STATUSES } from "@/domains/design";
 import { createScreen } from "@/domains/design/actions";
+import { listReminders } from "@/domains/competitors";
+import { RemindersPanel } from "@/domains/competitors/reminders";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -18,7 +20,7 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
   const { ws, project: slug } = await params;
   const ctx = await getProjectContext(ws, slug);
   if (!ctx) notFound();
-  const [screens, keyStates] = await Promise.all([listScreens(ctx.project.id), listKeyStates(ctx.project.id)]);
+  const [screens, keyStates, reminders] = await Promise.all([listScreens(ctx.project.id), listKeyStates(ctx.project.id), listReminders(ctx.project.id)]);
 
   return (
     <div className="flex max-w-6xl flex-col gap-8">
@@ -32,6 +34,8 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
           </form>
         )}
       </div>
+
+      <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
       {screens.length === 0 ? (
         <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>

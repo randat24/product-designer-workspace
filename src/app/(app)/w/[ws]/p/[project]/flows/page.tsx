@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { FLOW_STATUSES, listFlows } from "@/domains/flows";
 import { createFlow } from "@/domains/flows/actions";
+import { listReminders } from "@/domains/competitors";
+import { RemindersPanel } from "@/domains/competitors/reminders";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -17,7 +19,7 @@ export default async function FlowsPage({ params }: { params: Promise<{ ws: stri
   const { ws, project: slug } = await params;
   const ctx = await getProjectContext(ws, slug);
   if (!ctx) notFound();
-  const flows = await listFlows(ctx.project.id);
+  const [flows, reminders] = await Promise.all([listFlows(ctx.project.id), listReminders(ctx.project.id)]);
 
   return (
     <div className="flex max-w-5xl flex-col gap-8">
@@ -31,6 +33,8 @@ export default async function FlowsPage({ params }: { params: Promise<{ ws: stri
           </form>
         )}
       </div>
+
+      <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
       {flows.length === 0 ? (
         <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{f.empty}</p>

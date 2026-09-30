@@ -6,6 +6,8 @@ import { getFlowByCode, listScreenOptions } from "@/domains/flows";
 import { DeleteFlowButton, FlowMetaEditor } from "@/domains/flows/editors";
 import { FlowEditor } from "@/domains/flows/flow-editor";
 import { StepList } from "@/domains/flows/step-list";
+import { listReminders } from "@/domains/competitors";
+import { RemindersPanel } from "@/domains/competitors/reminders";
 import { TracePanel } from "@/domains/trace";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -25,7 +27,9 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
   const { ws, project: slug, code } = await params;
   const ctx = await getProjectContext(ws, slug);
   if (!ctx) notFound();
-  const [flow, screens] = await Promise.all([getFlowByCode(ctx.project.id, decodeURIComponent(code)), listScreenOptions(ctx.project.id)]);
+  const [flow, screens, reminders] = await Promise.all([
+    getFlowByCode(ctx.project.id, decodeURIComponent(code)), listScreenOptions(ctx.project.id), listReminders(ctx.project.id),
+  ]);
   if (!flow) notFound();
   const missing = flow.edgeCases.filter((c) => c.status === "missing").length;
 
@@ -36,6 +40,8 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
         <PageHeader title={flow.name} eyebrow={<EntityChip type="user_flow" code={flow.code} />}
           stat={{ value: missing, caption: f.edgeCases.statuses.missing.toLowerCase() }} />
       </div>
+
+      <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
       <div className="md:hidden"><StepList nodes={flow.nodes} edges={flow.edges} /></div>
       <div className="hidden md:block">

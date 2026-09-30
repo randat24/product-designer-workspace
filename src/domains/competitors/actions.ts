@@ -6,8 +6,8 @@ import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import { t } from "@/shared/i18n/ru";
 import {
-  ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME, competitorSchema, featureSchema, FEATURE_VALUES,
-  type CompetitorInput, type FeatureValue,
+  ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME, competitorSchema, featureSchema, FEATURE_VALUES, UX_TEMPLATES,
+  type CompetitorInput, type FeatureValue, type UxTemplate,
 } from "./schema";
 
 const uuid = z.uuid();
@@ -73,13 +73,31 @@ export async function deleteCompetitor(formData: FormData) {
 
 // ---------------------------------------------------------------- matrix
 
-export async function addFeature(projectId: string, input: { name: string; group_name?: string | null }) {
+export async function addFeature(projectId: string, input: { name: string; group_name?: string | null }, kind: "feature" | "ux" = "feature") {
   const parsed = featureSchema.safeParse(input);
-  if (!uuid.safeParse(projectId).success || !parsed.success) return { ok: false as const };
+  if (!uuid.safeParse(projectId).success || !parsed.success || !["feature", "ux"].includes(kind)) return { ok: false as const };
   const supabase = await createClient();
-  const { count } = await supabase.from("comparison_features").select("id", { count: "exact", head: true }).eq("project_id", projectId);
-  const { error } = await supabase.from("comparison_features").insert({ project_id: projectId, ...parsed.data, position: (count ?? 0) + 1 });
+  const { count } = await supabase.from("comparison_features").select("id", { count: "exact", head: true }).eq("project_id", projectId).eq("kind", kind);
+  const { error } = await supabase.from("comparison_features").insert({ project_id: projectId, ...parsed.data, kind, position: (count ?? 0) + 1 });
   if (error) return { ok: false as const };
+  refresh();
+  return { ok: true as const };
+}
+
+/** Adds a UX review template (Nielsen heuristics or UX laws), skipping rows that already exist. */
+export async function addUxTemplate(projectId: string, template: UxTemplate) {
+  const tpl = UX_TEMPLATES[template];
+  if (!uuid.safeParse(projectId).success || !tpl) return { ok: false as const };
+  const supabase = await createClient();
+  const { data: existing } = await supabase.from("comparison_features").select("name").eq("project_id", projectId).eq("kind", "ux");
+  const have = new Set((existing ?? []).map((r) => r.name));
+  const start = existing?.length ?? 0;
+  const rows = tpl.rows.filter((name) => !have.has(name))
+    .map((name, i) => ({ project_id: projectId, name, group_name: tpl.group, kind: "ux" as const, position: start + i + 1 }));
+  if (rows.length) {
+    const { error } = await supabase.from("comparison_features").insert(rows);
+    if (error) return { ok: false as const };
+  }
   refresh();
   return { ok: true as const };
 }
@@ -112,6 +130,29 @@ export async function setFeatureValue(competitorId: string, featureId: string, v
     .from("competitor_feature_values")
     .upsert({ competitor_id: competitorId, comparison_feature_id: featureId, value }, { onConflict: "competitor_id,comparison_feature_id" });
   return error ? { ok: false as const } : { ok: true as const };
+}
+
+/** A note in a matrix cell. On a competitor's red cell it becomes a reminder for our design. */
+export async function setCellNote(competitorId: string, featureId: string, note: string) {
+  const n = z.string().trim().max(500).safeParse(note);
+  if (!uuid.safeParse(competitorId).success || !uuid.safeParse(featureId).success || !n.success) return { ok: false as const };
+  const supabase = await createClient();
+  const { error } = await supabase.from("competitor_feature_values")
+    .upsert({ competitor_id: competitorId, comparison_feature_id: featureId, note: n.data || null, note_done: false },
+      { onConflict: "competitor_id,comparison_feature_id" });
+  if (error) return { ok: false as const };
+  refresh();
+  return { ok: true as const };
+}
+
+export async function setReminderDone(competitorId: string, featureId: string, done: boolean) {
+  if (!uuid.safeParse(competitorId).success || !uuid.safeParse(featureId).success) return { ok: false as const };
+  const supabase = await createClient();
+  const { error } = await supabase.from("competitor_feature_values").update({ note_done: done })
+    .eq("competitor_id", competitorId).eq("comparison_feature_id", featureId);
+  if (error) return { ok: false as const };
+  refresh();
+  return { ok: true as const };
 }
 
 // ---------------------------------------------------------------- screenshots

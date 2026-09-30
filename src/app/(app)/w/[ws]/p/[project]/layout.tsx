@@ -96,6 +96,7 @@ export default async function ProjectLayout({ children, params }: {
     })),
     { id: "action:research-matrix", label: t.research.matrix.title, href: `${base}/research/matrix`, group: t.palette.actions, keywords: "матрица ответов research" },
     { id: "action:matrix", label: t.palette.matrix, href: `${base}/competitors/matrix`, group: t.palette.actions, keywords: "matrix сравнение" },
+    { id: "action:ux-review", label: t.competitors.ux.title, href: `${base}/competitors/ux`, group: t.palette.actions, keywords: "ux review юзабилити нильсен эвристики законы" },
     { id: "action:settings", label: t.palette.settings, href: `${base}/settings`, group: t.palette.actions, keywords: "settings archive архив удалить" },
     { id: "action:new", label: t.palette.newProject, href: `/w/${workspace.slug}#new-h`, group: t.palette.actions, keywords: "new project создать" },
     { id: "action:all", label: t.palette.allProjects, href: `/w/${workspace.slug}`, group: t.palette.actions, keywords: "projects" },
