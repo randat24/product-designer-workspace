@@ -31,7 +31,7 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
         </form>
       )}
       {insights.length === 0 ? (
-        <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
+        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
         <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]">
           {insights.map((i) => {
@@ -40,14 +40,14 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
             return (
               <li key={i.id}>
                 <Link href={`${ctx.base}/insights/${i.code}`}
-                  className={cn("flex h-full flex-col gap-2.5 rounded-[14px] border bg-surface p-5 hover:border-fg",
+                  className={cn("flex h-full flex-col gap-2.5 rounded-panel border bg-surface p-5 hover:border-fg",
                     unsupported ? "border-[1.5px] border-dashed border-warning" : "border-line")}>
                   <span className="flex items-baseline justify-between gap-3">
                     <span className="text-caption font-bold text-fg-secondary tabular-nums">{i.code}</span>
                     <span className="text-caption font-semibold text-fg-secondary">{labelOf(INSIGHT_STATUSES, i.status)}</span>
                   </span>
                   <span className="text-base leading-snug font-bold">{i.title}</span>
-                  {i.statement && <span className="line-clamp-3 text-[13px] text-fg-secondary">{i.statement}</span>}
+                  {i.statement && <span className="line-clamp-3 text-meta text-fg-secondary">{i.statement}</span>}
                   <span className="mt-auto flex flex-wrap items-center gap-1.5 text-caption font-semibold">
                     <span className="rounded-full bg-fg px-2.5 py-0.5 text-canvas">{s.fields.confidence}: {labelOf(LEVELS, i.confidence).toLowerCase()}</span>
                     {unsupported ? (

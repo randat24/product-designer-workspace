@@ -28,5 +28,5 @@ export function useAction() {
 /** The message of a failed action, announced to screen readers; renders nothing otherwise. */
 export function ActionError({ error, className }: { error: string | null; className?: string }) {
   if (!error) return null;
-  return <p role="alert" className={className ?? "text-[13px] text-danger"}>{error}</p>;
+  return <p role="alert" className={className ?? "text-meta text-danger"}>{error}</p>;
 }

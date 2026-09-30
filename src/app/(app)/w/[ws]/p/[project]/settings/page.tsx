@@ -29,7 +29,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
         <h2 id="general-h" className="text-heading font-semibold">{t.settings.general}</h2>
         <Panel className="flex flex-col gap-4">
           <GeneralForm project={project} readOnly={!canEdit} />
-          <p className="text-[13px] text-fg-secondary">{t.settings.slugNote(project.slug)}</p>
+          <p className="text-meta text-fg-secondary">{t.settings.slugNote(project.slug)}</p>
         </Panel>
       </section>
 
@@ -44,7 +44,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
                   {t.cases.statusLabel}
                   <select name="caseStatus" defaultValue={caseStudy.status} disabled={!canEdit}
-                    className="h-9 rounded-[9px] border-[1.5px] border-line bg-surface px-2.5 font-normal">
+                    className="h-9 rounded-control border-[1.5px] border-line bg-surface px-2.5 font-normal">
                     {(["draft", "review", "published"] as const).map((s) => (
                       <option key={s} value={s}>{t.cases.status[s]}</option>
                     ))}
@@ -56,8 +56,8 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                     className="ml-auto self-center text-sm font-semibold underline underline-offset-4">{t.cases.open}</a>
                 )}
               </form>
-              <p className="text-[13px] text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
-              {!caseStudy.hasContent && <p className="text-[13px] text-warning">{t.cases.emptyContent}</p>}
+              <p className="text-meta text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
+              {!caseStudy.hasContent && <p className="text-meta text-warning">{t.cases.emptyContent}</p>}
             </>
           ) : (
             <div className="flex flex-wrap items-center gap-3">

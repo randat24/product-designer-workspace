@@ -34,7 +34,7 @@ export function StepList({ nodes, edges }: { nodes: FlowNode[]; edges: FlowEdge[
   const item = (n: FlowNode, i: number | null) => {
     const k = nodeKind(n.kind);
     return (
-      <li key={n.id} className="flex gap-3 rounded-[12px] border border-line bg-surface p-3" style={{ borderLeft: `4px solid ${k.color}` }}>
+      <li key={n.id} className="flex gap-3 rounded-panel border border-line bg-surface p-3" style={{ borderLeft: `4px solid ${k.color}` }}>
         {i !== null && <span className="w-6 shrink-0 text-caption font-bold text-fg-secondary tabular-nums">{i}</span>}
         <div className="flex min-w-0 flex-col gap-1">
           <span className="text-caption font-semibold text-fg-secondary">
@@ -42,7 +42,7 @@ export function StepList({ nodes, edges }: { nodes: FlowNode[]; edges: FlowEdge[
           </span>
           <span className="font-bold">{n.label}</span>
           {(out.get(n.id) ?? []).length > 0 && (
-            <ul className="flex flex-col gap-0.5 text-[13px]">
+            <ul className="flex flex-col gap-0.5 text-meta">
               {(out.get(n.id) ?? []).map((e) => (
                 <li key={e.id} className="text-fg-secondary">
                   <span style={{ color: branchColor(e.branch) }}>→</span>{" "}
@@ -59,7 +59,7 @@ export function StepList({ nodes, edges }: { nodes: FlowNode[]; edges: FlowEdge[
   return (
     <section aria-labelledby="steps-h" className="flex flex-col gap-3">
       <h2 id="steps-h" className="text-heading font-semibold">{f.stepList}</h2>
-      <p className="text-[13px] text-fg-secondary">{f.stepListHint}</p>
+      <p className="text-meta text-fg-secondary">{f.stepListHint}</p>
       <ol className="flex flex-col gap-2">{order.map((n, i) => item(n, i + 1))}</ol>
       {rest.length > 0 && (
         <>

@@ -38,7 +38,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
           {[{ value: undefined, label: t.competitors.all }, ...COMPETITOR_KINDS].map((k) => (
             <Link key={k.label} href={k.value ? `?kind=${k.value}` : "?"} aria-current={kind === k.value ? "true" : undefined}
               className={cn(
-                "rounded-full border-[1.5px] px-3 py-0.5 text-[13px] font-semibold",
+                "rounded-full border-[1.5px] px-3 py-0.5 text-meta font-semibold",
                 kind === k.value ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg",
               )}>
               {k.label}
@@ -63,7 +63,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
       </div>
 
       {shown.length === 0 ? (
-        <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
+        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
           {others.length === 0 ? t.competitors.empty : t.competitors.emptyFiltered}
         </p>
       ) : (
@@ -72,7 +72,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
             <li key={c.id}>
               <Link href={`${base}/competitors/${c.code}`}
                 className={cn(
-                  "flex h-full flex-col gap-3 overflow-hidden rounded-[14px] border border-line bg-surface transition-colors duration-[120ms] hover:border-fg",
+                  "flex h-full flex-col gap-3 overflow-hidden rounded-panel border border-line bg-surface transition-colors duration-[120ms] hover:border-fg",
                   c.is_own_product && "border-[1.5px] border-fg",
                 )}>
                 {covers.get(c.id) && (
@@ -91,9 +91,9 @@ export default async function CompetitorsPage({ params, searchParams }: {
                     {c.url && <span className="truncate text-caption text-fg-secondary">{c.url.replace(/^https?:\/\/(www\.)?/, "")}</span>}
                   </span>
                   {c.is_own_product ? (
-                    c.positioning && <p className="line-clamp-3 text-[13px] text-fg-secondary">{c.positioning}</p>
+                    c.positioning && <p className="line-clamp-3 text-meta text-fg-secondary">{c.positioning}</p>
                   ) : isAssessed(c) ? (
-                    <dl className="flex flex-col gap-2 text-[13px]">
+                    <dl className="flex flex-col gap-2 text-meta">
                       {([["strengths", t.competitors.strengths], ["weaknesses", t.competitors.weaknesses], ["borrow", t.competitors.borrow]] as const)
                         .filter(([key]) => c[key])
                         .map(([key, label]) => (
@@ -104,7 +104,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
                         ))}
                     </dl>
                   ) : (
-                    <p className="text-[13px] text-fg-secondary">{t.competitors.noAssessment}</p>
+                    <p className="text-meta text-fg-secondary">{t.competitors.noAssessment}</p>
                   )}
                 </div>
               </Link>

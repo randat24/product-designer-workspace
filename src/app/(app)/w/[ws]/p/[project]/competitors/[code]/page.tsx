@@ -28,7 +28,7 @@ export default async function CompetitorPage({ params }: { params: Promise<Param
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/competitors`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">
+      <Link href={`${ctx.base}/competitors`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">
         ← {t.competitors.back}
       </Link>
       <PageHeader title={c.name}

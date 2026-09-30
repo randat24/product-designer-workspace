@@ -14,7 +14,7 @@ export function PageHeader({ eyebrow, title, lede, progress, stat, children }: {
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0 max-w-3xl">
-        {eyebrow && <p className="mb-2 text-[13px] font-semibold text-fg-secondary">{eyebrow}</p>}
+        {eyebrow && <p className="mb-2 text-meta font-semibold text-fg-secondary">{eyebrow}</p>}
         <h1 className="page-title">{title}</h1>
         {lede && <div className="mt-3 max-w-[62ch] text-fg-secondary">{lede}</div>}
         {children}

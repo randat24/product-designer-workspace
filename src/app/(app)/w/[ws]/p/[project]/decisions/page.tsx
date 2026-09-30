@@ -32,10 +32,10 @@ export default async function DecisionsPage({ params }: { params: Promise<{ ws: 
       </div>
 
       {decisions.length === 0 ? (
-        <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{dc.empty}</p>
+        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{dc.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
-          <table className="w-full min-w-[680px] text-left text-[14px]">
+        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+          <table className="w-full min-w-[680px] text-left text-sm">
             <thead className="border-b border-line text-caption font-semibold text-fg-secondary">
               <tr>
                 <th scope="col" className="px-4 py-2.5">{dc.columns.decision}</th>
@@ -53,10 +53,10 @@ export default async function DecisionsPage({ params }: { params: Promise<{ ws: 
                       <span className="mr-2 text-caption text-fg-secondary tabular-nums">{d.code}</span>{d.title}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-[13px] font-semibold">{DECISION_STATUSES.find((x) => x.value === d.status)?.label}</td>
-                  <td className="px-4 py-3 text-[13px] tabular-nums whitespace-nowrap">{dateFmt.format(new Date(d.decidedAt))}</td>
-                  <td className="px-4 py-3 text-[13px]">{d.author ?? "—"}</td>
-                  <td className="px-4 py-3 text-[13px] tabular-nums">
+                  <td className="px-4 py-3 text-meta font-semibold">{DECISION_STATUSES.find((x) => x.value === d.status)?.label}</td>
+                  <td className="px-4 py-3 text-meta tabular-nums whitespace-nowrap">{dateFmt.format(new Date(d.decidedAt))}</td>
+                  <td className="px-4 py-3 text-meta">{d.author ?? "—"}</td>
+                  <td className="px-4 py-3 text-meta tabular-nums">
                     {d.evidence > 0 ? d.evidence : <span className="font-semibold text-warning">⚠ {dc.noEvidence}</span>}
                   </td>
                 </tr>

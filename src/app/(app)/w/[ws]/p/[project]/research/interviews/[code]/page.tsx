@@ -26,16 +26,16 @@ export default async function InterviewPage({ params }: { params: Promise<Params
   return (
     <div className="max-w-4xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href={`${ctx.base}/research/participants/${p.code}`} className="text-[13px] font-semibold text-fg-secondary hover:text-fg">
+        <Link href={`${ctx.base}/research/participants/${p.code}`} className="text-meta font-semibold text-fg-secondary hover:text-fg">
           ← {t.research.interview.back(p.code)}
         </Link>
-        <Link href={`${ctx.base}/research/interviews/${iv.code}/live`} className="rounded-[9px] bg-fg px-3.5 py-1.5 text-sm font-semibold text-canvas">
+        <Link href={`${ctx.base}/research/interviews/${iv.code}/live`} className="rounded-control bg-fg px-3.5 py-1.5 text-sm font-semibold text-canvas">
           {t.research.interview.live}
         </Link>
       </div>
       <PageHeader title={`${p.code} · ${participantTitle(p)}`}
         eyebrow={<span className="flex items-center gap-2"><EntityChip type="interview" code={iv.code} />{iv.guide?.title}</span>} />
-      <p className="-mt-4 mb-6 text-[13px] text-fg-secondary">{t.synthesis.quotes.selectHint} · ⌥Q / ⌥O</p>
+      <p className="-mt-4 mb-6 text-meta text-fg-secondary">{t.synthesis.quotes.selectHint} · ⌥Q / ⌥O</p>
       <InterviewEditor key={iv.id} interviewId={iv.id} canEdit={ctx.canEdit} projectId={ctx.project.id} base={ctx.base} synthesis={synthesis}
         meta={{ conducted_at: iv.conducted_at, duration_min: iv.duration_min, mode: iv.mode, status: iv.status, notes: iv.notes }}
         questions={iv.guide?.questions ?? null} answers={iv.answers} />

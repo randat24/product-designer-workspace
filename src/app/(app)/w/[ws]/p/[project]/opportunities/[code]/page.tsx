@@ -29,7 +29,7 @@ export default async function OpportunityPage({ params }: { params: Promise<Para
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "opportunity", id: o.id, code: o.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/opportunities`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
+      <Link href={`${ctx.base}/opportunities`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
       <PageHeader title={o.title} eyebrow={<EntityChip type="opportunity" code={o.code} />}
         stat={{ value: st?.participants ?? 0, caption: s.participants }} />
       <div className="flex flex-col gap-8">

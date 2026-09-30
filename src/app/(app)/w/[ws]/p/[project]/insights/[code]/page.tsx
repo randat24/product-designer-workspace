@@ -29,14 +29,14 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "insight", id: i.id, code: i.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/insights`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
+      <Link href={`${ctx.base}/insights`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
       <PageHeader title={i.title} eyebrow={<span className="flex items-center gap-2"><EntityChip type="insight" code={i.code} />{s.participants(st?.participants ?? 0)}</span>} />
       <div className="flex flex-col gap-8">
         <InsightEditor key={i.id} id={i.id} canEdit={ctx.canEdit}
           initial={{ title: i.title, statement: i.statement, confidence: i.confidence, status: i.status }} />
         {/* Cognitive bias (docs/UX_LAWS.md, UX-08): one voice is not a pattern yet. */}
         {st && st.sources > 0 && st.participants === 1 && (
-          <p role="note" className="max-w-[62ch] rounded-[12px] border-[1.5px] border-dashed border-warning px-4 py-3 text-[14px]">
+          <p role="note" className="max-w-[62ch] rounded-panel border-[1.5px] border-dashed border-warning px-4 py-3 text-sm">
             <span className="font-semibold text-warning">⚠ {s.singleSource}.</span> {s.singleSourceHint}
           </p>
         )}

@@ -5,7 +5,7 @@ import { t } from "@/shared/i18n/ru";
  * a real page (title, lede, rows), so navigation reacts immediately and nothing jumps afterwards.
  */
 export function PageSkeleton({ rows = 6 }: { rows?: number }) {
-  const bar = "animate-pulse rounded-[8px] bg-subtle motion-reduce:animate-none";
+  const bar = "animate-pulse rounded-control bg-subtle motion-reduce:animate-none";
   return (
     <div role="status" aria-live="polite" aria-busy="true">
       <span className="sr-only">{t.status.loading}</span>
@@ -16,7 +16,7 @@ export function PageSkeleton({ rows = 6 }: { rows?: number }) {
           <div className={`${bar} mt-4 h-4 w-full max-w-[62ch]`} />
           <div className={`${bar} mt-2 h-4 w-1/2 max-w-[40ch]`} />
         </header>
-        <div className="flex flex-col gap-2 rounded-[14px] border border-line bg-surface p-4">
+        <div className="flex flex-col gap-2 rounded-panel border border-line bg-surface p-4">
           {Array.from({ length: rows }, (_, i) => (
             <div key={i} className="flex items-center gap-3 py-1.5">
               <div className={`${bar} h-5 w-16 shrink-0`} />

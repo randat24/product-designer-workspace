@@ -26,14 +26,14 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
           <span className="font-display text-lg leading-none font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
           <WorkspaceSwitcher current={workspace.slug} workspaces={workspaces} />
         </span>
-        <form action="/auth/signout" method="post" className="flex items-center gap-3 text-[13px]">
+        <form action="/auth/signout" method="post" className="flex items-center gap-3 text-meta">
           <Link href="/account" className="hidden opacity-70 hover:opacity-100 hover:underline sm:inline">{user?.email}</Link>
-          <button className="rounded-lg border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
+          <button className="rounded-control border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
         </form>
       </header>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(18px,4vw,56px)] py-10">
-        <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-[18px] border-[1.5px] border-fg bg-surface p-6 md:p-8">
+        <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-hero border-[1.5px] border-fg bg-surface p-6 md:p-8">
           <h1 id="new-h" className="page-title">{t.workspace.newProject}</h1>
           <NewProjectForm workspaceId={workspace.id} autoFocus />
         </section>
@@ -41,7 +41,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
         <section aria-labelledby="projects-h" className="flex flex-col gap-4">
           <h2 id="projects-h" className="text-heading font-semibold">{t.workspace.projects}</h2>
           {projects.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
+            <div className="flex flex-col items-center gap-3 rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
               <p>{t.workspace.empty}</p>
               <form action={createDemoProject}>
                 <input type="hidden" name="workspaceId" value={workspace.id} />
@@ -77,10 +77,10 @@ function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: Pr
         return (
           <li key={p.id} className="relative">
             <Link href={`/w/${wsSlug}/p/${p.slug}`}
-              className="flex h-full min-h-24 flex-col gap-1 rounded-[14px] border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg">
+              className="flex h-full min-h-24 flex-col gap-1 rounded-panel border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg">
               <span className={`line-clamp-2 text-base leading-snug font-bold ${c ? "pr-28" : ""}`}>{p.name}</span>
               {(p.description || p.platforms.length > 0) && (
-                <span className="line-clamp-2 text-[13px] text-fg-secondary">
+                <span className="line-clamp-2 text-meta text-fg-secondary">
                   {[p.platforms.map(platformLabel).join(", "), p.description].filter(Boolean).join(" — ")}
                 </span>
               )}
@@ -88,11 +88,11 @@ function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: Pr
             {/* The case badge sits over the card, not inside its link: a published case opens the site. */}
             {c && c.status === "published" ? (
               <a href={`/uk/cases/${c.slug}`} target="_blank" rel="noreferrer"
-                className="absolute top-4 right-4 rounded-full bg-success px-2.5 py-1 text-[12px] font-semibold text-white hover:opacity-85">
+                className="absolute top-4 right-4 rounded-full bg-success px-2.5 py-1 text-caption font-semibold text-white hover:opacity-85">
                 {t.cases.badge.published}
               </a>
             ) : c ? (
-              <span className={`absolute top-4 right-4 rounded-full border px-2.5 py-1 text-[12px] font-semibold ${
+              <span className={`absolute top-4 right-4 rounded-full border px-2.5 py-1 text-caption font-semibold ${
                 c.status === "review" ? "border-warning text-warning" : "border-line text-fg-secondary"}`}>
                 {t.cases.badge[c.status]}
               </span>

@@ -31,9 +31,9 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
     <div className="flex flex-col gap-8">
       <SaveToast id="guide-status" status={status} error={error?.message} readOnly={!canEdit} />
       <ActionError error={actionError} />
-      <div className="flex flex-col gap-5 rounded-[14px] border border-line bg-surface p-5">
+      <div className="flex flex-col gap-5 rounded-panel border border-line bg-surface p-5">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="guide-title" className="text-[13px] font-semibold text-fg-secondary">{g.title}</label>
+          <label htmlFor="guide-title" className="text-meta font-semibold text-fg-secondary">{g.title}</label>
           <Input id="guide-title" value={m.title} readOnly={!canEdit} maxLength={200} className="text-base font-bold"
             onChange={(e) => update({ title: e.target.value })} />
         </div>
@@ -56,10 +56,10 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
                 <span className="display-num text-[22px] leading-none text-fg-secondary tabular-nums">{si + 1}</span>
                 <div>
                   <h2 id={`sec-${section.value}`} className="text-heading font-semibold">{section.label}</h2>
-                  <p className="text-[13px] text-fg-secondary">{section.hint}</p>
+                  <p className="text-meta text-fg-secondary">{section.hint}</p>
                 </div>
               </div>
-              {items.length === 0 && !canEdit && <p className="text-[13px] text-fg-secondary">{g.emptySection}</p>}
+              {items.length === 0 && !canEdit && <p className="text-meta text-fg-secondary">{g.emptySection}</p>}
               <ul className="flex flex-col gap-2">
                 {items.map((q, i) => (
                   <QuestionRow key={q.id} q={q} canEdit={canEdit} first={i === 0} last={i === items.length - 1}
@@ -73,7 +73,7 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
         })}
       </ol>
 
-      <div className="rounded-[14px] border border-line bg-surface p-5">
+      <div className="rounded-panel border border-line bg-surface p-5">
         <TextField id="outro" label={g.outro} hint={g.outroHint} value={m.outro ?? ""} readOnly={!canEdit} onChange={(outro) => update({ outro })} />
       </div>
     </div>
@@ -95,10 +95,10 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
     },
     canEdit,
   );
-  const icon = "grid size-8 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-fg disabled:opacity-30";
+  const icon = "grid size-8 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-fg disabled:opacity-30";
 
   return (
-    <li className={cn("flex flex-col gap-2 rounded-[12px] border border-line bg-surface p-2.5 pl-3", value.is_key && "border-l-4 border-l-fg")}>
+    <li className={cn("flex flex-col gap-2 rounded-panel border border-line bg-surface p-2.5 pl-3", value.is_key && "border-l-4 border-l-fg")}>
       <div className="flex items-start gap-2">
         <Input aria-label={`${t.research.matrix.question}: ${value.text}`} value={value.text} readOnly={!canEdit} maxLength={1000}
           aria-invalid={status === "error"} onChange={(e) => update({ text: e.target.value })} className="font-semibold" />
@@ -106,7 +106,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
           <div className="flex shrink-0 flex-wrap items-center justify-end">
             <select aria-label={`${g.section}: ${value.text}`} value={value.section}
               onChange={(e) => update({ section: e.target.value as GuideSection })}
-              className="mr-1 h-8 max-w-36 rounded-lg border border-line bg-surface px-1.5 text-caption font-semibold text-fg-secondary">
+              className="mr-1 h-8 max-w-36 rounded-control border border-line bg-surface px-1.5 text-caption font-semibold text-fg-secondary">
               {GUIDE_SECTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
             </select>
             <label className="mr-1 flex cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] border-line px-2.5 py-1 text-caption font-semibold has-[:checked]:border-fg has-[:checked]:bg-fg has-[:checked]:text-canvas">
@@ -126,7 +126,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
             <div key={i} className="flex items-center gap-1.5">
               <span aria-hidden className="text-fg-secondary">↳</span>
               <Input aria-label={`${g.probes} ${i + 1}`} value={probe} readOnly={!canEdit} maxLength={300} placeholder={g.probePlaceholder}
-                className="h-8 text-[13px]" onChange={(e) => update({ probes: value.probes.map((x, j) => (j === i ? e.target.value : x)) })} />
+                className="h-8 text-meta" onChange={(e) => update({ probes: value.probes.map((x, j) => (j === i ? e.target.value : x)) })} />
               {canEdit && (
                 <button type="button" className={icon} aria-label={`${t.brief.fields.remove}: ${g.probes} ${i + 1}`}
                   onClick={() => update({ probes: value.probes.filter((_, j) => j !== i) })}>×</button>

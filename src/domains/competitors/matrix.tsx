@@ -111,13 +111,13 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
     features.reduce((s, f) => s + ({ yes: 1, partial: 0.5, no: 0, unknown: 0 } as const)[cellValue(f.id, p)], 0);
 
   if (products.length === 0) {
-    return <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{m.noCompetitors}</p>;
+    return <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{m.noCompetitors}</p>;
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-[13px] text-fg-secondary">{m.redHint}</p>
-      <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
+      <p className="text-meta text-fg-secondary">{m.redHint}</p>
+      <div className="overflow-x-auto rounded-panel border border-line bg-surface">
         <table className="min-w-full border-collapse text-sm">
           <thead>
             <tr>
@@ -131,17 +131,17 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
               {canEdit && <th aria-hidden className="w-10" />}
             </tr>
             <tr>
-              <th scope="col" className="sticky left-0 z-[1] min-w-[170px] sm:min-w-[280px] sm:max-w-[320px] border-r border-b border-line bg-surface p-3 text-left align-bottom text-[13px] font-bold">
+              <th scope="col" className="sticky left-0 z-[1] min-w-[170px] sm:min-w-[280px] sm:max-w-[320px] border-r border-b border-line bg-surface p-3 text-left align-bottom text-meta font-bold">
                 {kind === "ux" ? ux.criterion : m.feature}
               </th>
               {products.map((p, i) => (
                 <th key={p.id} scope="col" className="min-w-[150px] border-b border-line p-2.5 align-bottom" style={{ "--c": STICKY[i % 7] } as React.CSSProperties}>
                   <Link href={`${base}/competitors/${p.code}`}
                     className={cn(
-                      "flex flex-col gap-0.5 rounded-[3px] bg-[var(--c)] px-2.5 pt-3 pb-2 text-center text-on-sticky shadow-[0_6px_10px_-6px_rgba(0,0,0,.35)] transition-transform hover:rotate-0",
+                      "flex flex-col gap-0.5 rounded-chip bg-[var(--c)] px-2.5 pt-3 pb-2 text-center text-on-sticky shadow-[0_6px_10px_-6px_rgba(0,0,0,.35)] transition-transform hover:rotate-0",
                       i % 2 ? "rotate-[.7deg]" : "-rotate-[.6deg]",
                     )}>
-                    <span className="text-[14px] leading-tight font-bold">{p.name}</span>
+                    <span className="text-sm leading-tight font-bold">{p.name}</span>
                     <span className="text-caption font-semibold opacity-70">{p.is_own_product ? t.competitors.ownBadge : p.code}</span>
                   </Link>
                 </th>
@@ -168,7 +168,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                           <button type="button" disabled={!canEdit} onClick={() => cycle(f.id, p.id)}
                             aria-label={`${cellName}: ${values[v]}`} title={`${cellName}: ${values[v]}`}
                             className={cn(
-                              "inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold disabled:cursor-default",
+                              "inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-control px-2 text-meta font-semibold disabled:cursor-default",
                               canEdit && "hover:bg-surface/60",
                               v === "yes" && "text-success",
                               v === "no" && "text-danger",
@@ -183,14 +183,14 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                               onSave={(text) => saveNote(f.id, p.id, text)} onCancel={() => setEditing(null)} />
                           ) : note ? (
                             <button type="button" disabled={!canEdit} onClick={() => setEditing(key)} aria-label={m.editNote(cellName)}
-                              className={cn("mt-1 block w-full rounded-md px-1.5 py-1 text-left text-[12px] leading-snug text-fg disabled:cursor-default",
+                              className={cn("mt-1 block w-full rounded-chip px-1.5 py-1 text-left text-caption leading-snug text-fg disabled:cursor-default",
                                 canEdit && "hover:bg-surface/70", note.done && "text-fg-secondary line-through")}>
-                              {reminder && <span className="mr-1 rounded bg-danger px-1 text-[10px] font-bold text-white uppercase">{m.reminderBadge}</span>}
+                              {reminder && <span className="mr-1 rounded-chip bg-danger px-1 text-caption font-bold text-white uppercase">{m.reminderBadge}</span>}
                               {note.note}
                             </button>
                           ) : canEdit && (
                             <button type="button" onClick={() => setEditing(key)} aria-label={m.editNote(cellName)}
-                              className="absolute top-1 right-1 grid size-6 place-items-center rounded text-[12px] text-fg-secondary opacity-0 group-hover/cell:opacity-100 focus:opacity-100 hover:bg-surface/80 hover:text-fg">
+                              className="absolute top-1 right-1 grid size-6 place-items-center rounded-chip text-caption text-fg-secondary opacity-0 group-hover/cell:opacity-100 focus:opacity-100 hover:bg-surface/80 hover:text-fg">
                               <span aria-hidden>✎</span>
                             </button>
                           )}
@@ -201,7 +201,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                       <td className="border-b border-line p-1 text-center">
                         <button type="button" aria-label={`${m.deleteFeature}: ${f.name}`}
                           disabled={rows.pending} onClick={() => rows.run(() => deleteFeature(f.id))}
-                          className="grid size-8 place-items-center rounded-[7px] text-fg-secondary opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
+                          className="grid size-8 place-items-center rounded-control text-fg-secondary opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
                           <span aria-hidden>×</span>
                         </button>
                       </td>
@@ -212,7 +212,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
             ))}
             {features.length > 0 && (
               <tr>
-                <th scope="row" className="sticky left-0 z-[1] border-r border-line bg-surface p-3 text-left text-[13px] font-bold">Итого</th>
+                <th scope="row" className="sticky left-0 z-[1] border-r border-line bg-surface p-3 text-left text-meta font-bold">Итого</th>
                 {products.map((p) => (
                   <td key={p.id} className="p-3 text-center">
                     <span className="display-num text-[22px] tabular-nums">{score(p.id)}</span>
@@ -227,7 +227,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
       </div>
 
       {features.length === 0 && <p className="text-fg-secondary">{kind === "ux" ? ux.empty : m.empty}</p>}
-      {failed && <p role="alert" className="text-[13px] text-danger">{m.saveFailed}</p>}
+      {failed && <p role="alert" className="text-meta text-danger">{m.saveFailed}</p>}
       <ActionError error={rows.error} />
 
       {canEdit && (
@@ -272,10 +272,10 @@ function NoteEditor({ initial, label, placeholder, onSave, onCancel }: {
           if (e.key === "Escape") onCancel();
           if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSave(text); }
         }}
-        className="w-full resize-none rounded-md border border-line bg-surface px-1.5 py-1 text-[12px] leading-snug focus:border-fg focus:outline-none" />
+        className="w-full resize-none rounded-chip border border-line bg-surface px-1.5 py-1 text-caption leading-snug focus:border-fg focus:outline-none" />
       <div className="flex gap-1">
-        <button type="button" onClick={() => onSave(text)} className="rounded-md bg-fg px-2 py-0.5 text-[12px] font-semibold text-canvas">{m.saveNote}</button>
-        <button type="button" onClick={onCancel} className="rounded-md px-2 py-0.5 text-[12px] font-semibold text-fg-secondary hover:text-fg">{m.cancelNote}</button>
+        <button type="button" onClick={() => onSave(text)} className="rounded-chip bg-fg px-2 py-0.5 text-caption font-semibold text-canvas">{m.saveNote}</button>
+        <button type="button" onClick={onCancel} className="rounded-chip px-2 py-0.5 text-caption font-semibold text-fg-secondary hover:text-fg">{m.cancelNote}</button>
       </div>
     </div>
   );
@@ -311,6 +311,6 @@ function FeatureName({ feature }: { feature: Feature }) {
   return (
     <textarea aria-label={m.feature} value={name} maxLength={200} rows={1} onChange={(e) => setName(e.target.value)} onBlur={save}
       onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); (e.target as HTMLTextAreaElement).blur(); } }}
-      className="block w-full resize-none rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-[14px] leading-snug font-semibold [field-sizing:content] hover:border-line focus:border-fg focus:bg-surface focus:outline-none" />
+      className="block w-full resize-none rounded-control border border-transparent bg-transparent px-2 py-1.5 text-sm leading-snug font-semibold [field-sizing:content] hover:border-line focus:border-fg focus:bg-surface focus:outline-none" />
   );
 }

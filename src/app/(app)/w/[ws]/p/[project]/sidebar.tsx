@@ -25,13 +25,13 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
     <nav aria-label="Разделы проекта"
       className="sticky top-0 z-20 bg-rail text-rail-fg md:h-screen md:overflow-y-auto">
       <div className="flex flex-col gap-1 px-5 pt-5 pb-3 md:pt-7">
-        <Link href={`/w/${wsSlug}`} className="text-[13px] opacity-70 hover:opacity-100">{wsName}</Link>
+        <Link href={`/w/${wsSlug}`} className="text-meta opacity-70 hover:opacity-100">{wsName}</Link>
         <div className="flex items-start justify-between gap-2">
           <span className="font-display text-[22px] leading-[1.05] font-bold uppercase md:text-[26px]" title={projectName}>
             {projectName}
           </span>
           <Link href={`${base}/settings`} aria-current={pathname === `${base}/settings` ? "page" : undefined}
-            className="mt-1 shrink-0 rounded-md border border-rail-fg/30 px-2 py-0.5 text-caption hover:border-rail-fg/70 aria-[current=page]:bg-rail-fg aria-[current=page]:text-rail">
+            className="mt-1 shrink-0 rounded-chip border border-rail-fg/30 px-2 py-0.5 text-caption hover:border-rail-fg/70 aria-[current=page]:bg-rail-fg aria-[current=page]:text-rail">
             {t.project.settings}
           </Link>
         </div>
@@ -55,7 +55,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
                   <li key={item.segment || "overview"}>
                     <Link href={href} aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex flex-col rounded-[10px] px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-[120ms]",
+                        "flex flex-col rounded-control px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-[120ms]",
                         active ? "bg-canvas text-fg" : "hover:bg-rail-fg/10",
                         pending && !active && "font-medium opacity-55",
                       )}>
@@ -64,7 +64,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
                         {pending && <span className="text-caption font-medium tabular-nums">{t.project.phaseSoon(item.phase)}</span>}
                       </span>
                       {value !== undefined && (
-                        <span className="mt-1.5 block h-[3px] overflow-hidden rounded-sm shadow-[inset_0_0_0_1px_rgba(127,127,127,.35)]"
+                        <span className="mt-1.5 block h-[3px] overflow-hidden rounded-chip shadow-[inset_0_0_0_1px_rgba(127,127,127,.35)]"
                           role="img" aria-label={`Готово ${value}%`}>
                           <i className="block h-full bg-current" style={{ width: `${value}%` }} />
                         </span>
@@ -77,7 +77,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
           </div>
         ))}
         {/* Reference at the end of the list (serial position, docs/UX_LAWS.md UX-14). */}
-        <Link href="/app/ux-laws" className="hidden rounded-[10px] px-2.5 py-1.5 text-[13px] font-semibold opacity-70 hover:bg-rail-fg/10 hover:opacity-100 md:block">
+        <Link href="/app/ux-laws" className="hidden rounded-control px-2.5 py-1.5 text-meta font-semibold opacity-70 hover:bg-rail-fg/10 hover:opacity-100 md:block">
           {t.uxLaws.nav}
         </Link>
       </div>

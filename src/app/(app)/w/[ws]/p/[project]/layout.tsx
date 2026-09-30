@@ -53,7 +53,7 @@ export default async function ProjectLayout({ children, params }: {
       <main className="min-w-0 px-[clamp(18px,4vw,56px)] pt-8 pb-20 md:pt-10">
         {project.archived_at && (
           <form action={setProjectArchived} role="status"
-            className="mb-6 flex max-w-3xl flex-wrap items-center justify-between gap-3 rounded-[12px] border-[1.5px] border-dashed border-line px-4 py-2.5 text-[13px]">
+            className="mb-6 flex max-w-3xl flex-wrap items-center justify-between gap-3 rounded-panel border-[1.5px] border-dashed border-line px-4 py-2.5 text-meta">
             <span>{t.project.archivedBanner}</span>
             <input type="hidden" name="projectId" value={project.id} />
             <input type="hidden" name="archived" value="0" />

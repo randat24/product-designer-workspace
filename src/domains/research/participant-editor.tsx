@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { Input } from "@/shared/ui/field";
-import { cn } from "@/shared/lib/cn";
+import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { t } from "@/shared/i18n/ru";
 import { deleteParticipant, saveParticipant } from "./actions";
 import type { ParticipantFields } from "./schema";
@@ -19,11 +19,10 @@ export function ParticipantEditor({ id, initial, consentAt, canEdit }: {
 }) {
   const { value: p, update, status, error } = useAutosave(initial, (v) => saveParticipant(id, { ...v, consentAt }), canEdit);
   const [tagsText, setTagsText] = useState(initial.tags.join(", "));
-  const [armed, setArmed] = useState(false);
 
   const input = (key: "role" | "display_name" | "segment_label" | "age_range" | "contact", label: string, hint?: string, max = 200) => (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={key} className="text-[13px] font-semibold text-fg-secondary">{label}</label>
+      <label htmlFor={key} className="text-meta font-semibold text-fg-secondary">{label}</label>
       <Input id={key} value={p[key] ?? ""} readOnly={!canEdit} maxLength={max} placeholder={hint}
         onChange={(e) => update({ [key]: e.target.value })} />
     </div>
@@ -38,7 +37,7 @@ export function ParticipantEditor({ id, initial, consentAt, canEdit }: {
           {input("segment_label", f.segment_label, f.segmentHint, 80)}
           {input("age_range", f.age_range, undefined, 40)}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="tags" className="text-[13px] font-semibold text-fg-secondary">{f.tags}</label>
+            <label htmlFor="tags" className="text-meta font-semibold text-fg-secondary">{f.tags}</label>
             <Input id="tags" value={tagsText} readOnly={!canEdit} placeholder={f.tagsHint}
               onChange={(e) => { setTagsText(e.target.value); update({ tags: e.target.value.split(",") }); }} />
           </div>
@@ -60,14 +59,7 @@ export function ParticipantEditor({ id, initial, consentAt, canEdit }: {
       </Section>
 
       {canEdit && (
-        <form action={deleteParticipant} onSubmit={(e) => { if (!armed) { e.preventDefault(); setArmed(true); } }}>
-          <input type="hidden" name="id" value={id} />
-          <button type="submit" onBlur={() => setArmed(false)}
-            className={cn("rounded-[9px] border-[1.5px] px-3.5 py-1.5 text-sm font-semibold",
-              armed ? "border-danger bg-danger text-white" : "border-line text-danger hover:border-danger")}>
-            {armed ? t.research.participants.deleteConfirm : t.research.participants.delete}
-          </button>
-        </form>
+        <ConfirmDelete action={deleteParticipant} fields={{ id }} label={t.research.participants.delete} confirm={t.research.participants.deleteConfirm} />
       )}
       {error?.field && <span className="sr-only">{error.message}</span>}
     </div>

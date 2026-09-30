@@ -23,7 +23,7 @@ export default function ProjectError({ error, reset }: { error: Error & { digest
           {t.status.toOverview}
         </Link>
       </div>
-      {error.digest && <p className="text-[12px] text-fg-secondary">ID: {error.digest}</p>}
+      {error.digest && <p className="text-caption text-fg-secondary">ID: {error.digest}</p>}
     </div>
   );
 }

@@ -71,8 +71,8 @@ function StepNodeView({ data, selected }: NodeProps<StepNode>) {
   if (k.shape === "diamond") {
     return (
       <div className="relative grid size-[132px] place-items-center">
-        <div aria-hidden className={cn("absolute inset-[18px] rotate-45 rounded-[10px] border-[1.5px] bg-surface", ring)} style={{ borderColor: k.color }} />
-        <span className="relative max-w-[88px] text-center text-[12.5px] leading-tight font-bold">{label}</span>
+        <div aria-hidden className={cn("absolute inset-[18px] rotate-45 rounded-control border-[1.5px] bg-surface", ring)} style={{ borderColor: k.color }} />
+        <span className="relative max-w-[88px] text-center text-caption leading-tight font-bold">{label}</span>
         {handles}
       </div>
     );
@@ -82,19 +82,19 @@ function StepNodeView({ data, selected }: NodeProps<StepNode>) {
       <div className={cn("flex min-w-[150px] max-w-[220px] items-center gap-2 rounded-full border-[1.5px] bg-surface px-4 py-2", ring)}
         style={{ borderColor: k.color }}>
         <span aria-hidden className="size-2.5 shrink-0 rounded-full" style={{ background: k.color }} />
-        <span className="text-[13px] leading-tight font-bold">{label}</span>
+        <span className="text-meta leading-tight font-bold">{label}</span>
         {handles}
       </div>
     );
   }
   return (
-    <div className={cn("flex w-[188px] flex-col gap-1 rounded-[10px] border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.05)]", ring)}
+    <div className={cn("flex w-[188px] flex-col gap-1 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.05)]", ring)}
       style={{ borderTop: `4px solid ${k.color}` }}>
       <span className="text-caption font-semibold text-fg-secondary">{kindLabel}</span>
-      <span className="text-[13.5px] leading-snug font-bold">{label}</span>
+      <span className="text-meta leading-snug font-bold">{label}</span>
       {data.kind === "screen" && (
         data.screen
-          ? <span className="self-start rounded-[4px] border border-line px-1.5 text-caption font-semibold tabular-nums">{data.screen.code}</span>
+          ? <span className="self-start rounded-chip border border-line px-1.5 text-caption font-semibold tabular-nums">{data.screen.code}</span>
           : <span className="text-caption text-warning">{f.noScreen}</span>
       )}
       {handles}
@@ -206,15 +206,15 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
       <section aria-labelledby="canvas-h" className="flex flex-col gap-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 id="canvas-h" className="text-heading font-semibold">{f.canvas}</h2>
-          {canEdit && !wide && <p className="text-[13px] text-fg-secondary">{f.readOnlyHint}</p>}
+          {canEdit && !wide && <p className="text-meta text-fg-secondary">{f.readOnlyHint}</p>}
         </div>
 
         {editable && (
           <div role="toolbar" aria-label={f.palette} className="flex flex-wrap items-center gap-1.5">
-            <span className="mr-1 text-[13px] font-semibold text-fg-secondary">{f.palette}:</span>
+            <span className="mr-1 text-meta font-semibold text-fg-secondary">{f.palette}:</span>
             {NODE_KINDS.map((k) => (
               <button key={k.value} type="button" onClick={() => addStep(k.value)}
-                className="flex h-8 items-center gap-1.5 rounded-[8px] border border-line bg-surface px-2.5 text-[13px] font-semibold hover:border-fg">
+                className="flex h-8 items-center gap-1.5 rounded-control border border-line bg-surface px-2.5 text-meta font-semibold hover:border-fg">
                 <span aria-hidden className="size-2.5 rounded-full" style={{ background: k.color }} />
                 {f.kinds[k.value]}
               </button>
@@ -222,10 +222,10 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
           </div>
         )}
         {editable && <p className="text-caption text-fg-secondary">{f.paletteHint}</p>}
-        {error && <p role="alert" className="text-[13px] font-semibold text-danger">{error}</p>}
+        {error && <p role="alert" className="text-meta font-semibold text-danger">{error}</p>}
 
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <div ref={wrapper} className="flow-canvas h-[68vh] min-h-[460px] overflow-hidden rounded-[14px] border border-line bg-subtle">
+          <div ref={wrapper} className="flow-canvas h-[68vh] min-h-[460px] overflow-hidden rounded-panel border border-line bg-subtle">
             <ReactFlow<StepNode, LinkEdge>
               nodes={nodes} edges={edges} nodeTypes={nodeTypes}
               onNodesChange={onNodesChange} onEdgesChange={onEdgesChange}
@@ -259,7 +259,7 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
             </ReactFlow>
           </div>
 
-          <aside aria-labelledby="inspector-h" className="flex flex-col gap-4 rounded-[14px] border border-line bg-surface p-4 lg:max-h-[68vh] lg:overflow-y-auto">
+          <aside aria-labelledby="inspector-h" className="flex flex-col gap-4 rounded-panel border border-line bg-surface p-4 lg:max-h-[68vh] lg:overflow-y-auto">
             <h3 id="inspector-h" className="text-caption font-bold tracking-wide text-fg-secondary uppercase">{f.inspector}</h3>
             {node ? (
               <NodeInspector key={node.id} node={node} screens={screens} editable={editable} base={base}
@@ -283,7 +283,7 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
                 }}
                 report={report} />
             ) : (
-              <p className="text-[13px] text-fg-secondary">{f.inspectorEmpty}</p>
+              <p className="text-meta text-fg-secondary">{f.inspectorEmpty}</p>
             )}
           </aside>
         </div>
@@ -296,8 +296,8 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
 
 // ---------------------------------------------------------------- inspectors
 
-const selectClass = "h-9 w-full rounded-[8px] border border-line bg-surface px-2 text-sm disabled:opacity-70";
-const fieldLabel = "text-[13px] font-semibold text-fg-secondary";
+const selectClass = "h-9 w-full rounded-control border border-line bg-surface px-2 text-sm disabled:opacity-70";
+const fieldLabel = "text-meta font-semibold text-fg-secondary";
 
 function NodeInspector({ node, screens, editable, base, onPatch, onScreenCreated, onDelete, report }: {
   base: string;
@@ -352,7 +352,7 @@ function NodeInspector({ node, screens, editable, base, onPatch, onScreenCreated
             {screens.map((s) => <option key={s.id} value={s.id}>{s.code} {s.name}</option>)}
           </select>
           {node.data.screen && (
-            <a href={`${base}/screens/${node.data.screen.code}`} className="self-start text-[13px] font-semibold underline underline-offset-2">
+            <a href={`${base}/screens/${node.data.screen.code}`} className="self-start text-meta font-semibold underline underline-offset-2">
               {f.openScreen(node.data.screen.code)}
             </a>
           )}
@@ -373,7 +373,7 @@ function NodeInspector({ node, screens, editable, base, onPatch, onScreenCreated
 
       {editable && (
         <button type="button" onClick={onDelete}
-          className="self-start rounded-[8px] border-[1.5px] border-line px-3 py-1.5 text-[13px] font-semibold text-danger hover:border-danger">
+          className="self-start rounded-control border-[1.5px] border-line px-3 py-1.5 text-meta font-semibold text-danger hover:border-danger">
           {f.deleteNode}
         </button>
       )}
@@ -401,7 +401,7 @@ function EdgeInspector({ edge, from, to, editable, onPatch, onDelete, report }: 
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-[13px]"><span className="font-semibold">{from}</span> → <span className="font-semibold">{to}</span></p>
+      <p className="text-meta"><span className="font-semibold">{from}</span> → <span className="font-semibold">{to}</span></p>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="edge-branch" className={fieldLabel}>{f.branch}</label>
         <select id="edge-branch" className={selectClass} disabled={!editable} value={d.branch}
@@ -426,7 +426,7 @@ function EdgeInspector({ edge, from, to, editable, onPatch, onDelete, report }: 
       </div>
       {editable && (
         <button type="button" onClick={onDelete}
-          className="self-start rounded-[8px] border-[1.5px] border-line px-3 py-1.5 text-[13px] font-semibold text-danger hover:border-danger">
+          className="self-start rounded-control border-[1.5px] border-line px-3 py-1.5 text-meta font-semibold text-danger hover:border-danger">
           {f.deleteEdge}
         </button>
       )}

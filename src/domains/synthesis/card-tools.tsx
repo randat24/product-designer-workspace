@@ -9,7 +9,7 @@ import { t } from "@/shared/i18n/ru";
 import { createObservation, saveObservation, saveQuoteText } from "./actions";
 import { OBSERVATION_KINDS, type ObservationKind } from "./schema";
 
-const area = "w-full resize-y rounded-lg border border-transparent bg-subtle px-3 py-2 text-[17px] leading-relaxed [field-sizing:content] focus:border-fg focus:bg-surface focus:outline-none";
+const area = "w-full resize-y rounded-control border border-transparent bg-subtle px-3 py-2 text-heading leading-relaxed [field-sizing:content] focus:border-fg focus:bg-surface focus:outline-none";
 
 export function QuoteText({ id, initial, canEdit }: { id: string; initial: string; canEdit: boolean }) {
   const f = useFieldAutosave(initial, (v) => saveQuoteText(id, v), canEdit);

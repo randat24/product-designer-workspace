@@ -89,7 +89,7 @@ export function CommandPalette({ items: staticItems, load, triggerClassName }: {
   return (
     <>
       <button type="button" onClick={open}
-        className={cn("flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-line bg-canvas px-2.5 text-[13px] text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
+        className={cn("flex h-8 w-full items-center justify-between gap-2 rounded-control border border-line bg-canvas px-2.5 text-meta text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
         {t.palette.open}
         <kbd className="font-sans text-caption">⌘K</kbd>
       </button>
@@ -98,7 +98,7 @@ export function CommandPalette({ items: staticItems, load, triggerClassName }: {
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
       <dialog ref={dialog} aria-label={t.palette.open}
         onClick={(e) => e.target === dialog.current && dialog.current.close()}
-        className="mx-auto mt-[12vh] w-[min(560px,calc(100vw-32px))] rounded-[14px] border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
+        className="mx-auto mt-[12vh] w-[min(560px,calc(100vw-32px))] rounded-panel border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
         <input autoFocus value={query} placeholder={t.palette.placeholder}
           onChange={(e) => { setQuery(e.target.value); setActive(0); }}
           onKeyDown={onInputKey}
@@ -117,7 +117,7 @@ export function CommandPalette({ items: staticItems, load, triggerClassName }: {
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus */}
                 <div id={`cmd-${item.id}`} role="option" aria-selected={i === active}
                   onMouseMove={() => setActive(i)} onClick={() => go(item)}
-                  className={cn("flex h-9 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 font-medium", i === active && "bg-subtle")}>
+                  className={cn("flex h-9 cursor-pointer items-center justify-between gap-3 rounded-control px-3 font-medium", i === active && "bg-subtle")}>
                   <span className="truncate">{item.label}</span>
                   {item.hint && <span className="shrink-0 text-caption text-fg-secondary">{item.hint}</span>}
                 </div>

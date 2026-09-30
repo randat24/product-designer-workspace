@@ -36,7 +36,7 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <Link href={`${ctx.base}/flows`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{f.back}</Link>
+        <Link href={`${ctx.base}/flows`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{f.back}</Link>
         <PageHeader title={flow.name} eyebrow={<EntityChip type="user_flow" code={flow.code} />}
           stat={{ value: missing, caption: f.edgeCases.statuses.missing.toLowerCase() }} />
       </div>

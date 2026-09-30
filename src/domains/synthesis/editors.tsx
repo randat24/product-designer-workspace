@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { FieldError, Input } from "@/shared/ui/field";
-import { cn } from "@/shared/lib/cn";
+import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { t } from "@/shared/i18n/ru";
 import { deleteSynthesisEntity, saveInsight, saveOpportunity, savePainPoint } from "./actions";
 import {
@@ -20,10 +19,10 @@ function TitleInput({ id, label, hint, value, readOnly, error, onChange }: {
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[13px] font-semibold text-fg-secondary">{label}</label>
+      <label htmlFor={id} className="text-meta font-semibold text-fg-secondary">{label}</label>
       <Input id={id} value={value} readOnly={readOnly} maxLength={300} placeholder={hint} aria-invalid={!!error}
         aria-describedby={error ? `${id}-error` : undefined}
-        onChange={(e) => onChange(e.target.value)} className="h-11 text-[17px] font-bold" />
+        onChange={(e) => onChange(e.target.value)} className="h-11 text-heading font-bold" />
       <FieldError id={id} message={error} />
     </div>
   );
@@ -55,7 +54,7 @@ export function PainPointEditor({ id, initial, canEdit }: { id: string; initial:
       <TextField id="description" label={f.description} value={v.description ?? ""} readOnly={!canEdit} onChange={(description) => update({ description })} />
       <ChipGroup label={f.severity} options={SEVERITIES} value={v.severity} disabled={!canEdit} onChange={(severity) => update({ severity })} />
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="segment_label" className="text-[13px] font-semibold text-fg-secondary">{f.segment_label}</label>
+        <label htmlFor="segment_label" className="text-meta font-semibold text-fg-secondary">{f.segment_label}</label>
         <Input id="segment_label" value={v.segment_label ?? ""} readOnly={!canEdit} maxLength={80} className="max-w-xs"
           onChange={(e) => update({ segment_label: e.target.value })} />
       </div>
@@ -83,16 +82,5 @@ export function OpportunityEditor({ id, initial, canEdit }: { id: string; initia
 
 /** Two-step delete used on synthesis detail pages. */
 export function DeleteEntityButton({ type, id, label }: { type: string; id: string; label: string }) {
-  const [armed, setArmed] = useState(false);
-  return (
-    <form action={deleteSynthesisEntity} onSubmit={(e) => { if (!armed) { e.preventDefault(); setArmed(true); } }}>
-      <input type="hidden" name="type" value={type} />
-      <input type="hidden" name="id" value={id} />
-      <button type="submit" onBlur={() => setArmed(false)}
-        className={cn("rounded-[9px] border-[1.5px] px-3.5 py-1.5 text-sm font-semibold",
-          armed ? "border-danger bg-danger text-white" : "border-line text-danger hover:border-danger")}>
-        {armed ? s.deleteConfirm : label}
-      </button>
-    </form>
-  );
+  return <ConfirmDelete action={deleteSynthesisEntity} fields={{ type, id }} label={label} confirm={s.deleteConfirm} />;
 }

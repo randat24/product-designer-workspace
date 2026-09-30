@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { FieldError, Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
+import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { t } from "@/shared/i18n/ru";
 import { deleteDecision, deleteScreen, saveDecision, saveScreen } from "./actions";
@@ -16,7 +16,7 @@ import {
 
 const sc = t.screens;
 const dc = t.decisions;
-const labelClass = "text-[13px] font-semibold text-fg-secondary";
+const labelClass = "text-meta font-semibold text-fg-secondary";
 
 function Line({ id, label, hint, value, readOnly, error, onChange, className }: {
   id: string; label: string; hint?: string; value: string; readOnly: boolean; error?: string;
@@ -49,14 +49,14 @@ function StringList({ id, label, hint, items, readOnly, onChange }: {
               placeholder={sc.itemPlaceholder} onChange={(e) => onChange(items.map((x, j) => (j === i ? e.target.value : x)))} />
             {!readOnly && (
               <button type="button" aria-label={`${sc.removeItem} ${i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}
-                className="grid size-9 shrink-0 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                className="grid size-9 shrink-0 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
             )}
           </li>
         ))}
       </ol>
       {!readOnly && (
         <button type="button" onClick={() => onChange([...items, ""])}
-          className="self-start rounded-[9px] border-[1.5px] border-line px-3 py-1 text-[13px] font-semibold hover:border-fg">+ {sc.addItem}</button>
+          className="self-start rounded-control border-[1.5px] border-line px-3 py-1 text-meta font-semibold hover:border-fg">+ {sc.addItem}</button>
       )}
     </fieldset>
   );
@@ -72,21 +72,21 @@ function EventList({ items, readOnly, onChange }: { items: AnalyticsEvent[]; rea
         {items.map((ev, i) => (
           <li key={i} className="grid gap-1.5 sm:grid-cols-[1fr_1.4fr_1fr_auto]">
             <Input aria-label={`${e.name} ${i + 1}`} placeholder={e.name} value={ev.name} readOnly={readOnly} maxLength={120}
-              className="font-mono text-[13px]" onChange={(x) => set(i, { name: x.target.value })} />
+              className="font-mono text-meta" onChange={(x) => set(i, { name: x.target.value })} />
             <Input aria-label={`${e.trigger} ${i + 1}`} placeholder={e.trigger} value={ev.trigger} readOnly={readOnly} maxLength={300}
               onChange={(x) => set(i, { trigger: x.target.value })} />
             <Input aria-label={`${e.props} ${i + 1}`} placeholder={e.props} value={ev.props} readOnly={readOnly} maxLength={300}
-              className="font-mono text-[13px]" onChange={(x) => set(i, { props: x.target.value })} />
+              className="font-mono text-meta" onChange={(x) => set(i, { props: x.target.value })} />
             {!readOnly && (
               <button type="button" aria-label={`${sc.removeItem}: ${ev.name || i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}
-                className="grid size-9 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                className="grid size-9 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
             )}
           </li>
         ))}
       </ul>
       {!readOnly && (
         <button type="button" onClick={() => onChange([...items, { name: "", trigger: "", props: "" }])}
-          className="self-start rounded-[9px] border-[1.5px] border-line px-3 py-1 text-[13px] font-semibold hover:border-fg">+ {e.add}</button>
+          className="self-start rounded-control border-[1.5px] border-line px-3 py-1 text-meta font-semibold hover:border-fg">+ {e.add}</button>
       )}
     </fieldset>
   );
@@ -101,7 +101,7 @@ export function ScreenEditor({ id, initial, canEdit }: { id: string; initial: Sc
     <div className="flex flex-col gap-8">
       <SaveToast id="screen-status" status={status} error={error?.message} readOnly={ro} />
       <Section id="spec" title={sc.sections.spec}>
-        <Line id="name" label={f.name} value={v.name} readOnly={ro} error={error?.field === "name" ? error.message : undefined} className="h-11 text-[17px] font-bold"
+        <Line id="name" label={f.name} value={v.name} readOnly={ro} error={error?.field === "name" ? error.message : undefined} className="h-11 text-heading font-bold"
           onChange={(name) => update({ name })} />
         <ChipGroup label={f.status} options={SCREEN_STATUSES} value={v.status} disabled={ro} onChange={(s) => update({ status: s })} />
         <TextField id="purpose" label={f.purpose} hint={f.purposeHint} value={v.purpose ?? ""} readOnly={ro} onChange={(purpose) => update({ purpose })} />
@@ -130,10 +130,10 @@ export function ScreenEditor({ id, initial, canEdit }: { id: string; initial: Sc
               aria-invalid={error?.field === "figma_url"} aria-describedby={error?.field === "figma_url" ? "figma-error" : undefined}
               className="min-w-0 flex-1" onChange={(e) => update({ figma_url: e.target.value })} />
             {v.figma_url && isHttpUrl(withScheme(v.figma_url)) && (
-              <a href={withScheme(v.figma_url)} target="_blank" rel="noreferrer" className="text-[13px] font-semibold underline underline-offset-2">{sc.openFigma}</a>
+              <a href={withScheme(v.figma_url)} target="_blank" rel="noreferrer" className="text-meta font-semibold underline underline-offset-2">{sc.openFigma}</a>
             )}
           </div>
-          {error?.field === "figma_url" && <p id="figma-error" className="text-[13px] text-danger">{error.message}</p>}
+          {error?.field === "figma_url" && <p id="figma-error" className="text-meta text-danger">{error.message}</p>}
         </div>
       </Section>
     </div>
@@ -141,17 +141,7 @@ export function ScreenEditor({ id, initial, canEdit }: { id: string; initial: Sc
 }
 
 function ArmedDelete({ action, id, label, confirm }: { action: (fd: FormData) => Promise<void>; id: string; label: string; confirm: string }) {
-  const [armed, setArmed] = useState(false);
-  return (
-    <form action={action} onSubmit={(e) => { if (!armed) { e.preventDefault(); setArmed(true); } }}>
-      <input type="hidden" name="id" value={id} />
-      <button type="submit" onBlur={() => setArmed(false)}
-        className={cn("rounded-[9px] border-[1.5px] px-3.5 py-1.5 text-sm font-semibold",
-          armed ? "border-danger bg-danger text-white" : "border-line text-danger hover:border-danger")}>
-        {armed ? confirm : label}
-      </button>
-    </form>
-  );
+  return <ConfirmDelete action={action} fields={{ id }} label={label} confirm={confirm} />;
 }
 export const DeleteScreenButton = ({ id }: { id: string }) => <ArmedDelete action={deleteScreen} id={id} label={sc.delete} confirm={sc.deleteConfirm} />;
 export const DeleteDecisionButton = ({ id }: { id: string }) => <ArmedDelete action={deleteDecision} id={id} label={dc.delete} confirm={dc.deleteConfirm} />;
@@ -169,7 +159,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
     <div className="flex flex-col gap-8">
       <SaveToast id="decision-status" status={status} error={error?.message} readOnly={ro} />
       <Section id="decision" title={dc.section}>
-        <Line id="title" label={f.title} value={v.title} readOnly={ro} error={error?.field === "title" ? error.message : undefined} className="h-11 text-[17px] font-bold"
+        <Line id="title" label={f.title} value={v.title} readOnly={ro} error={error?.field === "title" ? error.message : undefined} className="h-11 text-heading font-bold"
           onChange={(title) => update({ title })} />
         <TextField id="context" label={f.context} hint={f.contextHint} value={v.context ?? ""} readOnly={ro} onChange={(context) => update({ context })} />
         <TextField id="decision-text" label={f.decision} value={v.decision ?? ""} readOnly={ro} onChange={(decision) => update({ decision })} />
@@ -179,13 +169,13 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
       <Section id="alternatives" title={f.alternatives}>
         <ul className="flex flex-col gap-3">
           {alts.map((a, i) => (
-            <li key={i} className="flex flex-col gap-1.5 rounded-[12px] border border-line p-3">
+            <li key={i} className="flex flex-col gap-1.5 rounded-panel border border-line p-3">
               <div className="flex items-center gap-1.5">
                 <Input aria-label={`${f.option} ${i + 1}`} placeholder={f.option} value={a.option} readOnly={ro} maxLength={300}
                   className="font-semibold" onChange={(e) => setAlt(i, { option: e.target.value })} />
                 {!ro && (
                   <button type="button" aria-label={`${dc.removeAlternative} ${i + 1}`} onClick={() => update({ alternatives: alts.filter((_, j) => j !== i) })}
-                    className="grid size-9 shrink-0 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                    className="grid size-9 shrink-0 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
                 )}
               </div>
               <Input aria-label={`${f.why_rejected} ${i + 1}`} placeholder={f.why_rejected} value={a.why_rejected} readOnly={ro} maxLength={1000}
@@ -195,7 +185,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
         </ul>
         {!ro && (
           <button type="button" onClick={() => update({ alternatives: [...alts, { option: "", why_rejected: "" }] })}
-            className="self-start rounded-[9px] border-[1.5px] border-line px-3 py-1 text-[13px] font-semibold hover:border-fg">+ {dc.addAlternative}</button>
+            className="self-start rounded-control border-[1.5px] border-line px-3 py-1 text-meta font-semibold hover:border-fg">+ {dc.addAlternative}</button>
         )}
       </Section>
 
@@ -211,7 +201,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
             <label htmlFor="superseded_by" className={labelClass}>{f.superseded_by}</label>
             <select id="superseded_by" disabled={ro} value={v.superseded_by_id ?? ""} aria-invalid={error?.field === "superseded_by_id"}
               onChange={(e) => update({ superseded_by_id: e.target.value || null, ...(e.target.value ? { status: "superseded" as const } : {}) })}
-              className="h-9 rounded-[8px] border border-line bg-surface px-2 text-sm disabled:opacity-70">
+              className="h-9 rounded-control border border-line bg-surface px-2 text-sm disabled:opacity-70">
               <option value="">{dc.supersededNone}</option>
               {others.map((o) => <option key={o.id} value={o.id}>{o.code} {o.title}</option>)}
             </select>

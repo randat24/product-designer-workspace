@@ -56,20 +56,20 @@ export function SelectionActions({ selection, projectId, interviewId, base }: {
 
   return (
     <div role="toolbar" aria-label={t.synthesis.quotes.selectHint}
-      className="mt-1.5 flex flex-wrap items-center gap-1.5 rounded-[10px] bg-fg px-2 py-1.5 text-canvas shadow-lg">
+      className="mt-1.5 flex flex-wrap items-center gap-1.5 rounded-control bg-fg px-2 py-1.5 text-canvas shadow-lg">
       <span className="max-w-60 truncate px-1 text-caption opacity-70">«{selection.text}»</span>
       <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={quote} disabled={pending}
-        className="rounded-md bg-canvas px-2.5 py-1 text-[13px] font-bold text-fg disabled:opacity-50" title="Alt+Q">
+        className="rounded-chip bg-canvas px-2.5 py-1 text-meta font-bold text-fg disabled:opacity-50" title="Alt+Q">
         {t.synthesis.quotes.fromSelection} <span className="font-normal opacity-60">⌥Q</span>
       </button>
       <span className="flex items-center gap-1">
         <select aria-label={t.synthesis.board.kind} value={kind} onChange={(e) => setKind(e.target.value as ObservationKind)}
           onMouseDown={(e) => e.stopPropagation()}
-          className="h-7 rounded-md border border-canvas/30 bg-transparent px-1 text-[13px] [&>option]:text-fg">
+          className="h-8 rounded-chip border border-canvas/30 bg-transparent px-1 text-meta [&>option]:text-fg">
           {OBSERVATION_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
         </select>
         <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={observe} disabled={pending}
-          className="rounded-md border border-canvas/40 px-2.5 py-1 text-[13px] font-bold disabled:opacity-50" title="Alt+O">
+          className="rounded-chip border border-canvas/40 px-2.5 py-1 text-meta font-bold disabled:opacity-50" title="Alt+O">
           {t.synthesis.quotes.observationFromSelection} <span className="font-normal opacity-60">⌥O</span>
         </button>
       </span>

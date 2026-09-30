@@ -102,7 +102,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
           {startedAt && (
             <span className="display-num text-2xl tabular-nums" role="timer" aria-label={`${lv.timer} ${clock}`}>{clock}</span>
           )}
-          <Link href={detailHref} className="rounded-lg border border-rail-fg/30 px-3 py-1.5 text-sm font-semibold hover:border-rail-fg/70">{lv.exit}</Link>
+          <Link href={detailHref} className="rounded-control border border-rail-fg/30 px-3 py-1.5 text-sm font-semibold hover:border-rail-fg/70">{lv.exit}</Link>
         </div>
       </header>
 
@@ -151,13 +151,13 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
 
           {step.kind === "intro" && canEdit && !startedAt && !finished && (
             <button type="button" onClick={start} disabled={pending}
-              className="self-start rounded-[12px] bg-fg px-6 py-3.5 text-lg font-bold text-canvas disabled:opacity-50">
+              className="self-start rounded-panel bg-fg px-6 py-3.5 text-lg font-bold text-canvas disabled:opacity-50">
               {lv.start}
             </button>
           )}
           {step.kind === "outro" && canEdit && !finished && (
             <button type="button" onClick={finish} disabled={pending}
-              className="self-start rounded-[12px] bg-success px-6 py-3.5 text-lg font-bold text-white disabled:opacity-50">
+              className="self-start rounded-panel bg-success px-6 py-3.5 text-lg font-bold text-white disabled:opacity-50">
               {lv.finish}
             </button>
           )}
@@ -172,12 +172,12 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
 
       <footer className="flex items-center justify-between gap-3 border-t border-line bg-surface px-4 py-3 sm:px-6">
         <button type="button" onClick={() => setI((x) => Math.max(x - 1, 0))} disabled={i === 0}
-          className="h-12 min-w-28 rounded-[12px] border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
+          className="h-12 min-w-28 rounded-panel border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
           ← {lv.prev}
         </button>
         <p className="hidden text-caption text-fg-secondary md:block">{lv.shortcuts}</p>
         <button type="button" onClick={() => setI((x) => Math.min(x + 1, steps.length - 1))} disabled={i === steps.length - 1}
-          className={cn("h-12 min-w-28 rounded-[12px] bg-fg px-5 text-base font-bold text-canvas disabled:opacity-30")}>
+          className={cn("h-12 min-w-28 rounded-panel bg-fg px-5 text-base font-bold text-canvas disabled:opacity-30")}>
           {lv.next} →
         </button>
       </footer>

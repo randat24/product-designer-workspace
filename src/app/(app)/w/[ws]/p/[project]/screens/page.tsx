@@ -38,10 +38,10 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
       <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
       {screens.length === 0 ? (
-        <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>
+        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
-          <table className="w-full min-w-[720px] text-left text-[14px]">
+        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+          <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="border-b border-line text-caption font-semibold text-fg-secondary">
               <tr>
                 <th scope="col" className="px-4 py-2.5">{sc.columns.screen}</th>
@@ -60,9 +60,9 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
                       <Link href={`${ctx.base}/screens/${s.code}`} className="font-bold hover:underline">
                         <span className="mr-2 text-caption text-fg-secondary tabular-nums">{s.code}</span>{s.name}
                       </Link>
-                      {s.purpose && <p className="line-clamp-1 text-[13px] text-fg-secondary">{s.purpose}</p>}
+                      {s.purpose && <p className="line-clamp-1 text-meta text-fg-secondary">{s.purpose}</p>}
                     </td>
-                    <td className="px-4 py-3 text-[13px] font-semibold">{SCREEN_STATUSES.find((x) => x.value === s.status)?.label}</td>
+                    <td className="px-4 py-3 text-meta font-semibold">{SCREEN_STATUSES.find((x) => x.value === s.status)?.label}</td>
                     <td className="px-4 py-3">
                       <ul className="flex gap-2.5 text-caption" aria-label={sc.columns.states}>
                         {KEY_STATES.map((k) => (
@@ -75,12 +75,12 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
                         ))}
                       </ul>
                     </td>
-                    <td className="px-4 py-3 text-[13px] tabular-nums">
+                    <td className="px-4 py-3 text-meta tabular-nums">
                       {s.flows.map((code) => (
                         <Link key={code} href={`${ctx.base}/flows/${code}`} className="mr-1.5 hover:underline">{code}</Link>
                       ))}
                     </td>
-                    <td className="px-4 py-3 text-[13px]">
+                    <td className="px-4 py-3 text-meta">
                       {s.upstream > 0
                         ? <span>{sc.upstream(s.upstream)}</span>
                         : <span className="font-semibold text-warning">⚠ {sc.noUpstream}</span>}

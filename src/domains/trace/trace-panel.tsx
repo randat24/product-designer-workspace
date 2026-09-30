@@ -28,10 +28,10 @@ export async function TracePanel({ projectId, base, entity, canEdit, needsSource
   const candidates = canEdit ? await listLinkCandidates(base, projectId, candidateTypes) : [];
 
   return (
-    <aside aria-label={t.trace.title} className="flex flex-col gap-5 rounded-[14px] border border-line bg-surface p-5 text-sm">
+    <aside aria-label={t.trace.title} className="flex flex-col gap-5 rounded-panel border border-line bg-surface p-5 text-sm">
       <h2 className="text-caption font-bold tracking-wide text-fg-secondary uppercase">{t.trace.title}</h2>
       <Section title={t.trace.upstream} edges={upstream} pick="source" resolved={resolved} canEdit={canEdit}
-        empty={needsSources ? <p className="rounded-lg bg-warning/10 px-2.5 py-1.5 font-semibold text-warning">⚠ {t.trace.unsupported}</p> : null} />
+        empty={needsSources ? <p className="rounded-control bg-warning/10 px-2.5 py-1.5 font-semibold text-warning">⚠ {t.trace.unsupported}</p> : null} />
       <div className="flex items-center gap-2 border-y border-line py-3">
         <EntityChip type={entity.type} code={entity.code} className="border-fg" />
         <span className="text-caption text-fg-secondary">{ENTITIES[entity.type].label}</span>
@@ -70,9 +70,9 @@ function Section({ title, edges, pick, resolved, canEdit, empty }: {
             const r = resolved.get(`${e[pick].type}:${e[pick].id}`);
             return (
               <li key={e.linkId} className="group flex items-start gap-1.5" style={{ paddingLeft: (e.depth - 1) * 12 }}>
-                <Link href={r?.href ?? "#"} className="flex min-w-0 flex-1 items-start gap-2 rounded-md px-1 py-0.5 hover:bg-subtle">
+                <Link href={r?.href ?? "#"} className="flex min-w-0 flex-1 items-start gap-2 rounded-chip px-1 py-0.5 hover:bg-subtle">
                   <EntityChip type={e[pick].type} code={r?.code ?? "…"} title={r?.title} />
-                  <span className="line-clamp-2 min-w-0 text-[13px] leading-snug">
+                  <span className="line-clamp-2 min-w-0 text-meta leading-snug">
                     {r?.participant && e[pick].type !== "interview" && <span className="font-semibold">{r.participant} · </span>}
                     {r?.title}
                   </span>

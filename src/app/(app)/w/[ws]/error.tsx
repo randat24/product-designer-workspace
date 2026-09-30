@@ -18,7 +18,7 @@ export default function WorkspaceError({ error, reset }: { error: Error & { dige
           {t.status.toProjects}
         </Link>
       </div>
-      {error.digest && <p className="text-[12px] text-fg-secondary">ID: {error.digest}</p>}
+      {error.digest && <p className="text-caption text-fg-secondary">ID: {error.digest}</p>}
     </div>
   );
 }
