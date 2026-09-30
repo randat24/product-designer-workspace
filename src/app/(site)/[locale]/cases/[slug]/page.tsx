@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CONTACTS, LOCALES, dict, isLocale } from "@/site/content";
+import { trackAttrs } from "@/site/analytics/track";
 import { getCases } from "@/site/cases-source";
+import { CaseGallery } from "@/site/case-gallery";
 import { CaseStoryView } from "@/site/case-story-view";
-import { CaseCover, Eyebrow, PrimaryLink, container } from "@/site/ui";
+import { JsonLd } from "@/site/json-ld";
+import { breadcrumbLd, caseLd, graph, localeUrl, pageMetadata } from "@/site/seo";
+import { CaseCover, Eyebrow, KindBadge, PrimaryLink, SecondaryLink, container } from "@/site/ui";
 
 // Cases published later in the tool are rendered on first visit and then cached.
 export const revalidate = 60;
+// Cases published after the build render on first visit (the layout limits only the locale).
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const lists = await Promise.all(LOCALES.map(async (locale) => ({ locale, cases: await getCases(locale) })));
@@ -20,13 +26,17 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
   const item = (await getCases(locale)).find((c) => c.slug === slug);
-  return item
-    ? {
-        title: item.title,
-        description: item.summary,
-        alternates: { languages: { uk: `/uk/cases/${slug}`, en: `/en/cases/${slug}` } },
-      }
-    : {};
+  if (!item) return {};
+  // Placeholder cases stay out of search results until real content replaces them.
+  return pageMetadata({
+    locale,
+    path: `/cases/${slug}`,
+    title: item.title,
+    description: item.summary,
+    type: "article",
+    caseSlug: slug,
+    noindex: item.sample,
+  });
 }
 
 export default async function CasePage({ params }: { params: Params }) {
@@ -41,11 +51,32 @@ export default async function CasePage({ params }: { params: Params }) {
 
   return (
     <article className="pb-20 pt-10">
+      <JsonLd
+        data={graph(
+          caseLd(locale, item),
+          breadcrumbLd([
+            { name: d.ui.home, url: localeUrl(locale, "") },
+            { name: d.cases.title, url: localeUrl(locale, "/cases") },
+            { name: item.title, url: localeUrl(locale, `/cases/${item.slug}`) },
+          ]),
+        )}
+      />
       <div className={`${container} flex flex-col gap-8`}>
-        <Link href={`/${locale}/cases`} className="w-fit text-[14px] font-semibold text-fg-secondary hover:text-fg">
-          ← {d.cases.back}
-        </Link>
+        <nav aria-label={d.ui.breadcrumbs}>
+          <ol className="flex flex-wrap items-center gap-1.5 text-[14px] font-semibold text-fg-secondary">
+            <li><Link href={`/${locale}`} className="hover:text-fg">{d.ui.home}</Link></li>
+            <li aria-hidden="true">/</li>
+            <li><Link href={`/${locale}/cases`} className="hover:text-fg">{d.cases.title}</Link></li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page" className="text-fg">{item.title}</li>
+          </ol>
+        </nav>
         <header className="flex max-w-[820px] flex-col gap-5">
+          {item.kind && (
+            <div className="flex">
+              <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />
+            </div>
+          )}
           <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[0.92]">{item.title}</h1>
           <p className="text-[clamp(17px,2vw,20px)] text-fg-secondary">{item.summary}</p>
         </header>
@@ -63,6 +94,19 @@ export default async function CasePage({ params }: { params: Params }) {
           ))}
         </dl>
         <CaseCover item={item} label={d.cases.placeholder} large />
+        {/* Live product, or a note that the pages can be browsed here (no site / a concept). */}
+        {item.liveUrl ? (
+          <div className="flex">
+            <SecondaryLink href={item.liveUrl} track={trackAttrs("case_live_open", { case_slug: item.slug, location: "case" })}>
+              {d.project.live} ↗
+            </SecondaryLink>
+          </div>
+        ) : item.gallery?.length ? (
+          <p className="text-[15px] text-fg-secondary">
+            {item.kind === "concept" ? d.project.conceptNote : d.project.noLive}{" "}
+            <a href="#pages" className="font-semibold text-fg underline underline-offset-4">{d.project.pages} ↓</a>
+          </p>
+        ) : null}
         {item.story && (
           <p className="rounded-[10px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-secondary">{d.story.sample}</p>
         )}
@@ -77,6 +121,13 @@ export default async function CasePage({ params }: { params: Params }) {
         </ul>
         )}
       </div>
+
+      {item.gallery && item.gallery.length > 0 && (
+        <section id="pages" aria-labelledby="pages-h" className={`${container} mt-14 scroll-mt-24`}>
+          <h2 id="pages-h" className="mb-3 font-display text-[28px] font-bold uppercase leading-none">{d.project.pages}</h2>
+          <CaseGallery items={item.gallery} labels={d.project} caseSlug={item.slug} />
+        </section>
+      )}
 
       {item.story ? (
         <div className="mt-12">
@@ -106,14 +157,20 @@ export default async function CasePage({ params }: { params: Params }) {
       <div className={`${container} mt-20`}>
       <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10 sm:flex-row sm:items-center sm:justify-between">
         {next ? (
-          <Link href={`/${locale}/cases/${next.slug}`} className="group flex flex-col gap-1">
+          <Link
+            href={`/${locale}/cases/${next.slug}`}
+            className="group flex flex-col gap-1"
+            {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}
+          >
             <Eyebrow>{d.cases.next}</Eyebrow>
             <span className="font-display text-[28px] font-bold uppercase leading-none group-hover:underline">{next.title} →</span>
           </Link>
         ) : (
           <span />
         )}
-        <PrimaryLink href={`mailto:${CONTACTS.email}`}>{d.home.cta}</PrimaryLink>
+        <PrimaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "case", case_slug: item.slug })}>
+          {d.home.cta}
+        </PrimaryLink>
       </div>
       </div>
     </article>

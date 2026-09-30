@@ -1,10 +1,12 @@
 // Hennadii's signature (vector, from fg.svg). Filled shapes in currentColor,
 // so it follows the text colour in light and dark themes.
 
-export function Signature({ className, title }: { className?: string; title?: string }) {
+export function Signature({ className, title, width, height }: { className?: string; title?: string; width?: number; height?: number }) {
   return (
     <svg
       viewBox="0 0 283 150"
+      width={width}
+      height={height}
       className={className}
       fill="currentColor"
       role={title ? "img" : undefined}
