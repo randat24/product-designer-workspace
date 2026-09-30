@@ -8,12 +8,13 @@ import { CommandPalette, type CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/ru";
 
 /** Dark navigation rail from the notebook prototype: groups, items, progress bars for shipped stages. */
-export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, progress }: {
+export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, loadEntities, progress }: {
   wsSlug: string;
   wsName: string;
   projectSlug: string;
   projectName: string;
   commands: CommandItem[];
+  loadEntities?: () => Promise<CommandItem[]>;
   /** Stage progress 0–100 by nav segment. */
   progress: Record<string, number>;
 }) {
@@ -35,7 +36,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, pr
           </Link>
         </div>
         <div className="mt-3 hidden md:block">
-          <CommandPalette items={commands}
+          <CommandPalette items={commands} load={loadEntities}
             triggerClassName="border-rail-fg/30 bg-transparent text-rail-fg/80 hover:bg-rail-fg/10 hover:text-rail-fg" />
         </div>
       </div>

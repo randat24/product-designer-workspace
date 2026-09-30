@@ -266,6 +266,7 @@ export type Database = {
         Returns: { screen_id: string; missing_states: number; flows: string[]; upstream: number; decisions: number }[];
       };
       decision_stats: { Args: { p_project: string }; Returns: { decision_id: string; evidence: number; targets: number }[] };
+      project_stage_counts: { Args: { p_project: string }; Returns: Json };
       flow_stats: {
         Args: { p_project: string };
         Returns: { flow_id: string; node_count: number; screen_count: number; missing_cases: number }[];

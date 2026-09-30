@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { createClient } from "@/shared/lib/supabase/server";
+import type { StageCountsRow } from "./progress";
 
 export const getCurrentUser = cache(async () => {
   const supabase = await createClient();
@@ -132,4 +133,12 @@ export const getProjectContext = cache(async (wsSlug: string, projectSlug: strin
     canEdit: role === "owner" || role === "editor",
     base: `/w/${workspace.slug}/p/${project.slug}`,
   };
+});
+
+/** Stage counts of a project in one database call (docs/QUALITY_REVIEW.md, A4). */
+export const getStageCounts = cache(async (projectId: string): Promise<StageCountsRow> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("project_stage_counts", { p_project: projectId });
+  if (error) throw error;
+  return (data ?? {}) as StageCountsRow;
 });

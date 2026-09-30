@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { stageProgress, type ProgressCounts } from "./progress";
+import { countsFromRow, stageProgress, type ProgressCounts } from "./progress";
 
 const zero = { done: 0, total: 0 };
 const empty: ProgressCounts = {
@@ -27,5 +27,15 @@ describe("stageProgress", () => {
   });
   it("marks opportunities done once there is one", () => {
     expect(stageProgress({ ...empty, opportunities: 1 }).opportunities).toBe(100);
+  });
+});
+
+describe("countsFromRow", () => {
+  it("maps database counts, treating missing values as zero", () => {
+    const c = countsFromRow({ screens_total: 3, screens_complete: 2, research_target: null }, { done: 1, total: 7 });
+    expect(c.screens).toEqual({ done: 2, total: 3 });
+    expect(c.research).toEqual({ conducted: 0, target: null });
+    expect(c.flows).toEqual({ done: 0, total: 0 });
+    expect(stageProgress(c).screens).toBe(67);
   });
 });

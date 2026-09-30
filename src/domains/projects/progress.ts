@@ -44,3 +44,28 @@ export function stageProgress(c: ProgressCounts): Record<string, number> {
     decisions: pct(c.decisions),
   };
 }
+
+/** The row of the database function project_stage_counts (migration 015). */
+export type StageCountsRow = Partial<Record<
+  | "competitors_assessed" | "interviews_conducted" | "research_target" | "cards_total" | "cards_sorted"
+  | "insights_total" | "insights_sourced" | "pain_points_total" | "pain_points_sourced" | "opportunities"
+  | "flows_total" | "flows_complete" | "screens_total" | "screens_complete" | "decisions_total" | "decisions_evidenced",
+  number | null
+>>;
+
+/** Maps the database counts (plus the brief, computed in TypeScript) to ProgressCounts. */
+export function countsFromRow(row: StageCountsRow, brief: Ratio): ProgressCounts {
+  const n = (k: keyof StageCountsRow) => Number(row[k] ?? 0);
+  return {
+    brief,
+    competitorsAssessed: n("competitors_assessed"),
+    research: { conducted: n("interviews_conducted"), target: row.research_target ?? null },
+    synthesis: { done: n("cards_sorted"), total: n("cards_total") },
+    insights: { done: n("insights_sourced"), total: n("insights_total") },
+    painPoints: { done: n("pain_points_sourced"), total: n("pain_points_total") },
+    opportunities: n("opportunities"),
+    flows: { done: n("flows_complete"), total: n("flows_total") },
+    screens: { done: n("screens_complete"), total: n("screens_total") },
+    decisions: { done: n("decisions_evidenced"), total: n("decisions_total") },
+  };
+}
