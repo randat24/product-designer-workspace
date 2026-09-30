@@ -86,12 +86,12 @@ type Dictionary = {
   };
   jobs: Job[];
   skills: { group: string; items: string }[];
-  education: { title: string; place: string; year: string }[];
+  education: { title: string; place: string; year: string; certificate?: string }[];
   languages: { name: string; level: string }[];
   availability: string[];
   awards: Award[];
   contact: { title: string; lead: string; write: string };
-  footer: { rights: string; login: string };
+  footer: { rights: string; login: string; top: string; certificate: string };
   cases_list: Case[];
 };
 
@@ -198,11 +198,17 @@ const uk: Dictionary = {
     { group: "Технічне", items: "HTML, CSS, базовий JS, адаптивна верстка" },
   ],
   education: [
-    { title: "UX|UI designer", place: "Skvot · сертифікат", year: "2025" },
+    {
+      title: "UX|UI designer",
+      place: "Skvot · сертифікат",
+      year: "2025",
+      certificate: "https://lms.skvot.io/certificate/973ec20a3270e9c547625ad0c1c4400f",
+    },
     {
       title: "Python для Data Science",
       place: "intellectum.university · сертифікат",
       year: "2026",
+      certificate: "https://lms.intellectum.university/courses/python-data-science/certificate",
     },
     {
       title: "Дизайн",
@@ -258,7 +264,7 @@ const uk: Dictionary = {
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
     write: "Написати на пошту",
   },
-  footer: { rights: "Усі права захищено", login: "Вхід" },
+  footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат" },
   cases_list: [],
 };
 
@@ -365,11 +371,17 @@ const en: Dictionary = {
     { group: "Technical", items: "HTML, CSS, basic JS, responsive markup" },
   ],
   education: [
-    { title: "UX|UI designer", place: "Skvot · certificate", year: "2025" },
+    {
+      title: "UX|UI designer",
+      place: "Skvot · certificate",
+      year: "2025",
+      certificate: "https://lms.skvot.io/certificate/973ec20a3270e9c547625ad0c1c4400f",
+    },
     {
       title: "Python for Data Science",
       place: "intellectum.university · certificate",
       year: "2026",
+      certificate: "https://lms.intellectum.university/courses/python-data-science/certificate",
     },
     {
       title: "Design",
@@ -424,7 +436,7 @@ const en: Dictionary = {
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",
     write: "Email me",
   },
-  footer: { rights: "All rights reserved", login: "Sign in" },
+  footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate" },
   cases_list: [],
 };
 

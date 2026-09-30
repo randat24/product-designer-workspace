@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CONTACTS, dict, isLocale } from "@/site/content";
 import { AwardCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
+import { ExternalIcon } from "@/site/social-icons";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -118,7 +119,20 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             {d.education.map((e) => (
               <li key={e.title} className="flex justify-between gap-4">
                 <div>
-                  <p className="font-semibold">{e.title}</p>
+                  {e.certificate ? (
+                    <a
+                      href={e.certificate}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={d.footer.certificate}
+                      className="inline-flex items-center gap-1 font-semibold underline decoration-line underline-offset-4 hover:decoration-fg"
+                    >
+                      {e.title}
+                      <ExternalIcon className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    <p className="font-semibold">{e.title}</p>
+                  )}
                   <p className="text-[14px] text-fg-secondary">{e.place}</p>
                 </div>
                 <span className="shrink-0 tabular-nums text-[14px] text-fg-secondary">{e.year}</span>
