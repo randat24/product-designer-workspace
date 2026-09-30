@@ -23,13 +23,19 @@ export const getCaseForProject = cache(async (projectId: string) => {
     .eq("project_id", projectId)
     .maybeSingle();
   if (error) throw error;
-  return data && { ...data, hasContent: hasContent(data.content), adult: isAdult(data.content) };
+  return data && { ...data, hasContent: hasContent(data.content), adult: isAdult(data.content), sample: isSample(data.content) };
 });
 
 /** Made for an 18+ audience: the flag sits in every language of the snapshot (see setCaseStatus). */
 export function isAdult(content: unknown): boolean {
   const c = content as Record<string, { adult?: boolean } | undefined> | null;
   return Boolean(c?.uk?.adult ?? c?.en?.adult);
+}
+
+/** Placeholder texts: the site marks the case «Приклад» and keeps it out of search (see setCaseStatus). */
+export function isSample(content: unknown): boolean {
+  const c = content as Record<string, { sample?: boolean } | undefined> | null;
+  return Boolean(c?.uk?.sample ?? c?.en?.sample);
 }
 
 /** A case shows on the site only when its snapshot has at least a title. */
