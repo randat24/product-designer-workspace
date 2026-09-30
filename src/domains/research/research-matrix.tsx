@@ -103,11 +103,11 @@ function StickyHeader({ color, tilt, participant, href, canEdit }: {
 }) {
   const name = useFieldAutosave(participant.display_name ?? "", (v) => renameParticipant(participant.id, { display_name: v }), canEdit);
   const role = useFieldAutosave(participant.role ?? "", (v) => renameParticipant(participant.id, { role: v }), canEdit);
-  const input = "w-full rounded border border-transparent bg-transparent p-0.5 text-center text-on-sticky placeholder:text-on-sticky/50 focus:bg-white/55 focus:outline-none";
+  const input = "w-full rounded border border-transparent bg-transparent p-0.5 text-center text-on-sticky placeholder:text-on-sticky/80 focus:bg-white/55 focus:outline-none";
   return (
     <div className={cn("flex flex-col gap-0.5 rounded-[3px] px-2.5 pt-2.5 pb-2 text-center text-on-sticky shadow-[0_6px_10px_-6px_rgba(0,0,0,.35)]", tilt)}
       style={{ background: color }}>
-      <Link href={href} className="self-end text-caption font-semibold opacity-60 hover:opacity-100">{participant.code} →</Link>
+      <Link href={href} className="self-end text-caption font-semibold opacity-80 hover:opacity-100">{participant.code} →</Link>
       <input aria-label={`${mx.namePlaceholder} ${participant.code}`} value={name.value} readOnly={!canEdit} maxLength={120}
         placeholder={mx.namePlaceholder} onChange={(e) => name.onChange(e.target.value)} onBlur={name.onBlur}
         className={cn(input, "text-[15px] font-bold")} />

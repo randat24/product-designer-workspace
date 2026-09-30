@@ -18,9 +18,9 @@ const STICKY = ["var(--s1)", "var(--s2)", "var(--s3)", "var(--s4)", "var(--s5)",
 const MARK: Record<FeatureValue, string> = { yes: "✓", partial: "◐", no: "✕", unknown: "?" };
 // Cell colours as in a competitor-analysis spreadsheet: green / yellow / red.
 const CELL_BG: Record<FeatureValue, string> = {
-  yes: "color-mix(in srgb, var(--success) 18%, var(--surface))",
+  yes: "color-mix(in srgb, var(--success) 12%, var(--surface))",
   partial: "color-mix(in srgb, var(--s3) 45%, var(--surface))",
-  no: "color-mix(in srgb, var(--danger) 18%, var(--surface))",
+  no: "color-mix(in srgb, var(--danger) 12%, var(--surface))",
   unknown: "var(--surface)",
 };
 const COLUMN_GROUPS = ["own", "direct", "indirect", "substitute"] as const;
@@ -172,7 +172,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                               canEdit && "hover:bg-surface/60",
                               v === "yes" && "text-success",
                               v === "no" && "text-danger",
-                              v === "unknown" && "text-fg-secondary/70",
+                              v === "unknown" && "text-fg-secondary",
                             )}>
                             <span aria-hidden className="text-base leading-none">{MARK[v]}</span>
                             <span aria-hidden>{values[v]}</span>

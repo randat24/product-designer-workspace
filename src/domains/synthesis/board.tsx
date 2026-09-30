@@ -116,10 +116,10 @@ function ColumnHeader({ pattern, count, canEdit, onDelete }: { pattern: Pattern 
   return (
     <header className="flex flex-col gap-2 rounded-[10px] p-2.5 text-on-sticky" style={{ background: `var(--${pattern.color ?? "s1"})` }}>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-caption font-bold opacity-70">{pattern.code} · {b.cards(count)}</span>
+        <span className="text-caption font-bold opacity-80">{pattern.code} · {b.cards(count)}</span>
         {canEdit && (
           <button type="button" onClick={onDelete} aria-label={`${b.deletePattern}: ${pattern.title}`}
-            className="grid size-6 place-items-center rounded text-on-sticky/60 hover:bg-white/40 hover:text-on-sticky">×</button>
+            className="grid size-6 place-items-center rounded text-on-sticky/80 hover:bg-white/40 hover:text-on-sticky">×</button>
         )}
       </div>
       <input aria-label={`${b.patternPlaceholder} ${pattern.code}`} value={title.value} readOnly={!canEdit} maxLength={200}

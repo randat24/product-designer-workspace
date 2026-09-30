@@ -124,7 +124,7 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
             style={{ background: STICKERS[i % STICKERS.length], transform: `rotate(${i % 2 ? 1 : -1}deg)` }}
           >
             <p className="text-[17px] font-semibold leading-snug">«{q.text}»</p>
-            <p className="text-[13px] opacity-70">— {q.who}</p>
+            <p className="text-[13px] opacity-80">— {q.who}</p>
           </li>
         ))}
       </ul>
@@ -134,7 +134,9 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
 
 function Code({ code, color }: { code: string; color: string }) {
   return (
-    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[6px] px-1.5 py-0.5 text-[12px]" style={{ color, background: tint(color, 14) }}>
+    // Text: the entity colour mixed 60/40 with the text colour — darker in light, lighter in dark, >= 4.5:1.
+    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[6px] px-1.5 py-0.5 text-[12px]"
+      style={{ color: `color-mix(in srgb, ${color} 60%, var(--fg))`, background: tint(color, 14) }}>
       {code}
     </span>
   );
@@ -159,9 +161,10 @@ function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
 }
 
 const MARK_STYLE: Record<Mark, { bg: string; fg: string }> = {
-  yes: { bg: tint("var(--success)", 22), fg: "var(--success)" },
-  partial: { bg: tint("var(--warning)", 24), fg: "var(--warning)" },
-  no: { bg: tint("var(--danger)", 24), fg: "var(--danger)" },
+  // Light tints keep the status text at 4.5:1 or more (WCAG AA).
+  yes: { bg: tint("var(--success)", 12), fg: "var(--success)" },
+  partial: { bg: tint("var(--warning)", 12), fg: "var(--warning)" },
+  no: { bg: tint("var(--danger)", 12), fg: "var(--danger)" },
 };
 
 function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitors"]>; labels: StoryLabels }) {

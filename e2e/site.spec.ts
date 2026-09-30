@@ -29,8 +29,7 @@ test("site: first published case", async ({ page }, testInfo) => {
   await page.goto("/en/cases");
   const href = await page.locator('main a[href^="/en/cases/"]').first().getAttribute("href", { timeout: 5_000 }).catch(() => null);
   test.skip(!href, "no published cases in this database");
-  // Sample cases carry placeholder illustrations; contrast is checked once real images land.
-  await checkPage(page, testInfo, href!, "en", false);
+  await checkPage(page, testInfo, href!, "en");
 });
 
 test("site 404 is a real, localized page", async ({ page }) => {
