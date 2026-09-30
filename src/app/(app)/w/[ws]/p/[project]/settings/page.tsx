@@ -54,6 +54,10 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                   <Checkbox name="adult" value="1" defaultChecked={caseStudy.adult} disabled={!canEdit} aria-describedby="case-adult-hint" />
                   {t.cases.adult}
                 </label>
+                <label className="flex h-9 items-center gap-2 text-sm font-semibold" title={t.cases.sampleHint}>
+                  <Checkbox name="sample" value="1" defaultChecked={caseStudy.sample} disabled={!canEdit} aria-describedby="case-sample-hint" />
+                  {t.cases.sample}
+                </label>
                 {canEdit && <Button type="submit" variant="secondary">{t.cases.save}</Button>}
                 {caseStudy.status === "published" && caseStudy.hasContent && (
                   <a href={`/uk/cases/${caseStudy.slug}`} target="_blank" rel="noreferrer"
@@ -62,6 +66,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
               </form>
               <p className="text-meta text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
               <p id="case-adult-hint" className="text-meta text-fg-secondary">{t.cases.adultHint}</p>
+              <p id="case-sample-hint" className="text-meta text-fg-secondary">{t.cases.sampleHint}</p>
               {!caseStudy.hasContent && <p className="text-meta text-warning">{t.cases.emptyContent}</p>}
             </>
           ) : (

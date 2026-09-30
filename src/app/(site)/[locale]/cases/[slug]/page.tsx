@@ -117,7 +117,7 @@ export default async function CasePage({ params }: { params: Params }) {
             <a href="#pages" className="font-semibold text-fg underline underline-offset-4">{d.project.pages} ↓</a>
           </p>
         ) : null}
-        {item.story && (
+        {item.story && item.sample && (
           <p className="rounded-[10px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-secondary">{d.story.sample}</p>
         )}
         {!item.story && (

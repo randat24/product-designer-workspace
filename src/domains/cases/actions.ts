@@ -31,12 +31,13 @@ export async function setCaseStatus(formData: FormData) {
   const caseId = z.string().uuid().parse(formData.get("caseId"));
   const status = statusSchema.parse(formData.get("caseStatus"));
   const adult = formData.get("adult") === "1";
+  const sample = formData.get("sample") === "1";
   const supabase = await createClient();
   const { data: current, error: readError } = await supabase.from("case_studies").select("content").eq("id", caseId).single();
   if (readError) throw readError;
-  // The 18+ flag lives in each language of the snapshot, next to the rest of the case, so the site reads it as is.
+  // The 18+ and sample flags live in each language of the snapshot, next to the rest of the case, so the site reads them as is.
   const content = { ...((current.content ?? {}) as Record<string, Record<string, unknown>>) };
-  for (const locale of ["uk", "en"]) if (content[locale]) content[locale] = { ...content[locale], adult };
+  for (const locale of ["uk", "en"]) if (content[locale]) content[locale] = { ...content[locale], adult, sample };
   const { error } = await supabase.from("case_studies").update({ status, content: content as Json }).eq("id", caseId);
   if (error) throw error;
   revalidatePath("/w", "layout");
