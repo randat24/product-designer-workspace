@@ -2,38 +2,30 @@
 
 import { useActionState } from "react";
 import { createProject, type CreateProjectState } from "@/domains/projects/actions";
-import { PLATFORMS } from "@/domains/projects/constants";
 import { Button } from "@/shared/ui/button";
-import { Field, Input, Textarea } from "@/shared/ui/field";
+import { Input } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
 
-export function NewProjectForm({ workspaceId }: { workspaceId: string }) {
+/** One field and Enter: the project opens right away; description and platforms live in its settings. */
+export function NewProjectForm({ workspaceId, autoFocus }: { workspaceId: string; autoFocus?: boolean }) {
   const [state, action, pending] = useActionState<CreateProjectState, FormData>(createProject, undefined);
-  const nameError = state?.fieldErrors?.name;
+  const error = state?.fieldErrors?.name ?? state?.error;
 
   return (
-    <form action={action} className="flex flex-col gap-3" noValidate>
+    <form action={action} className="flex flex-col gap-2" noValidate>
       <input type="hidden" name="workspaceId" value={workspaceId} />
-      <Field label={t.workspace.name} htmlFor="name" error={nameError}>
-        <Input id="name" name="name" required maxLength={120} placeholder={t.workspace.namePlaceholder}
-          aria-invalid={!!nameError} aria-describedby={nameError ? "name-error" : undefined} />
-      </Field>
-      <Field label={t.workspace.description} htmlFor="description">
-        <Textarea id="description" name="description" rows={3} placeholder={t.workspace.descriptionPlaceholder} />
-      </Field>
-      <fieldset className="flex flex-col gap-1.5">
-        <legend className="mb-1.5 text-[13px] font-semibold text-fg-secondary">{t.workspace.platforms}</legend>
-        <div className="flex flex-wrap gap-x-4 gap-y-2">
-          {PLATFORMS.map((p) => (
-            <label key={p.value} className="flex items-center gap-1.5">
-              <input type="checkbox" name="platforms" value={p.value} className="size-4 accent-[var(--accent)]" />
-              {p.label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-      {state?.error && <p role="alert" className="text-[13px] text-danger">{state.error}</p>}
-      <Button type="submit" disabled={pending}>{pending ? t.workspace.creating : t.workspace.create}</Button>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <label htmlFor="name" className="sr-only">{t.workspace.name}</label>
+        <Input id="name" name="name" required maxLength={120} autoFocus={autoFocus} autoComplete="off"
+          placeholder={t.workspace.namePlaceholder} aria-invalid={!!error} aria-describedby={error ? "name-error" : "name-hint"}
+          className="h-12 min-w-0 flex-1 text-[17px]" />
+        <Button type="submit" disabled={pending} className="h-12 px-6 text-[15px]">
+          {pending ? t.workspace.creating : t.workspace.create}
+        </Button>
+      </div>
+      {error
+        ? <p id="name-error" role="alert" className="text-[13px] text-danger">{error}</p>
+        : <p id="name-hint" className="text-caption text-fg-secondary">{t.workspace.createHint}</p>}
     </form>
   );
 }
