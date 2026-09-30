@@ -7,6 +7,7 @@ import { ChipGroup } from "@/shared/ui/chips";
 import { Input } from "@/shared/ui/field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { t } from "@/shared/i18n/ru";
+import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { deleteAnswer, deleteInterview, saveInterviewMeta } from "./actions";
 import { AnswerField } from "./answer-field";
@@ -117,9 +118,9 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
                 <QuoteChips base={base} quotes={quotesOf(n.id)} />
               </div>
               {canEdit && (
-                <button type="button" aria-label={`${iv.removeNote} ${i + 1}`} disabled={removing.pending}
-                  onClick={() => removing.run(() => deleteAnswer(n.id))}
-                  className="grid size-9 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                <ConfirmIconButton label={`${iv.removeNote} ${i + 1}`} confirm={t.status.confirmDelete} disabled={removing.pending}
+                  onConfirm={() => removing.run(() => deleteAnswer(n.id))}
+                  className="grid size-9 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger" />
               )}
             </li>
           ))}

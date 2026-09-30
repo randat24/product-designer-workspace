@@ -7,6 +7,7 @@ import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addFeature, addUxTemplate, deleteFeature, setCellNote, setFeatureValue, updateFeature } from "./actions";
 import { nextFeatureValue, type FeatureValue, type UxTemplate } from "./schema";
@@ -199,11 +200,9 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                     })}
                     {canEdit && (
                       <td className="border-b border-line p-1 text-center">
-                        <button type="button" aria-label={`${m.deleteFeature}: ${f.name}`}
-                          disabled={rows.pending} onClick={() => rows.run(() => deleteFeature(f.id))}
-                          className="hit grid size-8 place-items-center rounded-control text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
-                          <span aria-hidden>×</span>
-                        </button>
+                        <ConfirmIconButton label={`${m.deleteFeature}: ${f.name}`} confirm={t.status.confirmDelete}
+                          disabled={rows.pending} onConfirm={() => rows.run(() => deleteFeature(f.id))}
+                          className="hit grid size-8 place-items-center rounded-control text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger" />
                       </td>
                     )}
                   </tr>

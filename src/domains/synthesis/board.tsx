@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { createInsightFromPattern, createObservation, createPattern, deletePattern, moveCard, renamePattern } from "./actions";
 import { kindOf, OBSERVATION_KINDS, participantColor, type ObservationKind } from "./schema";
@@ -118,8 +119,8 @@ function ColumnHeader({ pattern, count, canEdit, onDelete }: { pattern: Pattern 
       <div className="flex items-center justify-between gap-2">
         <span className="text-caption font-bold opacity-80">{pattern.code} · {b.cards(count)}</span>
         {canEdit && (
-          <button type="button" onClick={onDelete} aria-label={`${b.deletePattern}: ${pattern.title}`}
-            className="grid size-6 place-items-center rounded-chip text-on-sticky/80 hover:bg-white/40 hover:text-on-sticky">×</button>
+          <ConfirmIconButton label={`${b.deletePattern}: ${pattern.title}`} confirm={t.status.confirmDelete} onConfirm={onDelete}
+            className="hit grid size-6 place-items-center rounded-chip text-on-sticky/80 hover:bg-white/40 hover:text-on-sticky" />
         )}
       </div>
       <input aria-label={`${b.patternPlaceholder} ${pattern.code}`} value={title.value} readOnly={!canEdit} maxLength={200}

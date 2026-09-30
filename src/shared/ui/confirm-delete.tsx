@@ -37,3 +37,25 @@ function Submit({ armed, onBlur, children }: { armed: boolean; onBlur: () => voi
     </button>
   );
 }
+
+/**
+ * Icon-sized two-step delete (×) for rows, columns and notes: the first press shows «Удалить?»,
+ * the second runs `onConfirm`; leaving resets. Prevents losing data to a stray tap on a phone.
+ */
+export function ConfirmIconButton({ label, confirm, onConfirm, disabled, className }: {
+  label: string;
+  confirm: string;
+  onConfirm: () => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  const [armed, setArmed] = useState(false);
+  return (
+    <button type="button" disabled={disabled} aria-label={armed ? confirm : label} aria-live="polite"
+      onClick={() => { if (armed) { setArmed(false); onConfirm(); } else setArmed(true); }}
+      onBlur={() => setArmed(false)}
+      className={cn(armed ? "rounded-control bg-danger px-2 text-caption font-semibold text-white" : className)}>
+      {armed ? confirm : <span aria-hidden>×</span>}
+    </button>
+  );
+}
