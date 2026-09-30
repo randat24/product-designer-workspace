@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CONTACTS, LOCALES, dict, isLocale } from "@/site/content";
 import { BackToTop } from "@/site/back-to-top";
 import { LangSwitch } from "@/site/lang-switch";
+import { Signature } from "@/site/signature";
 import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { container } from "@/site/ui";
 
@@ -69,7 +70,10 @@ export default async function SiteLayout({
       <footer className="bg-rail text-rail-fg">
         <div className={`${container} flex flex-col gap-6 py-10 sm:flex-row sm:items-end sm:justify-between`}>
           <div className="flex flex-col gap-2">
-            <p className="font-display text-[24px] font-bold uppercase leading-none">{d.name}</p>
+            <div className="flex items-end gap-3">
+              <p className="font-display text-[24px] font-bold uppercase leading-none">{d.name}</p>
+              <Signature className="-mb-2 h-10 w-auto opacity-80" />
+            </div>
             <p className="text-[14px] opacity-70">{d.role} · {d.location}</p>
           </div>
           <div className="flex flex-col gap-4 sm:items-end">
