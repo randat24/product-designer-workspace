@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CONTACTS, LOCALES, dict, isLocale } from "@/site/content";
+import { BackToTop } from "@/site/back-to-top";
 import { LangSwitch } from "@/site/lang-switch";
+import { Signature } from "@/site/signature";
+import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { container } from "@/site/ui";
 
 export const dynamicParams = false;
@@ -67,19 +70,42 @@ export default async function SiteLayout({
       <footer className="bg-rail text-rail-fg">
         <div className={`${container} flex flex-col gap-6 py-10 sm:flex-row sm:items-end sm:justify-between`}>
           <div className="flex flex-col gap-2">
-            <p className="font-display text-[24px] font-bold uppercase leading-none">{d.name}</p>
+            <div className="flex items-end gap-3">
+              <p className="font-display text-[24px] font-bold uppercase leading-none">{d.name}</p>
+              <Signature className="-mb-2 h-10 w-auto opacity-80" />
+            </div>
             <p className="text-[14px] opacity-70">{d.role} · {d.location}</p>
           </div>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[14px] font-semibold">
-            <li><a href={`mailto:${CONTACTS.email}`} className="hover:underline">{CONTACTS.email}</a></li>
-            <li><a href={CONTACTS.telegram} target="_blank" rel="noreferrer" className="hover:underline">Telegram</a></li>
-            <li><a href={CONTACTS.linkedin} target="_blank" rel="noreferrer" className="hover:underline">LinkedIn</a></li>
-            <li><a href={CONTACTS.dribbble} target="_blank" rel="noreferrer" className="hover:underline">Dribbble</a></li>
-          </ul>
+          <div className="flex flex-col gap-4 sm:items-end">
+            <ul className="flex gap-2">
+              {[
+                { href: `mailto:${CONTACTS.email}`, label: CONTACTS.email, Icon: MailIcon },
+                { href: CONTACTS.telegram, label: "Telegram", Icon: TelegramIcon },
+                { href: CONTACTS.linkedin, label: "LinkedIn", Icon: LinkedInIcon },
+                { href: CONTACTS.dribbble, label: "Dribbble", Icon: DribbbleIcon },
+              ].map(({ href, label, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    aria-label={label}
+                    title={label}
+                    {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-current/25 transition-colors hover:border-current hover:bg-current/10"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a href={`mailto:${CONTACTS.email}`} className="text-[14px] font-semibold hover:underline">{CONTACTS.email}</a>
+          </div>
         </div>
-        <div className={`${container} flex items-center justify-between border-t border-current/15 py-4 text-[12px] opacity-60`}>
-          <span>© {year} · {d.footer.rights}</span>
-          <Link href="/app" className="hover:underline">{d.footer.login}</Link>
+        <div className={`${container} flex items-center justify-between gap-4 border-t border-current/15 py-4`}>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] opacity-60">
+            <span>© {year} · {d.footer.rights}</span>
+            <Link href="/app" className="hover:underline">{d.footer.login}</Link>
+          </div>
+          <BackToTop label={d.footer.top} />
         </div>
       </footer>
     </div>

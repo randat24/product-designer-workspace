@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Signature } from "@/site/signature";
 import { AWARD_TILE, AwardSvg } from "@/site/award-icons";
 import { CONTACTS, dict, isLocale } from "@/site/content";
 import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
@@ -31,6 +32,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <p className="max-w-[640px] text-[clamp(17px,2vw,20px)] leading-[1.5] text-fg-secondary">
             <span className="text-fg">{d.home.hello}</span> {d.home.lead}
           </p>
+          <Signature className="signature-draw -my-2 h-16 w-auto self-start text-fg sm:h-20" title={d.name} />
           <div className="flex flex-wrap gap-3">
             <PrimaryLink href={`mailto:${CONTACTS.email}`}>{d.home.cta}</PrimaryLink>
             <SecondaryLink href={CONTACTS.cv} download>{d.home.ctaCv}</SecondaryLink>

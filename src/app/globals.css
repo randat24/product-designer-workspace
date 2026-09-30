@@ -144,3 +144,11 @@ body {
 .flow-canvas .react-flow__node:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; border-radius: 10px; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Signature on the home page: revealed left to right once, like it is being written. */
+.signature-draw { animation: signature-reveal 1.6s cubic-bezier(0.45, 0, 0.2, 1) 0.3s both; }
+@keyframes signature-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@media (prefers-reduced-motion: reduce) { .signature-draw { animation: none; } }
