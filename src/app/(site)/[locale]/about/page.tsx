@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CONTACTS, dict, isLocale } from "@/site/content";
-import { AwardPlaceholder, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
+import { AwardCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -41,19 +41,28 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
       {/* Service and awards */}
       <section id="service" className={`${container} mt-16 scroll-mt-24`}>
-        <div className="flex flex-col gap-8 rounded-[18px] bg-rail p-6 text-rail-fg sm:p-10">
-          <div className="grid gap-6 md:grid-cols-[220px_1fr]">
-            <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-10 rounded-[18px] bg-rail p-6 text-rail-fg sm:p-10">
+          <div className="grid gap-8 md:grid-cols-[1fr_300px] md:items-center">
+            <div className="flex flex-col gap-4">
               <Eyebrow className="text-rail-fg opacity-70">{d.jobs[0]!.period}</Eyebrow>
-              <p className="font-display text-[36px] font-bold uppercase leading-none">{d.about.serviceTitle}</p>
+              <p className="font-display text-[clamp(32px,4vw,44px)] font-bold uppercase leading-none">{d.about.serviceTitle}</p>
+              <p className="max-w-[560px] text-[17px] leading-[1.6]">{d.about.serviceText}</p>
             </div>
-            <p className="text-[17px] leading-[1.6]">{d.about.serviceText}</p>
+            <figure className="flex flex-col gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element -- static file */}
+              <img
+                src={d.awardsPhoto.image}
+                alt={d.awardsPhoto.caption}
+                className="aspect-[3/4] w-full rounded-[14px] object-cover"
+              />
+              <figcaption className="text-[13px] opacity-70">{d.awardsPhoto.caption}</figcaption>
+            </figure>
           </div>
-          <div className="flex flex-col gap-4">
-            <p className="font-display text-[20px] font-bold uppercase">{d.about.awards}</p>
-            <div className="grid grid-cols-1 gap-4 text-fg sm:grid-cols-3">
-              {d.awards.map((a, i) => (
-                <AwardPlaceholder key={i} year={a.year} title={a.title} note={d.about.awardPlaceholder} />
+          <div className="flex flex-col gap-5">
+            <p className="font-display text-[24px] font-bold uppercase leading-none">{d.about.awards}</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-4">
+              {d.awards.map((a) => (
+                <AwardCard key={a.image} award={a} />
               ))}
             </div>
           </div>

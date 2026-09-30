@@ -77,8 +77,21 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
           <div className="flex flex-col gap-4">
             <p className="text-[17px] leading-[1.6]">{d.about.serviceText}</p>
-            <Link href={`/${locale}/about#service`} className="w-fit text-[14px] font-semibold underline underline-offset-4">
-              {d.about.awards} →
+            <Link href={`/${locale}/about#service`} className="group flex w-fit flex-wrap items-center gap-3">
+              <span className="flex -space-x-3">
+                {d.awards.map((a) => (
+                  // eslint-disable-next-line @next/next/no-img-element -- static files
+                  <img
+                    key={a.image}
+                    src={a.image}
+                    alt=""
+                    className={`h-14 w-12 rounded-[8px] border-2 border-rail bg-[#1d2447] ${a.fit === "cover" ? "object-cover" : "object-contain"} ${a.fit === "cutout" ? "p-1" : ""}`}
+                  />
+                ))}
+              </span>
+              <span className="text-[14px] font-semibold underline underline-offset-4">
+                {d.about.awards} · {d.awards.length} →
+              </span>
             </Link>
           </div>
         </div>

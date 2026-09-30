@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
-import type { Case, Locale } from "./content";
+import type { Award, Case, Locale } from "./content";
 
 export const container = "mx-auto w-full max-w-[1120px] px-4 sm:px-8";
 
@@ -181,62 +181,27 @@ export function CaseCard({
   );
 }
 
-/** Award placeholder: a medal outline until the stylised photos arrive. */
-export function AwardPlaceholder({
-  year,
-  title,
-  note,
-}: {
-  year: string;
-  title: string;
-  note: string;
-}) {
+/** Award on a dark "velvet" tile, the same in light and dark themes. */
+export function AwardCard({ award }: { award: Award }) {
   return (
-    <figure className="flex flex-col items-center gap-3 rounded-[14px] border-[1.5px] border-dashed border-line bg-surface px-4 py-6 text-center">
-      <svg
-        viewBox="0 0 64 88"
-        className="h-24 w-auto text-fg-secondary"
-        aria-hidden="true"
-      >
-        <path
-          d="M18 2h12l6 30H24zM34 2h12l-6 30h-12z"
-          fill="currentColor"
-          opacity="0.25"
+    <figure className="flex flex-col gap-3">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] bg-[#1d2447]">
+        {/* eslint-disable-next-line @next/next/no-img-element -- static files, sizes are small */}
+        <img
+          src={award.image}
+          alt={award.title}
+          loading="lazy"
+          className={cn(
+            "absolute inset-0 h-full w-full",
+            award.fit === "cover" && "object-cover",
+            award.fit === "photo" && "object-contain",
+            award.fit === "cutout" && "object-contain p-[10%]",
+          )}
         />
-        <path
-          d="M18 2h12l6 30M46 2H34l-6 30"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <circle
-          cx="32"
-          cy="58"
-          r="24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-        />
-        <circle
-          cx="32"
-          cy="58"
-          r="16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeDasharray="3 3"
-        />
-        <path
-          d="M32 47l3.2 6.6 7.3 1-5.3 5.1 1.3 7.2L32 63.5l-6.5 3.4 1.3-7.2-5.3-5.1 7.3-1z"
-          fill="currentColor"
-          opacity="0.5"
-        />
-      </svg>
+      </div>
       <figcaption className="flex flex-col gap-0.5">
-        <span className="font-display text-[20px] font-bold uppercase">
-          {title} · {year}
-        </span>
-        <span className="text-[12px] text-fg-secondary">{note}</span>
+        <span className="font-semibold leading-snug">{award.title}</span>
+        <span className="text-[13px] opacity-70">{award.issuer}</span>
       </figcaption>
     </figure>
   );
