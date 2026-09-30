@@ -239,6 +239,11 @@ const uk: Dictionary = {
       issuer: "36 ОБрМП",
     },
     {
+      icon: "honour-and-loyalty",
+      title: "Медаль «За честь і вірність обовʼязку»",
+      issuer: "36 ОБрМП",
+    },
+    {
       icon: "veteran-of-war",
       title: "Нагрудний знак «Ветеран війни»",
       issuer: "Україна",
@@ -401,6 +406,11 @@ const en: Dictionary = {
     {
       icon: "marine-brigade-36",
       title: "Commemorative medal of the 36th Separate Marine Brigade, “Kursk operation”",
+      issuer: "36th Separate Marine Brigade",
+    },
+    {
+      icon: "honour-and-loyalty",
+      title: "Medal “For Honour and Loyalty to Duty”",
       issuer: "36th Separate Marine Brigade",
     },
     {

@@ -190,7 +190,7 @@ export function AwardCard({ award }: { award: Award }) {
         className="flex aspect-[4/5] items-center justify-center rounded-[14px] text-[#b3b8e6]"
         style={{ background: AWARD_TILE }}
       >
-        <AwardSvg icon={award.icon} className="h-[78%] w-auto" />
+        <AwardSvg icon={award.icon} className="h-[90%] w-auto" />
       </div>
       <figcaption className="flex flex-col gap-0.5">
         <span className="font-semibold leading-snug">{award.title}</span>
