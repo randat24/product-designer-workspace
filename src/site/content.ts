@@ -247,6 +247,12 @@ const uk: Dictionary = {
       issuer: "Україна",
       fit: "cutout",
     },
+    {
+      image: "/awards/military-service-veteran.webp",
+      title: "Нагрудний знак «Ветеран військової служби»",
+      issuer: "Україна",
+      fit: "cover",
+    },
   ],
   awardsPhoto: {
     image: "/awards/defence-of-mykolaiv-case.webp",
@@ -410,6 +416,12 @@ const en: Dictionary = {
       title: "“War Veteran” badge",
       issuer: "Ukraine",
       fit: "cutout",
+    },
+    {
+      image: "/awards/military-service-veteran.webp",
+      title: "“Veteran of Military Service” badge",
+      issuer: "Ukraine",
+      fit: "cover",
     },
   ],
   awardsPhoto: {
