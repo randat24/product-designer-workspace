@@ -5,7 +5,9 @@ import { CONTACTS, dict, isLocale } from "@/site/content";
 import { trackAttrs } from "@/site/analytics/track";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, graph, localeUrl, pageMetadata, personId, personLd } from "@/site/seo";
-import { AwardCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
+import { FileDown } from "lucide-react";
+import { ContactMenu } from "@/site/contact-menu";
+import { AwardCard, Eyebrow, PrimaryLink, SectionTitle, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 import { ExternalIcon } from "@/site/social-icons";
 
@@ -46,12 +48,18 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           <h1 className="page-title">{d.about.title}</h1>
           <p className="max-w-[680px] text-[clamp(17px,2vw,20px)] leading-[1.55]">{d.about.summary}</p>
           <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={CONTACTS.cv} download track={trackAttrs("resume_download", { location: "about" })}>
+            <PrimaryLink href={CONTACTS.cv} download icon={<FileDown aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "about" })}>
               {d.about.download}
             </PrimaryLink>
-            <SecondaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "about" })}>
-              {d.home.cta}
-            </SecondaryLink>
+            <ContactMenu
+              label={d.home.cta}
+              heading={d.ui.writeVia}
+              copyLabel={d.ui.copyEmail}
+              copiedLabel={d.ui.copied}
+              contacts={CONTACTS}
+              location="about"
+              variant="secondary"
+            />
           </div>
           <Link
             href={`/${locale}/cases`}
@@ -63,7 +71,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         </div>
         {/* Portrait placeholder */}
         <div
-          className="flex aspect-[4/5] items-end rounded-[14px] p-4 font-display text-[22px] font-bold uppercase leading-none text-on-sticky"
+          className="flex aspect-[4/5] items-end rounded-[14px] p-4 font-display text-[22px] font-bold uppercase leading-[1.1] text-on-sticky"
           style={{ background: "var(--s5)" }}
           aria-hidden="true"
         >
@@ -77,7 +85,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           <div className="grid gap-6 md:grid-cols-[220px_1fr]">
             <div className="flex flex-col gap-2">
               <Eyebrow className="text-rail-fg opacity-70">{d.jobs[0]!.period}</Eyebrow>
-              <p className="font-display text-[36px] font-bold uppercase leading-none">{d.about.serviceTitle}</p>
+              <p className="font-display text-[36px] font-bold uppercase leading-[1.1]">{d.about.serviceTitle}</p>
             </div>
             <p className="text-[17px] leading-[1.6]">{d.about.serviceText}</p>
           </div>
@@ -103,7 +111,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             <li key={job.title + job.period} className="grid gap-3 border-t border-line py-6 md:grid-cols-[200px_1fr]">
               <p className="tabular-nums text-[14px] font-semibold text-fg-secondary">{job.period}</p>
               <div className="flex flex-col gap-2">
-                <h3 className="font-display text-[24px] font-bold uppercase leading-[1.05]">
+                <h3 className="font-display text-[24px] font-bold uppercase leading-[1.1]">
                   {job.title}
                   {job.military && (
                     <span className="ml-2 inline-block translate-y-[-3px] rounded-full bg-fg px-2 py-0.5 align-middle font-sans text-[11px] font-bold normal-case text-canvas">
@@ -193,7 +201,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 function Block({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn("flex flex-col gap-4 border-t-[1.5px] border-fg pt-5", className)}>
-      <h2 className="font-display text-[22px] font-bold uppercase leading-none">{title}</h2>
+      <h2 className="font-display text-[22px] font-bold uppercase leading-[1.1]">{title}</h2>
       {children}
     </div>
   );

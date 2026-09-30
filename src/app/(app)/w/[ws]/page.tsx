@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getWorkspaceBySlug, listMyWorkspaces, listProjects, getCurrentUser, PLATFORMS } from "@/domains/projects";
 import { createDemoProject } from "@/domains/projects/actions";
 import { listCaseStudies } from "@/domains/cases";
+import { Globe } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { t } from "@/shared/i18n/ru";
 import { NewProjectForm } from "./new-project-form";
@@ -23,10 +24,15 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
     <div className="min-h-screen">
       <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
         <span className="flex min-w-0 items-center gap-4">
-          <span className="font-display text-lg leading-none font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
+          <span className="font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
           <WorkspaceSwitcher current={workspace.slug} workspaces={workspaces} />
         </span>
         <form action="/auth/signout" method="post" className="flex items-center gap-3 text-meta">
+          {/* The tool lives next to the portfolio; this is the way back to it. */}
+          <Link href="/uk" className="hit inline-flex items-center gap-1.5 font-semibold opacity-80 hover:opacity-100 hover:underline">
+            <Globe aria-hidden className="size-4 shrink-0" />
+            <span className="sr-only sm:not-sr-only">{t.auth.toSite}</span>
+          </Link>
           <Link href="/account" className="hidden opacity-70 hover:opacity-100 hover:underline sm:inline">{user?.email}</Link>
           <button className="rounded-control border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
         </form>

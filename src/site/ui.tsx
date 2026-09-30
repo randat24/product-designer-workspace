@@ -36,7 +36,7 @@ export function SectionTitle({
   return (
     <h2
       id={id}
-      className="font-display text-[clamp(28px,4vw,40px)] font-bold uppercase leading-none tracking-[-0.005em]"
+      className="font-display text-[clamp(28px,4vw,40px)] font-bold uppercase leading-[1.1] tracking-[0.01em]"
     >
       {children}
     </h2>
@@ -49,12 +49,15 @@ const linkBtn =
 type LinkButtonProps = {
   href: string;
   children: React.ReactNode;
+  /** A 16 px Lucide icon after the label (buttons always carry one: docs/DESIGN-SYSTEM.md, Иконография). */
+  icon?: React.ReactNode;
   download?: boolean;
   /** Analytics data attributes, from trackAttrs(). */
   track?: Record<string, string>;
 };
 
-function LinkButton({ href, children, download, track, className }: LinkButtonProps & { className: string }) {
+function LinkButton({ href, children: label, icon, download, track, className }: LinkButtonProps & { className: string }) {
+  const children = <>{label}{icon}</>;
   if (href.startsWith("/") && !download)
     return (
       <Link href={href} className={className} {...track}>
@@ -160,7 +163,7 @@ export function CaseCard({
           {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? p.concept : p.real} />}
           {item.client} · {item.year}
         </p>
-        <Title className="font-display text-[24px] font-bold uppercase leading-[1.05] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
+        <Title className="font-display text-[24px] font-bold uppercase leading-[1.1] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
           {item.title}
         </Title>
         <p className="text-fg-secondary">{item.summary}</p>

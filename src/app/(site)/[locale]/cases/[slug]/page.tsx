@@ -8,7 +8,9 @@ import { CaseGallery } from "@/site/case-gallery";
 import { CaseStoryView } from "@/site/case-story-view";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl, pageMetadata } from "@/site/seo";
-import { CaseCover, Eyebrow, KindBadge, PrimaryLink, SecondaryLink, container } from "@/site/ui";
+import { ArrowUpRight } from "lucide-react";
+import { ContactMenu } from "@/site/contact-menu";
+import { CaseCover, Eyebrow, KindBadge, SecondaryLink, container } from "@/site/ui";
 
 // Cases published later in the tool are rendered on first visit and then cached.
 export const revalidate = 60;
@@ -77,7 +79,7 @@ export default async function CasePage({ params }: { params: Params }) {
               <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />
             </div>
           )}
-          <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[0.92]">{item.title}</h1>
+          <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[1.1]">{item.title}</h1>
           <p className="text-[clamp(17px,2vw,20px)] text-fg-secondary">{item.summary}</p>
         </header>
         <dl className={`grid grid-cols-2 gap-4 border-y border-line py-5 ${item.story ? "lg:grid-cols-6" : "sm:grid-cols-3"}`}>
@@ -97,8 +99,8 @@ export default async function CasePage({ params }: { params: Params }) {
         {/* Live product, or a note that the pages can be browsed here (no site / a concept). */}
         {item.liveUrl ? (
           <div className="flex">
-            <SecondaryLink href={item.liveUrl} track={trackAttrs("case_live_open", { case_slug: item.slug, location: "case" })}>
-              {d.project.live} ↗
+            <SecondaryLink href={item.liveUrl} icon={<ArrowUpRight aria-hidden className="size-4" />} track={trackAttrs("case_live_open", { case_slug: item.slug, location: "case" })}>
+              {d.project.live}
             </SecondaryLink>
           </div>
         ) : item.gallery?.length ? (
@@ -124,7 +126,7 @@ export default async function CasePage({ params }: { params: Params }) {
 
       {item.gallery && item.gallery.length > 0 && (
         <section id="pages" aria-labelledby="pages-h" className={`${container} mt-14 scroll-mt-24`}>
-          <h2 id="pages-h" className="mb-3 font-display text-[28px] font-bold uppercase leading-none">{d.project.pages}</h2>
+          <h2 id="pages-h" className="mb-3 font-display text-[28px] font-bold uppercase leading-[1.1]">{d.project.pages}</h2>
           <CaseGallery items={item.gallery} labels={d.project} caseSlug={item.slug} />
         </section>
       )}
@@ -139,7 +141,7 @@ export default async function CasePage({ params }: { params: Params }) {
           <section key={s.title} className="grid gap-4 md:grid-cols-[260px_1fr]">
             <div className="flex items-baseline gap-3">
               <span className="display-num text-[14px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
-              <h2 className="font-display text-[28px] font-bold uppercase leading-none">{s.title}</h2>
+              <h2 className="font-display text-[28px] font-bold uppercase leading-[1.1]">{s.title}</h2>
             </div>
             <div className="flex max-w-[680px] flex-col gap-6">
               <p className="text-[18px] leading-[1.65]">{s.body}</p>
@@ -163,14 +165,19 @@ export default async function CasePage({ params }: { params: Params }) {
             {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}
           >
             <Eyebrow>{d.cases.next}</Eyebrow>
-            <span className="font-display text-[28px] font-bold uppercase leading-none group-hover:underline">{next.title} →</span>
+            <span className="font-display text-[28px] font-bold uppercase leading-[1.1] group-hover:underline">{next.title} →</span>
           </Link>
         ) : (
           <span />
         )}
-        <PrimaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "case", case_slug: item.slug })}>
-          {d.home.cta}
-        </PrimaryLink>
+        <ContactMenu
+              label={d.home.cta}
+              heading={d.ui.writeVia}
+              copyLabel={d.ui.copyEmail}
+              copiedLabel={d.ui.copied}
+              contacts={CONTACTS}
+              location="case"
+            />
       </div>
       </div>
     </article>

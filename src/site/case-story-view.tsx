@@ -47,7 +47,7 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
           <section key={s.id} id={s.id} className="grid scroll-mt-32 gap-6 md:grid-cols-[220px_1fr]">
             <header className="flex items-baseline gap-3 md:sticky md:top-32 md:self-start">
               <span className="display-num text-[14px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
-              <h2 className="flex items-center gap-2 font-display text-[28px] font-bold uppercase leading-none">
+              <h2 className="flex items-center gap-2 font-display text-[28px] font-bold uppercase leading-[1.1]">
                 {s.stage && <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: STAGE_COLOR[s.stage] }} aria-hidden="true" />}
                 {s.title}
               </h2>
@@ -74,7 +74,7 @@ function Overview({ story, labels }: { story: CaseStory; labels: StoryLabels }) 
     <div className="grid gap-4 lg:grid-cols-3">
       {items.map((it) => (
         <div key={it.title} className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-5" style={{ borderTop: `4px solid ${it.color}` }}>
-          <p className="font-display text-[18px] font-bold uppercase leading-none">{it.title}</p>
+          <p className="font-display text-[18px] font-bold uppercase leading-[1.1]">{it.title}</p>
           <p className="leading-[1.6]">{it.text}</p>
         </div>
       ))}
@@ -149,7 +149,7 @@ function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
       {data.map((ins) => (
         <li key={ins.code} className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-5">
           <Code code={ins.code} color={color} />
-          <p className="font-display text-[22px] font-bold uppercase leading-[1.05]">{ins.title}</p>
+          <p className="font-display text-[22px] font-bold uppercase leading-[1.1]">{ins.title}</p>
           <p className="leading-[1.6] text-fg-secondary">{ins.body}</p>
           <p className="mt-auto border-t border-line pt-3 text-[13px] font-semibold" style={{ color }}>
             {ins.evidence}
@@ -221,7 +221,7 @@ function Opportunities({ data }: { data: NonNullable<CaseStory["opportunities"]>
       {data.map((o) => (
         <li key={o.code} className="flex flex-col gap-2 border-t border-line py-5 sm:flex-row sm:items-baseline sm:gap-6">
           <Code code={o.code} color={color} />
-          <p className="font-display text-[clamp(22px,2.6vw,30px)] font-bold uppercase leading-[1.05]">{o.text}</p>
+          <p className="font-display text-[clamp(22px,2.6vw,30px)] font-bold uppercase leading-[1.1]">{o.text}</p>
         </li>
       ))}
     </ol>
@@ -260,7 +260,7 @@ function Flow({ data, labels }: { data: NonNullable<CaseStory["flow"]>; labels: 
         ))}
       </ol>
       <div className="mt-8 rounded-[14px] border border-dashed border-line p-5">
-        <p className="mb-3 font-display text-[18px] font-bold uppercase leading-none">{labels.edgeCases}</p>
+        <p className="mb-3 font-display text-[18px] font-bold uppercase leading-[1.1]">{labels.edgeCases}</p>
         <ul className="flex flex-col gap-2">
           {data.edgeCases.map((e) => (
             <li key={e} className="flex gap-2">
@@ -295,7 +295,7 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
                 <div className="mt-auto h-9 rounded-[10px] bg-current/80" />
               </div>
             </div>
-            <p className="font-display text-[22px] font-bold uppercase leading-none">{sc.title}</p>
+            <p className="font-display text-[22px] font-bold uppercase leading-[1.1]">{sc.title}</p>
             <p className="text-fg-secondary">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
@@ -319,7 +319,7 @@ function Decisions({ data, labels }: { data: NonNullable<CaseStory["decisions"]>
         <li key={dec.code} className="grid gap-5 rounded-[14px] border border-line bg-surface p-5 lg:grid-cols-[1.2fr_1fr]">
           <div className="flex flex-col gap-3">
             <Code code={dec.code} color={color} />
-            <p className="font-display text-[24px] font-bold uppercase leading-[1.05]">{dec.title}</p>
+            <p className="font-display text-[24px] font-bold uppercase leading-[1.1]">{dec.title}</p>
             <p className="leading-[1.6]">
               <span className="font-semibold">{labels.why}: </span>
               {dec.why}

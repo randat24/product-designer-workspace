@@ -140,6 +140,12 @@ type Dictionary = {
     notFoundHome: string;
     notFoundWork: string;
     seeWork: string;
+    /** «Написати мені» menu: where to write. */
+    writeVia: string;
+    copyEmail: string;
+    copied: string;
+    /** Floating back-to-top button: "{n}" is the share of the page read. */
+    toTop: string;
   };
   project: {
     real: string;
@@ -397,6 +403,10 @@ const uk: Dictionary = {
     notFoundHome: "На головну",
     notFoundWork: "Дивитися роботи",
     seeWork: "Дивитися роботи",
+    writeVia: "Куди написати",
+    copyEmail: "Скопіювати адресу",
+    copied: "Скопійовано",
+    toTop: "Вгору · прочитано {n}%",
   },
   project: {
     real: "Реальний проєкт",
@@ -652,6 +662,10 @@ const en: Dictionary = {
     notFoundHome: "Home page",
     notFoundWork: "See the work",
     seeWork: "See the work",
+    writeVia: "Where to write",
+    copyEmail: "Copy address",
+    copied: "Copied",
+    toTop: "Back to top · {n}% read",
   },
   project: {
     real: "Real project",

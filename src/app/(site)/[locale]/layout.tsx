@@ -15,6 +15,7 @@ import { Signature } from "@/site/signature";
 import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
 import { container } from "@/site/ui";
+import { SiteNav } from "@/site/site-nav";
 
 // Root layout of the public site: <html lang> follows the locale. The private workspace has its
 // own root (app/_root/tool-root.tsx). Only /uk and /en exist: any other first segment matches no
@@ -68,8 +69,7 @@ export default async function SiteLayout({
   const locale: Locale = isLocale(raw) ? raw : "uk";
   const d = dict(locale);
   const year = new Date().getFullYear();
-  const navLink = "hit rounded-[8px] px-2.5 py-1.5 hover:bg-subtle";
-
+  
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
@@ -86,25 +86,19 @@ export default async function SiteLayout({
         <div className="flex min-h-dvh flex-col">
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/85 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:gap-4`}>
-              <Link href={`/${locale}`} className="hit font-display text-[20px] font-bold uppercase leading-none tracking-[0.01em]">
+              <Link href={`/${locale}`} className="hit font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[0.01em]">
                 {d.name}
               </Link>
-              <nav className="ml-auto hidden items-center gap-2 text-[14px] font-semibold sm:flex" aria-label={d.ui.mainNav}>
-                <Link href={`/${locale}/cases`} className={navLink}>{d.nav.work}</Link>
-                <Link href={`/${locale}/about`} className={navLink}>{d.nav.about}</Link>
-                <a href={`/${locale}#contact`} className={navLink}>{d.nav.contact}</a>
-              </nav>
+              <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
               <div className="ml-auto flex items-center gap-2 sm:ml-0">
                 <ThemeToggle labelLight={d.ui.themeLight} labelDark={d.ui.themeDark} />
                 <LangSwitch current={locale} />
               </div>
             </div>
             {/* Mobile: a second row instead of a hamburger — only three links. */}
-            <nav className={`${container} flex gap-4 pb-2.5 text-[14px] font-semibold sm:hidden`} aria-label={d.ui.mainNav}>
-              <Link href={`/${locale}/cases`} className="hit">{d.nav.work}</Link>
-              <Link href={`/${locale}/about`} className="hit">{d.nav.about}</Link>
-              <a href={`/${locale}#contact`} className="hit">{d.nav.contact}</a>
-            </nav>
+            <div className={container}>
+              <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} mobile />
+            </div>
           </header>
 
           <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
@@ -116,7 +110,7 @@ export default async function SiteLayout({
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-end gap-3">
-                    <p className="font-display text-[24px] font-bold uppercase leading-none">{d.name}</p>
+                    <p className="font-display text-[24px] font-bold uppercase leading-[1.1]">{d.name}</p>
                     <Signature className="-mb-2 h-10 w-auto opacity-80" />
                   </div>
                   <p className="text-[14px] opacity-70">{d.role} · {d.location}</p>
@@ -161,10 +155,10 @@ export default async function SiteLayout({
                 {/* The private workspace: not for crawlers. */}
                 <Link href="/app" rel="nofollow" prefetch={false} className="hit hover:underline">{d.footer.login}</Link>
               </div>
-              <BackToTop label={d.footer.top} />
             </div>
           </footer>
         </div>
+        <BackToTop label={d.ui.toTop} />
         <AnalyticsClickListener />
         <GoogleAnalytics />
         {/* Vercel serves /_vercel/speed-insights only on its own deployments. */}

@@ -8,6 +8,9 @@ import { CONTACTS, dict, isLocale, type Locale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
 import { JsonLd } from "@/site/json-ld";
 import { graph, pageMetadata, personLd, websiteLd } from "@/site/seo";
+import { FileText, Mail } from "lucide-react";
+import { ContactMenu } from "@/site/contact-menu";
+import { LinkedInIcon, TelegramIcon } from "@/site/social-icons";
 import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 
 export const revalidate = 60;
@@ -42,7 +45,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
             {d.home.available}
           </p>
-          <h1 className="font-display text-[clamp(44px,8vw,96px)] font-bold uppercase leading-[0.9] tracking-[-0.01em]">
+          <h1 className="font-display text-[clamp(44px,8vw,96px)] font-bold uppercase leading-[1.1] tracking-[0.01em]">
             {d.name}
           </h1>
           <p className="max-w-[640px] text-[clamp(17px,2vw,20px)] leading-[1.5] text-fg-secondary">
@@ -50,10 +53,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </p>
           <Signature className="signature-draw -my-2 h-16 w-auto self-start text-fg sm:h-20" title={d.name} />
           <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "hero" })}>
-              {d.home.cta}
-            </PrimaryLink>
-            <SecondaryLink href={CONTACTS.cv} download track={trackAttrs("resume_download", { location: "hero" })}>
+            <ContactMenu
+              label={d.home.cta}
+              heading={d.ui.writeVia}
+              copyLabel={d.ui.copyEmail}
+              copiedLabel={d.ui.copied}
+              contacts={CONTACTS}
+              location="hero"
+            />
+            <SecondaryLink href={CONTACTS.cv} download icon={<FileText aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "hero" })}>
               {d.home.ctaCv}
             </SecondaryLink>
           </div>
@@ -62,7 +70,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           {STICKERS.map((s, i) => (
             <li
               key={s.text}
-              className="absolute flex h-[120px] w-[150px] items-end rounded-[4px] p-3 font-display text-[21px] font-bold uppercase leading-[0.95] text-on-sticky shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
+              className="absolute flex h-[120px] w-[150px] items-end rounded-[4px] p-3 font-display text-[21px] font-bold uppercase leading-[1.1] text-on-sticky shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
               style={{
                 background: s.bg,
                 transform: `rotate(${s.rot})`,
@@ -96,7 +104,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <div className="grid gap-6 rounded-[18px] bg-rail p-6 text-rail-fg sm:p-10 md:grid-cols-[220px_1fr]">
           <div className="flex flex-col gap-2">
             <Eyebrow className="text-rail-fg opacity-70">{d.jobs[0]!.period}</Eyebrow>
-            <p className="font-display text-[32px] font-bold uppercase leading-none">{d.about.serviceTitle}</p>
+            <p className="font-display text-[32px] font-bold uppercase leading-[1.1]">{d.about.serviceTitle}</p>
           </div>
           <div className="flex flex-col gap-4">
             <p className="text-[17px] leading-[1.6]">{d.about.serviceText}</p>
@@ -133,11 +141,11 @@ function Contact({ locale }: { locale: Locale }) {
         <SectionTitle>{d.contact.title}</SectionTitle>
         <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.contact.lead}</p>
         <div className="flex flex-wrap gap-3">
-          <PrimaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "contact" })}>
+          <PrimaryLink href={`mailto:${CONTACTS.email}`} icon={<Mail aria-hidden className="size-4" />} track={trackAttrs("contact_email_click", { location: "contact" })}>
             {d.contact.write}
           </PrimaryLink>
-          <SecondaryLink href={CONTACTS.telegram} track={trackAttrs("telegram_click", { location: "contact" })}>Telegram</SecondaryLink>
-          <SecondaryLink href={CONTACTS.linkedin} track={trackAttrs("linkedin_click", { location: "contact" })}>LinkedIn</SecondaryLink>
+          <SecondaryLink href={CONTACTS.telegram} icon={<TelegramIcon className="size-4" />} track={trackAttrs("telegram_click", { location: "contact" })}>Telegram</SecondaryLink>
+          <SecondaryLink href={CONTACTS.linkedin} icon={<LinkedInIcon className="size-4" />} track={trackAttrs("linkedin_click", { location: "contact" })}>LinkedIn</SecondaryLink>
         </div>
       </div>
     </section>

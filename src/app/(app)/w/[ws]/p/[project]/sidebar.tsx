@@ -8,8 +8,9 @@ import { cn } from "@/shared/lib/cn";
 import { CommandPalette, type CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/ru";
 import { NAV_ICONS } from "@/shared/nav-icons";
+import { BookOpen, Check, ChevronLeft, Globe, Settings } from "lucide-react";
 
-/** Dark navigation rail from the notebook prototype: groups, items, progress bars for shipped stages. */
+/** Dark navigation rail from the notebook prototype: groups, items, a progress ring for shipped stages. */
 export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, loadEntities, progress }: {
   wsSlug: string;
   wsName: string;
@@ -41,14 +42,21 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
     <nav aria-label="Разделы проекта"
       className="z-20 bg-rail text-rail-fg lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
       <div className="flex flex-col gap-1 px-5 pt-5 pb-3 lg:pt-7">
-        <Link href={`/w/${wsSlug}`} className="text-meta opacity-70 hover:opacity-100">{wsName}</Link>
+        <Link href={`/w/${wsSlug}`}
+          className="hit -ml-1 inline-flex w-fit max-w-full items-center gap-1 text-meta opacity-70 hover:opacity-100">
+          <ChevronLeft aria-hidden className="size-4 shrink-0" />
+          <span className="truncate">{wsName}</span>
+        </Link>
+        {/* The title wraps; the settings button keeps its size, so a long name can no longer push it out. */}
         <div className="flex items-start justify-between gap-2">
-          <span className="font-display text-display-xs leading-[1.05] font-bold uppercase lg:text-display-sm" title={projectName}>
+          <span className="min-w-0 font-display text-display-xs leading-[1.1] font-bold tracking-[0.01em] break-words uppercase lg:text-display-sm"
+            title={projectName}>
             {projectName}
           </span>
           <Link href={`${base}/settings`} aria-current={pathname === `${base}/settings` ? "page" : undefined}
-            className="hit mt-1 shrink-0 rounded-chip border border-rail-fg/30 px-2 py-0.5 text-caption hover:border-rail-fg/70 aria-[current=page]:bg-rail-fg aria-[current=page]:text-rail">
-            {t.project.settings}
+            aria-label={t.project.settings} title={t.project.settings}
+            className="hit grid size-8 shrink-0 place-items-center rounded-control border border-rail-fg/30 transition-colors duration-[120ms] hover:border-rail-fg/70 hover:bg-rail-fg/10 aria-[current=page]:border-rail-fg aria-[current=page]:bg-rail-fg aria-[current=page]:text-rail">
+            <Settings aria-hidden className="size-4" />
           </Link>
         </div>
         {/* Search on every screen size: on a phone it is the fastest way to any entity. */}
@@ -72,21 +80,16 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
                   <li key={item.segment || "overview"}>
                     <Link href={href} aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex flex-col rounded-control px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-[120ms]",
-                        active ? "bg-canvas text-fg" : "hover:bg-rail-fg/10",
+                        "relative flex min-h-9 items-center gap-2 rounded-control px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-[120ms]",
+                        // Current section: filled pill plus a bar on the rail edge, so it reads even at a glance.
+                        active ? "bg-canvas text-fg lg:before:absolute lg:before:inset-y-1.5 lg:before:-left-3 lg:before:w-[3px] lg:before:rounded-r-full lg:before:bg-rail-fg"
+                          : "hover:bg-rail-fg/10",
                         pending && !active && "font-medium opacity-55",
                       )}>
-                      <span className="flex items-center gap-2">
-                        {(() => { const Icon = NAV_ICONS[item.segment]; return Icon ? <Icon aria-hidden className="size-4 shrink-0 opacity-80" /> : null; })()}
-                        <span className="flex-1">{item.label}</span>
-                        {pending && <span className="text-caption font-medium tabular-nums">{t.project.phaseSoon(item.phase)}</span>}
-                      </span>
-                      {value !== undefined && (
-                        <span className="mt-1.5 block h-[3px] overflow-hidden rounded-chip shadow-[inset_0_0_0_1px_rgba(127,127,127,.35)]"
-                          role="img" aria-label={`Готово ${value}%`}>
-                          <i className="block h-full bg-current" style={{ width: `${value}%` }} />
-                        </span>
-                      )}
+                      {(() => { const Icon = NAV_ICONS[item.segment]; return Icon ? <Icon aria-hidden className="size-4 shrink-0 opacity-80" /> : null; })()}
+                      <span className="flex-1">{item.label}</span>
+                      {pending && <span className="text-caption font-medium tabular-nums">{t.project.phaseSoon(item.phase)}</span>}
+                      {value !== undefined && <StageRing value={value} active={active} />}
                     </Link>
                   </li>
                 );
@@ -94,11 +97,45 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
             </ul>
           </div>
         ))}
-        {/* Reference at the end of the list (serial position, docs/UX_LAWS.md UX-14). */}
-        <Link href="/app/ux-laws" className="hidden rounded-control px-2.5 py-1.5 text-meta font-semibold opacity-70 hover:bg-rail-fg/10 hover:opacity-100 lg:block">
-          {t.uxLaws.nav}
-        </Link>
+        {/* Reference and the way back to the site at the end of the list (serial position, docs/UX_LAWS.md UX-14). */}
+        <div className="hidden flex-col gap-0.5 border-t border-rail-fg/15 pt-3 lg:flex">
+          <Link href="/app/ux-laws" className={FOOT_LINK}>
+            <BookOpen aria-hidden className="size-4 shrink-0" />{t.uxLaws.nav}
+          </Link>
+          <Link href="/uk" className={FOOT_LINK}>
+            <Globe aria-hidden className="size-4 shrink-0" />{t.auth.toSite}
+          </Link>
+        </div>
       </div>
     </nav>
+  );
+}
+
+const FOOT_LINK = "flex items-center gap-2 rounded-control px-2.5 py-1.5 text-meta font-semibold opacity-70 transition-opacity hover:bg-rail-fg/10 hover:opacity-100";
+
+/**
+ * Stage completeness as a small ring next to the item (replaces the thin bars under every label): it keeps
+ * the list one line per item and reads as a status, not as a second row of content. A full stage shows a check.
+ */
+function StageRing({ value, active }: { value: number; active: boolean }) {
+  const label = t.project.stageProgress(value);
+  if (value >= 100)
+    return (
+      <span role="img" aria-label={label} title={label}
+        className="grid size-4 shrink-0 place-items-center rounded-full bg-current">
+        <Check aria-hidden strokeWidth={3} className={cn("size-2.5", active ? "text-canvas" : "text-rail")} />
+      </span>
+    );
+  const r = 6.5;
+  const c = 2 * Math.PI * r;
+  return (
+    <svg role="img" aria-label={label} viewBox="0 0 16 16" className="size-4 shrink-0 -rotate-90">
+      <title>{label}</title>
+      <circle cx="8" cy="8" r={r} fill="none" stroke="currentColor" strokeOpacity={0.25} strokeWidth="2" />
+      {value > 0 && (
+        <circle cx="8" cy="8" r={r} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+          strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} />
+      )}
+    </svg>
   );
 }
