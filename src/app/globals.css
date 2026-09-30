@@ -38,8 +38,10 @@
   --entity-design: #3b5bdb;
   --entity-decision: #495057;
 }
+/* Dark: follows the system unless the visitor picked a theme (data-theme on <html>, set by the
+   site theme switch). The tool has no switch, so it always follows the system. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --canvas: #10132a;
     --surface: #1a1e3a;
     --subtle: #222747;
@@ -62,6 +64,29 @@
     --entity-design: #7c93f0;
     --entity-decision: #adb5bd;
   }
+}
+:root[data-theme="dark"] {
+  --canvas: #10132a;
+  --surface: #1a1e3a;
+  --subtle: #222747;
+  --line: #2e3356;
+  --fg: #eceef7;
+  --fg-secondary: #a0a5c0;
+  --accent: #eceef7;
+  --accent-hover: #ffffff;
+  --on-accent: #10132a;
+  --danger: #ff8a80;
+  --warning: #f2c46b;
+  --success: #5cc98f;
+  --rail: #eceef7;
+  --rail-fg: #10132a;
+  --entity-research: #3bc9db;
+  --entity-synthesis: #9775fa;
+  --entity-problem: #ff8a4c;
+  --entity-opportunity: #f2c46b;
+  --entity-structure: #4dabf7;
+  --entity-design: #7c93f0;
+  --entity-decision: #adb5bd;
 }
 
 @theme inline {
@@ -102,6 +127,18 @@
 }
 
 html { color-scheme: light dark; }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* Theme switch icon: show the moon in light mode, the sun in dark mode (pure CSS, no hydration flash). */
+/* The screen-reader label follows the same rule: it names the theme the button switches to. */
+.theme-icon-sun, .theme-label-light { display: none; }
+:root[data-theme="dark"] .theme-icon-sun, :root[data-theme="dark"] .theme-label-light { display: block; }
+:root[data-theme="dark"] .theme-icon-moon, :root[data-theme="dark"] .theme-label-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon-sun, :root:not([data-theme="light"]) .theme-label-light { display: block; }
+  :root:not([data-theme="light"]) .theme-icon-moon, :root:not([data-theme="light"]) .theme-label-dark { display: none; }
+}
 body {
   background: var(--canvas);
   color: var(--fg);
