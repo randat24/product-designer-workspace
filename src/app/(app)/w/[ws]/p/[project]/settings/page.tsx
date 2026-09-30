@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getMyRole, getProjectBySlug, getWorkspaceBySlug } from "@/domains/projects";
 import { setProjectArchived } from "@/domains/projects/actions";
+import { getCaseForProject } from "@/domains/cases";
+import { createCaseStudy, setCaseStatus } from "@/domains/cases/actions";
 import { Button } from "@/shared/ui/button";
 import { Panel } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -16,7 +18,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
   const project = workspace && (await getProjectBySlug(workspace.id, slug));
   if (!workspace || !project) notFound();
 
-  const role = await getMyRole(workspace.id);
+  const [role, caseStudy] = await Promise.all([getMyRole(workspace.id), getCaseForProject(project.id)]);
   const canEdit = role === "owner" || role === "editor";
 
   return (
@@ -28,6 +30,46 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
         <Panel className="flex flex-col gap-4">
           <GeneralForm project={project} readOnly={!canEdit} />
           <p className="text-[13px] text-fg-secondary">{t.settings.slugNote(project.slug)}</p>
+        </Panel>
+      </section>
+
+      <section aria-labelledby="case-h" className="flex flex-col gap-3">
+        <h2 id="case-h" className="text-heading font-semibold">{t.cases.title}</h2>
+        <p className="max-w-prose text-fg-secondary">{t.cases.lede}</p>
+        <Panel className="flex flex-col gap-4">
+          {caseStudy ? (
+            <>
+              <form action={setCaseStatus} className="flex flex-wrap items-end gap-3">
+                <input type="hidden" name="caseId" value={caseStudy.id} />
+                <label className="flex flex-col gap-1.5 text-sm font-semibold">
+                  {t.cases.statusLabel}
+                  <select name="caseStatus" defaultValue={caseStudy.status} disabled={!canEdit}
+                    className="h-9 rounded-[9px] border-[1.5px] border-line bg-surface px-2.5 font-normal">
+                    {(["draft", "review", "published"] as const).map((s) => (
+                      <option key={s} value={s}>{t.cases.status[s]}</option>
+                    ))}
+                  </select>
+                </label>
+                {canEdit && <Button type="submit" variant="secondary">{t.cases.save}</Button>}
+                {caseStudy.status === "published" && caseStudy.hasContent && (
+                  <a href={`/uk/cases/${caseStudy.slug}`} target="_blank" rel="noreferrer"
+                    className="ml-auto self-center text-sm font-semibold underline underline-offset-4">{t.cases.open}</a>
+                )}
+              </form>
+              <p className="text-[13px] text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
+              {!caseStudy.hasContent && <p className="text-[13px] text-warning">{t.cases.emptyContent}</p>}
+            </>
+          ) : (
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-fg-secondary">{t.cases.none}</p>
+              {canEdit && (
+                <form action={createCaseStudy}>
+                  <input type="hidden" name="projectId" value={project.id} />
+                  <Button type="submit" variant="secondary">{t.cases.create}</Button>
+                </form>
+              )}
+            </div>
+          )}
         </Panel>
       </section>
 

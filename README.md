@@ -19,6 +19,8 @@
 
 Тексты кейсов — заглушки; «Застосунок бронювання ресторанів» — кейс-пример в полной подаче (`src/site/case-story.ts`, `src/site/cases/`). Контент и список наград — в `src/site/content.ts`; новая награда = SVG в `public/awards/` + id в `award-icons.tsx` + запись в `awards` (uk и en). Название сайта и домен — позже.
 
+**Кейсы из инструмента.** Кейс — это проект, опубликованный на сайте: таблица `case_studies` (миграция 014), один кейс на проект, статус «Черновик → На согласовании → Опубликован». Сайт читает опубликованные кейсы из базы (`src/site/cases-source.ts`, обновление раз в минуту и сразу при смене статуса); встроенный список в `content.ts` — только запасной вариант, если база недоступна. В инструменте: значок «На сайте ↗» на карточке проекта и блок «Кейс на сайте» в настройках проекта. Содержимое кейса — снимок `{ uk, en }` в поле `content`; редактор страницы кейса — следующий шаг.
+
 Анализ конкурентов, часть 2:
 
 | Анализ конкурентов, часть 2 | Проверено |
@@ -172,7 +174,8 @@ docs/                    PRD, ARCHITECTURE, DATABASE, IA, MVP, ROADMAP, DESIGN-S
 supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo · 006 competitors + matrix + attachments · 007 research · 008 synthesis
 supabase/tests/database/ pgTAP
 src/app/                 маршруты (docs/IA.md); (site)/[locale] — публичный сайт, (app) — инструмент на /app
-src/site/                контент сайта uk/en (content.ts) и его компоненты
+src/site/                сайт: контент uk/en (content.ts), кейсы из базы (cases-source.ts), подача кейса (case-story*)
+src/domains/cases/       кейсы в инструменте: статус публикации
 src/domains/<name>/      schema.ts (Zod) · queries.ts · actions.ts · компоненты · index.ts (public API)
 src/shared/              entities.ts (реестр сущностей) · navigation.ts · i18n · ui · lib
 ```

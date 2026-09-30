@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Signature } from "@/site/signature";
 import { AWARD_TILE, AwardSvg } from "@/site/award-icons";
 import { CONTACTS, dict, isLocale } from "@/site/content";
+import { getCases } from "@/site/cases-source";
+
+export const revalidate = 60;
 import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 import { notFound } from "next/navigation";
 
@@ -16,6 +19,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const d = dict(locale);
+  const cases = await getCases(locale);
 
   return (
     <>
@@ -65,7 +69,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </Link>
         </div>
         <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
-          {d.cases_list.map((item) => (
+          {cases.slice(0, 4).map((item) => (
             <CaseCard key={item.slug} item={item} locale={locale} label={d.cases.placeholder} />
           ))}
         </div>
