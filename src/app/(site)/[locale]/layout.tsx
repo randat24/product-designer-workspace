@@ -68,7 +68,7 @@ export default async function SiteLayout({
   const locale: Locale = isLocale(raw) ? raw : "uk";
   const d = dict(locale);
   const year = new Date().getFullYear();
-  const navLink = "rounded-[8px] px-2.5 py-1.5 hover:bg-subtle";
+  const navLink = "hit rounded-[8px] px-2.5 py-1.5 hover:bg-subtle";
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -86,7 +86,7 @@ export default async function SiteLayout({
         <div className="flex min-h-dvh flex-col">
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/85 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:gap-4`}>
-              <Link href={`/${locale}`} className="font-display text-[20px] font-bold uppercase leading-none tracking-[0.01em]">
+              <Link href={`/${locale}`} className="hit font-display text-[20px] font-bold uppercase leading-none tracking-[0.01em]">
                 {d.name}
               </Link>
               <nav className="ml-auto hidden items-center gap-2 text-[14px] font-semibold sm:flex" aria-label={d.ui.mainNav}>
@@ -101,9 +101,9 @@ export default async function SiteLayout({
             </div>
             {/* Mobile: a second row instead of a hamburger — only three links. */}
             <nav className={`${container} flex gap-4 pb-2.5 text-[14px] font-semibold sm:hidden`} aria-label={d.ui.mainNav}>
-              <Link href={`/${locale}/cases`}>{d.nav.work}</Link>
-              <Link href={`/${locale}/about`}>{d.nav.about}</Link>
-              <a href={`/${locale}#contact`}>{d.nav.contact}</a>
+              <Link href={`/${locale}/cases`} className="hit">{d.nav.work}</Link>
+              <Link href={`/${locale}/about`} className="hit">{d.nav.about}</Link>
+              <a href={`/${locale}#contact`} className="hit">{d.nav.contact}</a>
             </nav>
           </header>
 
@@ -123,9 +123,9 @@ export default async function SiteLayout({
                 </div>
                 <nav aria-label={d.ui.footerNav}>
                   <ul className="flex flex-wrap gap-x-5 gap-y-1 text-[14px] font-semibold">
-                    <li><Link href={`/${locale}`} className="hover:underline">{d.ui.home}</Link></li>
-                    <li><Link href={`/${locale}/cases`} className="hover:underline">{d.nav.work}</Link></li>
-                    <li><Link href={`/${locale}/about`} className="hover:underline">{d.nav.about}</Link></li>
+                    <li><Link href={`/${locale}`} className="hit hover:underline">{d.ui.home}</Link></li>
+                    <li><Link href={`/${locale}/cases`} className="hit hover:underline">{d.nav.work}</Link></li>
+                    <li><Link href={`/${locale}/about`} className="hit hover:underline">{d.nav.about}</Link></li>
                   </ul>
                 </nav>
               </div>
@@ -149,7 +149,7 @@ export default async function SiteLayout({
                 <a
                   href={`mailto:${CONTACTS.email}`}
                   {...trackAttrs("contact_email_click", { location: "footer" })}
-                  className="text-[14px] font-semibold hover:underline"
+                  className="hit text-[14px] font-semibold hover:underline"
                 >
                   {CONTACTS.email}
                 </a>
@@ -159,7 +159,7 @@ export default async function SiteLayout({
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] opacity-60">
                 <span>© {year} · {d.footer.rights}</span>
                 {/* The private workspace: not for crawlers. */}
-                <Link href="/app" rel="nofollow" prefetch={false} className="hover:underline">{d.footer.login}</Link>
+                <Link href="/app" rel="nofollow" prefetch={false} className="hit hover:underline">{d.footer.login}</Link>
               </div>
               <BackToTop label={d.footer.top} />
             </div>

@@ -80,7 +80,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section className={`${container} flex flex-col gap-8 py-12`} aria-labelledby="work">
         <div className="flex items-end justify-between gap-4">
           <SectionTitle id="work">{d.home.selected}</SectionTitle>
-          <Link href={`/${locale}/cases`} className="shrink-0 text-[14px] font-semibold hover:underline">
+          <Link href={`/${locale}/cases`} className="hit shrink-0 text-[14px] font-semibold hover:underline">
             {d.home.all} →
           </Link>
         </div>

@@ -189,3 +189,18 @@ body {
   to { clip-path: inset(0 0 0 0); }
 }
 @media (prefers-reduced-motion: reduce) { .signature-draw { animation: none; } }
+
+/* Fitts's law (docs/UX_LAWS.md, UX-21): a 44 px touch target around small links and buttons
+   without changing how they look. The parent keeps its size; only the clickable area grows. */
+.hit {
+  position: relative;
+}
+.hit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}

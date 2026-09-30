@@ -55,7 +55,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           </div>
           <Link
             href={`/${locale}/cases`}
-            className="w-fit text-[15px] font-semibold underline underline-offset-4"
+            className="hit w-fit text-[15px] font-semibold underline underline-offset-4"
             {...trackAttrs("portfolio_cta_click", { cta: "cases", location: "about" })}
           >
             {d.ui.seeWork} →
@@ -157,7 +157,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                       target="_blank"
                       rel="noreferrer"
                       title={d.footer.certificate}
-                      className="inline-flex items-center gap-1 font-semibold underline decoration-line underline-offset-4 hover:decoration-fg"
+                      className="hit inline-flex items-center gap-1 font-semibold underline decoration-line underline-offset-4 hover:decoration-fg"
                     >
                       {e.title}
                       <ExternalIcon className="h-4 w-4" />

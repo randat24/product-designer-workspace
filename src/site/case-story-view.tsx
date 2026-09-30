@@ -1,5 +1,6 @@
 import { cn } from "@/shared/lib/cn";
 import { STAGE_COLOR, type CaseStory, type Mark, type Stage, type StoryLabels } from "./case-story";
+import { CaseContentsSpy } from "./case-contents-spy";
 import { container } from "./ui";
 
 const STICKERS = ["var(--s3)", "var(--s7)", "var(--s5)", "var(--s1)", "var(--s6)", "var(--s4)"];
@@ -27,17 +28,18 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
 
   return (
     <>
-      <nav aria-label={labels.contents} className="z-10 border-y border-line bg-canvas/90 backdrop-blur lg:sticky lg:top-16">
+      <nav id="case-contents" aria-label={labels.contents} className="z-10 border-y border-line bg-canvas/90 backdrop-blur lg:sticky lg:top-16">
         <ol className={`${container} flex gap-1 overflow-x-auto py-2.5 text-[13px] font-semibold`}>
           {sections.map((s, i) => (
             <li key={s.id} className="shrink-0">
-              <a href={`#${s.id}`} className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg">
-                <span className="display-num text-[11px] opacity-60">{String(i + 1).padStart(2, "0")}</span>
+              <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-full px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-subtle aria-[current]:text-fg">
+                <span className="display-num text-[11px]">{String(i + 1).padStart(2, "0")}</span>
                 {s.title}
               </a>
             </li>
           ))}
         </ol>
+        <CaseContentsSpy ids={sections.map((s) => s.id)} navId="case-contents" />
       </nav>
 
       <div className={`${container} mt-12 flex flex-col gap-20`}>

@@ -24,7 +24,7 @@ export function LangSwitch({ current }: { current: Locale }) {
           aria-current={l === current ? "true" : undefined}
           onClick={() => l !== current && track("language_switch", { from: current, to: l })}
           className={cn(
-            "rounded-full px-2.5 py-1 transition-colors",
+            "hit rounded-full px-2.5 py-1 transition-colors",
             l === current
               ? "bg-fg text-canvas"
               : "text-fg-secondary hover:text-fg",
