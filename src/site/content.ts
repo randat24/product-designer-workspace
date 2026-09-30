@@ -60,6 +60,9 @@ export type Award = {
   icon: AwardIcon;
   title: string;
   issuer: string;
+  /** Who awards it: shown as a small mark in the card corner (a generic icon, not the real emblem). */
+  issuerKind: "state" | "city" | "brigade";
+  description: string;
 };
 
 type Job = {
@@ -293,31 +296,43 @@ const uk: Dictionary = {
       icon: "defence-of-ukraine",
       title: "Відзнака Президента України «За оборону України»",
       issuer: "Президент України",
+      issuerKind: "state",
+      description: "Державна відзнака Президента України, яка вручається військовослужбовцям та працівникам правоохоронних органів за участь в обороні України.",
     },
     {
       icon: "defence-of-mykolaiv",
-      title: "Хрест «За оборону Миколаєва», 2022",
+      title: "За оборону Миколаєва 2022",
       issuer: "Місто Миколаїв",
-    },
-    {
-      icon: "marine-brigade-36",
-      title: "Памʼятна медаль 36-ї окремої бригади морської піхоти «Курська операція»",
-      issuer: "36 ОБрМП",
-    },
-    {
-      icon: "honour-and-loyalty",
-      title: "Медаль «За честь і вірність обовʼязку»",
-      issuer: "36 ОБрМП",
+      issuerKind: "city",
+      description: "Нагорода вручається за участь у захисті міста Миколаєва у 2022 році.",
     },
     {
       icon: "veteran-of-war",
-      title: "Нагрудний знак «Ветеран війни»",
+      title: "Ветеран війни",
       issuer: "Україна",
+      issuerKind: "state",
+      description: "Державний знак, який вручається ветеранам разом з посвідченням учасника бойових дій, учасника війни або особи з інвалідністю внаслідок війни.",
+    },
+    {
+      icon: "marine-brigade-36",
+      title: "36 окрема бригада морської піхоти",
+      issuer: "36 ОБрМП",
+      issuerKind: "brigade",
+      description: "Памʼятна нагорода 36-ї окремої бригади морської піхоти Збройних Сил України. На аверсі — емблема підрозділу та девізи «Борітеся — поборете» і «Вірні завжди».",
+    },
+    {
+      icon: "honour-and-loyalty",
+      title: "За честь і вірність обовʼязку",
+      issuer: "36 ОБрМП",
+      issuerKind: "brigade",
+      description: "Медаль морської піхоти за сумлінне виконання військового обовʼязку. У центрі — якір із крилами, символ морської піхоти.",
     },
     {
       icon: "military-service-veteran",
-      title: "Нагрудний знак «Ветеран військової служби»",
+      title: "Ветеран військової служби",
       issuer: "Україна",
+      issuerKind: "state",
+      description: "Нагрудний знак у вигляді сріблястого дубового вінка; всередині — якір, крила, схрещені меч і ствол артилерійського знаряддя: символи різних родів військ.",
     },
   ],
   story: {
@@ -536,31 +551,43 @@ const en: Dictionary = {
       icon: "defence-of-ukraine",
       title: "Presidential Award “For the Defence of Ukraine”",
       issuer: "President of Ukraine",
+      issuerKind: "state",
+      description: "A state award of the President of Ukraine, given to service members and law-enforcement officers for taking part in the defence of Ukraine.",
     },
     {
       icon: "defence-of-mykolaiv",
-      title: "Cross “For the Defence of Mykolaiv”, 2022",
+      title: "For the Defence of Mykolaiv 2022",
       issuer: "City of Mykolaiv",
-    },
-    {
-      icon: "marine-brigade-36",
-      title: "Commemorative medal of the 36th Separate Marine Brigade, “Kursk operation”",
-      issuer: "36th Separate Marine Brigade",
-    },
-    {
-      icon: "honour-and-loyalty",
-      title: "Medal “For Honour and Loyalty to Duty”",
-      issuer: "36th Separate Marine Brigade",
+      issuerKind: "city",
+      description: "Awarded for taking part in the defence of the city of Mykolaiv in 2022.",
     },
     {
       icon: "veteran-of-war",
-      title: "“War Veteran” badge",
+      title: "War Veteran",
       issuer: "Ukraine",
+      issuerKind: "state",
+      description: "A state badge given to veterans together with the certificate of a combatant, a war participant or a person disabled as a result of the war.",
+    },
+    {
+      icon: "marine-brigade-36",
+      title: "36th Separate Marine Brigade",
+      issuer: "36th Separate Marine Brigade",
+      issuerKind: "brigade",
+      description: "Commemorative award of the 36th Separate Marine Brigade of the Armed Forces of Ukraine. The obverse carries the unit emblem and the mottos “Fight and you will prevail” and “Always faithful”.",
+    },
+    {
+      icon: "honour-and-loyalty",
+      title: "For Honour and Loyalty to Duty",
+      issuer: "36th Separate Marine Brigade",
+      issuerKind: "brigade",
+      description: "Marine Corps medal for conscientious military service. In the centre, a winged anchor, the symbol of the marines.",
     },
     {
       icon: "military-service-veteran",
-      title: "“Veteran of Military Service” badge",
+      title: "Veteran of Military Service",
       issuer: "Ukraine",
+      issuerKind: "state",
+      description: "A breast badge shaped as a silver oak wreath with an anchor, wings, a crossed sword and gun barrel inside: symbols of the different branches of the armed forces.",
     },
   ],
   story: {

@@ -83,11 +83,14 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           </div>
           <div className="flex flex-col gap-4">
             <p className="font-display text-[20px] font-bold uppercase">{d.about.awards}</p>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-              {d.awards.map((a) => (
-                <AwardCard key={a.icon} award={a} />
+            {/* Bento: the two leading awards wide (medal on the left), then four tall cards (large screens). */}
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12">
+              {d.awards.map((a, i) => (
+                <li key={a.icon} className={i < 2 ? "sm:col-span-2 lg:col-span-6" : "lg:col-span-3"}>
+                  <AwardCard award={a} index={i} wide={i < 2} />
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </section>
