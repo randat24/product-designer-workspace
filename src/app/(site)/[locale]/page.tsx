@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AWARD_TILE, AwardSvg } from "@/site/award-icons";
 import { CONTACTS, dict, isLocale } from "@/site/content";
 import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 import { notFound } from "next/navigation";
@@ -80,13 +81,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <Link href={`/${locale}/about#service`} className="group flex w-fit flex-wrap items-center gap-3">
               <span className="flex -space-x-3">
                 {d.awards.map((a) => (
-                  // eslint-disable-next-line @next/next/no-img-element -- static files
-                  <img
-                    key={a.image}
-                    src={a.image}
-                    alt=""
-                    className={`h-14 w-12 rounded-[8px] border-2 border-rail bg-[#1d2447] ${a.fit === "cover" ? "object-cover" : "object-contain"} ${a.fit === "cutout" ? "p-1" : ""}`}
-                  />
+                  <span
+                    key={a.icon}
+                    className="flex h-14 w-12 items-center justify-center rounded-[8px] border-2 border-rail text-[#b3b8e6]"
+                    style={{ background: AWARD_TILE }}
+                  >
+                    <AwardSvg icon={a.icon} className="h-[82%] w-auto" />
+                  </span>
                 ))}
               </span>
               <span className="text-[14px] font-semibold underline underline-offset-4">

@@ -1,6 +1,8 @@
 // Public site content (portfolio + CV) in Ukrainian and English.
 // Cases are placeholders for now; the CV part follows the resume in public/cv/.
 
+import type { AwardIcon } from "./award-icons";
+
 export const LOCALES = ["uk", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
 
@@ -32,11 +34,9 @@ export type Case = {
 };
 
 export type Award = {
-  image: string;
+  icon: AwardIcon;
   title: string;
   issuer: string;
-  /** cutout: medal without background, padded · photo: shown whole · cover: fills the tile */
-  fit: "cutout" | "photo" | "cover";
 };
 
 type Job = {
@@ -224,34 +224,29 @@ const uk: Dictionary = {
   ],
   awards: [
     {
-      image: "/awards/defence-of-ukraine.webp",
+      icon: "defence-of-ukraine",
       title: "Відзнака Президента України «За оборону України»",
       issuer: "Президент України",
-      fit: "cutout",
     },
     {
-      image: "/awards/defence-of-mykolaiv.webp",
+      icon: "defence-of-mykolaiv",
       title: "Хрест «За оборону Миколаєва», 2022",
       issuer: "Місто Миколаїв",
-      fit: "cover",
     },
     {
-      image: "/awards/36-marine-brigade.webp", // shown whole: keeps the photographer's mark
+      icon: "marine-brigade-36",
       title: "Памʼятна медаль 36-ї окремої бригади морської піхоти «Курська операція»",
       issuer: "36 ОБрМП",
-      fit: "photo",
     },
     {
-      image: "/awards/veteran-of-war.webp",
+      icon: "veteran-of-war",
       title: "Нагрудний знак «Ветеран війни»",
       issuer: "Україна",
-      fit: "cutout",
     },
     {
-      image: "/awards/military-service-veteran.webp",
+      icon: "military-service-veteran",
       title: "Нагрудний знак «Ветеран військової служби»",
       issuer: "Україна",
-      fit: "cover",
     },
   ],
   awardsPhoto: {
@@ -394,34 +389,29 @@ const en: Dictionary = {
   ],
   awards: [
     {
-      image: "/awards/defence-of-ukraine.webp",
+      icon: "defence-of-ukraine",
       title: "Presidential Award “For the Defence of Ukraine”",
       issuer: "President of Ukraine",
-      fit: "cutout",
     },
     {
-      image: "/awards/defence-of-mykolaiv.webp",
+      icon: "defence-of-mykolaiv",
       title: "Cross “For the Defence of Mykolaiv”, 2022",
       issuer: "City of Mykolaiv",
-      fit: "cover",
     },
     {
-      image: "/awards/36-marine-brigade.webp", // shown whole: keeps the photographer's mark
+      icon: "marine-brigade-36",
       title: "Commemorative medal of the 36th Separate Marine Brigade, “Kursk operation”",
       issuer: "36th Separate Marine Brigade",
-      fit: "photo",
     },
     {
-      image: "/awards/veteran-of-war.webp",
+      icon: "veteran-of-war",
       title: "“War Veteran” badge",
       issuer: "Ukraine",
-      fit: "cutout",
     },
     {
-      image: "/awards/military-service-veteran.webp",
+      icon: "military-service-veteran",
       title: "“Veteran of Military Service” badge",
       issuer: "Ukraine",
-      fit: "cover",
     },
   ],
   awardsPhoto: {

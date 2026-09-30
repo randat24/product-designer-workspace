@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
+import { AWARD_TILE, AwardSvg } from "./award-icons";
 import type { Award, Case, Locale } from "./content";
 
 export const container = "mx-auto w-full max-w-[1120px] px-4 sm:px-8";
@@ -181,23 +182,15 @@ export function CaseCard({
   );
 }
 
-/** Award on a dark "velvet" tile, the same in light and dark themes. */
+/** Award as a line icon on a dark tile, the same in light and dark themes. */
 export function AwardCard({ award }: { award: Award }) {
   return (
     <figure className="flex flex-col gap-3">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] bg-[#1d2447]">
-        {/* eslint-disable-next-line @next/next/no-img-element -- static files, sizes are small */}
-        <img
-          src={award.image}
-          alt={award.title}
-          loading="lazy"
-          className={cn(
-            "absolute inset-0 h-full w-full",
-            award.fit === "cover" && "object-cover",
-            award.fit === "photo" && "object-contain",
-            award.fit === "cutout" && "object-contain p-[10%]",
-          )}
-        />
+      <div
+        className="flex aspect-[4/5] items-center justify-center rounded-[14px] text-[#b3b8e6]"
+        style={{ background: AWARD_TILE }}
+      >
+        <AwardSvg icon={award.icon} className="h-[78%] w-auto" />
       </div>
       <figcaption className="flex flex-col gap-0.5">
         <span className="font-semibold leading-snug">{award.title}</span>

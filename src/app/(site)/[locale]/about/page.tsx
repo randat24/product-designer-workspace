@@ -62,7 +62,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             <p className="font-display text-[24px] font-bold uppercase leading-none">{d.about.awards}</p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
               {d.awards.map((a) => (
-                <AwardCard key={a.image} award={a} />
+                <AwardCard key={a.icon} award={a} />
               ))}
             </div>
           </div>
