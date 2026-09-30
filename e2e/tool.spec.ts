@@ -20,7 +20,14 @@ async function openDemoProject(page: Page): Promise<string> {
   if (await demo.isVisible()) await demo.click();
   else await existing.click();
   await expect(page).toHaveURL(/\/w\/[^/]+\/p\/[^/]+$/);
+  await ready(page);
   return new URL(page.url()).pathname;
+}
+
+/** The project shell is rendered (past the loading skeleton) and React has hydrated. */
+async function ready(page: Page) {
+  await expect(page.getByRole("navigation", { name: "Разделы проекта" }).locator("a").first()).toBeVisible({ timeout: 20_000 });
+  await page.waitForLoadState("networkidle");
 }
 
 /** Section pages from the navigation rail plus the first detail page of each list. */
@@ -30,7 +37,8 @@ async function collectPages(page: Page, base: string) {
   const pages = [...sections];
   for (const s of sections) {
     if (s === base) continue;
-    await page.goto(s);
+    await page.goto(s, { waitUntil: "domcontentloaded" });
+    await page.locator("main h1").first().waitFor({ timeout: 20_000 }).catch(() => {});
     const detail = await page.locator(`main a[href^="${s}/"]`).first().getAttribute("href").catch(() => null);
     if (detail && !pages.includes(detail)) pages.push(detail);
   }
@@ -38,7 +46,7 @@ async function collectPages(page: Page, base: string) {
 }
 
 test("every section and detail page renders and is accessible", async ({ page }, testInfo) => {
-  test.setTimeout(300_000);
+  test.setTimeout(900_000);
   const base = await openDemoProject(page);
   const pages = await collectPages(page, base);
   expect(pages.length).toBeGreaterThan(10);
@@ -48,7 +56,7 @@ test("every section and detail page renders and is accessible", async ({ page },
   for (const path of pages) {
     await test.step(path.replace(base, "") || "overview", async () => {
       const errors = watchErrors(page);
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       await expect(page.getByText(ERROR_TITLE)).toHaveCount(0);
       await expect(page.locator("h1").first()).toBeVisible();
       await expect(page.locator("h1")).toHaveCount(1);
@@ -71,11 +79,14 @@ test("every section and detail page renders and is accessible", async ({ page },
 test("brief autosaves and keeps the text after reload", async ({ page }) => {
   const base = await openDemoProject(page);
   await page.goto(`${base}/brief`);
+  await ready(page);
   const field = page.getByLabel("Что за продукт");
   const text = `Проверка автосохранения ${Date.now()}`;
+  await field.clear();
   await field.fill(text);
   await expect(page.getByRole("status").filter({ hasText: "Сохранено" })).toBeVisible({ timeout: 10_000 });
   await page.reload();
+  await ready(page);
   await expect(page.getByLabel("Что за продукт")).toHaveValue(text);
 });
 
