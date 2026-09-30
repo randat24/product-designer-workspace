@@ -2,6 +2,8 @@
 // Cases are placeholders for now; the CV part follows the resume in public/cv/.
 
 import type { AwardIcon } from "./award-icons";
+import type { CaseStory, StoryLabels } from "./case-story";
+import { restaurantEn, restaurantUk } from "./cases/restaurant-booking";
 
 export const LOCALES = ["uk", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -31,6 +33,8 @@ export type Case = {
   tags: string[];
   metrics: { value: string; label: string }[];
   sections: CaseSection[];
+  /** Full case study, as published from the tool; without it the page shows `sections`. */
+  story?: CaseStory;
 };
 
 export type Award = {
@@ -90,6 +94,7 @@ type Dictionary = {
   languages: { name: string; level: string }[];
   availability: string[];
   awards: Award[];
+  story: StoryLabels;
   contact: { title: string; lead: string; write: string };
   footer: { rights: string; login: string; top: string; certificate: string };
   cases_list: Case[];
@@ -259,6 +264,29 @@ const uk: Dictionary = {
       issuer: "Україна",
     },
   ],
+  story: {
+    sample: "Кейс-приклад: так виглядатиме проєкт, опублікований з робочого простору. Цифри й цитати поки ілюстративні.",
+    contents: "Зміст",
+    overview: "Коротко",
+    challenge: "Задача",
+    solution: "Рішення",
+    outcome: "Результат",
+    process: "Як я працював",
+    research: "Дослідження",
+    insights: "Інсайти",
+    competitors: "Конкуренти",
+    opportunities: "Можливості",
+    flow: "Флоу",
+    edgeCases: "Крайні випадки",
+    screens: "Екрани",
+    decisions: "Рішення і чому",
+    why: "Чому",
+    rejected: "Відкинуті варіанти",
+    evidence: "Докази",
+    results: "Результат",
+    marks: { yes: "Є", partial: "Частково", no: "Немає" },
+    redHint: "Червоне — можливість бути кращими",
+  },
   contact: {
     title: "Є задача?",
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
@@ -431,6 +459,29 @@ const en: Dictionary = {
       issuer: "Ukraine",
     },
   ],
+  story: {
+    sample: "Sample case: this is how a project published from the workspace will look. Numbers and quotes are illustrative for now.",
+    contents: "Contents",
+    overview: "In short",
+    challenge: "Challenge",
+    solution: "Solution",
+    outcome: "Outcome",
+    process: "How I worked",
+    research: "Research",
+    insights: "Insights",
+    competitors: "Competitors",
+    opportunities: "Opportunities",
+    flow: "Flow",
+    edgeCases: "Edge cases",
+    screens: "Screens",
+    decisions: "Decisions and why",
+    why: "Why",
+    rejected: "Rejected options",
+    evidence: "Evidence",
+    results: "Results",
+    marks: { yes: "Yes", partial: "Partly", no: "No" },
+    redHint: "Red — a chance to do better",
+  },
   contact: {
     title: "Have a project?",
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",
@@ -510,6 +561,7 @@ uk.cases_list = [
   },
   {
     slug: "restaurant-booking",
+    story: restaurantUk,
     sticker: "var(--s2)",
     year: "2026",
     title: "Застосунок бронювання ресторанів",
@@ -630,6 +682,7 @@ en.cases_list = [
   },
   {
     ...uk.cases_list[2]!,
+    story: restaurantEn,
     title: "Restaurant booking app",
     client: "Concept",
     summary:
