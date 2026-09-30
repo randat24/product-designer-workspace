@@ -100,6 +100,24 @@ type OpportunityRow = Base & {
   code: string; title: string; description: string | null; hmw: string | null; impact: E["confidence_level"];
   effort: E["confidence_level"]; status: E["opportunity_status"]; archived_at: string | null;
 };
+type ScreenRow = Base & {
+  code: string; name: string; purpose: string | null; user_goal: string | null; entry_points: string | null;
+  primary_action: string | null; secondary_actions: string | null; content_hierarchy: Json; permissions: string | null;
+  analytics_events: Json; api_data_requirements: string | null; status: E["screen_status"]; figma_url: string | null;
+  figma_node_id: string | null; thumbnail_path: string | null; archived_at: string | null;
+};
+type UserFlowRow = Base & {
+  code: string; name: string; description: string | null; status: E["flow_status"]; viewport: Json | null; archived_at: string | null;
+};
+type FlowNodeRow = Base & {
+  flow_id: string; kind: E["flow_node_kind"]; label: string; screen_id: string | null; pos_x: number; pos_y: number; data: Json;
+};
+type FlowEdgeRow = Base & {
+  flow_id: string; source_node_id: string; target_node_id: string; label: string | null; branch: E["flow_edge_branch"]; condition: string | null;
+};
+type FlowEdgeCaseRow = Base & {
+  flow_id: string; kind: E["edge_case_kind"]; description: string | null; status: E["edge_case_status"]; node_id: string | null; position: number;
+};
 type Ins<T, R extends keyof T> = Partial<Omit<T, "id" | "workspace_id" | "code">> & Pick<T, R>;
 type Upd<T> = Partial<Omit<T, "id" | "workspace_id" | "project_id" | "code">>;
 type ProjectCounterRow = { project_id: string; entity_type: string; last_value: number };
@@ -187,6 +205,14 @@ export type Database = {
       insights: { Row: InsightRow; Insert: Ins<InsightRow, "project_id" | "title">; Update: Upd<InsightRow>; Relationships: [] };
       pain_points: { Row: PainPointRow; Insert: Ins<PainPointRow, "project_id" | "title">; Update: Upd<PainPointRow>; Relationships: [] };
       opportunities: { Row: OpportunityRow; Insert: Ins<OpportunityRow, "project_id" | "title">; Update: Upd<OpportunityRow>; Relationships: [] };
+      screens: { Row: ScreenRow; Insert: Ins<ScreenRow, "project_id" | "name">; Update: Upd<ScreenRow>; Relationships: [] };
+      user_flows: { Row: UserFlowRow; Insert: Ins<UserFlowRow, "project_id" | "name">; Update: Upd<UserFlowRow>; Relationships: [] };
+      flow_nodes: {
+        Row: FlowNodeRow; Insert: Ins<FlowNodeRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowNodeRow>;
+        Relationships: [{ foreignKeyName: "flow_nodes_screen_id_fkey"; columns: ["screen_id"]; isOneToOne: false; referencedRelation: "screens"; referencedColumns: ["id"] }];
+      };
+      flow_edges: { Row: FlowEdgeRow; Insert: Ins<FlowEdgeRow, "project_id" | "flow_id" | "source_node_id" | "target_node_id">; Update: Upd<FlowEdgeRow>; Relationships: [] };
+      flow_edge_cases: { Row: FlowEdgeCaseRow; Insert: Ins<FlowEdgeCaseRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowEdgeCaseRow>; Relationships: [] };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -208,6 +234,10 @@ export type Database = {
       synthesis_stats: {
         Args: { p_project: string };
         Returns: { entity_type: string; entity_id: string; source_count: number; participant_count: number }[];
+      };
+      flow_stats: {
+        Args: { p_project: string };
+        Returns: { flow_id: string; node_count: number; screen_count: number; missing_cases: number }[];
       };
       upstream_participants: { Args: { p_type: string; p_id: string }; Returns: { participant_id: string }[] };
       next_code: { Args: { p_project: string; p_entity: string }; Returns: string };
@@ -236,6 +266,12 @@ export type Database = {
       insight_status: "draft" | "validated" | "rejected";
       severity_level: "critical" | "high" | "medium" | "low";
       opportunity_status: "open" | "in_design" | "addressed" | "dropped";
+      flow_status: "draft" | "review" | "final";
+      flow_node_kind: "start" | "screen" | "action" | "decision" | "system" | "error" | "success" | "end";
+      flow_edge_branch: "default" | "yes" | "no" | "error" | "back";
+      edge_case_kind: "payment_failed" | "no_internet" | "unavailable" | "session_expired" | "empty" | "permission_denied" | "timeout" | "validation" | "custom";
+      edge_case_status: "missing" | "covered" | "not_applicable";
+      screen_status: "sketch" | "wireframe" | "prototype" | "tested" | "ready";
     };
     CompositeTypes: { [_ in never]: never };
   };
