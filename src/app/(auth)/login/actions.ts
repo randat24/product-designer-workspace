@@ -7,7 +7,7 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { env } from "@/shared/lib/env";
 import { t } from "@/shared/i18n/ru";
 
-export type LoginState = { sentTo?: string; error?: string } | undefined;
+export type LoginState = { error?: string } | undefined;
 
 async function origin() {
   const h = await headers();
@@ -19,18 +19,17 @@ function safeNext(next: FormDataEntryValue | null) {
   return v.startsWith("/") && !v.startsWith("//") ? v : "/";
 }
 
-export async function sendMagicLink(_prev: LoginState, formData: FormData): Promise<LoginState> {
+export async function signInWithPassword(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const email = z.email().safeParse(String(formData.get("email") ?? "").trim());
   if (!email.success) return { error: t.auth.invalidEmail };
+  const password = String(formData.get("password") ?? "");
+  if (!password) return { error: t.auth.passwordRequired };
 
   const supabase = await createClient();
-  const next = safeNext(formData.get("next"));
-  const { error } = await supabase.auth.signInWithOtp({
-    email: email.data,
-    options: { emailRedirectTo: `${await origin()}/auth/callback?next=${encodeURIComponent(next)}` },
-  });
-  if (error) return { error: error.message };
-  return { sentTo: email.data };
+  const { error } = await supabase.auth.signInWithPassword({ email: email.data, password });
+  // One message for every failure so the form does not reveal which accounts exist.
+  if (error) return { error: error.status === 429 ? t.auth.tooManyAttempts : t.auth.wrongCredentials };
+  redirect(safeNext(formData.get("next")));
 }
 
 export async function signInWithGoogle(formData: FormData) {

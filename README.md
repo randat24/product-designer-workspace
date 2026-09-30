@@ -88,9 +88,24 @@ npm run db:types   # сгенерировать src/types/database.ts (заме�
 
 ## Облако (развёрнуто)
 
-Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–009 применены, smoke-тест и advisors пройдены. Остаются только осознанные замечания: `is_workspace_member`, `can_access_project_file` и `next_code` вызываются из RLS и триггеров, поэтому роль `authenticated` должна иметь к ним доступ (`next_code` сам проверяет права editor). У `project_counters` нет политик, доступ к нему только через `next_code`. Проверка утёкших паролей не нужна: входа по паролю нет.
+Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–010 применены, smoke-тест и advisors пройдены. Остаются только осознанные замечания: `is_workspace_member`, `can_access_project_file` и `next_code` вызываются из RLS и триггеров, поэтому роль `authenticated` должна иметь к ним доступ (`next_code` сам проверяет права editor). У `project_counters` нет политик, доступ к нему только через `next_code`. Проверка утёкших паролей не нужна: входа по паролю нет.
 Vercel: https://product-designer-workspace.vercel.app (деплой из `main`).
 URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key из Project Settings → API.
+
+## Доступ (только по приглашению)
+
+Вход по почте и паролю, письма не отправляются. Регистрацию на уровне базы ограничивает `signup_allowlist` (миграция 010): пока в таблице есть строки, Supabase создаёт пользователей только с этими адресами. Пароль меняется на странице `/account`: ссылка с вашим адресом в шапке.
+
+Задать пароль (Supabase → SQL Editor, пароль вводите там, а не в чате):
+```sql
+update auth.users set encrypted_password = extensions.crypt('ваш-пароль', extensions.gen_salt('bf'))
+where email = 'randat24@gmail.com';
+```
+Пригласить ещё человека:
+```sql
+insert into public.signup_allowlist (email) values ('colleague@example.com');
+```
+Затем создайте его в Authentication → Users → Add user (с паролем, флажок «Auto confirm»).
 
 ## Деплой
 
