@@ -182,19 +182,17 @@ export function CaseCard({
   );
 }
 
-/** Award as a line icon on a dark tile, the same in light and dark themes. */
+/** Award card: the vector medal on a dark tile with a centred caption. */
 export function AwardCard({ award }: { award: Award }) {
   return (
-    <figure className="flex flex-col gap-3">
-      <div
-        className="flex aspect-[4/5] items-center justify-center rounded-[14px] text-[#b3b8e6]"
-        style={{ background: AWARD_TILE }}
-      >
-        <AwardSvg icon={award.icon} className="h-[90%] w-auto" />
-      </div>
-      <figcaption className="flex flex-col gap-0.5">
-        <span className="font-semibold leading-snug">{award.title}</span>
-        <span className="text-[13px] opacity-70">{award.issuer}</span>
+    <figure
+      className="flex flex-col items-center gap-3 rounded-[14px] border-[1.5px] border-white/10 px-3 pb-5 pt-4 text-center text-[#eceef7]"
+      style={{ background: AWARD_TILE }}
+    >
+      <AwardSvg icon={award.icon} className="h-40 w-auto" />
+      <figcaption className="flex flex-col gap-1">
+        <span className="text-[13px] font-semibold leading-snug">{award.title}</span>
+        <span className="text-[12px] opacity-60">{award.issuer}</span>
       </figcaption>
     </figure>
   );

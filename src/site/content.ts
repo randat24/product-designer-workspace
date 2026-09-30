@@ -90,7 +90,6 @@ type Dictionary = {
   languages: { name: string; level: string }[];
   availability: string[];
   awards: Award[];
-  awardsPhoto: { image: string; caption: string };
   contact: { title: string; lead: string; write: string };
   footer: { rights: string; login: string };
   cases_list: Case[];
@@ -254,10 +253,6 @@ const uk: Dictionary = {
       issuer: "Україна",
     },
   ],
-  awardsPhoto: {
-    image: "/awards/defence-of-mykolaiv-case.webp",
-    caption: "Хрест «За оборону Миколаєва» з посвідченням",
-  },
   contact: {
     title: "Є задача?",
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
@@ -424,10 +419,6 @@ const en: Dictionary = {
       issuer: "Ukraine",
     },
   ],
-  awardsPhoto: {
-    image: "/awards/defence-of-mykolaiv-case.webp",
-    caption: "The Cross “For the Defence of Mykolaiv” with its certificate",
-  },
   contact: {
     title: "Have a project?",
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",
