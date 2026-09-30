@@ -5,7 +5,7 @@ import { setProjectArchived } from "@/domains/projects/actions";
 import { getCaseForProject } from "@/domains/cases";
 import { createCaseStudy, setCaseStatus } from "@/domains/cases/actions";
 import { Button } from "@/shared/ui/button";
-import { Panel, Select } from "@/shared/ui/field";
+import { Checkbox, Panel, Select } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 import { DeleteForm, GeneralForm } from "./forms";
@@ -50,6 +50,10 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                     ))}
                   </Select>
                 </label>
+                <label className="flex h-9 items-center gap-2 text-sm font-semibold" title={t.cases.adultHint}>
+                  <Checkbox name="adult" value="1" defaultChecked={caseStudy.adult} disabled={!canEdit} aria-describedby="case-adult-hint" />
+                  {t.cases.adult}
+                </label>
                 {canEdit && <Button type="submit" variant="secondary">{t.cases.save}</Button>}
                 {caseStudy.status === "published" && caseStudy.hasContent && (
                   <a href={`/uk/cases/${caseStudy.slug}`} target="_blank" rel="noreferrer"
@@ -57,6 +61,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                 )}
               </form>
               <p className="text-meta text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
+              <p id="case-adult-hint" className="text-meta text-fg-secondary">{t.cases.adultHint}</p>
               {!caseStudy.hasContent && <p className="text-meta text-warning">{t.cases.emptyContent}</p>}
             </>
           ) : (

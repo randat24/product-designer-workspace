@@ -61,7 +61,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               contacts={CONTACTS}
               location="hero"
             />
-            <SecondaryLink href={CONTACTS.cv} download icon={<FileText aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "hero" })}>
+            <SecondaryLink href={CONTACTS.cv[locale]} download icon={<FileText aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "hero" })}>
               {d.home.ctaCv}
             </SecondaryLink>
           </div>

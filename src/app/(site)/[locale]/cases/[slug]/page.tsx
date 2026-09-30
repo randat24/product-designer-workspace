@@ -10,7 +10,8 @@ import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl, pageMetadata } from "@/site/seo";
 import { ArrowUpRight } from "lucide-react";
 import { ContactMenu } from "@/site/contact-menu";
-import { CaseCover, Eyebrow, KindBadge, SecondaryLink, container } from "@/site/ui";
+import { AdultGate } from "@/site/adult-gate";
+import { AdultBadge, CaseCover, Eyebrow, KindBadge, SecondaryLink, container } from "@/site/ui";
 
 // Cases published later in the tool are rendered on first visit and then cached.
 export const revalidate = 60;
@@ -50,6 +51,9 @@ export default async function CasePage({ params }: { params: Params }) {
   const item = cases[index];
   if (!item) notFound();
   const next = cases.length > 1 ? cases[(index + 1) % cases.length]! : null;
+  // 18+ cases: everything below the facts waits for the visitor's age confirmation.
+  const gate = (node: React.ReactNode) =>
+    item.adult ? <AdultGate labels={d.adult} backHref={`/${locale}/cases`}>{node}</AdultGate> : node;
 
   return (
     <article className="pb-20 pt-10">
@@ -74,9 +78,10 @@ export default async function CasePage({ params }: { params: Params }) {
           </ol>
         </nav>
         <header className="flex max-w-[820px] flex-col gap-5">
-          {item.kind && (
-            <div className="flex">
-              <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />
+          {(item.kind || item.adult) && (
+            <div className="flex gap-2">
+              {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />}
+              {item.adult && <AdultBadge label={d.adult.badge} />}
             </div>
           )}
           <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[1.1]">{item.title}</h1>
@@ -95,6 +100,9 @@ export default async function CasePage({ params }: { params: Params }) {
             </div>
           ))}
         </dl>
+      </div>
+      {gate(<>
+      <div className={`${container} mt-8 flex flex-col gap-8`}>
         <CaseCover item={item} label={d.cases.placeholder} large />
         {/* Live product, or a note that the pages can be browsed here (no site / a concept). */}
         {item.liveUrl ? (
@@ -155,6 +163,8 @@ export default async function CasePage({ params }: { params: Params }) {
         ))}
       </div>
       )}
+
+      </>)}
 
       <div className={`${container} mt-20`}>
       <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10 sm:flex-row sm:items-center sm:justify-between">

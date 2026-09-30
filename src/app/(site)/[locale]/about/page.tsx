@@ -48,7 +48,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           <h1 className="page-title">{d.about.title}</h1>
           <p className="max-w-[680px] text-[clamp(17px,2vw,20px)] leading-[1.55]">{d.about.summary}</p>
           <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={CONTACTS.cv} download icon={<FileDown aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "about" })}>
+            <PrimaryLink href={CONTACTS.cv[locale]} download icon={<FileDown aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "about" })}>
               {d.about.download}
             </PrimaryLink>
             <ContactMenu

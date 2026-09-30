@@ -155,12 +155,21 @@ export function CaseCard({
       className="group flex flex-col gap-4"
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
-      <div className="transition-transform duration-200 group-hover:-translate-y-1">
-        <CaseCover item={item} label={label} />
+      <div className="relative overflow-hidden rounded-[14px] transition-transform duration-200 group-hover:-translate-y-1">
+        {/* 18+: the cover is blurred on the card too; the case page asks for the visitor's age. */}
+        <div className={cn(item.adult && "blur-xl")}><CaseCover item={item} label={label} /></div>
+        {item.adult && (
+          <span aria-hidden className="absolute inset-0 grid place-items-center">
+            <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">
+              {dict(locale).adult.badge}
+            </span>
+          </span>
+        )}
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <p className="flex flex-wrap items-center gap-2 text-[13px] text-fg-secondary">
           {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? p.concept : p.real} />}
+          {item.adult && <AdultBadge label={dict(locale).adult.badge} />}
           {item.client} · {item.year}
         </p>
         <Title className="font-display text-[24px] font-bold uppercase leading-[1.1] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
@@ -179,6 +188,15 @@ export function CaseCard({
         </ul>
       </div>
     </Link>
+  );
+}
+
+/** 18+ marker on case cards and pages. */
+export function AdultBadge({ label }: { label: string }) {
+  return (
+    <span className="rounded-full border-[1.5px] border-danger px-2 py-0.5 text-[11px] font-bold tracking-[0.06em] text-danger">
+      {label}
+    </span>
   );
 }
 

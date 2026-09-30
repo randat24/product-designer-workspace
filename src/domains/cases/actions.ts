@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import type { Json } from "@/types/database";
 
 const statusSchema = z.enum(["draft", "review", "published"]);
 
@@ -29,8 +30,14 @@ export async function createCaseStudy(formData: FormData) {
 export async function setCaseStatus(formData: FormData) {
   const caseId = z.string().uuid().parse(formData.get("caseId"));
   const status = statusSchema.parse(formData.get("caseStatus"));
+  const adult = formData.get("adult") === "1";
   const supabase = await createClient();
-  const { error } = await supabase.from("case_studies").update({ status }).eq("id", caseId);
+  const { data: current, error: readError } = await supabase.from("case_studies").select("content").eq("id", caseId).single();
+  if (readError) throw readError;
+  // The 18+ flag lives in each language of the snapshot, next to the rest of the case, so the site reads it as is.
+  const content = { ...((current.content ?? {}) as Record<string, Record<string, unknown>>) };
+  for (const locale of ["uk", "en"]) if (content[locale]) content[locale] = { ...content[locale], adult };
+  const { error } = await supabase.from("case_studies").update({ status, content: content as Json }).eq("id", caseId);
   if (error) throw error;
   revalidatePath("/w", "layout");
   // The public site re-reads cases on its own (revalidate = 60); refresh it now:
