@@ -37,7 +37,8 @@ async function collectPages(page: Page, base: string) {
   const pages = [...sections];
   for (const s of sections) {
     if (s === base) continue;
-    await page.goto(s, { waitUntil: "domcontentloaded" });
+    // A page that never finishes rendering fails here, named, instead of using up the whole test timeout.
+    await test.step(`collect ${s.replace(base, "")}`, () => page.goto(s, { waitUntil: "domcontentloaded", timeout: 60_000 }));
     await page.locator("main h1").first().waitFor({ timeout: 20_000 }).catch(() => {});
     const detail = await page.locator(`main a[href^="${s}/"]`).first().getAttribute("href").catch(() => null);
     if (detail && !pages.includes(detail)) pages.push(detail);
@@ -56,7 +57,7 @@ test("every section and detail page renders and is accessible", async ({ page },
   for (const path of pages) {
     await test.step(path.replace(base, "") || "overview", async () => {
       const errors = watchErrors(page);
-      await page.goto(path, { waitUntil: "domcontentloaded" });
+      await page.goto(path, { waitUntil: "domcontentloaded", timeout: 60_000 });
       await expect(page.getByText(ERROR_TITLE)).toHaveCount(0);
       await expect(page.locator("h1").first()).toBeVisible();
       await expect(page.locator("h1")).toHaveCount(1);
