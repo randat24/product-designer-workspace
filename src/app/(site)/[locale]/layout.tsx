@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/oswald";
@@ -162,6 +163,8 @@ export default async function SiteLayout({
         <AnalyticsClickListener />
         <GoogleAnalytics />
         {/* Vercel serves /_vercel/speed-insights only on its own deployments. */}
+        {/* Vercel Web Analytics (pageviews, no cookies) and Speed Insights; only on Vercel, where /_vercel/* exists. */}
+        {process.env.VERCEL && <Analytics />}
         {process.env.VERCEL && <SpeedInsights />}
       </body>
     </html>

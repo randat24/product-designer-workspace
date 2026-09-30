@@ -1,13 +1,13 @@
 # Аналитика публичного сайта
 
-GA4 (Google Analytics 4) + Vercel Speed Insights. Только публичный сайт: инструмент (`/app`, `/login`)
+GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Только публичный сайт: инструмент (`/app`, `/login`)
 аналитику не подключает. Настройка аккаунта GA4 для не-разработчика — [GA4_SETUP.md](GA4_SETUP.md).
 
 ## Когда включается
 
-| Условие | GA4 | Speed Insights |
+| Условие | GA4 | Web Analytics и Speed Insights |
 |---|---|---|
-| Vercel production + `NEXT_PUBLIC_GA_ID=G-…` | да | да (включить в Vercel → Speed Insights) |
+| Vercel production + `NEXT_PUBLIC_GA_ID=G-…` | да | да (включить в Vercel → Analytics и Speed Insights) |
 | Vercel preview | нет | да (данные preview Vercel показывает отдельно) |
 | локально (`npm run dev` / `next start`) | нет; для проверки — `ANALYTICS_FORCE=true` | нет |
 
@@ -74,6 +74,14 @@ Enhanced measurement GA4 дополнительно отправит `click` (и
 Событий немного, все они описаны в коде и типизированы. GTM добавил бы ещё один скрипт (~80 КБ), отдельную
 консоль с правами на внедрение произвольного JS и второй источник правды. Вернуться к вопросу, если появятся
 рекламные пиксели или маркетолог, которому нужно менять теги без деплоя.
+
+## Vercel Web Analytics
+
+`@vercel/analytics` (версия закреплена) — просмотры страниц, посетители, источники, страны и устройства, без cookies и
+без баннера согласия. Компонент в раскладке сайта, только на Vercel. Включить: Vercel → проект → Analytics → Enable.
+События (клики «Написати мені», скачивание резюме) по-прежнему идут в GA4: собственные события в Web Analytics —
+платная функция Vercel. Установлен с `--legacy-peer-deps`: необязательные peer-зависимости пакета (SvelteKit → vite 8)
+конфликтуют с vite 7 из Vitest, хотя в проекте не используются; `npm ci` проходит.
 
 ## Vercel Speed Insights
 
