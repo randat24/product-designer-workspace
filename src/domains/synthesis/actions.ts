@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import { updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/ru";
 import {
   insightSchema, observationSchema, opportunitySchema, painPointSchema,
@@ -90,19 +91,17 @@ export async function createObservation(input: z.input<typeof observationInput>)
 export async function saveObservation(id: string, input: z.input<typeof observationSchema>): Promise<Result> {
   const parsed = observationSchema.safeParse(input);
   if (!uuid.safeParse(id).success || !parsed.success) return fail();
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("observations").update(parsed.data).eq("id", id).select("id").maybeSingle();
-  if (error) return fail();
-  return data ? { ok: true } : fail(t.autosave.readOnly);
+  const res = await updateTracked("observations", { column: "id", value: id }, parsed.data, "body_text", (r) => String(r.body_text ?? "").slice(0, 80));
+  if (res === "error") return fail();
+  return res === "ok" ? { ok: true } : fail(t.autosave.readOnly);
 }
 
 export async function saveQuoteText(id: string, text: string): Promise<Result> {
   const body = text.trim();
   if (!uuid.safeParse(id).success || !body || body.length > 2000) return fail();
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("quotes").update({ text: body }).eq("id", id).select("id").maybeSingle();
-  if (error) return fail();
-  return data ? { ok: true } : fail(t.autosave.readOnly);
+  const res = await updateTracked("quotes", { column: "id", value: id }, { text: body }, "text", (r) => String(r.text ?? "").slice(0, 80));
+  if (res === "error") return fail();
+  return res === "ok" ? { ok: true } : fail(t.autosave.readOnly);
 }
 
 /** Move a board card to a pattern (null = unclustered) at a position. */
@@ -207,11 +206,10 @@ export async function createSynthesisEntity(formData: FormData) {
 
 async function save(table: "insights" | "pain_points" | "opportunities", id: string, fields: object): Promise<Result> {
   if (!uuid.safeParse(id).success) return fail();
-  const supabase = await createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- fields validated by the caller's schema
-  const { data, error } = await (supabase.from(table) as any).update(fields).eq("id", id).select("id").maybeSingle();
-  if (error) return fail();
-  return data ? { ok: true } : fail(t.autosave.readOnly);
+  // The shell shows code + title in ⌘K.
+  const res = await updateTracked(table, { column: "id", value: id }, fields, "title");
+  if (res === "error") return fail();
+  return res === "ok" ? { ok: true } : fail(t.autosave.readOnly);
 }
 function issue(err: z.ZodError): Result {
   const i = err.issues[0];
