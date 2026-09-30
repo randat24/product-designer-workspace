@@ -126,7 +126,7 @@ const uk: Dictionary = {
     experience: "Досвід",
     serviceTitle: "Служба",
     serviceText:
-      "З березня 2022 року я у Збройних Силах України — одним із перших став на оборону своєї країни та рідного Миколаєва. Служба навчила того ж, що й добрий дизайн: чіткої комунікації, регламентів, які працюють під тиском, і відповідальності за результат. Я продовжую боротися — і в дизайні теж.",
+      "З 22 лютого 2022 року я у Збройних Силах України — одним із перших став на оборону своєї країни та рідного Миколаєва. Служба навчила того ж, що й добрий дизайн: чіткої комунікації, регламентів, які працюють під тиском, і відповідальності за результат. Я продовжую боротися — і в дизайні теж.",
     awards: "Нагороди",
     skills: "Навички",
     education: "Освіта",
@@ -136,7 +136,7 @@ const uk: Dictionary = {
   },
   jobs: [
     {
-      period: "03.2022 — зараз",
+      period: "22.02.2022 — зараз",
       title: "Фахівець зі звʼязку",
       place: "Збройні Сили України",
       military: true,
@@ -299,7 +299,7 @@ const en: Dictionary = {
     experience: "Experience",
     serviceTitle: "Service",
     serviceText:
-      "Since March 2022 I have served in the Armed Forces of Ukraine — among the first to stand up for my country and my home city of Mykolaiv. Service taught me what good design does too: clear communication, processes that hold under pressure, and ownership of the outcome. I keep fighting — in design as well.",
+      "Since 22 February 2022 I have served in the Armed Forces of Ukraine — among the first to stand up for my country and my home city of Mykolaiv. Service taught me what good design does too: clear communication, processes that hold under pressure, and ownership of the outcome. I keep fighting — in design as well.",
     awards: "Awards",
     skills: "Skills",
     education: "Education",
@@ -309,7 +309,7 @@ const en: Dictionary = {
   },
   jobs: [
     {
-      period: "03.2022 — now",
+      period: "22.02.2022 — now",
       title: "Signals specialist",
       place: "Armed Forces of Ukraine",
       military: true,
