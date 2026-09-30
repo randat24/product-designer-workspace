@@ -5,6 +5,8 @@ import { getProjectContext } from "@/domains/projects";
 import { getOpportunityByCode, getSynthesisStats } from "@/domains/synthesis";
 import { DeleteEntityButton, OpportunityEditor } from "@/domains/synthesis/editors";
 import { EvidenceList } from "@/domains/synthesis/evidence-list";
+import { createFlow } from "@/domains/flows/actions";
+import { Button } from "@/shared/ui/button";
 import { TracePanel } from "@/domains/trace";
 import { EntityLayout } from "@/shared/ui/entity-layout";
 import { EntityChip } from "@/shared/ui/entity-chip";
@@ -37,6 +39,13 @@ export default async function OpportunityPage({ params }: { params: Promise<Para
           <h2 id="evidence-h" className="text-heading font-semibold">{t.synthesis.insights.evidence}</h2>
           <EvidenceList type="opportunity" id={o.id} base={ctx.base} empty={t.synthesis.insights.evidenceEmpty} />
         </section>
+        {ctx.canEdit && (
+          <form action={createFlow}>
+            <input type="hidden" name="projectId" value={ctx.project.id} />
+            <input type="hidden" name="opportunityId" value={o.id} />
+            <Button type="submit" variant="secondary">{t.flows.fromOpportunity} →</Button>
+          </form>
+        )}
         {ctx.canEdit && <DeleteEntityButton type="opportunity" id={o.id} label={s.delete} />}
       </div>
     </EntityLayout>

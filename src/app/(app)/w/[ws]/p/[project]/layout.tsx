@@ -5,6 +5,7 @@ import { briefCompleteness, getBrief } from "@/domains/briefs";
 import { COMPETITORS_TARGET, isAssessed, listCompetitors } from "@/domains/competitors";
 import { getResearchStats, listParticipants, participantTitle, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
 import { getBoard, getSynthesisStats, listInsights, listOpportunities, listPainPoints } from "@/domains/synthesis";
+import { listFlows } from "@/domains/flows";
 import { CURRENT_PHASE, visibleNav } from "@/shared/navigation";
 import type { CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/ru";
@@ -25,10 +26,10 @@ export default async function ProjectLayout({ children, params }: {
   ]);
   if (!project) notFound();
 
-  const [brief, competitors, research, participants, board, insights, painPoints, opportunities, synthStats] = await Promise.all([
+  const [brief, competitors, research, participants, board, insights, painPoints, opportunities, synthStats, flows] = await Promise.all([
     getBrief(project.id), listCompetitors(project.id), getResearchStats(project.id), listParticipants(project.id),
     getBoard(project.id), listInsights(project.id), listPainPoints(project.id), listOpportunities(project.id),
-    getSynthesisStats(project.id),
+    getSynthesisStats(project.id), listFlows(project.id),
   ]);
   const pct = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0);
   const researchPercent = Math.round(Math.min(research.conducted / (research.target ?? RESEARCH_TARGET_DEFAULT), 1) * 100);
@@ -41,6 +42,7 @@ export default async function ProjectLayout({ children, params }: {
     insights: pct(insights.filter((i) => (synthStats.get(i.id)?.sources ?? 0) > 0).length, insights.length),
     "pain-points": pct(painPoints.filter((p) => (synthStats.get(p.id)?.sources ?? 0) > 0).length, painPoints.length),
     opportunities: opportunities.length ? 100 : 0,
+    flows: pct(flows.filter((f) => f.missing === 0).length, flows.length),
   };
 
   const base = `/w/${workspace.slug}/p/${project.slug}`;
@@ -80,6 +82,7 @@ export default async function ProjectLayout({ children, params }: {
       ...painPoints.map((p) => ({ type: "pain-points", ...p })),
       ...opportunities.map((o) => ({ type: "opportunities", ...o })),
     ].map((e) => ({ id: `${e.type}:${e.id}`, label: `${e.code} ${e.title}`, href: `${base}/${e.type}/${e.code}`, group: t.palette.entities })),
+    ...flows.map((f) => ({ id: `flow:${f.id}`, label: `${f.code} ${f.name}`, href: `${base}/flows/${f.code}`, group: t.palette.entities })),
     ...board.cards.map((c) => ({
       id: `${c.kind}:${c.id}`,
       label: `${c.code} ${c.text.slice(0, 80)}`,

@@ -4,7 +4,8 @@ import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PR
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
 import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/domains/competitors";
 import { getResearchStats, listInterviews, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
-import { getSynthesisOverview } from "@/domains/synthesis";
+import { getSynthesisOverview, listOpportunities } from "@/domains/synthesis";
+import { listFlows } from "@/domains/flows";
 import { createClient } from "@/shared/lib/supabase/server";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
@@ -42,7 +43,10 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
     getResearchStats(project.id), listInterviews(project.id),
   ]);
   const researchTarget = research.target ?? RESEARCH_TARGET_DEFAULT;
-  const synth = await getSynthesisOverview(project.id);
+  const [synth, flows, opportunities] = await Promise.all([
+    getSynthesisOverview(project.id), listFlows(project.id), listOpportunities(project.id),
+  ]);
+  const unlinkedScreens = await countScreenNodesWithoutScreen(flows.map((f) => f.id));
   const cards = synth.quotes + synth.observations;
   const emptyInterviews = await countDoneWithoutAnswers(interviews.filter((i) => i.status === "done").map((i) => i.id));
   const assessed = competitors.filter(isAssessed).length;
@@ -85,6 +89,12 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
       const state: StageState = synth.opportunities > 0 ? "done" : synth.painPoints > 0 ? "active" : "todo";
       return [{ segment, label: item.label, phase: item.phase, state, detail: `${synth.painPoints} болей · ${synth.opportunities} возможностей` }];
     }
+    if (segment === "flows") {
+      const covered = flows.filter((f) => f.missing === 0).length;
+      const state: StageState = flows.length > 0 && covered === flows.length ? "done" : flows.length > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, percent: flows.length ? (covered / flows.length) * 100 : 0,
+        detail: t.flows.stageDetail(flows.length, covered) }];
+    }
     return [{ segment, label: item.label, phase: item.phase, state: item.phase > CURRENT_PHASE ? "soon" : "todo" }];
   });
 
@@ -120,6 +130,17 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
   }
   if (synth.insights > 0 && synth.painPoints === 0) nextActions.push({ key: "pp", label: t.nextAction.painPoint, href: `${base}/insights` });
   if (synth.painPoints > 0 && synth.opportunities === 0) nextActions.push({ key: "opp", label: t.nextAction.opportunity, href: `${base}/pain-points` });
+
+  if (synth.opportunities > 0 && flows.length === 0) {
+    const [first] = opportunities;
+    nextActions.push({ key: "flow", label: t.nextAction.flow, href: first ? `${base}/opportunities/${first.code}` : `${base}/flows` });
+  }
+  for (const fl of flows.filter((f) => f.missing > 0).slice(0, 3)) {
+    nextActions.push({ key: `fl-${fl.code}`, label: t.nextAction.flowEdgeCases(fl.code, fl.missing), href: `${base}/flows/${fl.code}#edge-cases-h` });
+  }
+  for (const fl of flows.filter((f) => (unlinkedScreens.get(f.id) ?? 0) > 0).slice(0, 3)) {
+    nextActions.push({ key: `fls-${fl.code}`, label: t.nextAction.flowScreens(fl.code, unlinkedScreens.get(fl.id) ?? 0), href: `${base}/flows/${fl.code}` });
+  }
 
   // Average over stages that have shipped; later phases join as they land.
   const shipped = stages.filter((s) => s.state !== "soon");
@@ -232,4 +253,13 @@ async function countDoneWithoutAnswers(ids: string[]) {
   const { data } = await supabase.from("interview_answers").select("interview_id").in("interview_id", ids).neq("body_text", "");
   const withAnswers = new Set((data ?? []).map((a) => a.interview_id));
   return ids.filter((id) => !withAnswers.has(id)).length;
+}
+
+async function countScreenNodesWithoutScreen(flowIds: string[]) {
+  const out = new Map<string, number>();
+  if (!flowIds.length) return out;
+  const supabase = await createClient();
+  const { data } = await supabase.from("flow_nodes").select("flow_id").in("flow_id", flowIds).eq("kind", "screen").is("screen_id", null);
+  for (const n of data ?? []) out.set(n.flow_id, (out.get(n.flow_id) ?? 0) + 1);
+  return out;
 }

@@ -1,4 +1,8 @@
 // UI strings. Add uk.ts / en.ts with the same shape when localisation ships.
+/** Russian plural form: 1 шаг, 2 шага, 5 шагов. */
+export const plural = (n: number, one: string, few: string, many: string) =>
+  n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many;
+
 export const ru = {
   app: { name: "Product Designer Workspace" },
   auth: {
@@ -96,6 +100,9 @@ export const ru = {
     unsupported: (code: string) => `${code} без источников — свяжите с цитатами`,
     painPoint: "Выведите боли из инсайтов",
     opportunity: "Сформулируйте возможности «Как мы могли бы…»",
+    flow: "Постройте сценарий для возможности — откройте её и нажмите «Создать сценарий»",
+    flowEdgeCases: (code: string, n: number) => `${code}: продумайте edge cases (осталось ${n})`,
+    flowScreens: (code: string, n: number) => `${code}: свяжите шаги-экраны с экранами (${n} без экрана)`,
   },
   activity: {
     entity: {
@@ -103,6 +110,7 @@ export const ru = {
       research_plan: "План исследования", interview_guide: "Сценарий интервью", interview_question: "Вопрос интервью",
       participant: "Участник", interview: "Интервью", answer: "Ответ",
       quote: "Цитата", observation: "Наблюдение", pattern: "Паттерн", insight: "Инсайт", pain_point: "Боль", opportunity: "Возможность",
+      user_flow: "Сценарий", flow_node: "Шаг сценария", flow_edge: "Связь в сценарии", flow_edge_case: "Edge case", screen: "Экран",
     } as Record<string, string>,
     action: { create: "Создание", update: "Изменение", delete: "Удаление", link: "Новая связь", unlink: "Связь удалена", ai_accept: "Принято из AI" } as Record<string, string>,
     field: {
@@ -559,6 +567,73 @@ export const ru = {
     newProject: "Создать проект",
     settings: "Настройки проекта",
     allProjects: "Все проекты",
+  },
+  flows: {
+    title: "Сценарии",
+    lede: "User flow: шаги пользователя от входа до результата, развилки и ошибки. Шаг «Экран» связывается с экраном проекта.",
+    add: "Новый сценарий",
+    namePlaceholder: "Например: первый вход и выбор ресторана",
+    create: "Создать",
+    empty: "Сценариев пока нет. Начните с ключевой задачи пользователя — или создайте сценарий со страницы возможности.",
+    fromOpportunity: "Создать сценарий",
+    back: "← Все сценарии",
+    steps: (n: number) => `${n} ${plural(n, "шаг", "шага", "шагов")}`,
+    stageDetail: (n: number, covered: number) => `${n} ${plural(n, "сценарий", "сценария", "сценариев")} · без пробелов в edge cases: ${covered}`,
+    screens: (n: number) => `экранов: ${n}`,
+    missing: (n: number) => `не продумано: ${n}`,
+    allCovered: "edge cases продуманы",
+    fields: { name: "Название", description: "Описание", status: "Статус" },
+    statuses: { draft: "Черновик", review: "На ревью", final: "Готов" },
+    delete: "Удалить сценарий",
+    deleteConfirm: "Точно удалить? Шаги и связи пропадут",
+    canvas: "Схема сценария",
+    readOnlyHint: "Редактировать схему можно на экране от 1024 px. Здесь — просмотр.",
+    palette: "Добавить шаг",
+    paletteHint: "Перетащите связь от точки справа у шага к другому шагу. Delete — удалить выделенное.",
+    kinds: {
+      start: "Старт", screen: "Экран", action: "Действие", decision: "Развилка",
+      system: "Система", error: "Ошибка", success: "Успех", end: "Конец",
+    },
+    newLabel: {
+      start: "Открывает приложение", screen: "Новый экран", action: "Действие пользователя", decision: "Условие?",
+      system: "Система обрабатывает", error: "Что пошло не так", success: "Цель достигнута", end: "Выход",
+    },
+    inspector: "Свойства",
+    inspectorEmpty: "Выберите шаг или связь на схеме.",
+    label: "Подпись",
+    kind: "Тип шага",
+    screen: "Экран",
+    screenNone: "Не связан с экраном",
+    screenCreate: "Создать экран",
+    screenCreateHint: (name: string) => `Создаст экран «${name}» с новым кодом SCR`,
+    screenLinked: "Связан с экраном",
+    noScreen: "без экрана",
+    edgeLabel: "Подпись связи",
+    branch: "Ветка",
+    branches: { default: "Обычная", yes: "Да", no: "Нет", error: "Ошибка", back: "Назад" },
+    condition: "Условие",
+    deleteNode: "Удалить шаг",
+    deleteEdge: "Удалить связь",
+    stepList: "Шаги сценария",
+    stepListHint: "На телефоне сценарий показан списком. Схема — на планшете и компьютере.",
+    unreachable: "Не связаны со стартом",
+    edgeCases: {
+      title: "Edge cases",
+      lede: "Состояния, которые легко забыть. Отметьте, что продумано, и привяжите к шагу схемы.",
+      kinds: {
+        no_internet: "Нет интернета", timeout: "Долгий ответ / таймаут", session_expired: "Сессия истекла",
+        permission_denied: "Нет доступа / разрешения", validation: "Ошибка ввода", empty: "Пустое состояние",
+        unavailable: "Сервис или объект недоступен", payment_failed: "Оплата не прошла", custom: "Свой случай",
+      },
+      statuses: { missing: "Не продумано", covered: "Продумано", not_applicable: "Не нужно" },
+      node: "Шаг",
+      nodeNone: "— не привязан —",
+      note: "Как обрабатываем",
+      addCustom: "Добавить свой случай",
+      customPlaceholder: "Например: ресторан закрылся после брони",
+      remove: "Удалить случай",
+      summary: (missing: number, total: number) => `Не продумано ${missing} из ${total}`,
+    },
   },
   trace: {
     title: "Связи",
