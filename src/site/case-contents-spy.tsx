@@ -31,7 +31,10 @@ export function CaseContentsSpy({ ids, navId }: { ids: string[]; navId: string }
 
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) (e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id));
+        for (const e of entries) {
+          if (e.isIntersecting) visible.add(e.target.id);
+          else visible.delete(e.target.id);
+        }
         mark();
       },
       // A section counts while it crosses the upper third of the screen (below the sticky header).

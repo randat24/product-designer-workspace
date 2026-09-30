@@ -62,12 +62,15 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
         ))}
       </ul>
 
+      {/* Clicking outside the page closes the viewer for mouse users; the keyboard has Esc (native <dialog>). */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
       <dialog
         ref={dialog}
         aria-label={labels.pages}
         className="m-auto h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-black/85"
         onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
       >
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
         <div className="flex h-full flex-col items-center justify-center gap-4 p-4 text-white" onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}>
           <div className="flex w-full max-w-5xl items-center justify-between gap-4 text-[14px]">
             <span aria-live="polite">{counter(labels.open, index + 1, total)}{item.caption ? ` · ${item.caption}` : ""}</span>

@@ -72,6 +72,8 @@ export function CommandPalette({ items, triggerClassName }: { items: CommandItem
         <kbd className="font-sans text-caption">⌘K</kbd>
       </button>
 
+      {/* Clicking the backdrop closes it for mouse users; the keyboard has Esc (native <dialog>). */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
       <dialog ref={dialog} aria-label={t.palette.open}
         onClick={(e) => e.target === dialog.current && dialog.current.close()}
         className="mx-auto mt-[12vh] w-[min(560px,calc(100vw-32px))] rounded-[14px] border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
@@ -88,6 +90,8 @@ export function CommandPalette({ items, triggerClassName }: { items: CommandItem
             return (
               <li key={item.id} role="presentation">
                 {header && <p role="presentation" className="px-3 pt-2 pb-1 text-caption font-medium text-fg-secondary">{header}</p>}
+                {/* Combobox pattern: focus stays in the input (arrows, Enter); options are for the mouse. */}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus */}
                 <div id={`cmd-${item.id}`} role="option" aria-selected={i === active}
                   onMouseMove={() => setActive(i)} onClick={() => go(item)}
                   className={cn("flex h-9 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 font-medium", i === active && "bg-subtle")}>

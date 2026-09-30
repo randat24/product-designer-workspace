@@ -2,11 +2,12 @@ import { notFound } from "next/navigation";
 import { getMyRole, getProjectBySlug, getWorkspaceBySlug, listProjects } from "@/domains/projects";
 import { setProjectArchived } from "@/domains/projects/actions";
 import { briefCompleteness, getBrief } from "@/domains/briefs";
-import { COMPETITORS_TARGET, isAssessed, listCompetitors } from "@/domains/competitors";
-import { getResearchStats, listParticipants, participantTitle, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
+import { isAssessed, listCompetitors } from "@/domains/competitors";
+import { getResearchStats, listParticipants, participantTitle } from "@/domains/research";
 import { getBoard, getSynthesisStats, listInsights, listOpportunities, listPainPoints } from "@/domains/synthesis";
 import { listFlows } from "@/domains/flows";
 import { listDecisions, listScreens } from "@/domains/design";
+import { stageProgress } from "@/domains/projects/progress";
 import { CURRENT_PHASE, visibleNav } from "@/shared/navigation";
 import type { CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/ru";
@@ -32,21 +33,20 @@ export default async function ProjectLayout({ children, params }: {
     getBoard(project.id), listInsights(project.id), listPainPoints(project.id), listOpportunities(project.id),
     getSynthesisStats(project.id), listFlows(project.id), listScreens(project.id), listDecisions(project.id),
   ]);
-  const pct = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0);
-  const researchPercent = Math.round(Math.min(research.conducted / (research.target ?? RESEARCH_TARGET_DEFAULT), 1) * 100);
   const briefProgress = briefCompleteness(brief);
-  const progress: Record<string, number> = {
-    brief: Math.round((briefProgress.filled / briefProgress.total) * 100),
-    competitors: Math.round(Math.min(competitors.filter(isAssessed).length / COMPETITORS_TARGET, 1) * 100),
-    research: researchPercent,
-    synthesis: pct(board.cards.filter((c) => c.patternId).length, board.cards.length),
-    insights: pct(insights.filter((i) => (synthStats.get(i.id)?.sources ?? 0) > 0).length, insights.length),
-    "pain-points": pct(painPoints.filter((p) => (synthStats.get(p.id)?.sources ?? 0) > 0).length, painPoints.length),
-    opportunities: opportunities.length ? 100 : 0,
-    flows: pct(flows.filter((f) => f.missing === 0).length, flows.length),
-    screens: pct(screens.filter((s) => s.missingStates === 0).length, screens.length),
-    decisions: pct(decisions.filter((d) => d.evidence > 0).length, decisions.length),
-  };
+  const sourced = (items: { id: string }[]) => ({ done: items.filter((x) => (synthStats.get(x.id)?.sources ?? 0) > 0).length, total: items.length });
+  const progress = stageProgress({
+    brief: { done: briefProgress.filled, total: briefProgress.total },
+    competitorsAssessed: competitors.filter(isAssessed).length,
+    research: { conducted: research.conducted, target: research.target },
+    synthesis: { done: board.cards.filter((c) => c.patternId).length, total: board.cards.length },
+    insights: sourced(insights),
+    painPoints: sourced(painPoints),
+    opportunities: opportunities.length,
+    flows: { done: flows.filter((f) => f.missing === 0).length, total: flows.length },
+    screens: { done: screens.filter((s) => s.missingStates === 0).length, total: screens.length },
+    decisions: { done: decisions.filter((d) => d.evidence > 0).length, total: decisions.length },
+  });
 
   const base = `/w/${workspace.slug}/p/${project.slug}`;
   const commands: CommandItem[] = [

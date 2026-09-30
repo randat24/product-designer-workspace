@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Input, Textarea } from "@/shared/ui/field";
+import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
