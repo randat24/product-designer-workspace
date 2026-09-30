@@ -1,5 +1,5 @@
+import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { getInsightByCode, getSynthesisStats } from "@/domains/synthesis";
@@ -12,6 +12,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -29,7 +30,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "insight", id: i.id, code: i.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/insights`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
+      <BackLink href={`${ctx.base}/insights`}>{t.synthesis.back(s.title)}</BackLink>
       <PageHeader title={i.title} eyebrow={<span className="flex items-center gap-2"><EntityChip type="insight" code={i.code} />{s.participants(st?.participants ?? 0)}</span>} />
       <div className="flex flex-col gap-8">
         <InsightEditor key={i.id} id={i.id} canEdit={ctx.canEdit}
@@ -37,7 +38,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
         {/* Cognitive bias (docs/UX_LAWS.md, UX-08): one voice is not a pattern yet. */}
         {st && st.sources > 0 && st.participants === 1 && (
           <p role="note" className="max-w-[62ch] rounded-panel border-[1.5px] border-dashed border-warning px-4 py-3 text-sm">
-            <span className="font-semibold text-warning">⚠ {s.singleSource}.</span> {s.singleSourceHint}
+            <span className="inline-flex items-center gap-1 font-semibold text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{s.singleSource}.</span> {s.singleSourceHint}
           </p>
         )}
         <section aria-labelledby="evidence-h" className="flex flex-col gap-3">

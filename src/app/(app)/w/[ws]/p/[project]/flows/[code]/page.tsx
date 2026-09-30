@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { getFlowByCode, listScreenOptions } from "@/domains/flows";
@@ -12,6 +11,7 @@ import { TracePanel } from "@/domains/trace";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -36,7 +36,7 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <Link href={`${ctx.base}/flows`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{f.back}</Link>
+        <BackLink href={`${ctx.base}/flows`}>{f.back}</BackLink>
         <PageHeader title={flow.name} eyebrow={<EntityChip type="user_flow" code={flow.code} />}
           stat={{ value: missing, caption: f.edgeCases.statuses.missing.toLowerCase() }} />
       </div>

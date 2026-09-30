@@ -7,6 +7,7 @@ import { getGuide } from "@/domains/research";
 import { GuideBuilder } from "@/domains/research/guide-builder";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 export const metadata: Metadata = { title: t.research.guides };
 
@@ -21,7 +22,7 @@ export default async function GuidePage({ params }: { params: Promise<{ ws: stri
   return (
     <div className="max-w-4xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href={`${ctx.base}/research`} className="text-meta font-semibold text-fg-secondary hover:text-fg">← {t.research.guide.back}</Link>
+        <BackLink href={`${ctx.base}/research`} className="mb-0">{t.research.guide.back}</BackLink>
         <Link href={`${ctx.base}/research/participants`} className="text-meta font-semibold underline underline-offset-2">{t.research.guide.startInterview}</Link>
       </div>
       <PageHeader title={guide.title} lede={t.research.guide.lede} />

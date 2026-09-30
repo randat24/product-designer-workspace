@@ -1,3 +1,4 @@
+import { ArrowRight, Circle, CircleCheck, CircleDot } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -204,7 +205,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
                   s.state === "soon" && "bg-transparent text-fg-secondary",
                 )}>
                 <span className="flex items-baseline gap-3">
-                  <span className="display-num text-[22px] leading-none tabular-nums">{i + 1}</span>
+                  <span className="display-num text-display-xs leading-none tabular-nums">{i + 1}</span>
                   <span className="font-bold">{s.label}</span>
                   <StageIcon state={s.state} />
                 </span>
@@ -232,7 +233,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
               <li key={a.key}>
                 <Link href={a.href} className="flex items-center justify-between gap-3 rounded-panel border border-line bg-surface px-4 py-2.5 font-medium hover:border-fg">
                   <span>{a.label}</span>
-                  <span aria-hidden className="text-fg-secondary">→</span>
+                  <ArrowRight aria-hidden className="size-4 shrink-0 text-fg-secondary" />
                 </Link>
               </li>
             ))}
@@ -259,7 +260,7 @@ function StageIcon({ state }: { state: StageState }) {
   return (
     <span role="img" aria-label={label}
       className={cn("ml-auto", state === "done" ? "text-success" : state === "active" ? "text-accent" : "text-fg-secondary")}>
-      {state === "done" ? "✓" : state === "active" ? "●" : "○"}
+      {state === "done" ? <CircleCheck className="size-4" /> : state === "active" ? <CircleDot className="size-4" /> : <Circle className="size-4" />}
     </span>
   );
 }

@@ -40,7 +40,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
           {([["participants", stats.participants], ["interviews", stats.interviews], ["conducted", stats.conducted], ["questions", stats.questions]] as const).map(([k, v]) => (
             <div key={k} className="flex flex-col-reverse rounded-panel border border-line bg-surface p-4">
               <dt className="text-meta font-semibold text-fg-secondary">{t.research.stats[k]}</dt>
-              <dd className="display-num text-[34px] leading-none tabular-nums">{v}</dd>
+              <dd className="display-num text-display-md leading-none tabular-nums">{v}</dd>
             </div>
           ))}
         </dl>
@@ -57,7 +57,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
           )}
         </div>
         {plans.length === 0 ? <p className={empty}>{t.research.plansEmpty}</p> : (
-          <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
+          <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))]">
             {plans.map((p) => (
               <li key={p.id}>
                 <Link href={`${base}/research/plans/${p.code}`} className={card}>
@@ -101,7 +101,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
           )}
         </div>
         {guides.length === 0 ? <p className={empty}>{t.research.guidesEmpty}</p> : (
-          <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
+          <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))]">
             {guides.map((g) => (
               <li key={g.id}>
                 <Link href={`${base}/research/guides/${g.id}`} className={card}>

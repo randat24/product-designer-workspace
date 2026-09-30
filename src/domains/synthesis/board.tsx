@@ -1,10 +1,11 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFieldAutosave } from "@/shared/ui/autosave";
-import { Input } from "@/shared/ui/field";
+import { Input, Select } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
@@ -54,7 +55,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
     <div className="flex flex-col gap-4">
       {canEdit && <p className="text-meta text-fg-secondary">{b.dragHint}</p>}
       <ActionError error={columnsAction.error} />
-      <div className="flex items-start gap-4 overflow-x-auto pb-4">
+      <div className="relative flex items-start gap-4 overflow-x-auto pb-4">
         {columns.map((p) => {
           const key = p?.id ?? NONE;
           const list = cards.filter((c) => (c.patternId ?? NONE) === key).sort((a, z) => a.position - z.position);
@@ -129,9 +130,8 @@ function ColumnHeader({ pattern, count, canEdit, onDelete }: { pattern: Pattern 
       {canEdit && (
         <form action={createInsightFromPattern}>
           <input type="hidden" name="patternId" value={pattern.id} />
-          <Button type="submit" variant="ghost" disabled={count === 0}
-            className="h-auto w-full rounded-control bg-on-sticky px-2.5 py-1.5 text-meta font-bold text-white hover:bg-on-sticky hover:text-white disabled:opacity-40">
-            {b.formulate} →
+          <Button type="submit" size="sm" disabled={count === 0} className="w-full">
+            {b.formulate}<ArrowRight aria-hidden className="size-4" />
           </Button>
         </form>
       )}
@@ -178,12 +178,12 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
           {card.participant ? `${card.participant.code} · ${card.participant.role ?? ""}` : b.noParticipant}
         </span>
         {canEdit && (
-          <select aria-label={`${b.moveTo} ${card.code}`} value={card.patternId ?? NONE}
+          <Select aria-label={`${b.moveTo} ${card.code}`} value={card.patternId ?? NONE}
             onChange={(e) => onMove(e.target.value === NONE ? null : e.target.value)}
-            className="h-8 max-w-28 rounded-chip border border-line bg-surface px-1 text-caption text-fg-secondary">
+            size="sm" className="w-auto max-w-36 text-fg-secondary">
             <option value={NONE}>{b.unclustered}</option>
             {patterns.map((p) => <option key={p.id} value={p.id}>{p.code} {p.title}</option>)}
-          </select>
+          </Select>
         )}
       </div>
     </li>
@@ -211,19 +211,20 @@ function AddObservation({ projectId, participants, onAdded }: {
       }}>
       <textarea aria-label={b.addObservation} value={text} maxLength={2000} rows={2} placeholder={b.observationPlaceholder}
         onChange={(e) => setText(e.target.value)}
-        className="w-full resize-none rounded-control bg-subtle px-2 py-1.5 text-meta focus:bg-surface focus:outline-2 focus:outline-fg" />
-      <div className="flex gap-1.5">
-        <select aria-label={b.kind} value={kind} onChange={(e) => setKind(e.target.value as ObservationKind)}
-          className="h-8 flex-1 rounded-chip border border-line bg-surface px-1 text-caption">
+        className="w-full resize-none rounded-control border border-transparent bg-subtle px-2.5 py-2 text-meta placeholder:text-fg-secondary hover:border-line focus:border-fg focus:bg-surface focus:outline-none" />
+      {/* A column is ~250 px wide: the two selects stack instead of truncating their text. */}
+      <div className="flex flex-col gap-1.5">
+        <Select aria-label={b.kind} value={kind} onChange={(e) => setKind(e.target.value as ObservationKind)}
+          size="sm">
           {OBSERVATION_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
-        </select>
-        <select aria-label={b.participant} value={participantId} onChange={(e) => setParticipantId(e.target.value)}
-          className="h-8 flex-1 rounded-chip border border-line bg-surface px-1 text-caption">
+        </Select>
+        <Select aria-label={b.participant} value={participantId} onChange={(e) => setParticipantId(e.target.value)}
+          size="sm">
           <option value="">{b.noParticipant}</option>
           {participants.map((p) => <option key={p.id} value={p.id}>{p.code} {p.role ?? ""}</option>)}
-        </select>
+        </Select>
       </div>
-      <Button type="submit" disabled={pending || !text.trim()} className="h-8">{b.addObservation}</Button>
+      <Button type="submit" size="sm" disabled={pending || !text.trim()}>{b.addObservation}</Button>
     </form>
   );
 }

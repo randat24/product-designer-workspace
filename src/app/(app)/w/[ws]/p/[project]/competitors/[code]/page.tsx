@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { COMPETITOR_KINDS, getCompetitorByCode, listScreenshots } from "@/domains/competitors";
@@ -8,6 +7,7 @@ import { Screenshots } from "@/domains/competitors/screenshots";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 
@@ -28,9 +28,7 @@ export default async function CompetitorPage({ params }: { params: Promise<Param
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/competitors`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">
-        ← {t.competitors.back}
-      </Link>
+      <BackLink href={`${ctx.base}/competitors`}>{t.competitors.back}</BackLink>
       <PageHeader title={c.name}
         eyebrow={<span className="flex items-center gap-2"><EntityChip type="competitor" code={c.code} title={c.name} />{kind}</span>} />
       <CompetitorEditor

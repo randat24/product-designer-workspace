@@ -1,3 +1,4 @@
+import { Check, TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -52,7 +53,7 @@ export default async function FlowsPage({ params }: { params: Promise<{ ws: stri
                   <span>{f.steps(fl.steps)}</span>
                   <span>{f.screens(fl.screens)}</span>
                   <span className={cn("font-semibold", fl.missing ? "text-warning" : "text-success")}>
-                    {fl.missing ? `⚠ ${f.missing(fl.missing)}` : `✓ ${f.allCovered}`}
+                    {fl.missing ? <span className="inline-flex items-center gap-1"><TriangleAlert aria-hidden className="size-4 shrink-0" />{f.missing(fl.missing)}</span> : <span className="inline-flex items-center gap-1"><Check aria-hidden className="size-4 shrink-0" />{f.allCovered}</span>}
                   </span>
                 </span>
               </Link>

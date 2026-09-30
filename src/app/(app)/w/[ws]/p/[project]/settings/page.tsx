@@ -5,7 +5,7 @@ import { setProjectArchived } from "@/domains/projects/actions";
 import { getCaseForProject } from "@/domains/cases";
 import { createCaseStudy, setCaseStatus } from "@/domains/cases/actions";
 import { Button } from "@/shared/ui/button";
-import { Panel } from "@/shared/ui/field";
+import { Panel, Select } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 import { DeleteForm, GeneralForm } from "./forms";
@@ -43,12 +43,12 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                 <input type="hidden" name="caseId" value={caseStudy.id} />
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
                   {t.cases.statusLabel}
-                  <select name="caseStatus" defaultValue={caseStudy.status} disabled={!canEdit}
-                    className="h-9 rounded-control border-[1.5px] border-line bg-surface px-2.5 font-normal">
+                  <Select name="caseStatus" defaultValue={caseStudy.status} disabled={!canEdit}
+                    className="w-auto">
                     {(["draft", "review", "published"] as const).map((s) => (
                       <option key={s} value={s}>{t.cases.status[s]}</option>
                     ))}
-                  </select>
+                  </Select>
                 </label>
                 {canEdit && <Button type="submit" variant="secondary">{t.cases.save}</Button>}
                 {caseStudy.status === "published" && caseStudy.hasContent && (

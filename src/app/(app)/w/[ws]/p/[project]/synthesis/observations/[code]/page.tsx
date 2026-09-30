@@ -10,6 +10,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -25,7 +26,7 @@ export default async function ObservationPage({ params }: { params: Promise<Para
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "observation", id: o.id, code: o.code }} canEdit={ctx.canEdit} />}>
-      <Link href={`${ctx.base}/synthesis`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(t.synthesis.title)}</Link>
+      <BackLink href={`${ctx.base}/synthesis`}>{t.synthesis.back(t.synthesis.title)}</BackLink>
       <PageHeader title={t.synthesis.observation.text} eyebrow={<EntityChip type="observation" code={o.code} />} />
       <div className="flex flex-col gap-6">
         <ObservationEditor id={o.id} canEdit={ctx.canEdit} initial={{ kind: o.kind as ObservationKind, body_text: o.body_text }} />

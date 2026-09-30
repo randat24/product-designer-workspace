@@ -1,11 +1,12 @@
 "use client";
 
+import { ArrowDown, ArrowUp, CornerDownRight, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { TextField } from "@/shared/ui/form-section";
-import { Input } from "@/shared/ui/field";
-import { Button } from "@/shared/ui/button";
+import { Input, Select } from "@/shared/ui/field";
+import { Button, IconButton } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { ActionError, useAction } from "@/shared/ui/use-action";
@@ -53,7 +54,7 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
           return (
             <li key={section.value} aria-labelledby={`sec-${section.value}`} className="flex flex-col gap-2.5">
               <div className="flex items-baseline gap-3">
-                <span className="display-num text-[22px] leading-none text-fg-secondary tabular-nums">{si + 1}</span>
+                <span className="display-num text-display-xs leading-none text-fg-secondary tabular-nums">{si + 1}</span>
                 <div>
                   <h2 id={`sec-${section.value}`} className="text-heading font-semibold">{section.label}</h2>
                   <p className="text-meta text-fg-secondary">{section.hint}</p>
@@ -95,8 +96,6 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
     },
     canEdit,
   );
-  const icon = "grid size-8 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-fg disabled:opacity-30";
-
   return (
     <li className={cn("flex flex-col gap-2 rounded-panel border border-line bg-surface p-2.5 pl-3", value.is_key && "border-l-4 border-l-fg")}>
       <div className="flex items-start gap-2">
@@ -104,18 +103,18 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
           aria-invalid={status === "error"} onChange={(e) => update({ text: e.target.value })} className="font-semibold" />
         {canEdit && (
           <div className="flex shrink-0 flex-wrap items-center justify-end">
-            <select aria-label={`${g.section}: ${value.text}`} value={value.section}
+            <Select aria-label={`${g.section}: ${value.text}`} value={value.section}
               onChange={(e) => update({ section: e.target.value as GuideSection })}
-              className="mr-1 h-8 max-w-36 rounded-control border border-line bg-surface px-1.5 text-caption font-semibold text-fg-secondary">
+              size="sm" className="mr-1 max-w-36 font-semibold text-fg-secondary">
               {GUIDE_SECTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-            </select>
+            </Select>
             <label className="mr-1 flex cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] border-line px-2.5 py-1 text-caption font-semibold has-[:checked]:border-fg has-[:checked]:bg-fg has-[:checked]:text-canvas">
               <input type="checkbox" className="sr-only" checked={value.is_key} onChange={(e) => update({ is_key: e.target.checked })} />
               {g.isKey}
             </label>
-            <button type="button" className={icon} disabled={first} onClick={() => onMove(-1)} aria-label={`${g.moveUp}: ${value.text}`}>↑</button>
-            <button type="button" className={icon} disabled={last} onClick={() => onMove(1)} aria-label={`${g.moveDown}: ${value.text}`}>↓</button>
-            <button type="button" className={cn(icon, "hover:text-danger")} onClick={onDelete} aria-label={`${g.remove}: ${value.text}`}>×</button>
+            <IconButton size="sm" disabled={first} onClick={() => onMove(-1)} label={`${g.moveUp}: ${value.text}`}><ArrowUp className="size-4" /></IconButton>
+            <IconButton size="sm" disabled={last} onClick={() => onMove(1)} label={`${g.moveDown}: ${value.text}`}><ArrowDown className="size-4" /></IconButton>
+            <IconButton size="sm" tone="danger" onClick={onDelete} label={`${g.remove}: ${value.text}`}><X className="size-4" /></IconButton>
           </div>
         )}
         {!canEdit && value.is_key && <span className="shrink-0 rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">{g.isKey}</span>}
@@ -124,18 +123,17 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
         <div className="flex flex-col gap-1 pl-4">
           {value.probes.map((probe, i) => (
             <div key={i} className="flex items-center gap-1.5">
-              <span aria-hidden className="text-fg-secondary">↳</span>
+              <CornerDownRight aria-hidden className="size-4 shrink-0 text-fg-secondary" />
               <Input aria-label={`${g.probes} ${i + 1}`} value={probe} readOnly={!canEdit} maxLength={300} placeholder={g.probePlaceholder}
                 className="h-8 text-meta" onChange={(e) => update({ probes: value.probes.map((x, j) => (j === i ? e.target.value : x)) })} />
               {canEdit && (
-                <button type="button" className={icon} aria-label={`${t.brief.fields.remove}: ${g.probes} ${i + 1}`}
-                  onClick={() => update({ probes: value.probes.filter((_, j) => j !== i) })}>×</button>
+                <IconButton size="sm" tone="danger" label={`${t.brief.fields.remove}: ${g.probes} ${i + 1}`}
+                  onClick={() => update({ probes: value.probes.filter((_, j) => j !== i) })}><X className="size-4" /></IconButton>
               )}
             </div>
           ))}
           {canEdit && value.probes.length < 10 && (
-            <button type="button" onClick={() => update({ probes: [...value.probes, ""] })}
-              className="self-start px-1 text-caption font-semibold text-fg-secondary hover:text-fg">{g.addProbe}</button>
+            <Button variant="ghost" size="sm" className="self-start" onClick={() => update({ probes: [...value.probes, ""] })}><Plus aria-hidden className="size-4" />{g.addProbe}</Button>
           )}
         </div>
       )}

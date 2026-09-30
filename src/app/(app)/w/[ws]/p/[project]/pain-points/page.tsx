@@ -12,7 +12,7 @@ import { t } from "@/shared/i18n/ru";
 export const metadata: Metadata = { title: t.synthesis.painPoints.title };
 const s = t.synthesis.painPoints;
 const SEV_CLASS: Record<string, string> = {
-  critical: "bg-danger text-on-status", high: "bg-entity-problem text-on-status", medium: "bg-warning/10 text-warning", low: "bg-subtle text-fg-secondary",
+  critical: "bg-danger text-on-status", high: "bg-danger/10 text-danger", medium: "bg-warning/10 text-warning", low: "bg-subtle text-fg-secondary",
 };
 
 export default async function PainPointsPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
@@ -38,7 +38,7 @@ export default async function PainPointsPage({ params }: { params: Promise<{ ws:
       {sorted.length === 0 ? (
         <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+        <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[640px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-meta text-fg-secondary">

@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -40,7 +41,7 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
       {screens.length === 0 ? (
         <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+        <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="border-b border-line text-caption font-semibold text-fg-secondary">
               <tr>
@@ -83,7 +84,7 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
                     <td className="px-4 py-3 text-meta">
                       {s.upstream > 0
                         ? <span>{sc.upstream(s.upstream)}</span>
-                        : <span className="font-semibold text-warning">⚠ {sc.noUpstream}</span>}
+                        : <span className="inline-flex items-center gap-1 font-semibold text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{sc.noUpstream}</span>}
                     </td>
                   </tr>
                 );

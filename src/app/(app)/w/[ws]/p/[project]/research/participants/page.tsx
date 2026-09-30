@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -36,7 +37,7 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ w
       {participants.length === 0 ? (
         <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{pt.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+        <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[720px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-meta text-fg-secondary">
@@ -62,7 +63,7 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ w
                       </Link>
                     ) : <span className="text-fg-secondary">{pt.noInterview}</span>}
                   </td>
-                  <td className="px-4 py-2.5">{p.consent_at ? <span className="text-success">✓ {pt.consentYes}</span> : <span className="text-fg-secondary">{pt.consentNo}</span>}</td>
+                  <td className="px-4 py-2.5">{p.consent_at ? <span className="inline-flex items-center gap-1 text-success"><Check aria-hidden className="size-4 shrink-0" />{pt.consentYes}</span> : <span className="text-fg-secondary">{pt.consentNo}</span>}</td>
                   <td className="px-4 py-2.5">
                     <span className="flex flex-wrap gap-1">
                       {p.tags.map((tag) => <span key={tag} className="rounded-full border border-line px-2 py-0.5 text-caption font-semibold">{tag}</span>)}

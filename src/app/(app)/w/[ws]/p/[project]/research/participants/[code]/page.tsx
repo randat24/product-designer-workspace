@@ -10,6 +10,8 @@ import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { Select } from "@/shared/ui/field";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -28,7 +30,7 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/research/participants`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">← {pt.back}</Link>
+      <BackLink href={`${ctx.base}/research/participants`}>{pt.back}</BackLink>
       <PageHeader title={participantTitle(p)} eyebrow={<span className="flex items-center gap-2"><EntityChip type="participant" code={p.code} />{p.segment_label}</span>} />
 
       <section aria-labelledby="p-interviews-h" className="mb-8 flex flex-col gap-3">
@@ -54,11 +56,11 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
             <input type="hidden" name="participantId" value={p.id} />
             <label className="flex flex-col gap-1.5 text-meta font-semibold text-fg-secondary">
               {pt.guideLabel}
-              <select name="guideId" defaultValue={guides.at(-1)?.id ?? ""}
-                className="h-9 min-w-56 rounded-control border border-transparent bg-surface px-2.5 text-body font-medium text-fg hover:border-line focus:border-fg focus:outline-none">
+              <Select name="guideId" defaultValue={guides.at(-1)?.id ?? ""}
+                className="w-auto min-w-56 bg-surface">
                 {guides.map((g) => <option key={g.id} value={g.id}>{g.title}</option>)}
                 <option value="">{pt.noGuide}</option>
-              </select>
+              </Select>
             </label>
             <Button type="submit" name="live" value="1">{pt.startLive}</Button>
             <Button type="submit" variant="secondary">{pt.newInterview}</Button>

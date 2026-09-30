@@ -10,6 +10,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -26,7 +27,7 @@ export default async function QuotePage({ params }: { params: Promise<Params> })
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "quote", id: q.id, code: q.code }} canEdit={ctx.canEdit} />}>
-      <Link href={`${ctx.base}/synthesis`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(t.synthesis.title)}</Link>
+      <BackLink href={`${ctx.base}/synthesis`}>{t.synthesis.back(t.synthesis.title)}</BackLink>
       <PageHeader title={t.synthesis.quotes.quoteOf(q.participants?.code ?? "")} eyebrow={<EntityChip type="quote" code={q.code} />} />
       <div className="flex flex-col gap-6">
         <QuoteText id={q.id} initial={q.text} canEdit={ctx.canEdit} />

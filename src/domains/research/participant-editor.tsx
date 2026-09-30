@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
-import { Input } from "@/shared/ui/field";
+import { Input, Checkbox } from "@/shared/ui/field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { t } from "@/shared/i18n/ru";
 import { deleteParticipant, saveParticipant } from "./actions";
@@ -52,8 +52,7 @@ export function ParticipantEditor({ id, initial, consentAt, canEdit }: {
           {input("contact", f.contact, undefined, 300)}
         </div>
         <label className="flex cursor-pointer items-center gap-2.5 font-semibold">
-          <input type="checkbox" checked={p.consent} disabled={!canEdit} onChange={(e) => update({ consent: e.target.checked })}
-            className="size-5 accent-[var(--success)]" />
+          <Checkbox checked={p.consent} disabled={!canEdit} onChange={(e) => update({ consent: e.target.checked })} />
           {f.consent}
         </label>
       </Section>

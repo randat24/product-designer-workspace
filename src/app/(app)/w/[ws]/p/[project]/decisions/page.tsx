@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -34,7 +35,7 @@ export default async function DecisionsPage({ params }: { params: Promise<{ ws: 
       {decisions.length === 0 ? (
         <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{dc.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+        <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[680px] text-left text-sm">
             <thead className="border-b border-line text-caption font-semibold text-fg-secondary">
               <tr>
@@ -57,7 +58,7 @@ export default async function DecisionsPage({ params }: { params: Promise<{ ws: 
                   <td className="px-4 py-3 text-meta tabular-nums whitespace-nowrap">{dateFmt.format(new Date(d.decidedAt))}</td>
                   <td className="px-4 py-3 text-meta">{d.author ?? "—"}</td>
                   <td className="px-4 py-3 text-meta tabular-nums">
-                    {d.evidence > 0 ? d.evidence : <span className="font-semibold text-warning">⚠ {dc.noEvidence}</span>}
+                    {d.evidence > 0 ? d.evidence : <span className="inline-flex items-center gap-1 font-semibold text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{dc.noEvidence}</span>}
                   </td>
                 </tr>
               ))}

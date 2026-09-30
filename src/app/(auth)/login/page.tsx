@@ -9,7 +9,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <div className="grid min-h-screen md:grid-cols-[minmax(280px,420px)_1fr]">
       <aside className="flex flex-col justify-between gap-6 bg-rail p-8 text-rail-fg md:p-10">
-        <p className="font-display text-[26px] leading-none font-bold uppercase md:text-[34px]">
+        <p className="font-display text-display-sm leading-none font-bold uppercase md:text-display-md">
           {t.auth.brand}
           <span className="mt-3 block font-sans text-sm font-medium normal-case opacity-70">{t.auth.brandLede}</span>
         </p>

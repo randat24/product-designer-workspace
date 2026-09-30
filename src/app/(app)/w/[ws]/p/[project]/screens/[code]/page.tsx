@@ -1,3 +1,4 @@
+import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,6 +16,7 @@ import { EntityChip } from "@/shared/ui/entity-chip";
 import { EntityLayout } from "@/shared/ui/entity-layout";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -33,7 +35,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "screen", id: s.id, code: s.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/screens`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{sc.back}</Link>
+      <BackLink href={`${ctx.base}/screens`}>{sc.back}</BackLink>
       <PageHeader title={s.name} eyebrow={<EntityChip type="screen" code={s.code} />}
         stat={{ value: missing, caption: sc.states.statuses.missing.toLowerCase() }} />
       <div className="flex flex-col gap-10">
@@ -88,7 +90,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
               <input type="hidden" name="projectId" value={ctx.project.id} />
               <input type="hidden" name="targetType" value="screen" />
               <input type="hidden" name="targetId" value={s.id} />
-              <Button type="submit" variant="secondary">{sc.recordDecision} →</Button>
+              <Button type="submit" variant="secondary">{sc.recordDecision}<ArrowRight aria-hidden className="size-4" /></Button>
             </form>
           )}
         </section>

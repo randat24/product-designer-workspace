@@ -8,6 +8,7 @@ import { listInterviewSynthesis } from "@/domains/synthesis";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -26,9 +27,7 @@ export default async function InterviewPage({ params }: { params: Promise<Params
   return (
     <div className="max-w-4xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href={`${ctx.base}/research/participants/${p.code}`} className="text-meta font-semibold text-fg-secondary hover:text-fg">
-          ← {t.research.interview.back(p.code)}
-        </Link>
+        <BackLink href={`${ctx.base}/research/participants/${p.code}`} className="mb-0">{t.research.interview.back(p.code)}</BackLink>
         <Link href={`${ctx.base}/research/interviews/${iv.code}/live`} className="rounded-control bg-fg px-3.5 py-1.5 text-sm font-semibold text-canvas">
           {t.research.interview.live}
         </Link>

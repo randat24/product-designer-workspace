@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useFieldAutosave } from "@/shared/ui/autosave";
 import { cn } from "@/shared/lib/cn";
@@ -9,6 +10,7 @@ import { addRespondent, renameParticipant } from "./actions";
 import { AnswerField } from "./answer-field";
 import { participantTitle } from "./schema";
 import type { GuideQuestion } from "./queries";
+import { Button } from "@/shared/ui/button";
 
 const mx = t.research.matrix;
 const STICKY = ["var(--s1)", "var(--s2)", "var(--s3)", "var(--s4)", "var(--s5)", "var(--s6)", "var(--s7)"];
@@ -39,7 +41,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
     <>
     <ActionError error={error} className="mb-2 text-meta text-danger" />
     {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrolls sideways: reachable by keyboard */}
-    <div tabIndex={0} role="region" aria-label={mx.title} className="overflow-x-auto rounded-panel border border-line bg-surface">
+    <div tabIndex={0} role="region" aria-label={mx.title} className="relative overflow-x-auto rounded-panel border border-line bg-surface">
       <table className="min-w-full border-collapse">
         <thead>
           <tr>
@@ -56,11 +58,9 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
             ))}
             {canEdit && (
               <th className="min-w-[120px] border-b border-line p-2.5 align-middle">
-                <button type="button" disabled={pending}
-                  onClick={() => run(() => addRespondent(projectId, guideId))}
-                  className="rounded-control border-[1.5px] border-fg px-3 py-1.5 text-sm font-semibold whitespace-nowrap hover:bg-subtle disabled:opacity-50">
-                  {mx.addRespondent}
-                </button>
+                <Button variant="secondary" disabled={pending} onClick={() => run(() => addRespondent(projectId, guideId))}>
+                  <Plus aria-hidden className="size-4" />{mx.addRespondent}
+                </Button>
               </th>
             )}
           </tr>

@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -33,7 +34,7 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
       {insights.length === 0 ? (
         <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
-        <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]">
+        <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))]">
           {insights.map((i) => {
             const st = stats.get(i.id);
             const unsupported = (st?.sources ?? 0) === 0;
@@ -51,14 +52,14 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
                   <span className="mt-auto flex flex-wrap items-center gap-1.5 text-caption font-semibold">
                     <span className="rounded-full bg-fg px-2.5 py-0.5 text-canvas">{s.fields.confidence}: {labelOf(LEVELS, i.confidence).toLowerCase()}</span>
                     {unsupported ? (
-                      <span className="rounded-full bg-warning/10 px-2.5 py-0.5 text-warning">⚠ {t.trace.unsupported}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-warning/10 px-2.5 py-0.5 text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{t.trace.unsupported}</span>
                     ) : (
                       <span className="rounded-full border border-line px-2.5 py-0.5 text-fg-secondary">
                         {s.columns.sources}: {st?.sources} · {s.participants(st?.participants ?? 0)}
                       </span>
                     )}
                     {!unsupported && st?.participants === 1 && (
-                      <span className="rounded-full bg-warning/10 px-2.5 py-0.5 text-warning" title={s.singleSourceHint}>⚠ {s.singleSource}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-warning/10 px-2.5 py-0.5 text-warning" title={s.singleSourceHint}><TriangleAlert aria-hidden className="size-4 shrink-0" />{s.singleSource}</span>
                     )}
                   </span>
                 </Link>

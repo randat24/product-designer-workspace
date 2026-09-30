@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeft, ArrowRight, CircleCheck, CornerDownRight } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -121,11 +122,11 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
           )}
           {step.kind === "question" && (
             <>
-              <h1 className="text-[26px] leading-tight font-bold sm:text-[32px]">{step.q.text}</h1>
+              <h1 className="text-display-sm leading-tight font-bold sm:text-display-md">{step.q.text}</h1>
               {step.q.probes.length > 0 && (
                 <ul className="flex flex-wrap gap-2">
                   {step.q.probes.map((p) => (
-                    <li key={p} className="rounded-full border-[1.5px] border-line px-3 py-1 text-sm font-semibold text-fg-secondary">↳ {p}</li>
+                    <li key={p} className="rounded-full border-[1.5px] border-line px-3 py-1 text-sm font-semibold text-fg-secondary"><CornerDownRight aria-hidden className="mr-1 inline size-4 align-[-3px]" />{p}</li>
                   ))}
                 </ul>
               )}
@@ -163,7 +164,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
           )}
           {finished && step.kind === "outro" && (
             <p role="status" className="flex flex-wrap items-center gap-3 font-semibold text-success">
-              ✓ {lv.finished}
+              <CircleCheck aria-hidden className="size-5" />{lv.finished}
               <Link href={detailHref} className="text-fg underline underline-offset-2">{lv.toDetail}</Link>
             </p>
           )}
@@ -172,13 +173,13 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
 
       <footer className="flex items-center justify-between gap-3 border-t border-line bg-surface px-4 py-3 sm:px-6">
         <button type="button" onClick={() => setI((x) => Math.max(x - 1, 0))} disabled={i === 0}
-          className="h-12 min-w-28 rounded-panel border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
-          ← {lv.prev}
+          className="inline-flex h-12 min-w-28 items-center justify-center gap-1.5 rounded-panel border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
+          <ArrowLeft aria-hidden className="size-5" />{lv.prev}
         </button>
         <p className="hidden text-caption text-fg-secondary md:block">{lv.shortcuts}</p>
         <button type="button" onClick={() => setI((x) => Math.min(x + 1, steps.length - 1))} disabled={i === steps.length - 1}
-          className={cn("h-12 min-w-28 rounded-panel bg-fg px-5 text-base font-bold text-canvas disabled:opacity-30")}>
-          {lv.next} →
+          className={cn("inline-flex h-12 min-w-28 items-center justify-center gap-1.5 rounded-panel bg-fg px-5 text-base font-bold text-canvas disabled:opacity-30")}>
+          {lv.next}<ArrowRight aria-hidden className="size-5" />
         </button>
       </footer>
     </div>

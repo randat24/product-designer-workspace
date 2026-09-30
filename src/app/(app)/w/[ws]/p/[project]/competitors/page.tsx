@@ -67,7 +67,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
           {others.length === 0 ? t.competitors.empty : t.competitors.emptyFiltered}
         </p>
       ) : (
-        <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
+        <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))]">
           {(own && !kind ? [own, ...shown] : shown).map((c) => (
             <li key={c.id}>
               <Link href={`${base}/competitors/${c.code}`}
