@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getProjectContext } from "@/domains/projects/queries";
 import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PROJECT_STATUSES, type ActivityItem } from "@/domains/projects";
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
 import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/domains/competitors";
@@ -12,6 +14,12 @@ import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+
+export async function generateMetadata({ params }: { params: Promise<{ ws: string; project: string }> }): Promise<Metadata> {
+  const { ws, project } = await params;
+  const ctx = await getProjectContext(ws, project);
+  return { title: ctx ? `${ctx.project.name} · ${t.project.overview}` : t.project.overview };
+}
 
 type StageState = "done" | "active" | "todo" | "soon";
 type Stage = { segment: string; label: string; phase: number; state: StageState; detail?: string; percent?: number };
@@ -191,7 +199,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
             <li key={s.segment}>
               <Link href={`${base}/${s.segment}`}
                 className={cn(
-                  "flex h-full flex-col gap-2 rounded-[14px] border border-line bg-surface p-4 transition-colors duration-[120ms] hover:border-fg",
+                  "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-4 transition-colors duration-[120ms] hover:border-fg",
                   s.state === "done" && "border-success",
                   s.state === "soon" && "bg-transparent text-fg-secondary",
                 )}>
@@ -200,11 +208,11 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
                   <span className="font-bold">{s.label}</span>
                   <StageIcon state={s.state} />
                 </span>
-                <span className="text-[13px] text-fg-secondary tabular-nums">
+                <span className="text-meta text-fg-secondary tabular-nums">
                   {s.detail ?? (s.state === "soon" ? t.project.stageSoon(s.phase) : t.project.stageTodo)}
                 </span>
                 {s.percent !== undefined && (
-                  <span className="mt-auto block h-[3px] overflow-hidden rounded-sm bg-line" aria-hidden>
+                  <span className="mt-auto block h-[3px] overflow-hidden rounded-chip bg-line" aria-hidden>
                     <i className={cn("block h-full", s.state === "done" ? "bg-success" : "bg-fg")} style={{ width: `${s.percent}%` }} />
                   </span>
                 )}
@@ -222,7 +230,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
           <ul className="flex flex-col gap-2">
             {nextActions.map((a) => (
               <li key={a.key}>
-                <Link href={a.href} className="flex items-center justify-between gap-3 rounded-[12px] border border-line bg-surface px-4 py-2.5 font-medium hover:border-fg">
+                <Link href={a.href} className="flex items-center justify-between gap-3 rounded-panel border border-line bg-surface px-4 py-2.5 font-medium hover:border-fg">
                   <span>{a.label}</span>
                   <span aria-hidden className="text-fg-secondary">→</span>
                 </Link>
@@ -237,7 +245,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
         {activity.length === 0 ? (
           <p className="text-fg-secondary">{t.project.activityEmpty}</p>
         ) : (
-          <ul className="flex flex-col gap-2 rounded-[14px] border border-line bg-surface p-4">
+          <ul className="flex flex-col gap-2 rounded-panel border border-line bg-surface p-4">
             {activity.map((a) => <ActivityRow key={a.id} item={a} />)}
           </ul>
         )}
@@ -261,7 +269,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
   const action = t.activity.action[item.action] ?? item.action;
   const fields = item.action === "update" ? item.changedKeys.map((k) => t.activity.field[k] ?? k).join(", ") : "";
   return (
-    <li className="grid grid-cols-[1fr_auto] gap-x-4 text-[13px]">
+    <li className="grid grid-cols-[1fr_auto] gap-x-4 text-meta">
       <span className="min-w-0 truncate">
         <span className="font-medium">{action}</span> · {entity}
         {fields && <span className="text-fg-secondary">: {fields}</span>}

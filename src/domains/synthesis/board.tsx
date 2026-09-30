@@ -8,6 +8,8 @@ import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { createInsightFromPattern, createObservation, createPattern, deletePattern, moveCard, renamePattern } from "./actions";
 import { kindOf, OBSERVATION_KINDS, participantColor, type ObservationKind } from "./schema";
 import type { BoardCard } from "./queries";
@@ -33,6 +35,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const columnsAction = useAction();
   const [newPattern, setNewPattern] = useState("");
 
   const move = (card: BoardCard, patternId: string | null) => {
@@ -49,7 +52,8 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
 
   return (
     <div className="flex flex-col gap-4">
-      {canEdit && <p className="text-[13px] text-fg-secondary">{b.dragHint}</p>}
+      {canEdit && <p className="text-meta text-fg-secondary">{b.dragHint}</p>}
+      <ActionError error={columnsAction.error} />
       <div className="flex items-start gap-4 overflow-x-auto pb-4">
         {columns.map((p) => {
           const key = p?.id ?? NONE;
@@ -64,17 +68,17 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
                 if (card) move(card, p?.id ?? null);
               }}
               className={cn(
-                "flex w-[290px] shrink-0 flex-col gap-2.5 rounded-[14px] border bg-surface/60 p-3 transition-colors duration-[120ms]",
+                "flex w-[290px] shrink-0 flex-col gap-2.5 rounded-panel border bg-surface/60 p-3 transition-colors duration-[120ms]",
                 over === key ? "border-[1.5px] border-dashed border-fg bg-subtle" : "border-line",
                 !p && "bg-transparent",
               )}>
               <ColumnHeader pattern={p} count={list.length} canEdit={canEdit}
-                onDelete={() => p && startTransition(async () => { await deletePattern(p.id); router.refresh(); })} />
+                onDelete={() => p && columnsAction.run(() => deletePattern(p.id))} />
 
               {!p && canEdit && <AddObservation projectId={projectId} participants={participants} onAdded={() => router.refresh()} />}
 
               <ul className="flex min-h-16 flex-col gap-2">
-                {list.length === 0 && <li className="rounded-[10px] border-[1.5px] border-dashed border-line p-4 text-center text-[13px] text-fg-secondary">{b.empty}</li>}
+                {list.length === 0 && <li className="rounded-control border-[1.5px] border-dashed border-line p-4 text-center text-meta text-fg-secondary">{b.empty}</li>}
                 {list.map((c) => (
                   <Card key={c.id} card={c} base={base} canEdit={canEdit} patterns={patterns}
                     onDragStart={() => setDragging(c.id)} onDragEnd={() => { setDragging(null); setOver(null); }}
@@ -86,13 +90,13 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
         })}
 
         {canEdit && (
-          <form className="flex w-[260px] shrink-0 flex-col gap-2 rounded-[14px] border-[1.5px] border-dashed border-line p-3"
+          <form className="flex w-[260px] shrink-0 flex-col gap-2 rounded-panel border-[1.5px] border-dashed border-line p-3"
             onSubmit={(e) => {
               e.preventDefault();
-              startTransition(async () => { await createPattern(projectId, newPattern); setNewPattern(""); router.refresh(); });
+              columnsAction.run(() => createPattern(projectId, newPattern), () => setNewPattern(""));
             }}>
             <Input aria-label={b.addPattern} value={newPattern} maxLength={200} placeholder={b.patternPlaceholder} onChange={(e) => setNewPattern(e.target.value)} />
-            <Button type="submit" variant="secondary" disabled={pending}>{b.addPattern}</Button>
+            <Button type="submit" variant="secondary" disabled={pending || columnsAction.pending}>{b.addPattern}</Button>
           </form>
         )}
       </div>
@@ -111,22 +115,22 @@ function ColumnHeader({ pattern, count, canEdit, onDelete }: { pattern: Pattern 
     );
   }
   return (
-    <header className="flex flex-col gap-2 rounded-[10px] p-2.5 text-on-sticky" style={{ background: `var(--${pattern.color ?? "s1"})` }}>
+    <header className="flex flex-col gap-2 rounded-control p-2.5 text-on-sticky" style={{ background: `var(--${pattern.color ?? "s1"})` }}>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-caption font-bold opacity-70">{pattern.code} · {b.cards(count)}</span>
+        <span className="text-caption font-bold opacity-80">{pattern.code} · {b.cards(count)}</span>
         {canEdit && (
-          <button type="button" onClick={onDelete} aria-label={`${b.deletePattern}: ${pattern.title}`}
-            className="grid size-6 place-items-center rounded text-on-sticky/60 hover:bg-white/40 hover:text-on-sticky">×</button>
+          <ConfirmIconButton label={`${b.deletePattern}: ${pattern.title}`} confirm={t.status.confirmDelete} onConfirm={onDelete}
+            className="hit grid size-6 place-items-center rounded-chip text-on-sticky/80 hover:bg-white/40 hover:text-on-sticky" />
         )}
       </div>
       <input aria-label={`${b.patternPlaceholder} ${pattern.code}`} value={title.value} readOnly={!canEdit} maxLength={200}
         onChange={(e) => title.onChange(e.target.value)} onBlur={title.onBlur}
-        className="w-full rounded border border-transparent bg-transparent px-1 py-0.5 text-[15px] font-bold text-on-sticky focus:bg-white/55 focus:outline-none" />
+        className="w-full rounded-chip border border-transparent bg-transparent px-1 py-0.5 text-body font-bold text-on-sticky focus:bg-white/55 focus:outline-none" />
       {canEdit && (
         <form action={createInsightFromPattern}>
           <input type="hidden" name="patternId" value={pattern.id} />
           <Button type="submit" variant="ghost" disabled={count === 0}
-            className="h-auto w-full rounded-lg bg-on-sticky px-2.5 py-1.5 text-[13px] font-bold text-white hover:bg-on-sticky hover:text-white disabled:opacity-40">
+            className="h-auto w-full rounded-control bg-on-sticky px-2.5 py-1.5 text-meta font-bold text-white hover:bg-on-sticky hover:text-white disabled:opacity-40">
             {b.formulate} →
           </Button>
         </form>
@@ -156,7 +160,7 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
         onDragStart();
       }}
       className={cn(
-        "flex flex-col gap-1.5 rounded-[10px] border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.04)]",
+        "flex flex-col gap-1.5 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.04)]",
         canEdit && "cursor-grab active:cursor-grabbing", dragging && "opacity-40",
       )}
       style={{ borderLeft: `5px solid ${participantColor(card.participant?.code)}` }}>
@@ -168,7 +172,7 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
         </span>
         <Link href={href} className="text-fg-secondary tabular-nums hover:text-fg hover:underline">{card.code}</Link>
       </div>
-      <p className={cn("text-[13.5px] leading-snug", card.kind === "quote" && "italic")}>{card.kind === "quote" ? `«${card.text}»` : card.text}</p>
+      <p className={cn("text-meta leading-snug", card.kind === "quote" && "italic")}>{card.kind === "quote" ? `«${card.text}»` : card.text}</p>
       <div className="flex items-center justify-between gap-2">
         <span className="truncate text-caption text-fg-secondary">
           {card.participant ? `${card.participant.code} · ${card.participant.role ?? ""}` : b.noParticipant}
@@ -176,7 +180,7 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
         {canEdit && (
           <select aria-label={`${b.moveTo} ${card.code}`} value={card.patternId ?? NONE}
             onChange={(e) => onMove(e.target.value === NONE ? null : e.target.value)}
-            className="h-7 max-w-28 rounded-md border border-line bg-surface px-1 text-caption text-fg-secondary">
+            className="h-8 max-w-28 rounded-chip border border-line bg-surface px-1 text-caption text-fg-secondary">
             <option value={NONE}>{b.unclustered}</option>
             {patterns.map((p) => <option key={p.id} value={p.id}>{p.code} {p.title}</option>)}
           </select>
@@ -196,7 +200,7 @@ function AddObservation({ projectId, participants, onAdded }: {
   const [participantId, setParticipantId] = useState("");
   const [pending, startTransition] = useTransition();
   return (
-    <form className="flex flex-col gap-1.5 rounded-[10px] border border-line bg-surface p-2.5"
+    <form className="flex flex-col gap-1.5 rounded-control border border-line bg-surface p-2.5"
       onSubmit={(e) => {
         e.preventDefault();
         if (!text.trim()) return;
@@ -207,14 +211,14 @@ function AddObservation({ projectId, participants, onAdded }: {
       }}>
       <textarea aria-label={b.addObservation} value={text} maxLength={2000} rows={2} placeholder={b.observationPlaceholder}
         onChange={(e) => setText(e.target.value)}
-        className="w-full resize-none rounded-lg bg-subtle px-2 py-1.5 text-[13.5px] focus:bg-surface focus:outline-2 focus:outline-fg" />
+        className="w-full resize-none rounded-control bg-subtle px-2 py-1.5 text-meta focus:bg-surface focus:outline-2 focus:outline-fg" />
       <div className="flex gap-1.5">
         <select aria-label={b.kind} value={kind} onChange={(e) => setKind(e.target.value as ObservationKind)}
-          className="h-8 flex-1 rounded-md border border-line bg-surface px-1 text-caption">
+          className="h-8 flex-1 rounded-chip border border-line bg-surface px-1 text-caption">
           {OBSERVATION_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
         </select>
         <select aria-label={b.participant} value={participantId} onChange={(e) => setParticipantId(e.target.value)}
-          className="h-8 flex-1 rounded-md border border-line bg-surface px-1 text-caption">
+          className="h-8 flex-1 rounded-chip border border-line bg-surface px-1 text-caption">
           <option value="">{b.noParticipant}</option>
           {participants.map((p) => <option key={p.id} value={p.id}>{p.code} {p.role ?? ""}</option>)}
         </select>

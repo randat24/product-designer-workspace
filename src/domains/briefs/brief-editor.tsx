@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Input, Textarea } from "@/shared/ui/field";
+import { FieldError, Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
@@ -37,10 +37,10 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
         {text("product_description", f.product_description, f.product_descriptionHint)}
         {text("existing_product", f.existing_product, f.existing_productHint)}
         <div className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-semibold text-fg-secondary">{f.platforms}</span>
+          <span className="text-meta font-semibold text-fg-secondary">{f.platforms}</span>
           <p className="flex flex-wrap items-baseline gap-x-3">
             <span>{platforms.length ? platforms.join(", ") : <span className="text-fg-secondary">{f.platformsNone}</span>}</span>
-            <Link href={settingsHref} className="text-[13px] font-semibold underline underline-offset-2">{f.platformsEdit}</Link>
+            <Link href={settingsHref} className="text-meta font-semibold underline underline-offset-2">{f.platformsEdit}</Link>
           </p>
         </div>
       </Section>
@@ -83,11 +83,12 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
         <div className="grid gap-4 sm:grid-cols-2 sm:max-w-md">
           {(["timeline_start", "timeline_end"] as const).map((key) => (
             <div key={key} className="flex flex-col gap-1.5">
-              <label htmlFor={key} className="text-[13px] font-semibold text-fg-secondary">{f[key]}</label>
+              <label htmlFor={key} className="text-meta font-semibold text-fg-secondary">{f[key]}</label>
               <Input id={key} type="date" value={brief[key] ?? ""} readOnly={!canEdit}
                 aria-invalid={error?.field === key}
-                aria-describedby={error?.field === key ? "brief-status" : undefined}
+                aria-describedby={error?.field === key ? `${key}-error` : undefined}
                 onChange={(e) => update({ [key]: e.target.value || null })} />
+              <FieldError id={key} message={error?.field === key ? error.message : null} />
             </div>
           ))}
         </div>
@@ -135,7 +136,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
   const set = (i: number) => (row: T) => onChange(rows.map((r, j) => (j === i ? row : r)));
   return (
     <fieldset id={id} className="flex flex-col gap-1.5">
-      <legend className={cn("mb-1.5 text-[13px] font-semibold text-fg-secondary", hideLegend && "sr-only")}>{label}</legend>
+      <legend className={cn("mb-1.5 text-meta font-semibold text-fg-secondary", hideLegend && "sr-only")}>{label}</legend>
       {columns && rows.length > 0 && (
         <div aria-hidden className={cn("hidden gap-2 pr-9 text-caption text-fg-secondary sm:grid", gridClass)}>
           {columns.map((c) => <span key={c}>{c}</span>)}
@@ -148,7 +149,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
             {!readOnly && (
               <button type="button" onClick={() => onChange(rows.filter((_, j) => j !== i))}
                 aria-label={`${t.brief.fields.remove}: ${label} ${i + 1}`}
-                className="grid size-9 shrink-0 place-items-center rounded-[7px] text-base text-fg-secondary hover:bg-subtle hover:text-fg">
+                className="grid size-9 shrink-0 place-items-center rounded-control text-base text-fg-secondary hover:bg-subtle hover:text-fg">
                 <span aria-hidden>×</span>
               </button>
             )}
@@ -157,7 +158,7 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
       </ul>
       {!readOnly && (
         <button type="button" onClick={() => onChange([...rows, empty])}
-          className="self-start rounded-[9px] border-[1.5px] border-fg px-3 py-1.5 text-[13px] font-semibold hover:bg-subtle">
+          className="self-start rounded-control border-[1.5px] border-fg px-3 py-1.5 text-meta font-semibold hover:bg-subtle">
           + {addLabel}
         </button>
       )}

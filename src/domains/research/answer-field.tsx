@@ -69,8 +69,8 @@ export function AnswerField({ interviewId, questionId, answerId, initial, readOn
         onChange={(e) => field.onChange(e.target.value)} onBlur={field.onBlur}
         aria-invalid={field.status === "error"}
         className={cn(
-          "w-full resize-y rounded-lg border border-transparent bg-subtle px-3 py-2 leading-normal font-medium [field-sizing:content]",
-          "placeholder:font-normal placeholder:text-fg-secondary/70 hover:border-line focus:border-fg focus:bg-surface focus:outline-none",
+          "w-full resize-y rounded-control border border-transparent bg-subtle px-3 py-2 leading-normal font-medium [field-sizing:content]",
+          "placeholder:font-normal placeholder:text-fg-secondary hover:border-line focus:border-fg focus:bg-surface focus:outline-none",
           "aria-[invalid=true]:border-danger",
           className,
         )} />

@@ -1,5 +1,6 @@
 import { cn } from "@/shared/lib/cn";
 import { STAGE_COLOR, type CaseStory, type Mark, type Stage, type StoryLabels } from "./case-story";
+import { CaseContentsSpy } from "./case-contents-spy";
 import { container } from "./ui";
 
 const STICKERS = ["var(--s3)", "var(--s7)", "var(--s5)", "var(--s1)", "var(--s6)", "var(--s4)"];
@@ -27,17 +28,18 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
 
   return (
     <>
-      <nav aria-label={labels.contents} className="z-10 border-y border-line bg-canvas/90 backdrop-blur lg:sticky lg:top-16">
+      <nav id="case-contents" aria-label={labels.contents} className="z-10 border-y border-line bg-canvas/90 backdrop-blur lg:sticky lg:top-16">
         <ol className={`${container} flex gap-1 overflow-x-auto py-2.5 text-[13px] font-semibold`}>
           {sections.map((s, i) => (
             <li key={s.id} className="shrink-0">
-              <a href={`#${s.id}`} className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg">
-                <span className="display-num text-[11px] opacity-60">{String(i + 1).padStart(2, "0")}</span>
+              <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-full px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-subtle aria-[current]:text-fg">
+                <span className="display-num text-[11px]">{String(i + 1).padStart(2, "0")}</span>
                 {s.title}
               </a>
             </li>
           ))}
         </ol>
+        <CaseContentsSpy ids={sections.map((s) => s.id)} navId="case-contents" />
       </nav>
 
       <div className={`${container} mt-12 flex flex-col gap-20`}>
@@ -122,7 +124,7 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
             style={{ background: STICKERS[i % STICKERS.length], transform: `rotate(${i % 2 ? 1 : -1}deg)` }}
           >
             <p className="text-[17px] font-semibold leading-snug">«{q.text}»</p>
-            <p className="text-[13px] opacity-70">— {q.who}</p>
+            <p className="text-[13px] opacity-80">— {q.who}</p>
           </li>
         ))}
       </ul>
@@ -132,7 +134,9 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
 
 function Code({ code, color }: { code: string; color: string }) {
   return (
-    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[6px] px-1.5 py-0.5 text-[12px]" style={{ color, background: tint(color, 14) }}>
+    // Text: the entity colour mixed 60/40 with the text colour — darker in light, lighter in dark, >= 4.5:1.
+    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[6px] px-1.5 py-0.5 text-[12px]"
+      style={{ color: `color-mix(in srgb, ${color} 60%, var(--fg))`, background: tint(color, 14) }}>
       {code}
     </span>
   );
@@ -157,16 +161,19 @@ function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
 }
 
 const MARK_STYLE: Record<Mark, { bg: string; fg: string }> = {
-  yes: { bg: tint("var(--success)", 22), fg: "var(--success)" },
-  partial: { bg: tint("var(--warning)", 24), fg: "var(--warning)" },
-  no: { bg: tint("var(--danger)", 24), fg: "var(--danger)" },
+  // Light tints keep the status text at 4.5:1 or more (WCAG AA).
+  yes: { bg: tint("var(--success)", 12), fg: "var(--success)" },
+  partial: { bg: tint("var(--warning)", 12), fg: "var(--warning)" },
+  no: { bg: tint("var(--danger)", 12), fg: "var(--danger)" },
 };
 
 function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitors"]>; labels: StoryLabels }) {
   return (
     <>
       <Intro>{data.intro}</Intro>
-      <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
+      {/* Scrolls sideways on a phone: focusable so the keyboard can scroll it too (WCAG 2.1.1). */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+      <div tabIndex={0} role="region" aria-label={labels.competitors} className="overflow-x-auto rounded-[14px] border border-line bg-surface">
         <table className="w-full min-w-[560px] border-collapse text-[14px]">
           <thead>
             <tr>

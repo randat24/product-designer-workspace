@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/shared/lib/cn";
@@ -57,15 +57,26 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
     return () => clearInterval(id);
   }, [startedAt, finished]);
 
+  // Focus lands in the interview, not behind it (it covers the page like a modal).
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => root.current?.focus(), []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Esc: in a text field it only leaves the field (no lost context mid-sentence); otherwise it exits.
+      if (e.key === "Escape") {
+        const el = document.activeElement;
+        if (el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement) el.blur();
+        else router.push(detailHref);
+        return;
+      }
       if (!e.altKey) return;
       if (e.key === "ArrowRight") { e.preventDefault(); setI((x) => Math.min(x + 1, steps.length - 1)); }
       if (e.key === "ArrowLeft") { e.preventDefault(); setI((x) => Math.max(x - 1, 0)); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [steps.length]);
+  }, [steps.length, router, detailHref]);
 
   const elapsed = startedAt ? Math.max(0, Math.floor((now - startedAt) / 1000)) : 0;
   const clock = `${String(Math.floor(elapsed / 60)).padStart(2, "0")}:${String(elapsed % 60).padStart(2, "0")}`;
@@ -80,8 +91,8 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
   });
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={`${lv.title} ${code}`}
-      className="fixed inset-0 z-40 flex flex-col bg-canvas">
+    <div ref={root} tabIndex={-1} role="dialog" aria-modal="true" aria-label={`${lv.title} ${code}`}
+      className="fixed inset-0 z-40 flex flex-col bg-canvas focus:outline-none">
       <header className="flex items-center justify-between gap-3 bg-rail px-4 py-3 text-rail-fg sm:px-6">
         <div className="min-w-0">
           <p className="text-caption font-semibold opacity-70">{lv.title} · {code}</p>
@@ -91,7 +102,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
           {startedAt && (
             <span className="display-num text-2xl tabular-nums" role="timer" aria-label={`${lv.timer} ${clock}`}>{clock}</span>
           )}
-          <Link href={detailHref} className="rounded-lg border border-rail-fg/30 px-3 py-1.5 text-sm font-semibold hover:border-rail-fg/70">{lv.exit}</Link>
+          <Link href={detailHref} className="rounded-control border border-rail-fg/30 px-3 py-1.5 text-sm font-semibold hover:border-rail-fg/70">{lv.exit}</Link>
         </div>
       </header>
 
@@ -140,13 +151,13 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
 
           {step.kind === "intro" && canEdit && !startedAt && !finished && (
             <button type="button" onClick={start} disabled={pending}
-              className="self-start rounded-[12px] bg-fg px-6 py-3.5 text-lg font-bold text-canvas disabled:opacity-50">
+              className="self-start rounded-panel bg-fg px-6 py-3.5 text-lg font-bold text-canvas disabled:opacity-50">
               {lv.start}
             </button>
           )}
           {step.kind === "outro" && canEdit && !finished && (
             <button type="button" onClick={finish} disabled={pending}
-              className="self-start rounded-[12px] bg-success px-6 py-3.5 text-lg font-bold text-white disabled:opacity-50">
+              className="self-start rounded-panel bg-success px-6 py-3.5 text-lg font-bold text-on-status disabled:opacity-50">
               {lv.finish}
             </button>
           )}
@@ -161,12 +172,12 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
 
       <footer className="flex items-center justify-between gap-3 border-t border-line bg-surface px-4 py-3 sm:px-6">
         <button type="button" onClick={() => setI((x) => Math.max(x - 1, 0))} disabled={i === 0}
-          className="h-12 min-w-28 rounded-[12px] border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
+          className="h-12 min-w-28 rounded-panel border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
           ← {lv.prev}
         </button>
         <p className="hidden text-caption text-fg-secondary md:block">{lv.shortcuts}</p>
         <button type="button" onClick={() => setI((x) => Math.min(x + 1, steps.length - 1))} disabled={i === steps.length - 1}
-          className={cn("h-12 min-w-28 rounded-[12px] bg-fg px-5 text-base font-bold text-canvas disabled:opacity-30")}>
+          className={cn("h-12 min-w-28 rounded-panel bg-fg px-5 text-base font-bold text-canvas disabled:opacity-30")}>
           {lv.next} →
         </button>
       </footer>

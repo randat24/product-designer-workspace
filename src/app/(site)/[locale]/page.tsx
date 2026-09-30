@@ -1,12 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Signature } from "@/site/signature";
 import { AWARD_TILE, AwardSvg } from "@/site/award-icons";
-import { CONTACTS, dict, isLocale } from "@/site/content";
+import { trackAttrs } from "@/site/analytics/track";
+import { CONTACTS, dict, isLocale, type Locale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
+import { JsonLd } from "@/site/json-ld";
+import { graph, pageMetadata, personLd, websiteLd } from "@/site/seo";
+import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 
 export const revalidate = 60;
-import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
-import { notFound } from "next/navigation";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const d = dict(locale);
+  return pageMetadata({ locale, path: "", title: d.seo.home.title, description: d.seo.home.description, absoluteTitle: true, type: "profile" });
+}
 
 const STICKERS = [
   { text: "Research", bg: "var(--s7)", rot: "-6deg" },
@@ -23,6 +34,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <>
+      <JsonLd data={graph(websiteLd(locale), personLd(locale))} />
       {/* Hero */}
       <section className={`${container} grid gap-10 pb-16 pt-12 sm:pt-20 lg:grid-cols-[1fr_330px] lg:items-center`}>
         <div className="flex flex-col gap-6">
@@ -38,8 +50,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </p>
           <Signature className="signature-draw -my-2 h-16 w-auto self-start text-fg sm:h-20" title={d.name} />
           <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={`mailto:${CONTACTS.email}`}>{d.home.cta}</PrimaryLink>
-            <SecondaryLink href={CONTACTS.cv} download>{d.home.ctaCv}</SecondaryLink>
+            <PrimaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "hero" })}>
+              {d.home.cta}
+            </PrimaryLink>
+            <SecondaryLink href={CONTACTS.cv} download track={trackAttrs("resume_download", { location: "hero" })}>
+              {d.home.ctaCv}
+            </SecondaryLink>
           </div>
         </div>
         <ul className="relative hidden h-[300px] lg:block" aria-hidden="true">
@@ -64,13 +80,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section className={`${container} flex flex-col gap-8 py-12`} aria-labelledby="work">
         <div className="flex items-end justify-between gap-4">
           <SectionTitle id="work">{d.home.selected}</SectionTitle>
-          <Link href={`/${locale}/cases`} className="shrink-0 text-[14px] font-semibold hover:underline">
+          <Link href={`/${locale}/cases`} className="hit shrink-0 text-[14px] font-semibold hover:underline">
             {d.home.all} →
           </Link>
         </div>
         <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
           {cases.slice(0, 4).map((item) => (
-            <CaseCard key={item.slug} item={item} locale={locale} label={d.cases.placeholder} />
+            <CaseCard key={item.slug} item={item} locale={locale} label={d.cases.placeholder} location="home" />
           ))}
         </div>
       </section>
@@ -109,7 +125,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   );
 }
 
-function Contact({ locale }: { locale: "uk" | "en" }) {
+function Contact({ locale }: { locale: Locale }) {
   const d = dict(locale);
   return (
     <section id="contact" className={`${container} scroll-mt-24 py-16`}>
@@ -117,9 +133,11 @@ function Contact({ locale }: { locale: "uk" | "en" }) {
         <SectionTitle>{d.contact.title}</SectionTitle>
         <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.contact.lead}</p>
         <div className="flex flex-wrap gap-3">
-          <PrimaryLink href={`mailto:${CONTACTS.email}`}>{d.contact.write}</PrimaryLink>
-          <SecondaryLink href={CONTACTS.telegram}>Telegram</SecondaryLink>
-          <SecondaryLink href={CONTACTS.linkedin}>LinkedIn</SecondaryLink>
+          <PrimaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "contact" })}>
+            {d.contact.write}
+          </PrimaryLink>
+          <SecondaryLink href={CONTACTS.telegram} track={trackAttrs("telegram_click", { location: "contact" })}>Telegram</SecondaryLink>
+          <SecondaryLink href={CONTACTS.linkedin} track={trackAttrs("linkedin_click", { location: "contact" })}>LinkedIn</SecondaryLink>
         </div>
       </div>
     </section>

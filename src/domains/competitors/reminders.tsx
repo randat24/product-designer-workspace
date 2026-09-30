@@ -33,7 +33,7 @@ export function RemindersPanel({ base, initial, canEdit, compact = false }: {
       <input type="checkbox" checked={x.done} disabled={!canEdit} onChange={() => toggle(x)}
         aria-label={`${r.done}: ${x.note}`} className="mt-0.5 size-4 shrink-0 accent-[var(--success)]" />
       <div className="min-w-0 flex-1">
-        <p className={cn("text-[14px] leading-snug font-semibold", x.done && "text-fg-secondary line-through")}>{x.note}</p>
+        <p className={cn("text-sm leading-snug font-semibold", x.done && "text-fg-secondary line-through")}>{x.note}</p>
         <p className="text-caption text-fg-secondary">
           <Link href={`${base}/competitors/${x.kind === "ux" ? "ux" : "matrix"}`} className="hover:underline">{r.source[x.kind]}</Link>
           {" · "}<Link href={`${base}/competitors/${x.competitorCode}`} className="hover:underline">{x.competitor}</Link>
@@ -44,15 +44,15 @@ export function RemindersPanel({ base, initial, canEdit, compact = false }: {
   );
 
   return (
-    <section aria-labelledby="reminders-h" className="flex flex-col gap-2 rounded-[14px] border-[1.5px] border-danger/40 bg-surface p-4">
+    <section aria-labelledby="reminders-h" className="flex flex-col gap-2 rounded-panel border-[1.5px] border-danger/40 bg-surface p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="reminders-h" className="font-bold">💡 {r.title}</h2>
         <span className={cn("text-caption font-semibold", open.length ? "text-danger" : "text-success")}>
           {open.length ? r.open(open.length) : r.allDone}
         </span>
       </div>
-      {!compact && <p className="text-[13px] text-fg-secondary">{r.lede}</p>}
-      {items.length === 0 ? <p className="text-[13px] text-fg-secondary">{r.empty}</p> : (
+      {!compact && <p className="text-meta text-fg-secondary">{r.lede}</p>}
+      {items.length === 0 ? <p className="text-meta text-fg-secondary">{r.empty}</p> : (
         <ul className="divide-y divide-line">{open.map(row)}</ul>
       )}
       {!compact && done.length > 0 && (

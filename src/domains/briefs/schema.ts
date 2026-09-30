@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { t } from "@/shared/i18n/ru";
+import { withScheme } from "@/shared/lib/url";
 
 const text = (max = 5000) =>
   z.string().trim().max(max).nullish().transform((v) => v || null);
@@ -12,7 +13,7 @@ const date = z
   .transform((v) => v || null);
 
 /** Accepts "example.com" as well as full URLs; anything else is kept as typed. */
-const url = cell(2000).transform((v) => (v && !/^[a-z][a-z0-9+.-]*:/i.test(v) ? `https://${v}` : v));
+const url = cell(2000).transform(withScheme);
 
 // Empty rows are dropped on save; the editor keeps them locally while the user types.
 export const briefSchema = z

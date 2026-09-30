@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
 import { AWARD_TILE, AwardSvg } from "./award-icons";
-import type { Award, Case, Locale } from "./content";
+import { trackAttrs } from "./analytics/track";
+import { dict, type Award, type Case, type Locale } from "./content";
 
 export const container = "mx-auto w-full max-w-[1120px] px-4 sm:px-8";
 
@@ -44,53 +45,41 @@ export function SectionTitle({
 const linkBtn =
   "inline-flex h-11 items-center justify-center gap-2 rounded-[10px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
 
-export function PrimaryLink({
-  href,
-  children,
-  download,
-}: {
+type LinkButtonProps = {
   href: string;
   children: React.ReactNode;
   download?: boolean;
-}) {
-  const cls = cn(
-    linkBtn,
-    "border-[1.5px] border-accent bg-accent text-on-accent hover:bg-accent-hover",
-  );
+  /** Analytics data attributes, from trackAttrs(). */
+  track?: Record<string, string>;
+};
+
+function LinkButton({ href, children, download, track, className }: LinkButtonProps & { className: string }) {
   if (href.startsWith("/") && !download)
     return (
-      <Link href={href} className={cls}>
+      <Link href={href} className={className} {...track}>
         {children}
       </Link>
     );
+  const external = href.startsWith("http");
   return (
-    <a href={href} className={cls} download={download || undefined}>
+    <a
+      href={href}
+      className={className}
+      download={download || undefined}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      {...track}
+    >
       {children}
     </a>
   );
 }
 
-export function SecondaryLink({
-  href,
-  children,
-  download,
-}: {
-  href: string;
-  children: React.ReactNode;
-  download?: boolean;
-}) {
-  const cls = cn(linkBtn, "border-[1.5px] border-fg text-fg hover:bg-subtle");
-  if (href.startsWith("/") && !download)
-    return (
-      <Link href={href} className={cls}>
-        {children}
-      </Link>
-    );
-  return (
-    <a href={href} className={cls} download={download || undefined}>
-      {children}
-    </a>
-  );
+export function PrimaryLink(props: LinkButtonProps) {
+  return <LinkButton {...props} className={cn(linkBtn, "border-[1.5px] border-accent bg-accent text-on-accent hover:bg-accent-hover")} />;
+}
+
+export function SecondaryLink(props: LinkButtonProps) {
+  return <LinkButton {...props} className={cn(linkBtn, "border-[1.5px] border-fg text-fg hover:bg-subtle")} />;
 }
 
 /** Placeholder cover in a sticky-note colour: an abstract screen until real images arrive. */
@@ -146,26 +135,33 @@ export function CaseCard({
   item,
   locale,
   label,
+  location = "cases",
 }: {
   item: Case;
   locale: Locale;
   label: string;
+  location?: "home" | "cases";
 }) {
+  const p = dict(locale).project;
+  // Home: under the "Selected work" h2. Work page: directly under the page h1.
+  const Title = location === "home" ? "h3" : "h2";
   return (
     <Link
       href={`/${locale}/cases/${item.slug}`}
       className="group flex flex-col gap-4"
+      {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
       <div className="transition-transform duration-200 group-hover:-translate-y-1">
         <CaseCover item={item} label={label} />
       </div>
       <div className="flex flex-col gap-1.5">
-        <p className="text-[13px] text-fg-secondary">
+        <p className="flex flex-wrap items-center gap-2 text-[13px] text-fg-secondary">
+          {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? p.concept : p.real} />}
           {item.client} · {item.year}
         </p>
-        <h3 className="font-display text-[24px] font-bold uppercase leading-[1.05] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
+        <Title className="font-display text-[24px] font-bold uppercase leading-[1.05] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
           {item.title}
-        </h3>
+        </Title>
         <p className="text-fg-secondary">{item.summary}</p>
         <ul className="mt-1 flex flex-wrap gap-1.5">
           {item.tags.map((tag) => (
@@ -179,6 +175,20 @@ export function CaseCard({
         </ul>
       </div>
     </Link>
+  );
+}
+
+/** "Real project" / "Concept" marker on case cards and pages. */
+export function KindBadge({ kind, label }: { kind: "real" | "concept"; label: string }) {
+  return (
+    <span
+      className={cn(
+        "rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.06em]",
+        kind === "concept" ? "border border-dashed border-fg-secondary text-fg-secondary" : "bg-fg text-canvas",
+      )}
+    >
+      {label}
+    </span>
   );
 }
 

@@ -13,7 +13,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           {t.auth.brand}
           <span className="mt-3 block font-sans text-sm font-medium normal-case opacity-70">{t.auth.brandLede}</span>
         </p>
-        <p className="hidden text-[13px] opacity-60 md:block">{t.auth.chain}</p>
+        <p className="hidden text-meta opacity-60 md:block">{t.auth.chain}</p>
       </aside>
       <main className="flex items-center px-6 py-12">
         <div className="mx-auto flex w-full max-w-sm flex-col gap-6">

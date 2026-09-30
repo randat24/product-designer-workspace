@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Tokens: docs/DESIGN-SYSTEM.md §2 — visual language of the "Designer's notebook" prototype.
+/* Tokens: docs/DESIGN-SYSTEM.md «Токены» — visual language of the "Designer's notebook" prototype.
    Light by default, dark via system preference. */
 :root {
   --canvas: #eef0f3;
@@ -12,9 +12,11 @@
   --accent: #151a33;
   --accent-hover: #2a3158;
   --on-accent: #ffffff;
-  --danger: #c8433a;
-  --warning: #9c6a12;
-  --success: #2e8a5b;
+  --danger: #ac3830;
+  --warning: #83590f;
+  --success: #256f49;
+  /* Text on solid danger / warning / success fills (white in light, ink in dark: 4.5:1 in both). */
+  --on-status: #ffffff;
 
   /* Navigation rail: inverted ink */
   --rail: #151a33;
@@ -38,8 +40,10 @@
   --entity-design: #3b5bdb;
   --entity-decision: #495057;
 }
+/* Dark: follows the system unless the visitor picked a theme (data-theme on <html>, set by the
+   site theme switch). The tool has no switch, so it always follows the system. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --canvas: #10132a;
     --surface: #1a1e3a;
     --subtle: #222747;
@@ -52,6 +56,7 @@
     --danger: #ff8a80;
     --warning: #f2c46b;
     --success: #5cc98f;
+    --on-status: #10132a;
     --rail: #eceef7;
     --rail-fg: #10132a;
     --entity-research: #3bc9db;
@@ -62,6 +67,30 @@
     --entity-design: #7c93f0;
     --entity-decision: #adb5bd;
   }
+}
+:root[data-theme="dark"] {
+  --canvas: #10132a;
+  --surface: #1a1e3a;
+  --subtle: #222747;
+  --line: #2e3356;
+  --fg: #eceef7;
+  --fg-secondary: #a0a5c0;
+  --accent: #eceef7;
+  --accent-hover: #ffffff;
+  --on-accent: #10132a;
+  --danger: #ff8a80;
+  --warning: #f2c46b;
+  --success: #5cc98f;
+  --on-status: #10132a;
+  --rail: #eceef7;
+  --rail-fg: #10132a;
+  --entity-research: #3bc9db;
+  --entity-synthesis: #9775fa;
+  --entity-problem: #ff8a4c;
+  --entity-opportunity: #f2c46b;
+  --entity-structure: #4dabf7;
+  --entity-design: #7c93f0;
+  --entity-decision: #adb5bd;
 }
 
 @theme inline {
@@ -77,6 +106,7 @@
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
+  --color-on-status: var(--on-status);
   --color-rail: var(--rail);
   --color-rail-fg: var(--rail-fg);
   --color-on-sticky: var(--on-sticky);
@@ -99,9 +129,32 @@
   --text-sm--line-height: 20px;
   --text-caption: 12px;
   --text-caption--line-height: 16px;
+  /* Tool type scale (docs/QUALITY_REVIEW.md D1): 12 caption · 13 meta · 14 sm · 15 body · 18 heading · 20 title. */
+  --text-meta: 13px;
+  --text-meta--line-height: 1.55;
+  --text-body: 15px;
+  --text-body--line-height: 1.55;
+
+  /* Radius scale (D2): chips · controls (buttons, fields) · panels · hero panels. */
+  --radius-chip: 6px;
+  --radius-control: 10px;
+  --radius-panel: 14px;
+  --radius-hero: 18px;
 }
 
 html { color-scheme: light dark; }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* Theme switch icon: show the moon in light mode, the sun in dark mode (pure CSS, no hydration flash). */
+/* The screen-reader label follows the same rule: it names the theme the button switches to. */
+.theme-icon-sun, .theme-label-light { display: none; }
+:root[data-theme="dark"] .theme-icon-sun, :root[data-theme="dark"] .theme-label-light { display: block; }
+:root[data-theme="dark"] .theme-icon-moon, :root[data-theme="dark"] .theme-label-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon-sun, :root:not([data-theme="light"]) .theme-label-light { display: block; }
+  :root:not([data-theme="light"]) .theme-icon-moon, :root:not([data-theme="light"]) .theme-label-dark { display: none; }
+}
 body {
   background: var(--canvas);
   color: var(--fg);
@@ -152,3 +205,18 @@ body {
   to { clip-path: inset(0 0 0 0); }
 }
 @media (prefers-reduced-motion: reduce) { .signature-draw { animation: none; } }
+
+/* Fitts's law (docs/UX_LAWS.md, UX-21): a 44 px touch target around small links and buttons
+   without changing how they look. The parent keeps its size; only the clickable area grows. */
+.hit {
+  position: relative;
+}
+.hit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}

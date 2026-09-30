@@ -36,15 +36,16 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <Link href={`${ctx.base}/flows`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{f.back}</Link>
+        <Link href={`${ctx.base}/flows`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{f.back}</Link>
         <PageHeader title={flow.name} eyebrow={<EntityChip type="user_flow" code={flow.code} />}
           stat={{ value: missing, caption: f.edgeCases.statuses.missing.toLowerCase() }} />
       </div>
 
       <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
+      {/* On a phone the step list comes first as the readable overview; the editor works below it. */}
       <div className="md:hidden"><StepList nodes={flow.nodes} edges={flow.edges} /></div>
-      <div className="hidden md:block">
+      <div>
         <FlowEditor flowId={flow.id} nodes={flow.nodes} edges={flow.edges} edgeCases={flow.edgeCases} screens={screens}
           viewport={isViewport(flow.viewport) ? flow.viewport : null} canEdit={ctx.canEdit} base={ctx.base} />
       </div>

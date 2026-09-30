@@ -34,12 +34,12 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ w
       )}
 
       {participants.length === 0 ? (
-        <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{pt.empty}</p>
+        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{pt.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
+        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[720px] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-line text-left text-[13px] text-fg-secondary">
+              <tr className="border-b border-line text-left text-meta text-fg-secondary">
                 {Object.values(pt.columns).map((c) => <th key={c} scope="col" className="px-4 py-2.5 font-semibold">{c}</th>)}
               </tr>
             </thead>
@@ -51,7 +51,7 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ w
                   </td>
                   <td className="px-4 py-2.5">
                     <Link href={`${ctx.base}/research/participants/${p.code}`} className="font-semibold">{participantTitle(p)}</Link>
-                    {p.display_name && p.role && <span className="block text-[13px] text-fg-secondary">{p.role}</span>}
+                    {p.display_name && p.role && <span className="block text-meta text-fg-secondary">{p.role}</span>}
                   </td>
                   <td className="px-4 py-2.5 text-fg-secondary">{p.segment_label ?? "—"}</td>
                   <td className="px-4 py-2.5">

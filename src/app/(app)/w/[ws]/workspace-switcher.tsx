@@ -9,7 +9,7 @@ export function WorkspaceSwitcher({ current, workspaces }: { current: string; wo
   }
   return (
     <select aria-label="Пространство" value={current} onChange={(e) => router.push(`/w/${e.target.value}`)}
-      className="h-8 rounded-lg bg-transparent px-1 text-sm font-semibold hover:bg-rail-fg/10 [&>option]:text-fg">
+      className="h-8 rounded-control bg-transparent px-1 text-sm font-semibold hover:bg-rail-fg/10 [&>option]:text-fg">
       {workspaces.map((w) => <option key={w.slug} value={w.slug}>{w.name}</option>)}
     </select>
   );

@@ -33,7 +33,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "screen", id: s.id, code: s.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/screens`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{sc.back}</Link>
+      <Link href={`${ctx.base}/screens`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{sc.back}</Link>
       <PageHeader title={s.name} eyebrow={<EntityChip type="screen" code={s.code} />}
         stat={{ value: missing, caption: sc.states.statuses.missing.toLowerCase() }} />
       <div className="flex flex-col gap-10">
@@ -57,10 +57,10 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
             <ul className="flex flex-col gap-1.5">
               {s.flows.map((f) => (
                 <li key={f.code}>
-                  <Link href={`${ctx.base}/flows/${f.code}`} className="flex flex-wrap items-baseline gap-2 rounded-[10px] border border-line bg-surface px-3 py-2 hover:border-fg">
+                  <Link href={`${ctx.base}/flows/${f.code}`} className="flex flex-wrap items-baseline gap-2 rounded-control border border-line bg-surface px-3 py-2 hover:border-fg">
                     <EntityChip type="user_flow" code={f.code} />
                     <span className="font-semibold">{f.name}</span>
-                    <span className="text-[13px] text-fg-secondary">— {f.steps.join(", ")}</span>
+                    <span className="text-meta text-fg-secondary">— {f.steps.join(", ")}</span>
                   </Link>
                 </li>
               ))}
@@ -74,7 +74,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
             <ul className="flex flex-col gap-1.5">
               {decisions.map((d) => (
                 <li key={d.id}>
-                  <Link href={`${ctx.base}/decisions/${d.code}`} className="flex flex-wrap items-baseline gap-2 rounded-[10px] border border-line bg-surface px-3 py-2 hover:border-fg">
+                  <Link href={`${ctx.base}/decisions/${d.code}`} className="flex flex-wrap items-baseline gap-2 rounded-control border border-line bg-surface px-3 py-2 hover:border-fg">
                     <EntityChip type="design_decision" code={d.code} />
                     <span className="font-semibold">{d.title}</span>
                     <span className="text-caption font-semibold text-fg-secondary">{DECISION_STATUSES.find((x) => x.value === d.status)?.label}</span>

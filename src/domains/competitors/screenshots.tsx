@@ -67,13 +67,13 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
             <input ref={input} type="file" accept={ATTACHMENT_MIME.join(",")} multiple hidden
               onChange={(e) => { upload([...(e.target.files ?? [])]); e.target.value = ""; }} />
             <button type="button" disabled={busy} onClick={() => input.current?.click()}
-              className="rounded-[9px] border-[1.5px] border-fg px-3.5 py-1.5 text-sm font-semibold hover:bg-subtle disabled:opacity-50">
+              className="rounded-control border-[1.5px] border-fg px-3.5 py-1.5 text-sm font-semibold hover:bg-subtle disabled:opacity-50">
               {busy ? t.competitors.uploading : t.competitors.upload}
             </button>
           </>
         )}
       </div>
-      <div className={cn("rounded-[14px] border border-line bg-surface p-5", dragging && "border-[1.5px] border-dashed border-fg")}>
+      <div className={cn("rounded-panel border border-line bg-surface p-5", dragging && "border-[1.5px] border-dashed border-fg")}>
         {items.length === 0 ? (
           <p className="text-center text-fg-secondary">
             {emptyText} {canEdit && t.competitors.uploadHint}
@@ -81,7 +81,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
         ) : (
           <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]">
             {items.map((s) => (
-              <li key={s.id} className="group relative overflow-hidden rounded-[10px] border border-line bg-subtle">
+              <li key={s.id} className="group relative overflow-hidden rounded-control border border-line bg-subtle">
                 {s.url && (
                   <a href={s.url} target="_blank" rel="noreferrer">
                     {/* eslint-disable-next-line @next/next/no-img-element -- signed Storage URL */}
@@ -90,7 +90,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
                 )}
                 {canEdit && (
                   <button type="button" onClick={() => remove(s.id)} aria-label={`${t.competitors.removeScreenshot}: ${s.fileName}`}
-                    className="absolute top-1.5 right-1.5 grid size-8 place-items-center rounded-[7px] bg-surface/90 text-fg-secondary opacity-0 shadow group-hover:opacity-100 focus:opacity-100 hover:text-danger">
+                    className="absolute top-1.5 right-1.5 grid size-8 place-items-center rounded-control bg-surface/90 text-fg-secondary [@media(hover:hover)]:opacity-0 shadow group-hover:opacity-100 focus:opacity-100 hover:text-danger">
                     <span aria-hidden>×</span>
                   </button>
                 )}
@@ -99,7 +99,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
           </ul>
         )}
         {canEdit && items.length > 0 && <p className="mt-3 text-caption text-fg-secondary">{t.competitors.uploadHint}</p>}
-        {errors.map((e) => <p key={e} role="alert" className="mt-2 text-[13px] text-danger">{e}</p>)}
+        {errors.map((e) => <p key={e} role="alert" className="mt-2 text-meta text-danger">{e}</p>)}
       </div>
     </section>
   );

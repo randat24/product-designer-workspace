@@ -19,16 +19,16 @@ export async function EvidenceList({ type, id, base, empty }: { type: EntityType
   const items = unique.map((r) => resolved.get(`${r.type}:${r.id}`)).filter((x) => !!x);
 
   if (items.length === 0) {
-    return <p className="rounded-[12px] bg-warning/10 px-4 py-3 font-semibold text-warning">⚠ {empty}</p>;
+    return <p className="rounded-panel bg-warning/10 px-4 py-3 font-semibold text-warning">⚠ {empty}</p>;
   }
   return (
     <ul className="flex flex-col gap-2">
       {items.map((e) => (
         <li key={`${e.type}:${e.id}`}>
-          <Link href={e.href} className="flex items-start gap-3 rounded-[12px] border border-line bg-surface p-3 hover:border-fg"
+          <Link href={e.href} className="flex items-start gap-3 rounded-panel border border-line bg-surface p-3 hover:border-fg"
             style={{ borderLeft: `5px solid ${participantColor(e.participant)}` }}>
             <EntityChip type={e.type} code={e.code} />
-            <span className="min-w-0 text-[14px] leading-snug">
+            <span className="min-w-0 text-sm leading-snug">
               {e.participant && <span className="mr-1.5 font-bold">{e.participant}</span>}
               <span className={e.type === "quote" ? "italic" : undefined}>{e.type === "quote" ? `«${e.title}»` : e.title}</span>
             </span>

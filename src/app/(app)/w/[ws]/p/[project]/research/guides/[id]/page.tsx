@@ -21,8 +21,8 @@ export default async function GuidePage({ params }: { params: Promise<{ ws: stri
   return (
     <div className="max-w-4xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href={`${ctx.base}/research`} className="text-[13px] font-semibold text-fg-secondary hover:text-fg">← {t.research.guide.back}</Link>
-        <Link href={`${ctx.base}/research/participants`} className="text-[13px] font-semibold underline underline-offset-2">{t.research.guide.startInterview}</Link>
+        <Link href={`${ctx.base}/research`} className="text-meta font-semibold text-fg-secondary hover:text-fg">← {t.research.guide.back}</Link>
+        <Link href={`${ctx.base}/research/participants`} className="text-meta font-semibold underline underline-offset-2">{t.research.guide.startInterview}</Link>
       </div>
       <PageHeader title={guide.title} lede={t.research.guide.lede} />
       <GuideBuilder key={guide.id} projectId={ctx.project.id} guideId={guide.id} canEdit={ctx.canEdit}

@@ -12,8 +12,8 @@ import type { EdgeCase } from "./queries";
 const ec = t.flows.edgeCases;
 
 const STATUS_STYLE: Record<EdgeCaseStatus, string> = {
-  missing: "border-warning bg-warning text-white",
-  covered: "border-success bg-success text-white",
+  missing: "border-warning bg-warning text-on-status",
+  covered: "border-success bg-success text-on-status",
   not_applicable: "border-fg-secondary bg-fg-secondary text-canvas",
 };
 
@@ -46,19 +46,19 @@ export function EdgeCasesPanel({ flowId, initial, nodes, canEdit, onFocusNode }:
     <section aria-labelledby="edge-cases-h" className="flex flex-col gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 id="edge-cases-h" className="text-heading font-semibold">{ec.title}</h2>
-        <span className={cn("text-[13px] font-semibold", missing ? "text-warning" : "text-success")}>
+        <span className={cn("text-meta font-semibold", missing ? "text-warning" : "text-success")}>
           {missing ? ec.summary(missing, cases.length) : t.flows.allCovered}
         </span>
       </div>
-      <p className="text-[13px] text-fg-secondary">{ec.lede}</p>
-      {error && <p role="alert" className="text-[13px] font-semibold text-danger">{error}</p>}
+      <p className="text-meta text-fg-secondary">{ec.lede}</p>
+      {error && <p role="alert" className="text-meta font-semibold text-danger">{error}</p>}
 
       <ul className="flex flex-col gap-2">
         {cases.map((c) => {
           const title = c.kind === "custom" ? (c.description ?? ec.kinds.custom) : ec.kinds[c.kind as EdgeCaseKind];
           const node = nodes.find((n) => n.id === c.nodeId);
           return (
-            <li key={c.id} className="flex flex-col gap-2.5 rounded-[12px] border border-line bg-surface p-3.5">
+            <li key={c.id} className="flex flex-col gap-2.5 rounded-panel border border-line bg-surface p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-bold">{title}</span>
                 <div role="group" aria-label={`${title}: ${t.flows.fields.status}`} className="flex flex-wrap gap-1">
@@ -81,13 +81,13 @@ export function EdgeCasesPanel({ flowId, initial, nodes, canEdit, onFocusNode }:
                   <label htmlFor={`node-${c.id}`} className="sr-only">{`${ec.node}: ${title}`}</label>
                   <select id={`node-${c.id}`} value={c.nodeId ?? ""} disabled={!canEdit}
                     onChange={(e) => patch(c.id, { nodeId: e.target.value || null })}
-                    className="h-9 min-w-0 flex-1 rounded-[8px] border border-line bg-surface px-2 text-[13px] disabled:opacity-70">
+                    className="h-9 min-w-0 flex-1 rounded-control border border-line bg-surface px-2 text-meta disabled:opacity-70">
                     <option value="">{ec.nodeNone}</option>
                     {nodes.map((n) => <option key={n.id} value={n.id}>{n.label}</option>)}
                   </select>
                   {node && (
                     <button type="button" onClick={() => onFocusNode(node.id)} aria-label={`${ec.node}: ${node.label}`}
-                      className="grid size-9 shrink-0 place-items-center rounded-[8px] border border-line text-fg-secondary hover:border-fg hover:text-fg">
+                      className="grid size-9 shrink-0 place-items-center rounded-control border border-line text-fg-secondary hover:border-fg hover:text-fg">
                       <span aria-hidden>◎</span>
                     </button>
                   )}
@@ -97,7 +97,7 @@ export function EdgeCasesPanel({ flowId, initial, nodes, canEdit, onFocusNode }:
                         const res = await deleteEdgeCase(c.id);
                         if (res.ok) setCases((cs) => cs.filter((x) => x.id !== c.id)); else setError(res.error);
                       }}
-                      className="grid size-9 shrink-0 place-items-center rounded-[8px] text-fg-secondary hover:bg-subtle hover:text-danger">
+                      className="grid size-9 shrink-0 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger">
                       <span aria-hidden>×</span>
                     </button>
                   )}
@@ -136,7 +136,7 @@ function NoteInput({ id, label, initial, readOnly, onSave }: {
     <>
       <label htmlFor={`note-${id}`} className="sr-only">{label}</label>
       <Input id={`note-${id}`} value={value} readOnly={readOnly} maxLength={500} placeholder={ec.note}
-        onChange={(e) => setValue(e.target.value)} onBlur={() => value !== initial && onSave(value)} className="h-9 text-[13px]" />
+        onChange={(e) => setValue(e.target.value)} onBlur={() => value !== initial && onSave(value)} className="h-9 text-meta" />
     </>
   );
 }

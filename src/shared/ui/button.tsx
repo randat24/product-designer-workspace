@@ -26,7 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLBut
         disabled={disabled || busy}
         aria-busy={busy || undefined}
         className={cn(
-          "inline-flex h-9 items-center justify-center gap-1.5 rounded-[9px] px-3.5 text-sm font-semibold transition-colors duration-[120ms] disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex h-9 items-center justify-center gap-1.5 rounded-control px-3.5 text-sm font-semibold transition-colors duration-[120ms] disabled:pointer-events-none disabled:opacity-50",
           busy && "cursor-progress",
           VARIANTS[variant],
           className,

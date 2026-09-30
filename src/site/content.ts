@@ -35,6 +35,25 @@ export type Case = {
   sections: CaseSection[];
   /** Full case study, as published from the tool; without it the page shows `sections`. */
   story?: CaseStory;
+  /** Real (shipped / client) work or a design concept. */
+  kind?: "real" | "concept";
+  /** Live product, if it is public; without it visitors browse the pages below. */
+  liveUrl?: string;
+  /** Pages of the project to browse when there is no live site (or it is a concept). */
+  gallery?: GalleryItem[];
+  /** Placeholder content: shown on the site but kept out of search results and the sitemap. */
+  sample?: boolean;
+  /** Last change of the published snapshot (ISO), from the database. */
+  updatedAt?: string;
+};
+
+export type GalleryItem = {
+  src: string;
+  alt: string;
+  caption?: string;
+  device?: "desktop" | "mobile";
+  width: number;
+  height: number;
 };
 
 export type Award = {
@@ -97,6 +116,43 @@ type Dictionary = {
   story: StoryLabels;
   contact: { title: string; lead: string; write: string };
   footer: { rights: string; login: string; top: string; certificate: string };
+  seo: {
+    home: { title: string; description: string };
+    cases: { title: string; description: string };
+    about: { title: string; description: string };
+    notFound: { title: string; description: string };
+    ogRole: string;
+    ogTopics: string;
+  };
+  ui: {
+    skip: string;
+    mainNav: string;
+    footerNav: string;
+    home: string;
+    breadcrumbs: string;
+    themeLight: string;
+    themeDark: string;
+    notFoundTitle: string;
+    notFoundBody: string;
+    notFoundHome: string;
+    notFoundWork: string;
+    seeWork: string;
+  };
+  project: {
+    real: string;
+    concept: string;
+    sample: string;
+    live: string;
+    noLive: string;
+    conceptNote: string;
+    pages: string;
+    pagesLead: string;
+    /** "{n}" and "{total}" are filled in by the gallery. */
+    open: string;
+    close: string;
+    prev: string;
+    next: string;
+  };
   cases_list: Case[];
 };
 
@@ -293,6 +349,54 @@ const uk: Dictionary = {
     write: "Написати на пошту",
   },
   footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат" },
+  seo: {
+    home: {
+      title: "Геннадій Федоров — продуктовий дизайнер, UI/UX",
+      description:
+        "Портфоліо продуктового дизайнера Геннадія Федорова: UX-дослідження, дизайн інтерфейсів, дизайн-системи, вебдизайн і мобільні застосунки. 7 років у вебі та продуктових командах.",
+    },
+    cases: {
+      title: "Кейси з продуктового та UX-дизайну",
+      description:
+        "Кейси продуктового дизайну: від дослідження користувачів і аналізу конкурентів до флоу, екранів і рішень, переданих у розробку.",
+    },
+    about: {
+      title: "Про мене — досвід, навички, служба",
+      description:
+        "Геннадій Федоров — продуктовий і UI/UX дизайнер з Миколаєва: досвід у продуктових командах, дизайн-системи, UX-дослідження. З 22.02.2022 — у Збройних Силах України.",
+    },
+    notFound: { title: "Сторінку не знайдено", description: "Такої сторінки немає або її перенесли." },
+    ogRole: "Продуктовий дизайнер",
+    ogTopics: "UI/UX · дизайн-системи · UX-дослідження",
+  },
+  ui: {
+    skip: "Перейти до вмісту",
+    mainNav: "Основна навігація",
+    footerNav: "Навігація в підвалі",
+    home: "Головна",
+    breadcrumbs: "Навігаційний ланцюжок",
+    themeLight: "Увімкнути світлу тему",
+    themeDark: "Увімкнути темну тему",
+    notFoundTitle: "Сторінку не знайдено",
+    notFoundBody: "Такої сторінки немає або її перенесли. Почніть з головної або перегляньте роботи.",
+    notFoundHome: "На головну",
+    notFoundWork: "Дивитися роботи",
+    seeWork: "Дивитися роботи",
+  },
+  project: {
+    real: "Реальний проєкт",
+    concept: "Концепт",
+    sample: "Приклад",
+    live: "Відкрити сайт проєкту",
+    noLive: "Живого сайту немає — сторінки проєкту можна переглянути нижче.",
+    conceptNote: "Це дизайн-концепт: продукт не запускався, сторінки проєкту можна переглянути нижче.",
+    pages: "Сторінки проєкту",
+    pagesLead: "Натисніть на сторінку, щоб переглянути її на весь екран. Гортати — стрілками.",
+    open: "Сторінка {n} з {total}",
+    close: "Закрити",
+    prev: "Попередня сторінка",
+    next: "Наступна сторінка",
+  },
   cases_list: [],
 };
 
@@ -488,6 +592,54 @@ const en: Dictionary = {
     write: "Email me",
   },
   footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate" },
+  seo: {
+    home: {
+      title: "Hennadii Fedorov — Product Designer, UI/UX",
+      description:
+        "Portfolio of product designer Hennadii Fedorov: UX research, interface design, design systems, web and mobile app design. 7 years in web and product teams.",
+    },
+    cases: {
+      title: "Product and UX design case studies",
+      description:
+        "Product design case studies: from user research and competitor analysis to flows, screens and decisions handed off to development.",
+    },
+    about: {
+      title: "About — experience, skills, service",
+      description:
+        "Hennadii Fedorov, product and UI/UX designer from Mykolaiv, Ukraine: experience in product teams, design systems, UX research. Serving in the Armed Forces of Ukraine since 22 February 2022.",
+    },
+    notFound: { title: "Page not found", description: "This page does not exist or has moved." },
+    ogRole: "Product Designer",
+    ogTopics: "UI/UX · design systems · UX research",
+  },
+  ui: {
+    skip: "Skip to content",
+    mainNav: "Main navigation",
+    footerNav: "Footer navigation",
+    home: "Home",
+    breadcrumbs: "Breadcrumbs",
+    themeLight: "Switch to light theme",
+    themeDark: "Switch to dark theme",
+    notFoundTitle: "Page not found",
+    notFoundBody: "This page does not exist or has moved. Start from the home page or browse the work.",
+    notFoundHome: "Home page",
+    notFoundWork: "See the work",
+    seeWork: "See the work",
+  },
+  project: {
+    real: "Real project",
+    concept: "Concept",
+    sample: "Sample",
+    live: "Open the live site",
+    noLive: "There is no live site — browse the project pages below.",
+    conceptNote: "This is a design concept: the product was not launched, browse the project pages below.",
+    pages: "Project pages",
+    pagesLead: "Click a page to view it full screen. Use the arrow keys to flip through.",
+    open: "Page {n} of {total}",
+    close: "Close",
+    prev: "Previous page",
+    next: "Next page",
+  },
   cases_list: [],
 };
 
@@ -497,6 +649,8 @@ const en: Dictionary = {
 uk.cases_list = [
   {
     slug: "subscription-platform",
+    kind: "real",
+    sample: true,
     sticker: "var(--s6)",
     year: "2020 — 2022",
     title: "Медіаплатформа з підпискою",
@@ -531,6 +685,8 @@ uk.cases_list = [
   },
   {
     slug: "wgroup-design-system",
+    kind: "real",
+    sample: true,
     sticker: "var(--s4)",
     year: "2020 — 2022",
     title: "Дизайн-система для студії",
@@ -561,7 +717,15 @@ uk.cases_list = [
   },
   {
     slug: "restaurant-booking",
+    kind: "concept",
+    sample: true,
     story: restaurantUk,
+    gallery: [
+      { src: "/cases/restaurant-booking/01-occasion.svg", alt: "Екран вибору приводу: шість сценаріїв плиткою", caption: "Вибір приводу", device: "mobile", width: 390, height: 844 },
+      { src: "/cases/restaurant-booking/02-picks.svg", alt: "Підбірка ресторанів з вільними слотами в картках", caption: "Підбірка з вільними слотами", device: "mobile", width: 390, height: 844 },
+      { src: "/cases/restaurant-booking/03-booking.svg", alt: "Екран броні з деталями й кнопкою «Забронювати»", caption: "Бронь", device: "mobile", width: 390, height: 844 },
+      { src: "/cases/restaurant-booking/04-confirmed.svg", alt: "Підтвердження броні з додаванням у календар", caption: "Підтвердження", device: "mobile", width: 390, height: 844 },
+    ],
     sticker: "var(--s2)",
     year: "2026",
     title: "Застосунок бронювання ресторанів",
@@ -592,6 +756,8 @@ uk.cases_list = [
   },
   {
     slug: "designer-workspace",
+    kind: "real",
+    sample: true,
     sticker: "var(--s3)",
     year: "2026",
     title: "Робочий простір продуктового дизайнера",
@@ -683,6 +849,12 @@ en.cases_list = [
   {
     ...uk.cases_list[2]!,
     story: restaurantEn,
+    gallery: [
+      { src: "/cases/restaurant-booking/01-occasion-en.svg", alt: "Occasion screen: six scenarios as tiles", caption: "Pick an occasion", device: "mobile", width: 390, height: 844 },
+      { src: "/cases/restaurant-booking/02-picks-en.svg", alt: "Restaurant picks with free slots in the cards", caption: "Picks with free slots", device: "mobile", width: 390, height: 844 },
+      { src: "/cases/restaurant-booking/03-booking-en.svg", alt: "Booking screen with details and a Book button", caption: "Booking", device: "mobile", width: 390, height: 844 },
+      { src: "/cases/restaurant-booking/04-confirmed-en.svg", alt: "Booking confirmation with Add to calendar", caption: "Confirmation", device: "mobile", width: 390, height: 844 },
+    ],
     title: "Restaurant booking app",
     client: "Concept",
     summary:

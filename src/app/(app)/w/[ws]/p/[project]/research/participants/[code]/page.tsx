@@ -28,7 +28,7 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/research/participants`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">← {pt.back}</Link>
+      <Link href={`${ctx.base}/research/participants`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">← {pt.back}</Link>
       <PageHeader title={participantTitle(p)} eyebrow={<span className="flex items-center gap-2"><EntityChip type="participant" code={p.code} />{p.segment_label}</span>} />
 
       <section aria-labelledby="p-interviews-h" className="mb-8 flex flex-col gap-3">
@@ -36,14 +36,14 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
         {p.interviews.length === 0 ? <p className="text-fg-secondary">{pt.interviewsEmpty}</p> : (
           <ul className="flex flex-col gap-2">
             {p.interviews.map((i) => (
-              <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 rounded-[12px] border border-line bg-surface px-4 py-2.5">
+              <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 rounded-panel border border-line bg-surface px-4 py-2.5">
                 <Link href={`${ctx.base}/research/interviews/${i.code}`} className="font-semibold hover:underline">
                   {i.code}
-                  <span className={cn("ml-3 text-[13px]", isConducted(i.status) ? "text-success" : "text-fg-secondary")}>{interviewStatusLabel(i.status)}</span>
-                  {i.conducted_at && <span className="ml-3 text-[13px] font-normal text-fg-secondary">{dateFmt.format(new Date(i.conducted_at))}</span>}
+                  <span className={cn("ml-3 text-meta", isConducted(i.status) ? "text-success" : "text-fg-secondary")}>{interviewStatusLabel(i.status)}</span>
+                  {i.conducted_at && <span className="ml-3 text-meta font-normal text-fg-secondary">{dateFmt.format(new Date(i.conducted_at))}</span>}
                 </Link>
                 {ctx.canEdit && !isConducted(i.status) && (
-                  <Link href={`${ctx.base}/research/interviews/${i.code}/live`} className="rounded-[9px] bg-fg px-3 py-1 text-sm font-semibold text-canvas">{pt.startLive}</Link>
+                  <Link href={`${ctx.base}/research/interviews/${i.code}/live`} className="rounded-control bg-fg px-3 py-1 text-sm font-semibold text-canvas">{pt.startLive}</Link>
                 )}
               </li>
             ))}
@@ -52,10 +52,10 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
         {ctx.canEdit && (
           <form action={createInterview} className="flex flex-wrap items-end gap-2">
             <input type="hidden" name="participantId" value={p.id} />
-            <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-fg-secondary">
+            <label className="flex flex-col gap-1.5 text-meta font-semibold text-fg-secondary">
               {pt.guideLabel}
               <select name="guideId" defaultValue={guides.at(-1)?.id ?? ""}
-                className="h-9 min-w-56 rounded-lg border border-transparent bg-surface px-2.5 text-[14.5px] font-medium text-fg hover:border-line focus:border-fg focus:outline-none">
+                className="h-9 min-w-56 rounded-control border border-transparent bg-surface px-2.5 text-body font-medium text-fg hover:border-line focus:border-fg focus:outline-none">
                 {guides.map((g) => <option key={g.id} value={g.id}>{g.title}</option>)}
                 <option value="">{pt.noGuide}</option>
               </select>

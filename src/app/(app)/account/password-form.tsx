@@ -20,7 +20,7 @@ export function PasswordForm() {
           aria-describedby={state?.error ? "confirm-error" : undefined} />
       </Field>
       <Button type="submit" disabled={pending} className="self-start">{t.auth.save}</Button>
-      {state?.ok && <p role="status" className="text-[13px] font-semibold text-success">{t.auth.passwordSaved}</p>}
+      {state?.ok && <p role="status" className="text-meta font-semibold text-success">{t.auth.passwordSaved}</p>}
     </form>
   );
 }

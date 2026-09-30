@@ -29,7 +29,7 @@ export default async function PainPointPage({ params }: { params: Promise<Params
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "pain_point", id: p.id, code: p.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/pain-points`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
+      <Link href={`${ctx.base}/pain-points`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
       <PageHeader title={p.title} eyebrow={<EntityChip type="pain_point" code={p.code} />}
         stat={{ value: freq, caption: s.frequencyLong() }} />
       <div className="flex flex-col gap-8">

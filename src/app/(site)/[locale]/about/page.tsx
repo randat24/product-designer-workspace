@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { CONTACTS, dict, isLocale } from "@/site/content";
+import { trackAttrs } from "@/site/analytics/track";
+import { JsonLd } from "@/site/json-ld";
+import { breadcrumbLd, graph, localeUrl, pageMetadata, personId, personLd } from "@/site/seo";
 import { AwardCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 import { ExternalIcon } from "@/site/social-icons";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  return isLocale(locale)
-    ? { title: dict(locale).about.title, alternates: { languages: { uk: "/uk/about", en: "/en/about" } } }
-    : {};
+  if (!isLocale(locale)) return {};
+  const d = dict(locale);
+  return pageMetadata({ locale, path: "/about", title: d.seo.about.title, description: d.seo.about.description, type: "profile" });
 }
 
 export default async function About({ params }: { params: Promise<{ locale: string }> }) {
@@ -19,22 +23,49 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
   return (
     <div className="pb-20 pt-12">
+      <JsonLd
+        data={graph(
+          {
+            "@type": "ProfilePage",
+            "@id": `${localeUrl(locale, "/about")}#page`,
+            url: localeUrl(locale, "/about"),
+            name: d.seo.about.title,
+            inLanguage: locale,
+            mainEntity: { "@id": personId() },
+          },
+          personLd(locale),
+          breadcrumbLd([
+            { name: d.ui.home, url: localeUrl(locale, "") },
+            { name: d.about.title, url: localeUrl(locale, "/about") },
+          ]),
+        )}
+      />
       {/* Intro */}
       <section className={`${container} grid gap-8 md:grid-cols-[1fr_260px]`}>
         <div className="flex flex-col gap-5">
           <h1 className="page-title">{d.about.title}</h1>
           <p className="max-w-[680px] text-[clamp(17px,2vw,20px)] leading-[1.55]">{d.about.summary}</p>
           <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={CONTACTS.cv} download>{d.about.download}</PrimaryLink>
-            <SecondaryLink href={`mailto:${CONTACTS.email}`}>{d.home.cta}</SecondaryLink>
+            <PrimaryLink href={CONTACTS.cv} download track={trackAttrs("resume_download", { location: "about" })}>
+              {d.about.download}
+            </PrimaryLink>
+            <SecondaryLink href={`mailto:${CONTACTS.email}`} track={trackAttrs("contact_email_click", { location: "about" })}>
+              {d.home.cta}
+            </SecondaryLink>
           </div>
+          <Link
+            href={`/${locale}/cases`}
+            className="hit w-fit text-[15px] font-semibold underline underline-offset-4"
+            {...trackAttrs("portfolio_cta_click", { cta: "cases", location: "about" })}
+          >
+            {d.ui.seeWork} →
+          </Link>
         </div>
         {/* Portrait placeholder */}
         <div
           className="flex aspect-[4/5] items-end rounded-[14px] p-4 font-display text-[22px] font-bold uppercase leading-none text-on-sticky"
           style={{ background: "var(--s5)" }}
-          role="img"
-          aria-label={d.name}
+          aria-hidden="true"
         >
           {d.name}
         </div>
@@ -122,10 +153,11 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                   {e.certificate ? (
                     <a
                       href={e.certificate}
+                      {...trackAttrs("certificate_open", { provider: e.place.split(" ")[0] })}
                       target="_blank"
                       rel="noreferrer"
                       title={d.footer.certificate}
-                      className="inline-flex items-center gap-1 font-semibold underline decoration-line underline-offset-4 hover:decoration-fg"
+                      className="hit inline-flex items-center gap-1 font-semibold underline decoration-line underline-offset-4 hover:decoration-fg"
                     >
                       {e.title}
                       <ExternalIcon className="h-4 w-4" />

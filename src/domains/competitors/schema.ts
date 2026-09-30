@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { withScheme } from "@/shared/lib/url";
 
 const text = (max = 5000) => z.string().trim().max(max).nullish().transform((v) => v || null);
 
@@ -15,7 +16,7 @@ const url = z
   .trim()
   .max(2000)
   .nullish()
-  .transform((v) => (v ? (/^[a-z][a-z0-9+.-]*:/i.test(v) ? v : `https://${v}`) : null));
+  .transform((v) => (v ? withScheme(v) : null));
 
 export const competitorSchema = z.object({
   name: z.string().trim().min(1, { error: "Введите название" }).max(120),
@@ -48,7 +49,11 @@ export const featureSchema = z.object({
   group_name: z.string().trim().max(80).nullish().transform((v) => v || null),
 });
 
-/** Ready-made UX review rows: Nielsen's 10 heuristics and common UX laws. */
+/**
+ * Ready-made UX review rows: Nielsen's 10 heuristics and the laws of UX (docs/UX_LAWS.md), split
+ * into sets of up to 10 so no single set overwhelms the matrix (choice overload, UX-05).
+ * A row already in the matrix (same text) is skipped, so sets can overlap.
+ */
 export const UX_TEMPLATES = {
   nielsen: {
     group: "Эвристики Нильсена",
@@ -66,6 +71,24 @@ export const UX_TEMPLATES = {
       "Закон Миллера — порции по 5–9 элементов", "Закон Теслера — сложность берёт система",
       "Порог Доэрти — ответ быстрее 400 мс", "Эффект эстетики-удобства", "Правило пика и конца",
       "Эффект фон Ресторфф — главное выделено", "Закон близости — связанное рядом",
+    ],
+  },
+  gestalt: {
+    group: "Гештальт",
+    rows: [
+      "Закон близости — связанное рядом", "Закон общей области — группа в общей рамке",
+      "Закон сходства — однотипное выглядит одинаково", "Закон единой связанности — связи показаны линией",
+      "Закон Прегнанца — простые формы и иконки", "Эффект эстетики-удобства",
+    ],
+  },
+  memory: {
+    group: "Память и внимание",
+    rows: [
+      "Когнитивная нагрузка — один главный акцент", "Разбиение на части — блоки с заголовками",
+      "Рабочая память — не нужно помнить с другого экрана", "Избирательное внимание — важное у места действия",
+      "Эффект последовательной позиции — главное в начале и конце", "Перегрузка выбором — есть вариант по умолчанию",
+      "Эффект Зейгарник — незавершённое видно", "Эффект градиента цели — виден прогресс",
+      "Поток — основной цикл без прерываний", "Закон Постела — терпимость к вводу",
     ],
   },
 } as const;

@@ -4,9 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import { updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/ru";
 import {
-  ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME, competitorSchema, featureSchema, FEATURE_VALUES, UX_TEMPLATES,
+  ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME, competitorSchema, featureSchema, FEATURE_VALUES, isAssessed, UX_TEMPLATES,
   type CompetitorInput, type FeatureValue, type UxTemplate,
 } from "./schema";
 
@@ -51,10 +52,11 @@ export async function saveCompetitor(id: string, input: CompetitorInput): Promis
     const issue = parsed.error.issues[0];
     return { ok: false, error: issue?.message ?? t.autosave.failed, field: issue?.path[0]?.toString() };
   }
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("competitors").update(parsed.data).eq("id", id).select("id").maybeSingle();
-  if (error) return { ok: false, error: t.autosave.failed };
-  if (!data) return { ok: false, error: t.autosave.readOnly };
+  // The shell shows the name (⌘K) and whether the competitor counts as assessed (stage progress).
+  const res = await updateTracked("competitors", { column: "id", value: id }, parsed.data, "name, strengths, weaknesses, is_own_product",
+    (r) => [r.name, isAssessed(r as Parameters<typeof isAssessed>[0])]);
+  if (res === "error") return { ok: false, error: t.autosave.failed };
+  if (res === "read-only") return { ok: false, error: t.autosave.readOnly };
   return { ok: true };
 }
 

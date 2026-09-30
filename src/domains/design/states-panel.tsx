@@ -11,8 +11,8 @@ import type { ScreenState } from "./queries";
 const st = t.screens.states;
 const STANDARD = ["default", "loading", "empty", "error", "success"];
 const STATUS_STYLE: Record<StateStatus, string> = {
-  missing: "border-warning bg-warning text-white",
-  designed: "border-success bg-success text-white",
+  missing: "border-warning bg-warning text-on-status",
+  designed: "border-success bg-success text-on-status",
   n_a: "border-fg-secondary bg-fg-secondary text-canvas",
 };
 
@@ -38,15 +38,15 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
     <section aria-labelledby="states-h" className="flex flex-col gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 id="states-h" className="text-heading font-semibold">{st.title}</h2>
-        <span className={cn("text-[13px] font-semibold", missingKey ? "text-warning" : "text-success")}>{st.summary(missingKey)}</span>
+        <span className={cn("text-meta font-semibold", missingKey ? "text-warning" : "text-success")}>{st.summary(missingKey)}</span>
       </div>
-      <p className="text-[13px] text-fg-secondary">{st.lede}</p>
-      {error && <p role="alert" className="text-[13px] font-semibold text-danger">{error}</p>}
+      <p className="text-meta text-fg-secondary">{st.lede}</p>
+      {error && <p role="alert" className="text-meta font-semibold text-danger">{error}</p>}
       <ul className="flex flex-col gap-2">
         {states.map((s) => {
           const label = st.kinds[s.kind as StateKind] ?? s.kind;
           return (
-            <li key={s.id} className="flex flex-col gap-2.5 rounded-[12px] border border-line bg-surface p-3.5">
+            <li key={s.id} className="flex flex-col gap-2.5 rounded-panel border border-line bg-surface p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-bold">
                   {label}
@@ -69,7 +69,7 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                         const res = await deleteState(s.id);
                         if (res.ok) setStates((ss) => ss.filter((x) => x.id !== s.id)); else setError(res.error);
                       }}
-                      className="grid size-8 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
+                      className="grid size-8 place-items-center rounded-control text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
                   )}
                 </div>
               </div>
@@ -85,7 +85,7 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
       </ul>
       {canEdit && addable.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[13px] font-semibold text-fg-secondary">{st.add}:</span>
+          <span className="text-meta font-semibold text-fg-secondary">{st.add}:</span>
           {addable.map((k) => (
             <button key={k.value} type="button"
               onClick={async () => {
@@ -109,6 +109,6 @@ function BlurInput({ label, placeholder, initial, readOnly, max, type, onSave }:
   const [value, setValue] = useState(initial);
   return (
     <Input aria-label={label} placeholder={placeholder} value={value} readOnly={readOnly} maxLength={max} type={type}
-      className="h-9 text-[13px]" onChange={(e) => setValue(e.target.value)} onBlur={() => value !== initial && onSave(value)} />
+      className="h-9 text-meta" onChange={(e) => setValue(e.target.value)} onBlur={() => value !== initial && onSave(value)} />
   );
 }

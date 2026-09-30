@@ -38,11 +38,11 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "design_decision", id: d.id, code: d.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/decisions`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{dc.back}</Link>
+      <Link href={`${ctx.base}/decisions`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{dc.back}</Link>
       <PageHeader title={d.title} eyebrow={<EntityChip type="design_decision" code={d.code} />}
         stat={{ value: evidenceCount, caption: dc.evidence.toLowerCase() }} />
       {replacement && (
-        <p role="status" className="mb-6 rounded-[12px] border-[1.5px] border-dashed border-line px-4 py-2.5 text-[13px]">
+        <p role="status" className="mb-6 rounded-panel border-[1.5px] border-dashed border-line px-4 py-2.5 text-meta">
           <Link href={`${ctx.base}/decisions/${replacement.code}`} className="font-semibold underline underline-offset-2">
             {dc.supersededBanner(replacement.code)}
           </Link>
@@ -55,7 +55,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
             <ul className="flex flex-wrap gap-2">
               {[...targets.values()].map((e) => (
                 <li key={e.id}>
-                  <Link href={e.href} className="flex items-center gap-2 rounded-[10px] border border-line bg-surface px-3 py-1.5 hover:border-fg">
+                  <Link href={e.href} className="flex items-center gap-2 rounded-control border border-line bg-surface px-3 py-1.5 hover:border-fg">
                     <EntityChip type={e.type} code={e.code} /><span className="font-semibold">{e.title}</span>
                   </Link>
                 </li>
@@ -73,14 +73,14 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
 
         <section aria-labelledby="evidence-h" className="flex flex-col gap-3">
           <h2 id="evidence-h" className="text-heading font-semibold">{dc.evidence}</h2>
-          <p className="text-[13px] text-fg-secondary">{dc.evidenceHint}</p>
+          <p className="text-meta text-fg-secondary">{dc.evidenceHint}</p>
           {direct.size > 0 && (
             <ul className="flex flex-col gap-1.5">
               {[...direct.values()].map((e) => (
                 <li key={`${e.type}:${e.id}`}>
-                  <Link href={e.href} className="flex items-start gap-2 rounded-[10px] border border-line bg-surface px-3 py-2 hover:border-fg">
+                  <Link href={e.href} className="flex items-start gap-2 rounded-control border border-line bg-surface px-3 py-2 hover:border-fg">
                     <EntityChip type={e.type} code={e.code} />
-                    <span className="min-w-0 text-[14px] leading-snug">{e.participant ? <b className="mr-1">{e.participant}</b> : null}{e.type === "quote" ? `«${e.title}»` : e.title}</span>
+                    <span className="min-w-0 text-sm leading-snug">{e.participant ? <b className="mr-1">{e.participant}</b> : null}{e.type === "quote" ? `«${e.title}»` : e.title}</span>
                   </Link>
                 </li>
               ))}
@@ -89,7 +89,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
           <h3 className="mt-2 text-caption font-bold tracking-wide text-fg-secondary uppercase">{dc.voices}</h3>
           <EvidenceList type="design_decision" id={d.id} base={ctx.base} empty={direct.size ? dc.voicesEmpty : dc.evidenceEmpty} />
           {ctx.canEdit && suggestions.length > 0 && (
-            <div className="flex flex-col gap-2 rounded-[14px] border-[1.5px] border-dashed border-line p-4">
+            <div className="flex flex-col gap-2 rounded-panel border-[1.5px] border-dashed border-line p-4">
               <h3 className="font-bold">{dc.suggestions}</h3>
               <p className="text-caption text-fg-secondary">{dc.suggestionsHint}</p>
               <ul className="flex flex-col gap-1.5">
@@ -100,7 +100,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
                       <input type="hidden" name="sourceType" value={e.type} />
                       <input type="hidden" name="sourceId" value={e.id} />
                       <EntityChip type={e.type} code={e.code} />
-                      <Link href={e.href} className="min-w-0 flex-1 truncate text-[13.5px] hover:underline">
+                      <Link href={e.href} className="min-w-0 flex-1 truncate text-meta hover:underline">
                         {e.participant ? `${e.participant} · ` : ""}{e.title}
                       </Link>
                       <Button type="submit" variant="secondary" className="h-8 shrink-0" aria-label={`${dc.addEvidence}: ${e.code}`}>+ {dc.addEvidence}</Button>

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import { updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/ru";
 import { flowMetaSchema, type FlowMeta } from "./schema";
 
@@ -60,10 +61,8 @@ export async function createFlow(formData: FormData) {
 export async function saveFlowMeta(id: string, input: FlowMeta): Promise<Result> {
   const parsed = flowMetaSchema.safeParse(input);
   if (!uuid.safeParse(id).success || !parsed.success) return fail();
-  const supabase = await createClient();
-  const { error } = await supabase.from("user_flows").update(parsed.data).eq("id", id);
-  if (!error) refresh();
-  return done(error);
+  const res = await updateTracked("user_flows", { column: "id", value: id }, parsed.data, "name");
+  return res === "ok" ? { ok: true } : fail();
 }
 
 export async function saveViewport(id: string, viewport: { x: number; y: number; zoom: number }): Promise<Result> {

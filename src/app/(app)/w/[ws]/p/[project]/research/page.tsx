@@ -17,8 +17,8 @@ import { ResearchTabs } from "./tabs";
 export const metadata: Metadata = { title: t.research.title };
 
 const dateFmt = new Intl.DateTimeFormat("ru", { day: "numeric", month: "short" });
-const card = "flex h-full flex-col gap-2 rounded-[14px] border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg";
-const empty = "rounded-[14px] border-[1.5px] border-dashed border-line p-6 text-center text-fg-secondary";
+const card = "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg";
+const empty = "rounded-panel border-[1.5px] border-dashed border-line p-6 text-center text-fg-secondary";
 
 export default async function ResearchPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
   const { ws, project: slug } = await params;
@@ -38,8 +38,8 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
         <ResearchTabs base={base} current="overview" />
         <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {([["participants", stats.participants], ["interviews", stats.interviews], ["conducted", stats.conducted], ["questions", stats.questions]] as const).map(([k, v]) => (
-            <div key={k} className="flex flex-col-reverse rounded-[14px] border border-line bg-surface p-4">
-              <dt className="text-[13px] font-semibold text-fg-secondary">{t.research.stats[k]}</dt>
+            <div key={k} className="flex flex-col-reverse rounded-panel border border-line bg-surface p-4">
+              <dt className="text-meta font-semibold text-fg-secondary">{t.research.stats[k]}</dt>
               <dd className="display-num text-[34px] leading-none tabular-nums">{v}</dd>
             </div>
           ))}
@@ -73,7 +73,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
                       {RESEARCH_METHODS.find((m) => m.value === p.method)?.label}
                     </span>
                   </span>
-                  {p.goal && <span className="line-clamp-2 text-[13px] text-fg-secondary">{p.goal}</span>}
+                  {p.goal && <span className="line-clamp-2 text-meta text-fg-secondary">{p.goal}</span>}
                 </Link>
               </li>
             ))}
@@ -106,7 +106,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
               <li key={g.id}>
                 <Link href={`${base}/research/guides/${g.id}`} className={card}>
                   <span className="font-bold">{g.title}</span>
-                  <span className="text-[13px] text-fg-secondary">{t.research.questionsCount(g.questionCount)}</span>
+                  <span className="text-meta text-fg-secondary">{t.research.questionsCount(g.questionCount)}</span>
                 </Link>
               </li>
             ))}
@@ -123,7 +123,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
           </span>
         </div>
         {interviews.length === 0 ? <p className={empty}>{t.research.interviewsEmpty}</p> : (
-          <ul className="divide-y divide-line rounded-[14px] border border-line bg-surface">
+          <ul className="divide-y divide-line rounded-panel border border-line bg-surface">
             {interviews.map((i) => (
               <li key={i.id}>
                 <Link href={`${base}/research/interviews/${i.code}`}
@@ -132,10 +132,10 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
                   <span className="truncate font-semibold">
                     {i.participants ? `${i.participants.code} · ${participantTitle(i.participants)}` : "—"}
                   </span>
-                  <span className={cn("text-[13px] font-semibold", isConducted(i.status) ? "text-success" : "text-fg-secondary")}>
+                  <span className={cn("text-meta font-semibold", isConducted(i.status) ? "text-success" : "text-fg-secondary")}>
                     {interviewStatusLabel(i.status)}
                   </span>
-                  <span className="hidden text-right text-[13px] text-fg-secondary tabular-nums sm:block">
+                  <span className="hidden text-right text-meta text-fg-secondary tabular-nums sm:block">
                     {i.conducted_at ? dateFmt.format(new Date(i.conducted_at)) : ""}
                   </span>
                 </Link>

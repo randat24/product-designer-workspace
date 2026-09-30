@@ -8,7 +8,7 @@ export const CASES_REVALIDATE = 60;
 
 type Snapshot = Partial<Record<Locale, Partial<Case>>>;
 
-function toCase(slug: string, content: Snapshot, locale: Locale): Case | null {
+function toCase(slug: string, content: Snapshot, locale: Locale, updatedAt?: string): Case | null {
   const c = content[locale] ?? content.uk;
   if (!c?.title) return null;
   return {
@@ -23,6 +23,11 @@ function toCase(slug: string, content: Snapshot, locale: Locale): Case | null {
     metrics: c.metrics ?? [],
     sections: c.sections ?? [],
     story: c.story,
+    kind: c.kind,
+    liveUrl: c.liveUrl,
+    gallery: c.gallery,
+    sample: c.sample,
+    updatedAt,
   };
 }
 
@@ -45,12 +50,12 @@ export async function getCases(locale: Locale): Promise<Case[]> {
     });
     const { data, error } = await db
       .from("case_studies")
-      .select("slug, content")
+      .select("slug, content, updated_at")
       .eq("status", "published")
       .order("position")
       .order("published_at", { ascending: false });
     if (error || !data) return fallback;
-    return data.map((r) => toCase(r.slug, r.content as Snapshot, locale)).filter((c): c is Case => c !== null);
+    return data.map((r) => toCase(r.slug, r.content as Snapshot, locale, r.updated_at)).filter((c): c is Case => c !== null);
   } catch {
     return fallback;
   }

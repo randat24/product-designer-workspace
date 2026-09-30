@@ -26,7 +26,7 @@ export default async function QuotePage({ params }: { params: Promise<Params> })
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "quote", id: q.id, code: q.code }} canEdit={ctx.canEdit} />}>
-      <Link href={`${ctx.base}/synthesis`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(t.synthesis.title)}</Link>
+      <Link href={`${ctx.base}/synthesis`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(t.synthesis.title)}</Link>
       <PageHeader title={t.synthesis.quotes.quoteOf(q.participants?.code ?? "")} eyebrow={<EntityChip type="quote" code={q.code} />} />
       <div className="flex flex-col gap-6">
         <QuoteText id={q.id} initial={q.text} canEdit={ctx.canEdit} />

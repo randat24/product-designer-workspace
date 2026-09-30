@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import { updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/ru";
 import {
   GUIDE_SECTIONS, GUIDE_TEMPLATE, guideMetaSchema, interviewMetaSchema, participantSchema, planSchema, questionSchema,
@@ -22,13 +23,20 @@ async function projectBase(projectId: string) {
 }
 
 /** Shared update-by-id with RLS read-back: no row means read-only access. */
-async function updateRow(table: "research_plans" | "interview_guides" | "participants" | "interviews", id: string, fields: object): Promise<Result> {
+/** What the project shell shows from each table: participant names in ⌘K, interview status and the
+ *  plan's participant target in research progress. Guides show nothing there. */
+const SHOWN = {
+  participants: "display_name, role",
+  interviews: "status",
+  research_plans: "participants_target",
+  interview_guides: "id",
+} as const;
+
+async function updateRow(table: keyof typeof SHOWN, id: string, fields: object): Promise<Result> {
   if (!uuid.safeParse(id).success) return fail();
-  const supabase = await createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table is a narrowed union; fields were validated by the caller
-  const { data, error } = await (supabase.from(table) as any).update(fields).eq("id", id).select("id").maybeSingle();
-  if (error) return fail();
-  if (!data) return fail(t.autosave.readOnly);
+  const res = await updateTracked(table, { column: "id", value: id }, fields, SHOWN[table]);
+  if (res === "error") return fail();
+  if (res === "read-only") return fail(t.autosave.readOnly);
   return { ok: true };
 }
 

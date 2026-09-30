@@ -24,7 +24,7 @@ export default async function PlanPage({ params }: { params: Promise<Params> }) 
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/research`} className="mb-4 inline-block text-[13px] font-semibold text-fg-secondary hover:text-fg">← {t.research.plan.back}</Link>
+      <Link href={`${ctx.base}/research`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">← {t.research.plan.back}</Link>
       <PageHeader title={plan.title} eyebrow={<EntityChip type="research_plan" code={plan.code} title={plan.title} />} />
       <PlanEditor key={plan.id} id={plan.id} canEdit={ctx.canEdit} initial={{
         title: plan.title, goal: plan.goal, questions, hypotheses_text: plan.hypotheses_text, audience: plan.audience,
@@ -36,8 +36,8 @@ export default async function PlanPage({ params }: { params: Promise<Params> }) 
           <ul className="flex flex-wrap gap-2">
             {guides.map((g) => (
               <li key={g.id}>
-                <Link href={`${ctx.base}/research/guides/${g.id}`} className="inline-block rounded-[12px] border border-line bg-surface px-4 py-2 font-semibold hover:border-fg">
-                  {g.title} <span className="text-[13px] font-normal text-fg-secondary">· {t.research.questionsCount(g.questionCount)}</span>
+                <Link href={`${ctx.base}/research/guides/${g.id}`} className="inline-block rounded-panel border border-line bg-surface px-4 py-2 font-semibold hover:border-fg">
+                  {g.title} <span className="text-meta font-normal text-fg-secondary">· {t.research.questionsCount(g.questionCount)}</span>
                 </Link>
               </li>
             ))}
