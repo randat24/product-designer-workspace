@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { TextField } from "@/shared/ui/form-section";
@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addQuestion, applyGuideTemplate, deleteQuestion, moveQuestion, saveGuideMeta, saveQuestion } from "./actions";
 import { GUIDE_SECTIONS, type GuideMeta, type GuideSection } from "./schema";
 import type { GuideQuestion } from "./queries";
@@ -23,13 +24,13 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
   canEdit: boolean;
 }) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const { pending, run, error: actionError } = useAction();
   const { value: m, update, status, error } = useAutosave(meta, (v) => saveGuideMeta(guideId, v), canEdit);
-  const run = (fn: () => Promise<unknown>) => startTransition(async () => { await fn(); router.refresh(); });
 
   return (
     <div className="flex flex-col gap-8">
       <SaveToast id="guide-status" status={status} error={error?.message} readOnly={!canEdit} />
+      <ActionError error={actionError} />
       <div className="flex flex-col gap-5 rounded-[14px] border border-line bg-surface p-5">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="guide-title" className="text-[13px] font-semibold text-fg-secondary">{g.title}</label>

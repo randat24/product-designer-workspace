@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
-import { Input } from "@/shared/ui/field";
+import { FieldError, Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { t } from "@/shared/i18n/ru";
@@ -18,15 +18,17 @@ const sc = t.screens;
 const dc = t.decisions;
 const labelClass = "text-[13px] font-semibold text-fg-secondary";
 
-function Line({ id, label, hint, value, readOnly, invalid, onChange, className }: {
-  id: string; label: string; hint?: string; value: string; readOnly: boolean; invalid?: boolean;
+function Line({ id, label, hint, value, readOnly, error, onChange, className }: {
+  id: string; label: string; hint?: string; value: string; readOnly: boolean; error?: string;
   onChange: (v: string) => void; className?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className={labelClass}>{label}</label>
-      <Input id={id} value={value} readOnly={readOnly} placeholder={hint} aria-invalid={invalid} className={className}
+      <Input id={id} value={value} readOnly={readOnly} placeholder={hint} aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined} className={className}
         onChange={(e) => onChange(e.target.value)} />
+      <FieldError id={id} message={error} />
     </div>
   );
 }
@@ -99,7 +101,7 @@ export function ScreenEditor({ id, initial, canEdit }: { id: string; initial: Sc
     <div className="flex flex-col gap-8">
       <SaveToast id="screen-status" status={status} error={error?.message} readOnly={ro} />
       <Section id="spec" title={sc.sections.spec}>
-        <Line id="name" label={f.name} value={v.name} readOnly={ro} invalid={error?.field === "name"} className="h-11 text-[17px] font-bold"
+        <Line id="name" label={f.name} value={v.name} readOnly={ro} error={error?.field === "name" ? error.message : undefined} className="h-11 text-[17px] font-bold"
           onChange={(name) => update({ name })} />
         <ChipGroup label={f.status} options={SCREEN_STATUSES} value={v.status} disabled={ro} onChange={(s) => update({ status: s })} />
         <TextField id="purpose" label={f.purpose} hint={f.purposeHint} value={v.purpose ?? ""} readOnly={ro} onChange={(purpose) => update({ purpose })} />
@@ -167,7 +169,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
     <div className="flex flex-col gap-8">
       <SaveToast id="decision-status" status={status} error={error?.message} readOnly={ro} />
       <Section id="decision" title={dc.section}>
-        <Line id="title" label={f.title} value={v.title} readOnly={ro} invalid={error?.field === "title"} className="h-11 text-[17px] font-bold"
+        <Line id="title" label={f.title} value={v.title} readOnly={ro} error={error?.field === "title" ? error.message : undefined} className="h-11 text-[17px] font-bold"
           onChange={(title) => update({ title })} />
         <TextField id="context" label={f.context} hint={f.contextHint} value={v.context ?? ""} readOnly={ro} onChange={(context) => update({ context })} />
         <TextField id="decision-text" label={f.decision} value={v.decision ?? ""} readOnly={ro} onChange={(decision) => update({ decision })} />

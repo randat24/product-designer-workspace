@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
-import { Input } from "@/shared/ui/field";
+import { FieldError, Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { deleteCompetitor, saveCompetitor } from "./actions";
@@ -36,8 +36,9 @@ export function CompetitorEditor({ id, initial, isOwn, canEdit, screenshots }: {
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className="text-[13px] font-semibold text-fg-secondary">{f.name}</label>
             <Input id="name" value={c.name} readOnly={!canEdit} maxLength={120} className="text-base font-bold"
-              aria-invalid={error?.field === "name"} aria-describedby={error?.field === "name" ? "competitor-status" : undefined}
+              aria-invalid={error?.field === "name"} aria-describedby={error?.field === "name" ? "name-error" : undefined}
               onChange={(e) => update({ name: e.target.value })} />
+            <FieldError id="name" message={error?.field === "name" ? error.message : null} />
           </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="url" className="text-[13px] font-semibold text-fg-secondary">{f.url}</label>

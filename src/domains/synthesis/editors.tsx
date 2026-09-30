@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
-import { Input } from "@/shared/ui/field";
+import { FieldError, Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { deleteSynthesisEntity, saveInsight, saveOpportunity, savePainPoint } from "./actions";
@@ -15,14 +15,16 @@ import {
 
 const s = t.synthesis;
 
-function TitleInput({ id, label, hint, value, readOnly, invalid, onChange }: {
-  id: string; label: string; hint?: string; value: string; readOnly: boolean; invalid: boolean; onChange: (v: string) => void;
+function TitleInput({ id, label, hint, value, readOnly, error, onChange }: {
+  id: string; label: string; hint?: string; value: string; readOnly: boolean; error?: string; onChange: (v: string) => void;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="text-[13px] font-semibold text-fg-secondary">{label}</label>
-      <Input id={id} value={value} readOnly={readOnly} maxLength={300} placeholder={hint} aria-invalid={invalid}
+      <Input id={id} value={value} readOnly={readOnly} maxLength={300} placeholder={hint} aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)} className="h-11 text-[17px] font-bold" />
+      <FieldError id={id} message={error} />
     </div>
   );
 }
@@ -33,7 +35,7 @@ export function InsightEditor({ id, initial, canEdit }: { id: string; initial: I
   return (
     <Section id="insight" title={s.insights.title.slice(0, -1)}>
       <SaveToast id="insight-status" status={status} error={error?.message} readOnly={!canEdit} />
-      <TitleInput id="title" label={f.title} hint={f.titleHint} value={v.title} readOnly={!canEdit} invalid={error?.field === "title"} onChange={(title) => update({ title })} />
+      <TitleInput id="title" label={f.title} hint={f.titleHint} value={v.title} readOnly={!canEdit} error={error?.field === "title" ? error.message : undefined} onChange={(title) => update({ title })} />
       <TextField id="statement" label={f.statement} hint={f.statementHint} value={v.statement ?? ""} readOnly={!canEdit} onChange={(statement) => update({ statement })} />
       <div className="flex flex-wrap gap-6">
         <ChipGroup label={f.confidence} options={LEVELS} value={v.confidence} disabled={!canEdit} onChange={(confidence) => update({ confidence })} />
@@ -49,7 +51,7 @@ export function PainPointEditor({ id, initial, canEdit }: { id: string; initial:
   return (
     <Section id="pain" title={f.title}>
       <SaveToast id="pain-status" status={status} error={error?.message} readOnly={!canEdit} />
-      <TitleInput id="title" label={f.title} hint={f.titleHint} value={v.title} readOnly={!canEdit} invalid={error?.field === "title"} onChange={(title) => update({ title })} />
+      <TitleInput id="title" label={f.title} hint={f.titleHint} value={v.title} readOnly={!canEdit} error={error?.field === "title" ? error.message : undefined} onChange={(title) => update({ title })} />
       <TextField id="description" label={f.description} value={v.description ?? ""} readOnly={!canEdit} onChange={(description) => update({ description })} />
       <ChipGroup label={f.severity} options={SEVERITIES} value={v.severity} disabled={!canEdit} onChange={(severity) => update({ severity })} />
       <div className="flex flex-col gap-1.5">
@@ -67,7 +69,7 @@ export function OpportunityEditor({ id, initial, canEdit }: { id: string; initia
   return (
     <Section id="opportunity" title={f.title}>
       <SaveToast id="opp-status" status={status} error={error?.message} readOnly={!canEdit} />
-      <TitleInput id="title" label={f.title} value={v.title} readOnly={!canEdit} invalid={error?.field === "title"} onChange={(title) => update({ title })} />
+      <TitleInput id="title" label={f.title} value={v.title} readOnly={!canEdit} error={error?.field === "title" ? error.message : undefined} onChange={(title) => update({ title })} />
       <TextField id="hmw" label={f.hmw} hint={f.hmwHint} value={v.hmw ?? ""} readOnly={!canEdit} onChange={(hmw) => update({ hmw })} />
       <TextField id="description" label={f.description} value={v.description ?? ""} readOnly={!canEdit} onChange={(description) => update({ description })} />
       <div className="flex flex-wrap gap-6">

@@ -3,7 +3,7 @@
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
-import { Input } from "@/shared/ui/field";
+import { FieldError, Input } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
 import { savePlan } from "./actions";
 import { RESEARCH_METHODS, RESEARCH_STATUSES, type PlanFields } from "./schema";
@@ -23,7 +23,9 @@ export function PlanEditor({ id, initial, canEdit }: { id: string; initial: Plan
         <div className="flex flex-col gap-1.5">
           <label htmlFor="title" className="text-[13px] font-semibold text-fg-secondary">{f.title}</label>
           <Input id="title" value={p.title} readOnly={!canEdit} maxLength={200} className="text-base font-bold"
-            aria-invalid={error?.field === "title"} onChange={(e) => update({ title: e.target.value })} />
+            aria-invalid={error?.field === "title"} aria-describedby={error?.field === "title" ? "title-error" : undefined}
+            onChange={(e) => update({ title: e.target.value })} />
+          <FieldError id="title" message={error?.field === "title" ? error.message : null} />
         </div>
         {text("goal", f.goal, f.goalHint)}
         <ChipGroup label={f.status} options={RESEARCH_STATUSES} value={p.status} disabled={!canEdit} onChange={(status) => update({ status })} />

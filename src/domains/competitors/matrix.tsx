@@ -7,6 +7,7 @@ import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addFeature, addUxTemplate, deleteFeature, setCellNote, setFeatureValue, updateFeature } from "./actions";
 import { nextFeatureValue, type FeatureValue, type UxTemplate } from "./schema";
 import type { CellNote, MatrixKind } from "./queries";
@@ -97,7 +98,8 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
     });
   }
 
-  const addTemplate = (tpl: UxTemplate) => startTransition(async () => { await addUxTemplate(projectId, tpl); router.refresh(); });
+  const rows = useAction();
+  const addTemplate = (tpl: UxTemplate) => rows.run(() => addUxTemplate(projectId, tpl));
 
   // Group rows, keeping first-appearance order of groups.
   const groups: { name: string | null; rows: Feature[] }[] = [];
@@ -198,7 +200,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                     {canEdit && (
                       <td className="border-b border-line p-1 text-center">
                         <button type="button" aria-label={`${m.deleteFeature}: ${f.name}`}
-                          onClick={() => startTransition(async () => { await deleteFeature(f.id); router.refresh(); })}
+                          disabled={rows.pending} onClick={() => rows.run(() => deleteFeature(f.id))}
                           className="grid size-8 place-items-center rounded-[7px] text-fg-secondary opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
                           <span aria-hidden>×</span>
                         </button>
@@ -226,15 +228,16 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
 
       {features.length === 0 && <p className="text-fg-secondary">{kind === "ux" ? ux.empty : m.empty}</p>}
       {failed && <p role="alert" className="text-[13px] text-danger">{m.saveFailed}</p>}
+      <ActionError error={rows.error} />
 
       {canEdit && (
         <div className="flex flex-wrap items-end gap-2">
           {kind === "ux" && (
             <>
-              <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("nielsen")}>{ux.addNielsen}</Button>
-              <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("laws")}>{ux.addLaws}</Button>
-              <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("gestalt")}>{ux.addGestalt}</Button>
-              <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("memory")}>{ux.addMemory}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("nielsen")}>{ux.addNielsen}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("laws")}>{ux.addLaws}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("gestalt")}>{ux.addGestalt}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("memory")}>{ux.addMemory}</Button>
               <Link href="/app/ux-laws" target="_blank" className="inline-flex h-9 items-center px-2 text-sm font-semibold underline underline-offset-4">
                 {t.uxLaws.open}
               </Link>

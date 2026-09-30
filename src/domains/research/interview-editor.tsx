@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { deleteAnswer, deleteInterview, saveInterviewMeta } from "./actions";
 import { AnswerField } from "./answer-field";
 import { GUIDE_SECTIONS, INTERVIEW_MODES, INTERVIEW_STATUSES, type InterviewMeta } from "./schema";
@@ -33,8 +33,7 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
   answers: InterviewAnswer[];
   canEdit: boolean;
 }) {
-  const router = useRouter();
-  const [, startTransition] = useTransition();
+  const removing = useAction();
   const { value: m, update, status, error } = useAutosave(meta, (v) => saveInterviewMeta(interviewId, v), canEdit);
   const [newNotes, setNewNotes] = useState<number[]>([]);
   const [armed, setArmed] = useState(false);
@@ -109,6 +108,7 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
 
       <section aria-labelledby="notes-h" className="flex flex-col gap-3">
         <h2 id="notes-h" className="text-heading font-semibold">{iv.freeNotes}</h2>
+        <ActionError error={removing.error} />
         <ul className="flex flex-col gap-2">
           {notes.map((n, i) => (
             <li key={n.id} className="flex items-start gap-1">
@@ -118,8 +118,8 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
                 <QuoteChips base={base} quotes={quotesOf(n.id)} />
               </div>
               {canEdit && (
-                <button type="button" aria-label={`${iv.removeNote} ${i + 1}`}
-                  onClick={() => startTransition(async () => { await deleteAnswer(n.id); router.refresh(); })}
+                <button type="button" aria-label={`${iv.removeNote} ${i + 1}`} disabled={removing.pending}
+                  onClick={() => removing.run(() => deleteAnswer(n.id))}
                   className="grid size-9 place-items-center rounded-[7px] text-fg-secondary hover:bg-subtle hover:text-danger"><span aria-hidden>×</span></button>
               )}
             </li>

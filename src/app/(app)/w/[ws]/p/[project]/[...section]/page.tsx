@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findNavItem } from "@/shared/navigation";
 import { t } from "@/shared/i18n/ru";
 import { PageHeader } from "@/shared/ui/page-header";
+
+export async function generateMetadata({ params }: { params: Promise<{ section: string[] }> }): Promise<Metadata> {
+  return { title: findNavItem((await params).section.join("/"))?.label };
+}
 
 /** Placeholder for sections whose phase has not shipped yet. Each phase replaces its routes with real pages. */
 export default async function SectionPlaceholder({ params }: { params: Promise<{ ws: string; project: string; section: string[] }> }) {

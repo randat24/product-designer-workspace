@@ -1,11 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useFieldAutosave } from "@/shared/ui/autosave";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addRespondent, renameParticipant } from "./actions";
 import { AnswerField } from "./answer-field";
 import { participantTitle } from "./schema";
@@ -30,15 +29,17 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
   cells: Record<string, { id: string; text: string }>;
   canEdit: boolean;
 }) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const { pending, run, error } = useAction();
 
   if (questions.length === 0) {
     return <p className="rounded-[14px] border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{mx.noQuestions}</p>;
   }
 
   return (
-    <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
+    <>
+    <ActionError error={error} className="mb-2 text-[13px] text-danger" />
+    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrolls sideways: reachable by keyboard */}
+    <div tabIndex={0} role="region" aria-label={mx.title} className="overflow-x-auto rounded-[14px] border border-line bg-surface">
       <table className="min-w-full border-collapse">
         <thead>
           <tr>
@@ -56,7 +57,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
             {canEdit && (
               <th className="min-w-[120px] border-b border-line p-2.5 align-middle">
                 <button type="button" disabled={pending}
-                  onClick={() => startTransition(async () => { await addRespondent(projectId, guideId); router.refresh(); })}
+                  onClick={() => run(() => addRespondent(projectId, guideId))}
                   className="rounded-[9px] border-[1.5px] border-fg px-3 py-1.5 text-sm font-semibold whitespace-nowrap hover:bg-subtle disabled:opacity-50">
                   {mx.addRespondent}
                 </button>
@@ -89,6 +90,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
       </table>
       {interviews.length === 0 && <p className="p-5 text-center text-fg-secondary">{mx.noInterviews}</p>}
     </div>
+    </>
   );
 }
 

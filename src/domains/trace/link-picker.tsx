@@ -7,6 +7,7 @@ import { EntityChip } from "@/shared/ui/entity-chip";
 import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { linkEntities, unlinkEntities } from "./actions";
 import type { LinkRule, ResolvedEntity } from "./queries";
 
@@ -82,13 +83,15 @@ export function LinkPicker({ projectId, entity, candidates, upRules, downRules }
 }
 
 export function UnlinkButton({ linkId, label }: { linkId: string; label: string }) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const { pending, run, error } = useAction();
   return (
+    <>
+    <ActionError error={error} className="text-[12px] text-danger" />
     <button type="button" disabled={pending} aria-label={`${t.trace.unlink}: ${label}`}
-      onClick={() => startTransition(async () => { await unlinkEntities(linkId); router.refresh(); })}
+      onClick={() => run(() => unlinkEntities(linkId))}
       className="grid size-7 shrink-0 place-items-center rounded-md text-fg-secondary opacity-0 group-hover:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
       <span aria-hidden>×</span>
     </button>
+    </>
   );
 }

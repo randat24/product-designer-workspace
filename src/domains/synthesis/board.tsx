@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
+import { ActionError, useAction } from "@/shared/ui/use-action";
 import { createInsightFromPattern, createObservation, createPattern, deletePattern, moveCard, renamePattern } from "./actions";
 import { kindOf, OBSERVATION_KINDS, participantColor, type ObservationKind } from "./schema";
 import type { BoardCard } from "./queries";
@@ -33,6 +34,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const columnsAction = useAction();
   const [newPattern, setNewPattern] = useState("");
 
   const move = (card: BoardCard, patternId: string | null) => {
@@ -50,6 +52,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
   return (
     <div className="flex flex-col gap-4">
       {canEdit && <p className="text-[13px] text-fg-secondary">{b.dragHint}</p>}
+      <ActionError error={columnsAction.error} />
       <div className="flex items-start gap-4 overflow-x-auto pb-4">
         {columns.map((p) => {
           const key = p?.id ?? NONE;
@@ -69,7 +72,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
                 !p && "bg-transparent",
               )}>
               <ColumnHeader pattern={p} count={list.length} canEdit={canEdit}
-                onDelete={() => p && startTransition(async () => { await deletePattern(p.id); router.refresh(); })} />
+                onDelete={() => p && columnsAction.run(() => deletePattern(p.id))} />
 
               {!p && canEdit && <AddObservation projectId={projectId} participants={participants} onAdded={() => router.refresh()} />}
 
@@ -89,10 +92,10 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
           <form className="flex w-[260px] shrink-0 flex-col gap-2 rounded-[14px] border-[1.5px] border-dashed border-line p-3"
             onSubmit={(e) => {
               e.preventDefault();
-              startTransition(async () => { await createPattern(projectId, newPattern); setNewPattern(""); router.refresh(); });
+              columnsAction.run(() => createPattern(projectId, newPattern), () => setNewPattern(""));
             }}>
             <Input aria-label={b.addPattern} value={newPattern} maxLength={200} placeholder={b.patternPlaceholder} onChange={(e) => setNewPattern(e.target.value)} />
-            <Button type="submit" variant="secondary" disabled={pending}>{b.addPattern}</Button>
+            <Button type="submit" variant="secondary" disabled={pending || columnsAction.pending}>{b.addPattern}</Button>
           </form>
         )}
       </div>

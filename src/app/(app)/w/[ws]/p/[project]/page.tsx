@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getProjectContext } from "@/domains/projects/queries";
 import { getProjectBySlug, getWorkspaceBySlug, listRecentActivity, PLATFORMS, PROJECT_STATUSES, type ActivityItem } from "@/domains/projects";
 import { briefCompleteness, getBrief, type BriefKeyField } from "@/domains/briefs";
 import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/domains/competitors";
@@ -12,6 +14,12 @@ import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+
+export async function generateMetadata({ params }: { params: Promise<{ ws: string; project: string }> }): Promise<Metadata> {
+  const { ws, project } = await params;
+  const ctx = await getProjectContext(ws, project);
+  return { title: ctx ? `${ctx.project.name} · ${t.project.overview}` : t.project.overview };
+}
 
 type StageState = "done" | "active" | "todo" | "soon";
 type Stage = { segment: string; label: string; phase: number; state: StageState; detail?: string; percent?: number };

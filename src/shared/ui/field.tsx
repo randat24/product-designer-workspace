@@ -23,6 +23,15 @@ export function Field({ label, htmlFor, error, children }: { label: string; html
   );
 }
 
+/**
+ * A validation message right under its field (docs/UX_LAWS.md UX-13: where the eye is at the moment of
+ * input, not only in the floating save status). Link it with aria-describedby={`${id}-error`}.
+ */
+export function FieldError({ id, message }: { id: string; message?: string | null }) {
+  if (!message) return null;
+  return <p id={`${id}-error`} className="text-[13px] text-danger">{message}</p>;
+}
+
 /** White card with a hairline border — the notebook's basic container. */
 export function Panel({ className, children, ...p }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("rounded-[14px] border border-line bg-surface p-5", className)} {...p}>{children}</div>;
