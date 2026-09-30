@@ -118,6 +118,14 @@ type FlowEdgeRow = Base & {
 type FlowEdgeCaseRow = Base & {
   flow_id: string; kind: E["edge_case_kind"]; description: string | null; status: E["edge_case_status"]; node_id: string | null; position: number;
 };
+type ScreenStateRow = Base & {
+  screen_id: string; kind: E["screen_state_kind"]; description: string | null; figma_url: string | null;
+  status: E["screen_state_status"]; position: number;
+};
+type DesignDecisionRow = Base & {
+  code: string; title: string; context: string | null; decision: string | null; reason: string | null; alternatives: Json;
+  status: E["decision_status"]; decided_at: string | null; author_id: string | null; superseded_by_id: string | null; archived_at: string | null;
+};
 type Ins<T, R extends keyof T> = Partial<Omit<T, "id" | "workspace_id" | "code">> & Pick<T, R>;
 type Upd<T> = Partial<Omit<T, "id" | "workspace_id" | "project_id" | "code">>;
 type ProjectCounterRow = { project_id: string; entity_type: string; last_value: number };
@@ -206,10 +214,18 @@ export type Database = {
       pain_points: { Row: PainPointRow; Insert: Ins<PainPointRow, "project_id" | "title">; Update: Upd<PainPointRow>; Relationships: [] };
       opportunities: { Row: OpportunityRow; Insert: Ins<OpportunityRow, "project_id" | "title">; Update: Upd<OpportunityRow>; Relationships: [] };
       screens: { Row: ScreenRow; Insert: Ins<ScreenRow, "project_id" | "name">; Update: Upd<ScreenRow>; Relationships: [] };
+      screen_states: { Row: ScreenStateRow; Insert: Ins<ScreenStateRow, "project_id" | "screen_id" | "kind">; Update: Upd<ScreenStateRow>; Relationships: [] };
+      design_decisions: {
+        Row: DesignDecisionRow; Insert: Ins<DesignDecisionRow, "project_id" | "title">; Update: Upd<DesignDecisionRow>;
+        Relationships: [{ foreignKeyName: "design_decisions_author_id_fkey"; columns: ["author_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] }];
+      };
       user_flows: { Row: UserFlowRow; Insert: Ins<UserFlowRow, "project_id" | "name">; Update: Upd<UserFlowRow>; Relationships: [] };
       flow_nodes: {
         Row: FlowNodeRow; Insert: Ins<FlowNodeRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowNodeRow>;
-        Relationships: [{ foreignKeyName: "flow_nodes_screen_id_fkey"; columns: ["screen_id"]; isOneToOne: false; referencedRelation: "screens"; referencedColumns: ["id"] }];
+        Relationships: [
+          { foreignKeyName: "flow_nodes_screen_id_fkey"; columns: ["screen_id"]; isOneToOne: false; referencedRelation: "screens"; referencedColumns: ["id"] },
+          { foreignKeyName: "flow_nodes_flow_id_fkey"; columns: ["flow_id"]; isOneToOne: false; referencedRelation: "user_flows"; referencedColumns: ["id"] },
+        ];
       };
       flow_edges: { Row: FlowEdgeRow; Insert: Ins<FlowEdgeRow, "project_id" | "flow_id" | "source_node_id" | "target_node_id">; Update: Upd<FlowEdgeRow>; Relationships: [] };
       flow_edge_cases: { Row: FlowEdgeCaseRow; Insert: Ins<FlowEdgeCaseRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowEdgeCaseRow>; Relationships: [] };
@@ -235,6 +251,11 @@ export type Database = {
         Args: { p_project: string };
         Returns: { entity_type: string; entity_id: string; source_count: number; participant_count: number }[];
       };
+      screen_stats: {
+        Args: { p_project: string };
+        Returns: { screen_id: string; missing_states: number; flows: string[]; upstream: number; decisions: number }[];
+      };
+      decision_stats: { Args: { p_project: string }; Returns: { decision_id: string; evidence: number; targets: number }[] };
       flow_stats: {
         Args: { p_project: string };
         Returns: { flow_id: string; node_count: number; screen_count: number; missing_cases: number }[];
@@ -272,6 +293,9 @@ export type Database = {
       edge_case_kind: "payment_failed" | "no_internet" | "unavailable" | "session_expired" | "empty" | "permission_denied" | "timeout" | "validation" | "custom";
       edge_case_status: "missing" | "covered" | "not_applicable";
       screen_status: "sketch" | "wireframe" | "prototype" | "tested" | "ready";
+      screen_state_kind: "default" | "loading" | "empty" | "error" | "success" | "disabled" | "permission_denied" | "offline" | "partial";
+      screen_state_status: "missing" | "designed" | "n_a";
+      decision_status: "proposed" | "accepted" | "superseded" | "rejected";
     };
     CompositeTypes: { [_ in never]: never };
   };

@@ -115,10 +115,13 @@ export async function deleteProject(_prev: DeleteProjectState, formData: FormDat
 export async function createDemoProject(formData: FormData) {
   const workspaceId = z.uuid().parse(formData.get("workspaceId"));
   const supabase = await createClient();
-  const [{ data: slug, error }, { data: ws }] = await Promise.all([
-    supabase.rpc("create_demo_project", { p_workspace: workspaceId }),
-    supabase.from("workspaces").select("slug").eq("id", workspaceId).single(),
-  ]);
+  const { data: ws } = await supabase.from("workspaces").select("slug").eq("id", workspaceId).single();
+  // A repeated click (or a resubmitted form) opens the demo that was just created instead of copying it again.
+  const { data: recent } = await supabase.from("projects").select("slug").eq("workspace_id", workspaceId)
+    .like("slug", "restaurant-app%").gte("created_at", new Date(Date.now() - 30_000).toISOString())
+    .order("created_at", { ascending: false }).limit(1).maybeSingle();
+  if (recent) redirect(`/w/${ws?.slug}/p/${recent.slug}`);
+  const { data: slug, error } = await supabase.rpc("create_demo_project", { p_workspace: workspaceId });
   if (error) throw error;
   revalidatePath(`/w/${ws?.slug}`);
   redirect(`/w/${ws?.slug}/p/${slug}`);

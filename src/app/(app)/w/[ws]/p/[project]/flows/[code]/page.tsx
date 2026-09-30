@@ -40,7 +40,7 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
       <div className="md:hidden"><StepList nodes={flow.nodes} edges={flow.edges} /></div>
       <div className="hidden md:block">
         <FlowEditor flowId={flow.id} nodes={flow.nodes} edges={flow.edges} edgeCases={flow.edgeCases} screens={screens}
-          viewport={isViewport(flow.viewport) ? flow.viewport : null} canEdit={ctx.canEdit} />
+          viewport={isViewport(flow.viewport) ? flow.viewport : null} canEdit={ctx.canEdit} base={ctx.base} />
       </div>
 
       <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">

@@ -120,6 +120,8 @@ type Props = {
   screens: Screen[];
   viewport: Viewport | null;
   canEdit: boolean;
+  /** Project path, for links to screen pages. */
+  base: string;
 };
 
 export function FlowEditor(props: Props) {
@@ -130,7 +132,7 @@ export function FlowEditor(props: Props) {
   );
 }
 
-function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, screens: initialScreens, viewport, canEdit }: Props) {
+function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, screens: initialScreens, viewport, canEdit, base }: Props) {
   const wide = useWide();
   const editable = canEdit && wide;
   const rf = useReactFlow<StepNode, LinkEdge>();
@@ -260,7 +262,7 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
           <aside aria-labelledby="inspector-h" className="flex flex-col gap-4 rounded-[14px] border border-line bg-surface p-4 lg:max-h-[68vh] lg:overflow-y-auto">
             <h3 id="inspector-h" className="text-caption font-bold tracking-wide text-fg-secondary uppercase">{f.inspector}</h3>
             {node ? (
-              <NodeInspector key={node.id} node={node} screens={screens} editable={editable}
+              <NodeInspector key={node.id} node={node} screens={screens} editable={editable} base={base}
                 onPatch={(patch) => patchNode(node.id, patch)}
                 onScreenCreated={(s) => { setScreens((xs) => [...xs, s].sort((a, b) => a.code.localeCompare(b.code, "ru", { numeric: true }))); patchNode(node.id, { screen: s }); }}
                 onDelete={async () => {
@@ -297,7 +299,8 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
 const selectClass = "h-9 w-full rounded-[8px] border border-line bg-surface px-2 text-sm disabled:opacity-70";
 const fieldLabel = "text-[13px] font-semibold text-fg-secondary";
 
-function NodeInspector({ node, screens, editable, onPatch, onScreenCreated, onDelete, report }: {
+function NodeInspector({ node, screens, editable, base, onPatch, onScreenCreated, onDelete, report }: {
+  base: string;
   node: StepNode;
   screens: Screen[];
   editable: boolean;
@@ -348,6 +351,11 @@ function NodeInspector({ node, screens, editable, onPatch, onScreenCreated, onDe
             <option value="">{f.screenNone}</option>
             {screens.map((s) => <option key={s.id} value={s.id}>{s.code} {s.name}</option>)}
           </select>
+          {node.data.screen && (
+            <a href={`${base}/screens/${node.data.screen.code}`} className="self-start text-[13px] font-semibold underline underline-offset-2">
+              {f.openScreen(node.data.screen.code)}
+            </a>
+          )}
           {editable && !node.data.screen && (
             <Button type="button" variant="secondary" disabled={busy} className="h-9 self-start"
               title={f.screenCreateHint(label || f.newLabel.screen)}
