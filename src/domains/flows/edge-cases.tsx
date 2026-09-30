@@ -1,5 +1,6 @@
 "use client";
 
+import { Crosshair, X } from "lucide-react";
 import { useState } from "react";
 import { Input, Select } from "@/shared/ui/field";
 import { Button, IconButton } from "@/shared/ui/button";
@@ -86,14 +87,14 @@ export function EdgeCasesPanel({ flowId, initial, nodes, canEdit, onFocusNode }:
                     {nodes.map((n) => <option key={n.id} value={n.id}>{n.label}</option>)}
                   </Select>
                   {node && (
-                    <IconButton onClick={() => onFocusNode(node.id)} label={`${ec.node}: ${node.label}`} className="border border-line hover:border-fg">◎</IconButton>
+                    <IconButton onClick={() => onFocusNode(node.id)} label={`${ec.node}: ${node.label}`} className="border border-line hover:border-fg"><Crosshair className="size-4" /></IconButton>
                   )}
                   {canEdit && c.kind === "custom" && (
                     <IconButton tone="danger" label={`${ec.remove}: ${title}`}
                       onClick={async () => {
                         const res = await deleteEdgeCase(c.id);
                         if (res.ok) setCases((cs) => cs.filter((x) => x.id !== c.id)); else setError(res.error);
-                      }}>×</IconButton>
+                      }}><X className="size-4" /></IconButton>
                   )}
                 </div>
               </div>

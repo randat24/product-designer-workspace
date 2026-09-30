@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus, X } from "lucide-react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
@@ -43,14 +44,14 @@ export function PlanEditor({ id, initial, canEdit }: { id: string; initial: Plan
                   onChange={(e) => update({ questions: p.questions.map((x, j) => (j === i ? e.target.value : x)) })} />
                 {canEdit && (
                   <IconButton tone="danger" label={`${t.brief.fields.remove}: ${f.questions} ${i + 1}`}
-                    onClick={() => update({ questions: p.questions.filter((_, j) => j !== i) })}>×</IconButton>
+                    onClick={() => update({ questions: p.questions.filter((_, j) => j !== i) })}><X className="size-4" /></IconButton>
                 )}
               </li>
             ))}
           </ol>
           {canEdit && (
             <Button variant="secondary" size="sm" className="self-start" onClick={() => update({ questions: [...p.questions, ""] })}>
-              + {f.addQuestion}
+              <Plus aria-hidden className="size-4" />{f.addQuestion}
             </Button>
           )}
         </fieldset>

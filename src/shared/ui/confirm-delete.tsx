@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/shared/lib/cn";
@@ -55,7 +56,7 @@ export function ConfirmIconButton({ label, confirm, onConfirm, disabled, classNa
       onClick={() => { if (armed) { setArmed(false); onConfirm(); } else setArmed(true); }}
       onBlur={() => setArmed(false)}
       className={cn(armed ? "rounded-control bg-danger px-2 text-caption font-semibold text-on-status" : className)}>
-      {armed ? confirm : <span aria-hidden>×</span>}
+      {armed ? confirm : <X aria-hidden className="size-4" />}
     </button>
   );
 }

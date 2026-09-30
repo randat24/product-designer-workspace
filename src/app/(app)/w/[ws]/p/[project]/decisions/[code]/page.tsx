@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +14,7 @@ import { EntityChip } from "@/shared/ui/entity-chip";
 import { EntityLayout } from "@/shared/ui/entity-layout";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -38,7 +40,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "design_decision", id: d.id, code: d.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/decisions`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{dc.back}</Link>
+      <BackLink href={`${ctx.base}/decisions`}>{dc.back}</BackLink>
       <PageHeader title={d.title} eyebrow={<EntityChip type="design_decision" code={d.code} />}
         stat={{ value: evidenceCount, caption: dc.evidence.toLowerCase() }} />
       {replacement && (
@@ -103,7 +105,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
                       <Link href={e.href} className="min-w-0 flex-1 truncate text-meta hover:underline">
                         {e.participant ? `${e.participant} · ` : ""}{e.title}
                       </Link>
-                      <Button type="submit" variant="secondary" className="h-8 shrink-0" aria-label={`${dc.addEvidence}: ${e.code}`}>+ {dc.addEvidence}</Button>
+                      <Button type="submit" variant="secondary" className="h-8 shrink-0" aria-label={`${dc.addEvidence}: ${e.code}`}><Plus aria-hidden className="size-4" />{dc.addEvidence}</Button>
                     </form>
                   </li>
                 ))}

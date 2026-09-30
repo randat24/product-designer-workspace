@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/shared/lib/cn";
@@ -79,7 +80,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
             {emptyText} {canEdit && t.competitors.uploadHint}
           </p>
         ) : (
-          <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]">
+          <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(160px,100%),1fr))]">
             {items.map((s) => (
               <li key={s.id} className="group relative overflow-hidden rounded-control border border-line bg-subtle">
                 {s.url && (
@@ -91,7 +92,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
                 {canEdit && (
                   <button type="button" onClick={() => remove(s.id)} aria-label={`${t.competitors.removeScreenshot}: ${s.fileName}`}
                     className="absolute top-1.5 right-1.5 grid size-8 place-items-center rounded-control bg-surface/90 text-fg-secondary [@media(hover:hover)]:opacity-0 shadow group-hover:opacity-100 focus:opacity-100 hover:text-danger">
-                    <span aria-hidden>×</span>
+                    <X aria-hidden className="size-4" />
                   </button>
                 )}
               </li>

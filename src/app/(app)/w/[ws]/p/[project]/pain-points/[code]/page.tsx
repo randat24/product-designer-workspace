@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { getPainPointByCode, getSynthesisStats } from "@/domains/synthesis";
@@ -12,6 +11,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -29,7 +29,7 @@ export default async function PainPointPage({ params }: { params: Promise<Params
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "pain_point", id: p.id, code: p.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/pain-points`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
+      <BackLink href={`${ctx.base}/pain-points`}>{t.synthesis.back(s.title)}</BackLink>
       <PageHeader title={p.title} eyebrow={<EntityChip type="pain_point" code={p.code} />}
         stat={{ value: freq, caption: s.frequencyLong() }} />
       <div className="flex flex-col gap-8">

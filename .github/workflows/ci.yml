@@ -42,6 +42,8 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: 1
       E2E_EMAIL: e2e@example.test
+      # No page scrolls sideways on a phone (docs/QUALITY_REVIEW.md, stage 4): a regression fails the job.
+      E2E_STRICT_MOBILE: "1"
       E2E_PASSWORD: e2e-local-password-2026
     steps:
       - uses: actions/checkout@v4

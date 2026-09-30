@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
@@ -69,7 +70,7 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                       onClick={async () => {
                         const res = await deleteState(s.id);
                         if (res.ok) setStates((ss) => ss.filter((x) => x.id !== s.id)); else setError(res.error);
-                      }}>×</IconButton>
+                      }}><X className="size-4" /></IconButton>
                   )}
                 </div>
               </div>
@@ -94,7 +95,7 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                 else if (!res.ok) setError(res.error);
               }}
               className="rounded-full border-[1.5px] border-dashed border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary hover:border-fg hover:text-fg">
-              + {k.label}
+              <Plus aria-hidden className="size-4" />{k.label}
             </button>
           ))}
         </div>

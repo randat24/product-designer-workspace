@@ -38,7 +38,7 @@ export default async function PainPointsPage({ params }: { params: Promise<{ ws:
       {sorted.length === 0 ? (
         <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+        <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[640px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-meta text-fg-secondary">

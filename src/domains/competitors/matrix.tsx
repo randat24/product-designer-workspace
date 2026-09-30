@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowUpRight, Check, CircleHelp, Contrast, Pencil, Plus, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,7 @@ import type { CellNote, MatrixKind } from "./queries";
 const m = t.competitors.matrix;
 const ux = t.competitors.ux;
 const STICKY = ["var(--s1)", "var(--s2)", "var(--s3)", "var(--s4)", "var(--s5)", "var(--s6)", "var(--s7)"];
-const MARK: Record<FeatureValue, string> = { yes: "✓", partial: "◐", no: "✕", unknown: "?" };
+const MARK: Record<FeatureValue, typeof Check> = { yes: Check, partial: Contrast, no: X, unknown: CircleHelp };
 // Cell colours as in a competitor-analysis spreadsheet: green / yellow / red.
 const CELL_BG: Record<FeatureValue, string> = {
   yes: "color-mix(in srgb, var(--success) 12%, var(--surface))",
@@ -118,7 +119,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
   return (
     <div className="flex flex-col gap-4">
       <p className="text-meta text-fg-secondary">{m.redHint}</p>
-      <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+      <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
         <table className="min-w-full border-collapse text-sm">
           <thead>
             <tr>
@@ -175,7 +176,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                               v === "no" && "text-danger",
                               v === "unknown" && "text-fg-secondary",
                             )}>
-                            <span aria-hidden className="text-base leading-none">{MARK[v]}</span>
+                            {(() => { const Mark = MARK[v]; return <Mark aria-hidden className="size-4 shrink-0" />; })()}
                             <span aria-hidden>{values[v]}</span>
                           </button>
                           {editing === key ? (
@@ -192,7 +193,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                           ) : canEdit && (
                             <button type="button" onClick={() => setEditing(key)} aria-label={m.editNote(cellName)}
                               className="absolute top-1 right-1 grid size-6 place-items-center rounded-chip text-caption text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover/cell:opacity-100 focus:opacity-100 hover:bg-surface/80 hover:text-fg">
-                              <span aria-hidden>✎</span>
+                              <Pencil aria-hidden className="size-3.5" />
                             </button>
                           )}
                         </td>
@@ -233,12 +234,12 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
         <div className="flex flex-wrap items-end gap-2">
           {kind === "ux" && (
             <>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("nielsen")}>{ux.addNielsen}</Button>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("laws")}>{ux.addLaws}</Button>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("gestalt")}>{ux.addGestalt}</Button>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("memory")}>{ux.addMemory}</Button>
-              <Link href="/app/ux-laws" target="_blank" className="inline-flex h-9 items-center px-2 text-sm font-semibold underline underline-offset-4">
-                {t.uxLaws.open}
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("nielsen")}><Plus aria-hidden className="size-4" />{ux.addNielsen}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("laws")}><Plus aria-hidden className="size-4" />{ux.addLaws}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("gestalt")}><Plus aria-hidden className="size-4" />{ux.addGestalt}</Button>
+              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("memory")}><Plus aria-hidden className="size-4" />{ux.addMemory}</Button>
+              <Link href="/app/ux-laws" target="_blank" className="inline-flex h-9 items-center gap-1 px-2 text-sm font-semibold underline underline-offset-4">
+                {t.uxLaws.open}<ArrowUpRight aria-hidden className="size-4" />
               </Link>
             </>
           )}

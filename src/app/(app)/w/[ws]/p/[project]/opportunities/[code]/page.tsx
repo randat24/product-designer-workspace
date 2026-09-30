@@ -1,5 +1,5 @@
+import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { getOpportunityByCode, getSynthesisStats } from "@/domains/synthesis";
@@ -12,6 +12,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -29,7 +30,7 @@ export default async function OpportunityPage({ params }: { params: Promise<Para
 
   return (
     <EntityLayout aside={<TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "opportunity", id: o.id, code: o.code }} canEdit={ctx.canEdit} needsSources />}>
-      <Link href={`${ctx.base}/opportunities`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">{t.synthesis.back(s.title)}</Link>
+      <BackLink href={`${ctx.base}/opportunities`}>{t.synthesis.back(s.title)}</BackLink>
       <PageHeader title={o.title} eyebrow={<EntityChip type="opportunity" code={o.code} />}
         stat={{ value: st?.participants ?? 0, caption: s.participants }} />
       <div className="flex flex-col gap-8">
@@ -43,7 +44,7 @@ export default async function OpportunityPage({ params }: { params: Promise<Para
           <form action={createFlow}>
             <input type="hidden" name="projectId" value={ctx.project.id} />
             <input type="hidden" name="opportunityId" value={o.id} />
-            <Button type="submit" variant="secondary">{t.flows.fromOpportunity} →</Button>
+            <Button type="submit" variant="secondary">{t.flows.fromOpportunity}<ArrowRight aria-hidden className="size-4" /></Button>
           </form>
         )}
         {ctx.canEdit && <DeleteEntityButton type="opportunity" id={o.id} label={s.delete} />}

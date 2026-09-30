@@ -1,0 +1,36 @@
+import {
+  Blocks, Briefcase, ClipboardCheck, CircleAlert, FileText, Film, FlaskConical, LayoutGrid, Lightbulb, ListChecks,
+  type LucideIcon, Microscope, MonitorSmartphone, Network, PackageCheck, Palette, Puzzle, Scale, SearchCheck, Smartphone,
+  StickyNote, Swords, Table2, Target, Users, UsersRound, Workflow,
+} from "lucide-react";
+
+/** Lucide icon per project section (src/shared/navigation.ts). One icon, one meaning: reuse these in headers and ⌘K. */
+export const NAV_ICONS: Record<string, LucideIcon> = {
+  "": LayoutGrid,
+  brief: FileText,
+  competitors: Swords,
+  research: Microscope,
+  "research/participants": Users,
+  "research/matrix": Table2,
+  synthesis: StickyNote,
+  insights: Lightbulb,
+  "pain-points": CircleAlert,
+  opportunities: Target,
+  users: UsersRound,
+  jtbd: Briefcase,
+  hypotheses: FlaskConical,
+  requirements: ListChecks,
+  features: Puzzle,
+  ia: Network,
+  flows: Workflow,
+  screens: Smartphone,
+  ui: Palette,
+  "system/tokens": Palette,
+  "system/components": Blocks,
+  "system/motion": Film,
+  "system/responsive": MonitorSmartphone,
+  tests: ClipboardCheck,
+  findings: SearchCheck,
+  decisions: Scale,
+  handoff: PackageCheck,
+};

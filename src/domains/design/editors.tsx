@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus, X } from "lucide-react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
@@ -49,13 +50,13 @@ function StringList({ id, label, hint, items, readOnly, onChange }: {
             <Input id={i === 0 ? id : undefined} aria-label={`${label} ${i + 1}`} value={v} readOnly={readOnly} maxLength={300}
               placeholder={sc.itemPlaceholder} onChange={(e) => onChange(items.map((x, j) => (j === i ? e.target.value : x)))} />
             {!readOnly && (
-              <IconButton tone="danger" label={`${sc.removeItem} ${i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}>×</IconButton>
+              <IconButton tone="danger" label={`${sc.removeItem} ${i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}><X className="size-4" /></IconButton>
             )}
           </li>
         ))}
       </ol>
       {!readOnly && (
-        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...items, ""])}>+ {sc.addItem}</Button>
+        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...items, ""])}><Plus aria-hidden className="size-4" />{sc.addItem}</Button>
       )}
     </fieldset>
   );
@@ -77,13 +78,13 @@ function EventList({ items, readOnly, onChange }: { items: AnalyticsEvent[]; rea
             <Input aria-label={`${e.props} ${i + 1}`} placeholder={e.props} value={ev.props} readOnly={readOnly} maxLength={300}
               className="font-mono text-meta" onChange={(x) => set(i, { props: x.target.value })} />
             {!readOnly && (
-              <IconButton tone="danger" label={`${sc.removeItem}: ${ev.name || i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}>×</IconButton>
+              <IconButton tone="danger" label={`${sc.removeItem}: ${ev.name || i + 1}`} onClick={() => onChange(items.filter((_, j) => j !== i))}><X className="size-4" /></IconButton>
             )}
           </li>
         ))}
       </ul>
       {!readOnly && (
-        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...items, { name: "", trigger: "", props: "" }])}>+ {e.add}</Button>
+        <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...items, { name: "", trigger: "", props: "" }])}><Plus aria-hidden className="size-4" />{e.add}</Button>
       )}
     </fieldset>
   );
@@ -171,7 +172,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
                 <Input aria-label={`${f.option} ${i + 1}`} placeholder={f.option} value={a.option} readOnly={ro} maxLength={300}
                   className="font-semibold" onChange={(e) => setAlt(i, { option: e.target.value })} />
                 {!ro && (
-                  <IconButton tone="danger" label={`${dc.removeAlternative} ${i + 1}`} onClick={() => update({ alternatives: alts.filter((_, j) => j !== i) })}>×</IconButton>
+                  <IconButton tone="danger" label={`${dc.removeAlternative} ${i + 1}`} onClick={() => update({ alternatives: alts.filter((_, j) => j !== i) })}><X className="size-4" /></IconButton>
                 )}
               </div>
               <Input aria-label={`${f.why_rejected} ${i + 1}`} placeholder={f.why_rejected} value={a.why_rejected} readOnly={ro} maxLength={1000}
@@ -180,7 +181,7 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
           ))}
         </ul>
         {!ro && (
-          <Button variant="secondary" size="sm" className="self-start" onClick={() => update({ alternatives: [...alts, { option: "", why_rejected: "" }] })}>+ {dc.addAlternative}</Button>
+          <Button variant="secondary" size="sm" className="self-start" onClick={() => update({ alternatives: [...alts, { option: "", why_rejected: "" }] })}><Plus aria-hidden className="size-4" />{dc.addAlternative}</Button>
         )}
       </Section>
 

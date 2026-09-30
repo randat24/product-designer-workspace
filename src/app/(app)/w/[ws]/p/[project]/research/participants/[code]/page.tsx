@@ -11,6 +11,7 @@ import { EntityChip } from "@/shared/ui/entity-chip";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { Select } from "@/shared/ui/field";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -29,7 +30,7 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/research/participants`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">← {pt.back}</Link>
+      <BackLink href={`${ctx.base}/research/participants`}>{pt.back}</BackLink>
       <PageHeader title={participantTitle(p)} eyebrow={<span className="flex items-center gap-2"><EntityChip type="participant" code={p.code} />{p.segment_label}</span>} />
 
       <section aria-labelledby="p-interviews-h" className="mb-8 flex flex-col gap-3">

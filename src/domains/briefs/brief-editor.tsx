@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus, X } from "lucide-react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { FieldError, Input } from "@/shared/ui/field";
@@ -150,14 +151,14 @@ function ListField<T>({ id, label, hideLegend, addLabel, rows, empty, onChange, 
             <div className={cn("grid flex-1 gap-2", gridClass)}>{render(row, set(i), i)}</div>
             {!readOnly && (
               <IconButton tone="danger" onClick={() => onChange(rows.filter((_, j) => j !== i))}
-                label={`${t.brief.fields.remove}: ${label} ${i + 1}`}>×</IconButton>
+                label={`${t.brief.fields.remove}: ${label} ${i + 1}`}><X className="size-4" /></IconButton>
             )}
           </li>
         ))}
       </ul>
       {!readOnly && (
         <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...rows, empty])}>
-          + {addLabel}
+          <Plus aria-hidden className="size-4" />{addLabel}
         </Button>
       )}
     </fieldset>

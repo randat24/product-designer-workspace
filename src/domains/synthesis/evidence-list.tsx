@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { getTraceGraph, resolveEntities } from "@/domains/trace";
 import { EntityChip } from "@/shared/ui/entity-chip";
@@ -19,7 +20,7 @@ export async function EvidenceList({ type, id, base, empty }: { type: EntityType
   const items = unique.map((r) => resolved.get(`${r.type}:${r.id}`)).filter((x) => !!x);
 
   if (items.length === 0) {
-    return <p className="rounded-panel bg-warning/10 px-4 py-3 font-semibold text-warning">⚠ {empty}</p>;
+    return <p className="rounded-panel bg-warning/10 px-4 py-3 flex items-center gap-2 font-semibold text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{empty}</p>;
   }
   return (
     <ul className="flex flex-col gap-2">

@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowDown, ArrowUp, CornerDownRight, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
@@ -111,9 +112,9 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
               <input type="checkbox" className="sr-only" checked={value.is_key} onChange={(e) => update({ is_key: e.target.checked })} />
               {g.isKey}
             </label>
-            <IconButton size="sm" disabled={first} onClick={() => onMove(-1)} label={`${g.moveUp}: ${value.text}`}>↑</IconButton>
-            <IconButton size="sm" disabled={last} onClick={() => onMove(1)} label={`${g.moveDown}: ${value.text}`}>↓</IconButton>
-            <IconButton size="sm" tone="danger" onClick={onDelete} label={`${g.remove}: ${value.text}`}>×</IconButton>
+            <IconButton size="sm" disabled={first} onClick={() => onMove(-1)} label={`${g.moveUp}: ${value.text}`}><ArrowUp className="size-4" /></IconButton>
+            <IconButton size="sm" disabled={last} onClick={() => onMove(1)} label={`${g.moveDown}: ${value.text}`}><ArrowDown className="size-4" /></IconButton>
+            <IconButton size="sm" tone="danger" onClick={onDelete} label={`${g.remove}: ${value.text}`}><X className="size-4" /></IconButton>
           </div>
         )}
         {!canEdit && value.is_key && <span className="shrink-0 rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">{g.isKey}</span>}
@@ -122,17 +123,17 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
         <div className="flex flex-col gap-1 pl-4">
           {value.probes.map((probe, i) => (
             <div key={i} className="flex items-center gap-1.5">
-              <span aria-hidden className="text-fg-secondary">↳</span>
+              <CornerDownRight aria-hidden className="size-4 shrink-0 text-fg-secondary" />
               <Input aria-label={`${g.probes} ${i + 1}`} value={probe} readOnly={!canEdit} maxLength={300} placeholder={g.probePlaceholder}
                 className="h-8 text-meta" onChange={(e) => update({ probes: value.probes.map((x, j) => (j === i ? e.target.value : x)) })} />
               {canEdit && (
                 <IconButton size="sm" tone="danger" label={`${t.brief.fields.remove}: ${g.probes} ${i + 1}`}
-                  onClick={() => update({ probes: value.probes.filter((_, j) => j !== i) })}>×</IconButton>
+                  onClick={() => update({ probes: value.probes.filter((_, j) => j !== i) })}><X className="size-4" /></IconButton>
               )}
             </div>
           ))}
           {canEdit && value.probes.length < 10 && (
-            <Button variant="ghost" size="sm" className="self-start" onClick={() => update({ probes: [...value.probes, ""] })}>{g.addProbe}</Button>
+            <Button variant="ghost" size="sm" className="self-start" onClick={() => update({ probes: [...value.probes, ""] })}><Plus aria-hidden className="size-4" />{g.addProbe}</Button>
           )}
         </div>
       )}

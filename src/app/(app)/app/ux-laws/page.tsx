@@ -3,6 +3,7 @@ import Link from "next/link";
 import { UX_LAW_GROUPS, UX_LAWS, uxLawUrl } from "@/domains/ux-laws";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
+import { ArrowLeft } from "lucide-react";
 
 const l = t.uxLaws;
 
@@ -13,8 +14,8 @@ export default function UxLawsPage() {
   return (
     <div className="min-h-screen">
       <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
-        <span className="font-display text-lg leading-none font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
-        <Link href="/app" className="text-meta font-semibold opacity-80 hover:opacity-100 hover:underline">{l.back}</Link>
+        <span className="min-w-0 truncate font-display text-lg leading-none font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
+        <Link href="/app" className="inline-flex shrink-0 items-center gap-1 text-meta font-semibold opacity-80 hover:opacity-100 hover:underline"><ArrowLeft aria-hidden className="size-4" />{l.back}</Link>
       </header>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(18px,4vw,56px)] py-10">

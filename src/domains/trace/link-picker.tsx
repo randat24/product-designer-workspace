@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus, X } from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ENTITIES, type EntityType } from "@/shared/entities";
@@ -10,7 +11,7 @@ import { t } from "@/shared/i18n/ru";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { linkEntities, unlinkEntities } from "./actions";
 import type { LinkRule, ResolvedEntity } from "./queries";
-import { Button } from "@/shared/ui/button";
+import { Button, IconButton } from "@/shared/ui/button";
 
 /**
  * "Связать…": pick any entity of an allowed type; the direction and relation come
@@ -54,7 +55,7 @@ export function LinkPicker({ projectId, entity, candidates, upRules, downRules }
   if (!open) {
     return (
       <Button variant="secondary" size="sm" className="self-start" onClick={() => setOpen(true)}>
-        + {t.trace.link}
+        <Plus aria-hidden className="size-4" />{t.trace.link}
       </Button>
     );
   }
@@ -83,13 +84,13 @@ export function LinkPicker({ projectId, entity, candidates, upRules, downRules }
 export function UnlinkButton({ linkId, label }: { linkId: string; label: string }) {
   const { pending, run, error } = useAction();
   return (
-    <>
-    <ActionError error={error} className="text-caption text-danger" />
-    <button type="button" disabled={pending} aria-label={`${t.trace.unlink}: ${label}`}
-      onClick={() => run(() => unlinkEntities(linkId))}
-      className="hit grid size-7 shrink-0 place-items-center rounded-chip text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
-      <span aria-hidden>×</span>
-    </button>
-    </>
+    <span className="relative z-10 flex flex-col items-end">
+      <IconButton size="sm" tone="danger" disabled={pending} label={`${t.trace.unlink}: ${label}`}
+        onClick={() => run(() => unlinkEntities(linkId))}
+        className="size-7 [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100">
+        <X className="size-4" />
+      </IconButton>
+      <ActionError error={error} className="text-caption text-danger" />
+    </span>
   );
 }

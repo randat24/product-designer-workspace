@@ -7,6 +7,7 @@ import { PlanEditor } from "@/domains/research/plan-editor";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { t } from "@/shared/i18n/ru";
+import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -24,7 +25,7 @@ export default async function PlanPage({ params }: { params: Promise<Params> }) 
 
   return (
     <div className="max-w-4xl">
-      <Link href={`${ctx.base}/research`} className="mb-4 inline-block text-meta font-semibold text-fg-secondary hover:text-fg">← {t.research.plan.back}</Link>
+      <BackLink href={`${ctx.base}/research`}>{t.research.plan.back}</BackLink>
       <PageHeader title={plan.title} eyebrow={<EntityChip type="research_plan" code={plan.code} title={plan.title} />} />
       <PlanEditor key={plan.id} id={plan.id} canEdit={ctx.canEdit} initial={{
         title: plan.title, goal: plan.goal, questions, hypotheses_text: plan.hypotheses_text, audience: plan.audience,

@@ -1,5 +1,6 @@
 "use client";
 
+import { Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/shared/lib/cn";
@@ -89,9 +90,9 @@ export function CommandPalette({ items: staticItems, load, triggerClassName }: {
   return (
     <>
       <button type="button" onClick={open}
-        className={cn("flex h-11 w-full items-center md:h-8 justify-between gap-2 rounded-control border border-line bg-canvas px-2.5 text-meta text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
-        {t.palette.open}
-        <kbd className="hidden font-sans text-caption md:inline">⌘K</kbd>
+        className={cn("flex h-11 w-full items-center lg:h-8 justify-between gap-2 rounded-control border border-line bg-canvas px-2.5 text-meta text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
+        <span className="flex items-center gap-2"><Search aria-hidden className="size-4" />{t.palette.open}</span>
+        <kbd className="hidden font-sans text-caption lg:inline">⌘K</kbd>
       </button>
 
       {/* Clicking the backdrop closes it for mouse users; the keyboard has Esc (native <dialog>). */}

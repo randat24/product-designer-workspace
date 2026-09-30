@@ -48,9 +48,11 @@ export default async function ProjectLayout({ children, params }: {
   ];
 
   return (
-    <div className="grid min-h-screen grid-cols-1 md:grid-cols-[264px_minmax(0,1fr)]">
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[264px_minmax(0,1fr)]">
       <Sidebar wsSlug={workspace.slug} wsName={workspace.name} projectSlug={project.slug} projectName={project.name} commands={commands} loadEntities={loadPaletteEntities.bind(null, workspace.slug, project.slug)} progress={progress} />
-      <main className="min-w-0 px-[clamp(18px,4vw,56px)] pt-8 pb-20 md:pt-10">
+      <main className="min-w-0 px-[clamp(18px,4vw,56px)] pt-8 pb-20 lg:pt-10">
+        {/* Wide screens: the work area is centred and capped, so forms and lists do not hug the rail. */}
+        <div className="mx-auto w-full max-w-[1240px]">
         {project.archived_at && (
           <form action={setProjectArchived} role="status"
             className="mb-6 flex max-w-3xl flex-wrap items-center justify-between gap-3 rounded-panel border-[1.5px] border-dashed border-line px-4 py-2.5 text-meta">
@@ -63,6 +65,7 @@ export default async function ProjectLayout({ children, params }: {
           </form>
         )}
         {children}
+        </div>
       </main>
     </div>
   );

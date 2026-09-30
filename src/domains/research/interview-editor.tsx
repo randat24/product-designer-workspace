@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { TextField } from "@/shared/ui/form-section";
@@ -134,7 +135,7 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
         </ul>
         {canEdit && (
           <Button variant="secondary" size="sm" className="self-start" onClick={() => setNewNotes((n) => [...n, Date.now()])}>
-            + {iv.addNote}
+            <Plus aria-hidden className="size-4" />{iv.addNote}
           </Button>
         )}
         <div className="rounded-panel border border-line bg-surface p-5">

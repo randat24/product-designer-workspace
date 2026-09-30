@@ -40,7 +40,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
           <section aria-labelledby="opp-matrix-h" className="flex flex-col gap-3">
             <h2 id="opp-matrix-h" className="text-heading font-semibold">{s.matrix}</h2>
             <p className="text-meta text-fg-secondary">{s.matrixHint}</p>
-            <div className="overflow-x-auto">
+            <div className="relative overflow-x-auto">
               <table className="w-full min-w-[640px] table-fixed border-separate border-spacing-2">
                 <thead>
                   <tr>

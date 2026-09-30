@@ -19,7 +19,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
  */
 export const Select = forwardRef<HTMLSelectElement, Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> & { size?: "md" | "sm" }>(
   function Select({ className, size = "md", ...p }, ref) {
-    return <select ref={ref} className={cn(control, "min-w-0 cursor-pointer disabled:cursor-default disabled:opacity-60", size === "md" ? "h-9" : "h-8 px-1.5 text-meta", className)} {...p} />;
+    return <select ref={ref} className={cn(control, "select-control min-w-0 cursor-pointer disabled:cursor-default disabled:opacity-60", size === "md" ? "h-9" : "h-8 pl-2 text-meta", className)} {...p} />;
   },
 );
 

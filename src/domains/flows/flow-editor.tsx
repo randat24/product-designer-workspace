@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight, Plus } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
@@ -350,8 +351,8 @@ function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPat
             {screens.map((s) => <option key={s.id} value={s.id}>{s.code} {s.name}</option>)}
           </Select>
           {node.data.screen && (
-            <a href={`${base}/screens/${node.data.screen.code}`} className="self-start text-meta font-semibold underline underline-offset-2">
-              {f.openScreen(node.data.screen.code)}
+            <a href={`${base}/screens/${node.data.screen.code}`} className="inline-flex items-center gap-1 self-start text-meta font-semibold underline underline-offset-2">
+              {f.openScreen(node.data.screen.code)}<ArrowRight aria-hidden className="size-4" />
             </a>
           )}
           {editable && !node.data.screen && (
@@ -363,7 +364,7 @@ function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPat
                 setBusy(false);
                 if (report(res) && res.ok && res.id && res.code) onScreenCreated({ id: res.id, code: res.code, name: res.name ?? label });
               }}>
-              + {f.screenCreate}
+              <Plus aria-hidden className="size-4" />{f.screenCreate}
             </Button>
           )}
         </div>
