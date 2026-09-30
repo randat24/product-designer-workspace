@@ -4,28 +4,27 @@ import { useActionState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Field, Input } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
-import { sendMagicLink, signInWithGoogle, type LoginState } from "./actions";
+import { signInWithGoogle, signInWithPassword, type LoginState } from "./actions";
 
 // Show the Google button only once the provider is enabled in Supabase → Authentication → Providers.
 const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "on";
 
 export function LoginForm({ next, initialError }: { next: string; initialError?: string }) {
-  const [state, action, pending] = useActionState<LoginState, FormData>(sendMagicLink, initialError ? { error: initialError } : undefined);
-
-  if (state?.sentTo) {
-    return <p role="status" className="rounded-[14px] border border-line bg-surface p-5">{t.auth.sent(state.sentTo)}</p>;
-  }
+  const [state, action, pending] = useActionState<LoginState, FormData>(signInWithPassword, initialError ? { error: initialError } : undefined);
 
   return (
     <div className="flex flex-col gap-4">
       <form action={action} className="flex flex-col gap-3" noValidate>
         <input type="hidden" name="next" value={next} />
-        <Field label={t.auth.email} htmlFor="email" error={state?.error}>
-          <Input id="email" name="email" type="email" autoComplete="email" required autoFocus
-            placeholder={t.auth.emailPlaceholder} aria-invalid={!!state?.error}
-            aria-describedby={state?.error ? "email-error" : undefined} />
+        <Field label={t.auth.email} htmlFor="email">
+          <Input id="email" name="email" type="email" autoComplete="username" required autoFocus
+            placeholder={t.auth.emailPlaceholder} aria-invalid={!!state?.error} />
         </Field>
-        <Button type="submit" disabled={pending}>{t.auth.sendLink}</Button>
+        <Field label={t.auth.password} htmlFor="password" error={state?.error}>
+          <Input id="password" name="password" type="password" autoComplete="current-password" required
+            aria-invalid={!!state?.error} aria-describedby={state?.error ? "password-error" : undefined} />
+        </Field>
+        <Button type="submit" disabled={pending}>{pending ? t.auth.signingIn : t.auth.signIn}</Button>
       </form>
       {GOOGLE_ENABLED && (
         <>

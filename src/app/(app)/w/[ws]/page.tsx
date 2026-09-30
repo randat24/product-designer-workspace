@@ -29,7 +29,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
           <WorkspaceSwitcher current={workspace.slug} workspaces={workspaces} />
         </span>
         <form action="/auth/signout" method="post" className="flex items-center gap-3 text-[13px]">
-          <span className="hidden opacity-70 sm:inline">{user?.email}</span>
+          <Link href="/account" className="hidden opacity-70 hover:opacity-100 hover:underline sm:inline">{user?.email}</Link>
           <button className="rounded-lg border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
         </form>
       </header>
