@@ -136,3 +136,29 @@
 | Low | Заглушки в `.env.example` | X2 |
 
 Подробности внедрения — в `docs/SEO.md`, `docs/ANALYTICS.md`, `docs/GA4_SETUP.md`, `docs/SEARCH_CONSOLE_SETUP.md`, `docs/RELEASE_CHECKLIST.md`.
+
+---
+
+## 4. Статус после внедрения
+
+Всё из плана выше сделано и проверено на production-сборке (`next build` + `next start`) и Lighthouse (мобильный профиль).
+
+| Проверка | Результат |
+|---|---|
+| `/robots.txt`, `/sitemap.xml`, `/og`, иконки | 200, без редиректа на `/login` |
+| `/foo`, `/xx`, `/uk/nope`, `/uk/cases/nope` | 404, полный HTML на языке URL или браузера, `noindex` |
+| `/app`, `/w/**`, `/account` без входа | 307 на `/login`, `X-Robots-Tag: noindex, nofollow` |
+| `<html lang>` | `uk` / `en` на сайте, `ru` в инструменте |
+| canonical, hreflang uk/en/x-default, OG, Twitter | на всех страницах сайта |
+| Кейсы-примеры | `noindex, follow`, нет в sitemap |
+| Страницы сайта | ISR / статика (`Cache-Control: s-maxage`), middleware без Supabase |
+| Lighthouse `/uk` | Performance 94, Accessibility 100, Best Practices 100, SEO 100 |
+| Lighthouse `/en/cases`, `/uk/about` | 97 / 100 / 100 / 100 и 100 / 100 / 100 / 100 |
+| Lighthouse кейс-пример | 97 / 97 / 100 / 69 — SEO ниже из-за намеренного `noindex`; контраст — в иллюстрациях кейса-примера |
+
+### Осталось
+
+- **Контент.** Все 4 кейса — примеры (`sample`), в индекс не идут. Реальные тексты, обложки, галереи и подтверждённые метрики — от владельца.
+- **Контраст в иллюстрациях кейса-примера** (подписи-чипы в макетах матрицы и стикерах): заменятся реальными изображениями кейса.
+- **CLS 0,08 на главной** (порог «хорошо» — 0,1): сдвиг от подмены шрифта крупного заголовка. Можно довести до нуля метрикой fallback-шрифта (`size-adjust`), если Speed Insights покажет проблему на реальных визитах.
+- **Домен и внешние сервисы**: покупка домена, `NEXT_PUBLIC_SITE_URL`, GA4, Search Console — по [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
