@@ -125,10 +125,10 @@ function ColumnHeader({ pattern, count, canEdit, onDelete }: { pattern: Pattern 
       {canEdit && (
         <form action={createInsightFromPattern}>
           <input type="hidden" name="patternId" value={pattern.id} />
-          <button type="submit" disabled={count === 0}
-            className="w-full rounded-lg bg-on-sticky px-2.5 py-1.5 text-[13px] font-bold text-white disabled:opacity-40">
+          <Button type="submit" variant="ghost" disabled={count === 0}
+            className="h-auto w-full rounded-lg bg-on-sticky px-2.5 py-1.5 text-[13px] font-bold text-white hover:bg-on-sticky hover:text-white disabled:opacity-40">
             {b.formulate} →
-          </button>
+          </Button>
         </form>
       )}
     </header>

@@ -62,6 +62,7 @@ const SOURCES: Partial<Record<EntityType, { table: string; title: string; extra?
   opportunity: { table: "opportunities", title: "title" },
   user_flow: { table: "user_flows", title: "name" },
   screen: { table: "screens", title: "name" },
+  design_decision: { table: "design_decisions", title: "title" },
 };
 
 type Row = { id: string; code: string; [k: string]: unknown };
@@ -90,8 +91,6 @@ export async function resolveEntities(base: string, refs: { type: EntityType; id
         participant = iv?.participants?.code;
       } else if (type === "pattern") {
         href = `${base}/synthesis#${row.code}`;
-      } else if (type === "screen") {
-        href = `${base}/screens`; // screen pages ship in Phase 8a
       } else if (type === "interview") {
         const p = row.participants as Nested;
         participant = p?.code;

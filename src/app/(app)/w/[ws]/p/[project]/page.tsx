@@ -6,6 +6,7 @@ import { COMPETITORS_TARGET, getMatrix, isAssessed, listCompetitors } from "@/do
 import { getResearchStats, listInterviews, RESEARCH_TARGET_DEFAULT } from "@/domains/research";
 import { getSynthesisOverview, listOpportunities } from "@/domains/synthesis";
 import { listFlows } from "@/domains/flows";
+import { listDecisions, listScreens } from "@/domains/design";
 import { createClient } from "@/shared/lib/supabase/server";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
@@ -43,8 +44,9 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
     getResearchStats(project.id), listInterviews(project.id),
   ]);
   const researchTarget = research.target ?? RESEARCH_TARGET_DEFAULT;
-  const [synth, flows, opportunities] = await Promise.all([
+  const [synth, flows, opportunities, screens, decisions] = await Promise.all([
     getSynthesisOverview(project.id), listFlows(project.id), listOpportunities(project.id),
+    listScreens(project.id), listDecisions(project.id),
   ]);
   const unlinkedScreens = await countScreenNodesWithoutScreen(flows.map((f) => f.id));
   const cards = synth.quotes + synth.observations;
@@ -95,6 +97,18 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
       return [{ segment, label: item.label, phase: item.phase, state, percent: flows.length ? (covered / flows.length) * 100 : 0,
         detail: t.flows.stageDetail(flows.length, covered) }];
     }
+    if (segment === "screens") {
+      const ready = screens.filter((x) => x.missingStates === 0).length;
+      const state: StageState = screens.length > 0 && ready === screens.length ? "done" : screens.length > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, percent: screens.length ? (ready / screens.length) * 100 : 0,
+        detail: t.project.screensDetail(screens.length, ready) }];
+    }
+    if (segment === "decisions") {
+      const backed = decisions.filter((x) => x.evidence > 0).length;
+      const state: StageState = decisions.length > 0 && backed === decisions.length ? "done" : decisions.length > 0 ? "active" : "todo";
+      return [{ segment, label: item.label, phase: item.phase, state, percent: decisions.length ? (backed / decisions.length) * 100 : 0,
+        detail: t.project.decisionsDetail(decisions.length, backed) }];
+    }
     return [{ segment, label: item.label, phase: item.phase, state: item.phase > CURRENT_PHASE ? "soon" : "todo" }];
   });
 
@@ -140,6 +154,19 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
   }
   for (const fl of flows.filter((f) => (unlinkedScreens.get(f.id) ?? 0) > 0).slice(0, 3)) {
     nextActions.push({ key: `fls-${fl.code}`, label: t.nextAction.flowScreens(fl.code, unlinkedScreens.get(fl.id) ?? 0), href: `${base}/flows/${fl.code}` });
+  }
+
+  for (const sc of screens.filter((x) => x.missingStates > 0).slice(0, 3)) {
+    nextActions.push({ key: `scs-${sc.code}`, label: t.nextAction.screenStates(sc.code, sc.missingStates), href: `${base}/screens/${sc.code}#states-h` });
+  }
+  for (const sc of screens.filter((x) => x.upstream === 0).slice(0, 2)) {
+    nextActions.push({ key: `scu-${sc.code}`, label: t.nextAction.screenUpstream(sc.code), href: `${base}/screens/${sc.code}` });
+  }
+  if (screens.length > 0 && decisions.length === 0) {
+    nextActions.push({ key: "dec", label: t.nextAction.firstDecision, href: `${base}/screens/${screens[0]!.code}#decisions-h` });
+  }
+  for (const d of decisions.filter((x) => x.evidence === 0 && x.status !== "superseded" && x.status !== "rejected").slice(0, 3)) {
+    nextActions.push({ key: `dece-${d.code}`, label: t.nextAction.decisionEvidence(d.code), href: `${base}/decisions/${d.code}#evidence-h` });
   }
 
   // Average over stages that have shipped; later phases join as they land.

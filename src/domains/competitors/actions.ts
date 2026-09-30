@@ -117,6 +117,7 @@ export async function setFeatureValue(competitorId: string, featureId: string, v
 // ---------------------------------------------------------------- screenshots
 
 const attachmentSchema = z.object({
+  entityType: z.enum(["competitor", "screen"]).default("competitor"),
   projectId: z.uuid(),
   entityId: z.uuid(),
   storagePath: z.string().max(300),
@@ -128,11 +129,11 @@ const attachmentSchema = z.object({
 /** Registers a file the browser has already uploaded to Storage (RLS guards both steps). */
 export async function registerScreenshot(input: z.input<typeof attachmentSchema>) {
   const parsed = attachmentSchema.safeParse(input);
-  if (!parsed.success || !parsed.data.storagePath.startsWith(`${parsed.data.projectId}/competitor/`)) return { ok: false as const };
+  if (!parsed.success || !parsed.data.storagePath.startsWith(`${parsed.data.projectId}/${parsed.data.entityType}/`)) return { ok: false as const };
   const a = parsed.data;
   const supabase = await createClient();
   const { error } = await supabase.from("attachments").insert({
-    project_id: a.projectId, entity_type: "competitor", entity_id: a.entityId,
+    project_id: a.projectId, entity_type: a.entityType, entity_id: a.entityId,
     storage_path: a.storagePath, file_name: a.fileName, mime_type: a.mimeType, size_bytes: a.sizeBytes,
   });
   if (error) {

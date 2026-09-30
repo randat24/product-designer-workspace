@@ -14,8 +14,9 @@ const EXT: Record<string, string> = { "image/png": "png", "image/jpeg": "jpg", "
  * Screenshot gallery. The browser uploads straight to the private Storage bucket
  * (RLS checks the project from the path), then the server registers the attachment.
  */
-export function Screenshots({ projectId, entityId, items, canEdit }: {
+export function Screenshots({ projectId, entityId, items, canEdit, entityType = "competitor", title = t.competitors.sections.screenshots, emptyText = t.competitors.screenshotsEmpty }: {
   projectId: string; entityId: string; items: Screenshot[]; canEdit: boolean;
+  entityType?: "competitor" | "screen"; title?: string; emptyText?: string;
 }) {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
@@ -37,10 +38,10 @@ export function Screenshots({ projectId, entityId, items, canEdit }: {
         failed.push(file.name);
         continue;
       }
-      const path = `${projectId}/competitor/${crypto.randomUUID()}.${EXT[file.type]}`;
+      const path = `${projectId}/${entityType}/${crypto.randomUUID()}.${EXT[file.type]}`;
       const { error } = await supabase.storage.from("attachments").upload(path, file, { contentType: file.type });
       const res = error ? { ok: false } : await registerScreenshot({
-        projectId, entityId, storagePath: path, fileName: file.name, mimeType: file.type as (typeof ATTACHMENT_MIME)[number], sizeBytes: file.size,
+        entityType, projectId, entityId, storagePath: path, fileName: file.name, mimeType: file.type as (typeof ATTACHMENT_MIME)[number], sizeBytes: file.size,
       });
       if (!res.ok) failed.push(file.name);
     }
@@ -60,7 +61,7 @@ export function Screenshots({ projectId, entityId, items, canEdit }: {
       onDragLeave={() => setDragging(false)}
       onDrop={(e) => { if (!canEdit) return; e.preventDefault(); setDragging(false); upload([...e.dataTransfer.files]); }}>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="screenshots-h" className="text-heading font-semibold">{t.competitors.sections.screenshots}</h2>
+        <h2 id="screenshots-h" className="text-heading font-semibold">{title}</h2>
         {canEdit && (
           <>
             <input ref={input} type="file" accept={ATTACHMENT_MIME.join(",")} multiple hidden
@@ -75,7 +76,7 @@ export function Screenshots({ projectId, entityId, items, canEdit }: {
       <div className={cn("rounded-[14px] border border-line bg-surface p-5", dragging && "border-[1.5px] border-dashed border-fg")}>
         {items.length === 0 ? (
           <p className="text-center text-fg-secondary">
-            {t.competitors.screenshotsEmpty} {canEdit && t.competitors.uploadHint}
+            {emptyText} {canEdit && t.competitors.uploadHint}
           </p>
         ) : (
           <ul className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]">
