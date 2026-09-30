@@ -13,9 +13,12 @@ const ERROR_TITLE = "Не получилось открыть страницу";
 async function openDemoProject(page: Page): Promise<string> {
   await page.goto("/app");
   await expect(page).toHaveURL(/\/w\/[^/]+$/);
+  // A fresh account shows the demo button; later runs already have the project. Wait for either.
   const demo = page.getByRole("button", { name: "Открыть демо-проект" });
+  const existing = page.locator('main a[href*="/p/"]').first();
+  await expect(demo.or(existing)).toBeVisible();
   if (await demo.isVisible()) await demo.click();
-  else await page.locator('a[href*="/p/"]').first().click();
+  else await existing.click();
   await expect(page).toHaveURL(/\/w\/[^/]+\/p\/[^/]+$/);
   return new URL(page.url()).pathname;
 }
