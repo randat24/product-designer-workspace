@@ -24,6 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
-        with: { version: latest }
+        with: { version: 2.118.0 } # pinned: "latest" calls the GitHub API and hits its rate limit
       - run: supabase db start
       - run: supabase test db
