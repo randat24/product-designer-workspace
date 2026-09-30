@@ -6,6 +6,7 @@ import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
+import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { t } from "@/shared/i18n/ru";
 import { deleteDecision, deleteScreen, saveDecision, saveScreen } from "./actions";
 import {
@@ -126,8 +127,8 @@ export function ScreenEditor({ id, initial, canEdit }: { id: string; initial: Sc
             <Input id="figma_url" type="url" inputMode="url" value={v.figma_url ?? ""} readOnly={ro} placeholder="https://www.figma.com/design/…"
               aria-invalid={error?.field === "figma_url"} aria-describedby={error?.field === "figma_url" ? "figma-error" : undefined}
               className="min-w-0 flex-1" onChange={(e) => update({ figma_url: e.target.value })} />
-            {v.figma_url && /^https?:\/\//.test(v.figma_url) && (
-              <a href={v.figma_url} target="_blank" rel="noreferrer" className="text-[13px] font-semibold underline underline-offset-2">{sc.openFigma}</a>
+            {v.figma_url && isHttpUrl(withScheme(v.figma_url)) && (
+              <a href={withScheme(v.figma_url)} target="_blank" rel="noreferrer" className="text-[13px] font-semibold underline underline-offset-2">{sc.openFigma}</a>
             )}
           </div>
           {error?.field === "figma_url" && <p id="figma-error" className="text-[13px] text-danger">{error.message}</p>}

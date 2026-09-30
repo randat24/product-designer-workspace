@@ -5,6 +5,24 @@ export const plural = (n: number, one: string, few: string, many: string) =>
 
 export const ru = {
   app: { name: "Product Designer Workspace" },
+  uxLaws: {
+    title: "Законы UX",
+    lede: "30 принципов, по которым проверяем интерфейсы: свои экраны, сценарии и продукты конкурентов. У каждого — вопрос для проверки.",
+    count: "законов",
+    groups: "Группы законов",
+    check: "Проверка",
+    back: "← К проектам",
+    nav: "Справочник: законы UX",
+    open: "Справочник законов UX →",
+  },
+  status: {
+    loading: "Загрузка…",
+    errorTitle: "Не получилось открыть страницу",
+    errorBody: "Возможно, пропала связь или сервер не ответил. Данные, которые вы уже ввели, сохранены автоматически.",
+    retry: "Попробовать ещё раз",
+    toOverview: "К обзору проекта",
+    toProjects: "К проектам",
+  },
   auth: {
     title: "Вход",
     brand: "Рабочая тетрадь дизайнера",
@@ -290,6 +308,8 @@ export const ru = {
       values: { yes: "Соблюдено", partial: "Частично", no: "Нарушено", unknown: "Не оценено" },
       addNielsen: "+ 10 эвристик Нильсена",
       addLaws: "+ Законы UX",
+      addGestalt: "+ Гештальт",
+      addMemory: "+ Память и внимание",
       criterionPlaceholder: "Свой критерий",
       empty: "Добавьте эвристики Нильсена или законы UX — они станут строками оценки.",
     },
@@ -519,6 +539,8 @@ export const ru = {
       evidence: "Источники",
       evidenceEmpty: "У инсайта нет источников. Свяжите его с цитатами или наблюдениями в панели «Связи».",
       participants: (n: number) => `${n} уч.`,
+      singleSource: "Один участник",
+      singleSourceHint: "Все источники этого инсайта — от одного участника. Это может быть частный случай: найдите подтверждение у других, прежде чем строить на нём решения.",
       toPainPoint: "Создать боль из инсайта",
       toOpportunity: "Создать возможность",
       delete: "Удалить инсайт",
@@ -707,7 +729,7 @@ export const ru = {
     removeItem: "Убрать",
     event: { name: "Событие", trigger: "Когда", props: "Параметры", add: "Добавить событие" },
     openFigma: "Открыть в Figma ↗",
-    invalidUrl: "Ссылка должна начинаться с https://",
+    invalidUrl: "Нужна ссылка на Figma: figma.com/… или https://…",
     preview: "Превью",
     previewEmpty: "Загрузите превью экрана — PNG или JPG из Figma.",
     states: {

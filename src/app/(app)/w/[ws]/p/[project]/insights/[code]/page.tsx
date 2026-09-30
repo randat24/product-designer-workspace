@@ -34,6 +34,12 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
       <div className="flex flex-col gap-8">
         <InsightEditor key={i.id} id={i.id} canEdit={ctx.canEdit}
           initial={{ title: i.title, statement: i.statement, confidence: i.confidence, status: i.status }} />
+        {/* Cognitive bias (docs/UX_LAWS.md, UX-08): one voice is not a pattern yet. */}
+        {st && st.sources > 0 && st.participants === 1 && (
+          <p role="note" className="max-w-[62ch] rounded-[12px] border-[1.5px] border-dashed border-warning px-4 py-3 text-[14px]">
+            <span className="font-semibold text-warning">⚠ {s.singleSource}.</span> {s.singleSourceHint}
+          </p>
+        )}
         <section aria-labelledby="evidence-h" className="flex flex-col gap-3">
           <h2 id="evidence-h" className="text-heading font-semibold">{s.evidence}</h2>
           <EvidenceList type="insight" id={i.id} base={ctx.base} empty={s.evidenceEmpty} />

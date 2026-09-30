@@ -57,6 +57,9 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
                         {s.columns.sources}: {st?.sources} · {s.participants(st?.participants ?? 0)}
                       </span>
                     )}
+                    {!unsupported && st?.participants === 1 && (
+                      <span className="rounded-full bg-warning/15 px-2.5 py-0.5 text-warning" title={s.singleSourceHint}>⚠ {s.singleSource}</span>
+                    )}
                   </span>
                 </Link>
               </li>

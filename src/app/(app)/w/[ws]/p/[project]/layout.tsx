@@ -59,6 +59,7 @@ export default async function ProjectLayout({ children, params }: {
         hint: i.phase > CURRENT_PHASE ? t.palette.soon(i.phase) : g.title,
       })),
     ),
+    { id: "ux-laws", label: t.uxLaws.title, href: "/app/ux-laws", group: t.palette.sections, hint: t.uxLaws.nav },
     ...projects
       .filter((p) => !p.archived_at && p.id !== project.id)
       .map((p) => ({ id: `project:${p.id}`, label: p.name, href: `/w/${workspace.slug}/p/${p.slug}`, group: t.palette.projects })),

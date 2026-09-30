@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import { t } from "@/shared/i18n/ru";
+import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { decisionSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
 
 const refresh = () => revalidatePath("/w/[ws]/p/[project]", "layout");
@@ -61,7 +62,7 @@ export async function deleteScreen(formData: FormData) {
 const statePatch = z.object({
   status: z.enum(["missing", "designed", "n_a"]),
   description: z.string().trim().max(1000).transform((v) => v || null),
-  figma_url: z.string().trim().max(2000).transform((v) => v || null).refine((v) => v === null || /^https?:\/\//.test(v)),
+  figma_url: z.string().trim().max(2000).transform((v) => (v ? withScheme(v) : null)).refine((v) => v === null || isHttpUrl(v)),
 }).partial();
 
 export async function saveState(id: string, patch: z.input<typeof statePatch>): Promise<Result> {

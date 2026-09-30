@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Enums } from "@/types/database";
 import { t } from "@/shared/i18n/ru";
+import { isHttpUrl, withScheme } from "@/shared/lib/url";
 
 export type ScreenStatus = Enums<"screen_status">;
 export type StateKind = Enums<"screen_state_kind">;
@@ -18,9 +19,10 @@ export const DECISION_STATUSES = opts(t.decisions.statuses);
 export const KEY_STATES: StateKind[] = ["loading", "empty", "error"];
 
 const text = (max = 5000) => z.string().trim().max(max).nullish().transform((v) => v || null);
+// "figma.com/design/…" gets https:// added; other schemes (javascript:, file:) are rejected.
 const url = z.string().trim().max(2000).nullish()
-  .transform((v) => v || null)
-  .refine((v) => v === null || /^https?:\/\//.test(v), { message: "url" });
+  .transform((v) => (v ? withScheme(v) : null))
+  .refine((v) => v === null || isHttpUrl(v), { message: "url" });
 
 export const screenSpecSchema = z.object({
   name: z.string().trim().min(1).max(200),

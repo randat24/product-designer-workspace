@@ -233,6 +233,11 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
             <>
               <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("nielsen")}>{ux.addNielsen}</Button>
               <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("laws")}>{ux.addLaws}</Button>
+              <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("gestalt")}>{ux.addGestalt}</Button>
+              <Button type="button" variant="secondary" disabled={pending} onClick={() => addTemplate("memory")}>{ux.addMemory}</Button>
+              <Link href="/app/ux-laws" target="_blank" className="inline-flex h-9 items-center px-2 text-sm font-semibold underline underline-offset-4">
+                {t.uxLaws.open}
+              </Link>
             </>
           )}
           <form onSubmit={add} className="flex flex-wrap items-end gap-2">

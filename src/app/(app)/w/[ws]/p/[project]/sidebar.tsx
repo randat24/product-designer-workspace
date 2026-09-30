@@ -75,6 +75,10 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, pr
             </ul>
           </div>
         ))}
+        {/* Reference at the end of the list (serial position, docs/UX_LAWS.md UX-14). */}
+        <Link href="/app/ux-laws" className="hidden rounded-[10px] px-2.5 py-1.5 text-[13px] font-semibold opacity-70 hover:bg-rail-fg/10 hover:opacity-100 md:block">
+          {t.uxLaws.nav}
+        </Link>
       </div>
     </nav>
   );
