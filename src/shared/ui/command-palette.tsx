@@ -8,7 +8,7 @@ import { t } from "@/shared/i18n/ru";
 export type CommandItem = { id: string; label: string; href: string; group: string; hint?: string; keywords?: string };
 
 /**
- * ⌘K / Ctrl+K palette (docs/DESIGN-SYSTEM.md §3): sections and actions at once; entities (codes and
+ * ⌘K / Ctrl+K palette (docs/DESIGN-SYSTEM.md, «Компоненты»): sections and actions at once; entities (codes and
  * titles) from `load`, fetched on first open so the page itself does not pay for them.
  */
 export function CommandPalette({ items: staticItems, load, triggerClassName }: {

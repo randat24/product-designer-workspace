@@ -67,7 +67,7 @@ export function SaveToast({ id, status, error, readOnly }: { id: string; status:
       className={cn(
         "fixed bottom-5 left-1/2 z-10 max-w-sm -translate-x-1/2 rounded-control bg-fg px-4 py-2 text-sm font-semibold text-canvas shadow-lg",
         !label && "opacity-0",
-        status === "error" && "bg-danger text-white",
+        status === "error" && "bg-danger text-on-status",
       )}>
       {label}
     </p>

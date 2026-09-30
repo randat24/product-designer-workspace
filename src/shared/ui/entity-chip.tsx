@@ -1,7 +1,7 @@
 import { ENTITIES, GROUP_COLOR, type EntityType } from "@/shared/entities";
 import { cn } from "@/shared/lib/cn";
 
-/** Code + type colour. The building block of trace chains (docs/DESIGN-SYSTEM.md §3). */
+/** Code + type colour. The building block of trace chains (docs/DESIGN-SYSTEM.md, «Компоненты»). */
 export function EntityChip({ type, code, title, className }: { type: EntityType; code: string; title?: string; className?: string }) {
   const def = ENTITIES[type];
   return (

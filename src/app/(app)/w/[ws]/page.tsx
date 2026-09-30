@@ -88,7 +88,7 @@ function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: Pr
             {/* The case badge sits over the card, not inside its link: a published case opens the site. */}
             {c && c.status === "published" ? (
               <a href={`/uk/cases/${c.slug}`} target="_blank" rel="noreferrer"
-                className="absolute top-4 right-4 rounded-full bg-success px-2.5 py-1 text-caption font-semibold text-white hover:opacity-85">
+                className="absolute top-4 right-4 rounded-full bg-success px-2.5 py-1 text-caption font-semibold text-on-status hover:opacity-85">
                 {t.cases.badge.published}
               </a>
             ) : c ? (

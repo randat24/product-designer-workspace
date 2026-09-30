@@ -157,7 +157,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
           )}
           {step.kind === "outro" && canEdit && !finished && (
             <button type="button" onClick={finish} disabled={pending}
-              className="self-start rounded-panel bg-success px-6 py-3.5 text-lg font-bold text-white disabled:opacity-50">
+              className="self-start rounded-panel bg-success px-6 py-3.5 text-lg font-bold text-on-status disabled:opacity-50">
               {lv.finish}
             </button>
           )}

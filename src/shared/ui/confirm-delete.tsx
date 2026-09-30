@@ -31,7 +31,7 @@ function Submit({ armed, onBlur, children }: { armed: boolean; onBlur: () => voi
     <button type="submit" onBlur={onBlur} disabled={pending} aria-live="polite"
       className={cn(
         "inline-flex h-9 items-center rounded-control border-[1.5px] px-3.5 text-sm font-semibold disabled:opacity-50",
-        armed ? "border-danger bg-danger text-white" : "border-line text-danger hover:border-danger",
+        armed ? "border-danger bg-danger text-on-status" : "border-line text-danger hover:border-danger",
       )}>
       {children}
     </button>
@@ -54,7 +54,7 @@ export function ConfirmIconButton({ label, confirm, onConfirm, disabled, classNa
     <button type="button" disabled={disabled} aria-label={armed ? confirm : label} aria-live="polite"
       onClick={() => { if (armed) { setArmed(false); onConfirm(); } else setArmed(true); }}
       onBlur={() => setArmed(false)}
-      className={cn(armed ? "rounded-control bg-danger px-2 text-caption font-semibold text-white" : className)}>
+      className={cn(armed ? "rounded-control bg-danger px-2 text-caption font-semibold text-on-status" : className)}>
       {armed ? confirm : <span aria-hidden>×</span>}
     </button>
   );

@@ -12,8 +12,8 @@ import type { EdgeCase } from "./queries";
 const ec = t.flows.edgeCases;
 
 const STATUS_STYLE: Record<EdgeCaseStatus, string> = {
-  missing: "border-warning bg-warning text-white",
-  covered: "border-success bg-success text-white",
+  missing: "border-warning bg-warning text-on-status",
+  covered: "border-success bg-success text-on-status",
   not_applicable: "border-fg-secondary bg-fg-secondary text-canvas",
 };
 

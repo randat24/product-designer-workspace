@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Tokens: docs/DESIGN-SYSTEM.md §2 — visual language of the "Designer's notebook" prototype.
+/* Tokens: docs/DESIGN-SYSTEM.md «Токены» — visual language of the "Designer's notebook" prototype.
    Light by default, dark via system preference. */
 :root {
   --canvas: #eef0f3;
@@ -15,6 +15,8 @@
   --danger: #ac3830;
   --warning: #83590f;
   --success: #256f49;
+  /* Text on solid danger / warning / success fills (white in light, ink in dark: 4.5:1 in both). */
+  --on-status: #ffffff;
 
   /* Navigation rail: inverted ink */
   --rail: #151a33;
@@ -54,6 +56,7 @@
     --danger: #ff8a80;
     --warning: #f2c46b;
     --success: #5cc98f;
+    --on-status: #10132a;
     --rail: #eceef7;
     --rail-fg: #10132a;
     --entity-research: #3bc9db;
@@ -78,6 +81,7 @@
   --danger: #ff8a80;
   --warning: #f2c46b;
   --success: #5cc98f;
+  --on-status: #10132a;
   --rail: #eceef7;
   --rail-fg: #10132a;
   --entity-research: #3bc9db;
@@ -102,6 +106,7 @@
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
+  --color-on-status: var(--on-status);
   --color-rail: var(--rail);
   --color-rail-fg: var(--rail-fg);
   --color-on-sticky: var(--on-sticky);

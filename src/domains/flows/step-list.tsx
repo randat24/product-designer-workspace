@@ -27,7 +27,7 @@ export function orderSteps(nodes: FlowNode[], edges: FlowEdge[]) {
   return { order, rest, out };
 }
 
-/** Read-only list of steps for phones (docs/DESIGN-SYSTEM.md §7: < 768 px). */
+/** Read-only list of steps for phones (docs/DESIGN-SYSTEM.md, «Телефон»). */
 export function StepList({ nodes, edges }: { nodes: FlowNode[]; edges: FlowEdge[] }) {
   const { order, rest, out } = orderSteps(nodes, edges);
   const label = (id: string) => nodes.find((n) => n.id === id)?.label ?? "";

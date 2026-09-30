@@ -186,7 +186,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                             <button type="button" disabled={!canEdit} onClick={() => setEditing(key)} aria-label={m.editNote(cellName)}
                               className={cn("mt-1 block w-full rounded-chip px-1.5 py-1 text-left text-caption leading-snug text-fg disabled:cursor-default",
                                 canEdit && "hover:bg-surface/70", note.done && "text-fg-secondary line-through")}>
-                              {reminder && <span className="mr-1 rounded-chip bg-danger px-1 text-caption font-bold text-white uppercase">{m.reminderBadge}</span>}
+                              {reminder && <span className="mr-1 rounded-chip bg-danger px-1 text-caption font-bold text-on-status uppercase">{m.reminderBadge}</span>}
                               {note.note}
                             </button>
                           ) : canEdit && (

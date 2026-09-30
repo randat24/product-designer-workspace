@@ -11,8 +11,8 @@ import type { ScreenState } from "./queries";
 const st = t.screens.states;
 const STANDARD = ["default", "loading", "empty", "error", "success"];
 const STATUS_STYLE: Record<StateStatus, string> = {
-  missing: "border-warning bg-warning text-white",
-  designed: "border-success bg-success text-white",
+  missing: "border-warning bg-warning text-on-status",
+  designed: "border-success bg-success text-on-status",
   n_a: "border-fg-secondary bg-fg-secondary text-canvas",
 };
 
