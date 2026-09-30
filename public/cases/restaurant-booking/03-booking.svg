@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844" font-family="Manrope, Arial, sans-serif">
+<rect width="390" height="844" fill="#fff7ec"/>
+<rect x="0" y="0" width="390" height="44" fill="#fff7ec"/><text x="24" y="30" font-size="14" fill="#1b1b2a" font-weight="700">9:41</text>
+<text x="24" y="96" font-size="26" font-weight="800" fill="#1b1b2a">Бронь столика</text>
+<rect x="24" y="120" width="342" height="200" rx="18" fill="#fff" stroke="#1b1b2a" stroke-opacity=".1"/><rect x="40" y="136" width="310" height="110" rx="12" fill="#e9dccb"/><rect x="40" y="262" width="200" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.5"/><rect x="40" y="284" width="140" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.25"/>
+<rect x="24" y="340" width="342" height="190" rx="18" fill="#fff" stroke="#1b1b2a" stroke-opacity=".1"/><rect x="40" y="362" width="90" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.4"/><rect x="40" y="392" width="240" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.6"/><rect x="40" y="430" width="90" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.4"/><rect x="40" y="460" width="160" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.6"/><rect x="40" y="494" width="120" height="12" rx="6" fill="#1b1b2a" fill-opacity="0.4"/>
+<rect x="24" y="734" width="342" height="54" rx="14" fill="#1b1b2a"/><text x="195.0" y="768" font-size="16" fill="#fff" text-anchor="middle" font-weight="700">Забронювати</text>
+<text x="195.0" y="826" font-size="11" fill="#9a8c7a" text-anchor="middle">Wireframe · sample</text></svg>

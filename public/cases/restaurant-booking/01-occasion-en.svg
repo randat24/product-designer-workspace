@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844" font-family="Manrope, Arial, sans-serif">
+<rect width="390" height="844" fill="#fff7ec"/>
+<rect x="0" y="0" width="390" height="44" fill="#fff7ec"/><text x="24" y="30" font-size="14" fill="#1b1b2a" font-weight="700">9:41</text>
+<text x="24" y="96" font-size="26" font-weight="800" fill="#1b1b2a">Where to?</text>
+<text x="24" y="128" font-size="15" fill="#1b1b2a" fill-opacity=".6">Pick an occasion</text>
+<rect x="24" y="150" width="165" height="136" rx="18" fill="#f6a94f"/><text x="40" y="266" font-size="17" font-weight="800" fill="#1b1b2a">Date</text>
+<rect x="201" y="150" width="165" height="136" rx="18" fill="#8fd3f2"/><text x="217" y="266" font-size="17" font-weight="800" fill="#1b1b2a">Birthday</text>
+<rect x="24" y="300" width="165" height="136" rx="18" fill="#d9ee8f"/><text x="40" y="416" font-size="17" font-weight="800" fill="#1b1b2a">Business lunch</text>
+<rect x="201" y="300" width="165" height="136" rx="18" fill="#a99bf5"/><text x="217" y="416" font-size="17" font-weight="800" fill="#1b1b2a">With friends</text>
+<rect x="24" y="450" width="165" height="136" rx="18" fill="#f2a6ae"/><text x="40" y="566" font-size="17" font-weight="800" fill="#1b1b2a">With kids</text>
+<rect x="201" y="450" width="165" height="136" rx="18" fill="#f7dc52"/><text x="217" y="566" font-size="17" font-weight="800" fill="#1b1b2a">Just me</text>
+<rect x="24" y="734" width="342" height="54" rx="14" fill="#1b1b2a"/><text x="195.0" y="768" font-size="16" fill="#fff" text-anchor="middle" font-weight="700">Show places</text>
+<text x="195.0" y="826" font-size="11" fill="#9a8c7a" text-anchor="middle">Wireframe · sample</text></svg>
