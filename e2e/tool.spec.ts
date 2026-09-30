@@ -40,7 +40,9 @@ async function collectPages(page: Page, base: string) {
     // A page that never finishes rendering fails here, named, instead of using up the whole test timeout.
     await test.step(`collect ${s.replace(base, "")}`, () => page.goto(s, { waitUntil: "domcontentloaded", timeout: 60_000 }));
     await page.locator("main h1").first().waitFor({ timeout: 20_000 }).catch(() => {});
-    const detail = await page.locator(`main a[href^="${s}/"]`).first().getAttribute("href").catch(() => null);
+    // Read without waiting: a section without detail pages (settings) has no such link, and a waiting
+    // getAttribute would block until the test timeout.
+    const detail = await page.locator(`main a[href^="${s}/"]`).evaluateAll((as) => as[0]?.getAttribute("href") ?? null);
     if (detail && !pages.includes(detail)) pages.push(detail);
   }
   return pages;

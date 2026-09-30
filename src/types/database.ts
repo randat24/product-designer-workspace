@@ -257,6 +257,7 @@ export type Database = {
         Returns: boolean;
       };
       create_demo_project: { Args: { p_workspace: string }; Returns: string };
+      open_demo_project: { Args: { p_workspace: string }; Returns: string };
       synthesis_stats: {
         Args: { p_project: string };
         Returns: { entity_type: string; entity_id: string; source_count: number; participant_count: number }[];
