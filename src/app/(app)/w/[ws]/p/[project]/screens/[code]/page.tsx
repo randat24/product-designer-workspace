@@ -6,6 +6,8 @@ import { asEvents, asStrings, getScreenByCode, listScreenDecisions, DECISION_STA
 import { createDecision } from "@/domains/design/actions";
 import { DeleteScreenButton, ScreenEditor } from "@/domains/design/editors";
 import { StatesPanel } from "@/domains/design/states-panel";
+import { listReminders } from "@/domains/competitors";
+import { RemindersPanel } from "@/domains/competitors/reminders";
 import { Screenshots } from "@/domains/competitors/screenshots";
 import { TracePanel } from "@/domains/trace";
 import { Button } from "@/shared/ui/button";
@@ -26,7 +28,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
   if (!ctx) notFound();
   const s = await getScreenByCode(ctx.project.id, decodeURIComponent(code));
   if (!s) notFound();
-  const decisions = await listScreenDecisions(s.id);
+  const [decisions, reminders] = await Promise.all([listScreenDecisions(s.id), listReminders(ctx.project.id)]);
   const missing = s.states.filter((x) => ["loading", "empty", "error"].includes(x.kind) && x.status === "missing").length;
 
   return (
@@ -35,6 +37,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
       <PageHeader title={s.name} eyebrow={<EntityChip type="screen" code={s.code} />}
         stat={{ value: missing, caption: sc.states.statuses.missing.toLowerCase() }} />
       <div className="flex flex-col gap-10">
+        <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
         <Screenshots projectId={ctx.project.id} entityId={s.id} items={s.previews} canEdit={ctx.canEdit}
           entityType="screen" title={sc.preview} emptyText={sc.previewEmpty} />
 

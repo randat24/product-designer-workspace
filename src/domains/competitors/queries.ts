@@ -34,18 +34,53 @@ export const getCompetitorByCode = cache(async (projectId: string, code: string)
   return data;
 });
 
-export const getMatrix = cache(async (projectId: string) => {
+export type MatrixKind = "feature" | "ux";
+export type CellNote = { note: string; done: boolean };
+
+/** Rows of one kind (features or UX criteria) with values and notes per competitor. */
+export const getMatrix = cache(async (projectId: string, kind: MatrixKind = "feature") => {
   const supabase = await createClient();
   const [features, values] = await Promise.all([
-    supabase.from("comparison_features").select("id, name, group_name, position").eq("project_id", projectId)
+    supabase.from("comparison_features").select("id, name, group_name, position").eq("project_id", projectId).eq("kind", kind)
       .order("position").order("created_at"),
-    supabase.from("competitor_feature_values").select("competitor_id, comparison_feature_id, value").eq("project_id", projectId),
+    supabase.from("competitor_feature_values").select("competitor_id, comparison_feature_id, value, note, note_done, comparison_features!inner(kind)")
+      .eq("project_id", projectId).eq("comparison_features.kind", kind),
   ]);
   if (features.error) throw features.error;
   if (values.error) throw values.error;
   const cells: Record<string, FeatureValue> = {};
-  for (const v of values.data) cells[`${v.comparison_feature_id}:${v.competitor_id}`] = v.value;
-  return { features: features.data, cells };
+  const notes: Record<string, CellNote> = {};
+  for (const v of values.data) {
+    const key = `${v.comparison_feature_id}:${v.competitor_id}`;
+    cells[key] = v.value;
+    if (v.note) notes[key] = { note: v.note, done: v.note_done };
+  }
+  return { features: features.data, cells, notes };
+});
+
+export type Reminder = {
+  competitorId: string; featureId: string; competitor: string; competitorCode: string;
+  feature: string; kind: MatrixKind; note: string; done: boolean;
+};
+
+/**
+ * Red cells of competitors with a note: things they lack that our product should get right.
+ * Shown while designing (screens, flows) until marked done.
+ */
+export const listReminders = cache(async (projectId: string): Promise<Reminder[]> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("competitor_feature_values")
+    .select("competitor_id, comparison_feature_id, note, note_done, competitors!inner(code, name, is_own_product), comparison_features!inner(name, kind, position)")
+    .eq("project_id", projectId).eq("value", "no").not("note", "is", null).eq("competitors.is_own_product", false);
+  if (error) throw error;
+  return data
+    .filter((r) => r.note?.trim())
+    .map((r) => ({
+      competitorId: r.competitor_id, featureId: r.comparison_feature_id,
+      competitor: r.competitors.name, competitorCode: r.competitors.code,
+      feature: r.comparison_features.name, kind: r.comparison_features.kind, note: r.note!.trim(), done: r.note_done,
+    }))
+    .sort((a, b) => Number(a.done) - Number(b.done) || a.kind.localeCompare(b.kind) || a.feature.localeCompare(b.feature, "ru"));
 });
 
 export type Screenshot = { id: string; fileName: string; caption: string | null; url: string | null };

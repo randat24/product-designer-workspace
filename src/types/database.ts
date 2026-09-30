@@ -48,11 +48,11 @@ type CompetitorRow = {
 };
 type ComparisonFeatureRow = {
   id: string; workspace_id: string; project_id: string; name: string; group_name: string | null; position: number;
-  created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
+  kind: "feature" | "ux"; created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
 };
 type FeatureValueRow = {
   competitor_id: string; comparison_feature_id: string; workspace_id: string; project_id: string;
-  value: Database["public"]["Enums"]["feature_value"]; note: string | null; updated_by: string | null; updated_at: string;
+  value: Database["public"]["Enums"]["feature_value"]; note: string | null; note_done: boolean; updated_by: string | null; updated_at: string;
 };
 type AttachmentRow = {
   id: string; workspace_id: string; project_id: string; entity_type: string; entity_id: string;
@@ -176,7 +176,11 @@ export type Database = {
       };
       competitor_feature_values: {
         Row: FeatureValueRow; Insert: Insert<FeatureValueRow, "competitor_id" | "comparison_feature_id">;
-        Update: Partial<Pick<FeatureValueRow, "value" | "note">>; Relationships: [];
+        Update: Partial<Pick<FeatureValueRow, "value" | "note" | "note_done">>;
+        Relationships: [
+          { foreignKeyName: "competitor_feature_values_competitor_id_fkey"; columns: ["competitor_id"]; isOneToOne: false; referencedRelation: "competitors"; referencedColumns: ["id"] },
+          { foreignKeyName: "competitor_feature_values_comparison_feature_id_fkey"; columns: ["comparison_feature_id"]; isOneToOne: false; referencedRelation: "comparison_features"; referencedColumns: ["id"] },
+        ];
       };
       attachments: {
         Row: AttachmentRow;

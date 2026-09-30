@@ -10,21 +10,21 @@ import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 import { CompetitorTabs } from "../tabs";
 
-export const metadata: Metadata = { title: `${t.competitors.tabs.matrix} · ${t.competitors.title}` };
+export const metadata: Metadata = { title: `${t.competitors.tabs.ux} · ${t.competitors.title}` };
 
-export default async function MatrixPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
+export default async function UxReviewPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
   const { ws, project: slug } = await params;
   const ctx = await getProjectContext(ws, slug);
   if (!ctx) notFound();
   const [competitors, matrix, reminders] = await Promise.all([
-    listCompetitors(ctx.project.id), getMatrix(ctx.project.id, "feature"), listReminders(ctx.project.id),
+    listCompetitors(ctx.project.id), getMatrix(ctx.project.id, "ux"), listReminders(ctx.project.id),
   ]);
   const hasOwn = competitors.some((c) => c.is_own_product);
 
   return (
     <div className="max-w-7xl">
-      <PageHeader title={t.competitors.title} lede={t.competitors.matrix.lede} />
-      <CompetitorTabs base={ctx.base} current="matrix" />
+      <PageHeader title={t.competitors.title} lede={t.competitors.ux.lede} />
+      <CompetitorTabs base={ctx.base} current="ux" />
       {!hasOwn && ctx.canEdit && competitors.length > 0 && (
         <form action={createCompetitor} className="mb-4 flex flex-wrap items-center gap-3 rounded-[12px] border-[1.5px] border-dashed border-line px-4 py-2.5 text-[13px]">
           <input type="hidden" name="projectId" value={ctx.project.id} />
@@ -42,6 +42,7 @@ export default async function MatrixPage({ params }: { params: Promise<{ ws: str
         features={matrix.features}
         cells={matrix.cells}
         notes={matrix.notes}
+        kind="ux"
       />
       <div className="mt-8"><RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} /></div>
     </div>
