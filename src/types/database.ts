@@ -25,6 +25,11 @@ type ProjectRow = {
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
   archived_at: string | null;
 };
+type CaseStudyRow = {
+  id: string; workspace_id: string; project_id: string; slug: string;
+  status: Database["public"]["Enums"]["case_status"]; position: number; content: Json;
+  published_at: string | null; created_at: string; updated_at: string;
+};
 type EntityTypeRow = {
   type: string; table_name: string; prefix: string; code_sep: string; code_pad: number; domain: string; phase: number;
 };
@@ -233,6 +238,7 @@ export type Database = {
       };
       flow_edges: { Row: FlowEdgeRow; Insert: Ins<FlowEdgeRow, "project_id" | "flow_id" | "source_node_id" | "target_node_id">; Update: Upd<FlowEdgeRow>; Relationships: [] };
       flow_edge_cases: { Row: FlowEdgeCaseRow; Insert: Ins<FlowEdgeCaseRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowEdgeCaseRow>; Relationships: [] };
+      case_studies: { Row: CaseStudyRow; Insert: Ins<CaseStudyRow, "project_id" | "slug">; Update: Upd<CaseStudyRow>; Relationships: [] };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -278,6 +284,7 @@ export type Database = {
     Enums: {
       workspace_role: "owner" | "editor" | "viewer";
       project_status: "active" | "paused" | "done" | "archived";
+      case_status: "draft" | "review" | "published";
       trace_origin: "manual" | "ai_accepted" | "system";
       competitor_kind: "direct" | "indirect" | "substitute";
       feature_value: "yes" | "partial" | "no" | "unknown";

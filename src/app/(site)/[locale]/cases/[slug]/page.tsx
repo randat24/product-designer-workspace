@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CONTACTS, DICTIONARIES, LOCALES, dict, isLocale } from "@/site/content";
+import { CONTACTS, LOCALES, dict, isLocale } from "@/site/content";
+import { getCases } from "@/site/cases-source";
+import { CaseStoryView } from "@/site/case-story-view";
 import { CaseCover, Eyebrow, PrimaryLink, container } from "@/site/ui";
 
-export const dynamicParams = false;
+// Cases published later in the tool are rendered on first visit and then cached.
+export const revalidate = 60;
 
-export function generateStaticParams() {
-  return LOCALES.flatMap((locale) => DICTIONARIES[locale].cases_list.map((c) => ({ locale, slug: c.slug })));
+export async function generateStaticParams() {
+  const lists = await Promise.all(LOCALES.map(async (locale) => ({ locale, cases: await getCases(locale) })));
+  return lists.flatMap(({ locale, cases }) => cases.map((c) => ({ locale, slug: c.slug })));
 }
 
 type Params = Promise<{ locale: string; slug: string }>;
@@ -15,7 +19,7 @@ type Params = Promise<{ locale: string; slug: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const item = dict(locale).cases_list.find((c) => c.slug === slug);
+  const item = (await getCases(locale)).find((c) => c.slug === slug);
   return item
     ? {
         title: item.title,
@@ -29,10 +33,11 @@ export default async function CasePage({ params }: { params: Params }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
   const d = dict(locale);
-  const index = d.cases_list.findIndex((c) => c.slug === slug);
-  const item = d.cases_list[index];
+  const cases = await getCases(locale);
+  const index = cases.findIndex((c) => c.slug === slug);
+  const item = cases[index];
   if (!item) notFound();
-  const next = d.cases_list[(index + 1) % d.cases_list.length]!;
+  const next = cases.length > 1 ? cases[(index + 1) % cases.length]! : null;
 
   return (
     <article className="pb-20 pt-10">
@@ -44,11 +49,12 @@ export default async function CasePage({ params }: { params: Params }) {
           <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[0.92]">{item.title}</h1>
           <p className="text-[clamp(17px,2vw,20px)] text-fg-secondary">{item.summary}</p>
         </header>
-        <dl className="grid grid-cols-1 gap-4 border-y border-line py-5 sm:grid-cols-3">
+        <dl className={`grid grid-cols-2 gap-4 border-y border-line py-5 ${item.story ? "lg:grid-cols-6" : "sm:grid-cols-3"}`}>
           {[
             [d.cases.client, item.client],
             [d.cases.role, item.role],
             [d.cases.year, item.year],
+            ...(item.story?.meta.map((m) => [m.label, m.value]) ?? []),
           ].map(([k, v]) => (
             <div key={k} className="flex flex-col gap-1">
               <dt><Eyebrow>{k}</Eyebrow></dt>
@@ -57,6 +63,10 @@ export default async function CasePage({ params }: { params: Params }) {
           ))}
         </dl>
         <CaseCover item={item} label={d.cases.placeholder} large />
+        {item.story && (
+          <p className="rounded-[10px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-secondary">{d.story.sample}</p>
+        )}
+        {!item.story && (
         <ul className="grid gap-4 sm:grid-cols-3">
           {item.metrics.map((m) => (
             <li key={m.label} className="rounded-[14px] border border-line bg-surface p-5">
@@ -65,8 +75,14 @@ export default async function CasePage({ params }: { params: Params }) {
             </li>
           ))}
         </ul>
+        )}
       </div>
 
+      {item.story ? (
+        <div className="mt-12">
+          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} />
+        </div>
+      ) : (
       <div className={`${container} mt-14 flex flex-col gap-12`}>
         {item.sections.map((s, i) => (
           <section key={s.title} className="grid gap-4 md:grid-cols-[260px_1fr]">
@@ -85,13 +101,18 @@ export default async function CasePage({ params }: { params: Params }) {
           </section>
         ))}
       </div>
+      )}
 
       <div className={`${container} mt-20`}>
       <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10 sm:flex-row sm:items-center sm:justify-between">
-        <Link href={`/${locale}/cases/${next.slug}`} className="group flex flex-col gap-1">
-          <Eyebrow>{d.cases.next}</Eyebrow>
-          <span className="font-display text-[28px] font-bold uppercase leading-none group-hover:underline">{next.title} →</span>
-        </Link>
+        {next ? (
+          <Link href={`/${locale}/cases/${next.slug}`} className="group flex flex-col gap-1">
+            <Eyebrow>{d.cases.next}</Eyebrow>
+            <span className="font-display text-[28px] font-bold uppercase leading-none group-hover:underline">{next.title} →</span>
+          </Link>
+        ) : (
+          <span />
+        )}
         <PrimaryLink href={`mailto:${CONTACTS.email}`}>{d.home.cta}</PrimaryLink>
       </div>
       </div>

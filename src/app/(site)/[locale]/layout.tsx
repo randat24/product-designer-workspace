@@ -8,8 +8,8 @@ import { Signature } from "@/site/signature";
 import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { container } from "@/site/ui";
 
-export const dynamicParams = false;
-
+// No `dynamicParams = false` here: it would also apply to cases published after the build.
+// Unknown locales still 404 through isLocale() below.
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }

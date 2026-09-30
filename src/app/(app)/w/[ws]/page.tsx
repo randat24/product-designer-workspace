@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getWorkspaceBySlug, listMyWorkspaces, listProjects, getCurrentUser, PLATFORMS } from "@/domains/projects";
 import { createDemoProject } from "@/domains/projects/actions";
+import { listCaseStudies } from "@/domains/cases";
 import { Button } from "@/shared/ui/button";
 import { t } from "@/shared/i18n/ru";
 import { NewProjectForm } from "./new-project-form";
@@ -14,7 +15,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
   const { ws } = await params;
   const [workspace, workspaces, user] = await Promise.all([getWorkspaceBySlug(ws), listMyWorkspaces(), getCurrentUser()]);
   if (!workspace) notFound();
-  const all = await listProjects(workspace.id);
+  const [all, cases] = await Promise.all([listProjects(workspace.id), listCaseStudies(workspace.id)]);
   const projects = all.filter((p) => !p.archived_at);
   const archived = all.filter((p) => p.archived_at);
 
@@ -48,14 +49,14 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
               </form>
             </div>
           ) : (
-            <ProjectList wsSlug={workspace.slug} projects={projects} />
+            <ProjectList wsSlug={workspace.slug} projects={projects} cases={cases} />
           )}
           {archived.length > 0 && (
             <details>
               <summary className="cursor-pointer text-sm font-semibold text-fg-secondary hover:text-fg">
                 {t.workspace.archived(archived.length)}
               </summary>
-              <div className="mt-2"><ProjectList wsSlug={workspace.slug} projects={archived} /></div>
+              <div className="mt-2"><ProjectList wsSlug={workspace.slug} projects={archived} cases={cases} /></div>
             </details>
           )}
         </section>
@@ -65,24 +66,40 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
 }
 
 type ProjectListItem = Awaited<ReturnType<typeof listProjects>>[number];
+type CaseMap = Awaited<ReturnType<typeof listCaseStudies>>;
 
-function ProjectList({ wsSlug, projects }: { wsSlug: string; projects: ProjectListItem[] }) {
+function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: ProjectListItem[]; cases: CaseMap }) {
   const platformLabel = (v: string) => PLATFORMS.find((p) => p.value === v)?.label ?? v;
   return (
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((p) => (
-        <li key={p.id}>
-          <Link href={`/w/${wsSlug}/p/${p.slug}`}
-            className="flex h-full min-h-24 flex-col gap-1 rounded-[14px] border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg">
-            <span className="line-clamp-2 text-base leading-snug font-bold">{p.name}</span>
-            {(p.description || p.platforms.length > 0) && (
-              <span className="line-clamp-2 text-[13px] text-fg-secondary">
-                {[p.platforms.map(platformLabel).join(", "), p.description].filter(Boolean).join(" — ")}
+      {projects.map((p) => {
+        const c = cases.get(p.id);
+        return (
+          <li key={p.id} className="relative">
+            <Link href={`/w/${wsSlug}/p/${p.slug}`}
+              className="flex h-full min-h-24 flex-col gap-1 rounded-[14px] border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg">
+              <span className={`line-clamp-2 text-base leading-snug font-bold ${c ? "pr-28" : ""}`}>{p.name}</span>
+              {(p.description || p.platforms.length > 0) && (
+                <span className="line-clamp-2 text-[13px] text-fg-secondary">
+                  {[p.platforms.map(platformLabel).join(", "), p.description].filter(Boolean).join(" — ")}
+                </span>
+              )}
+            </Link>
+            {/* The case badge sits over the card, not inside its link: a published case opens the site. */}
+            {c && c.status === "published" ? (
+              <a href={`/uk/cases/${c.slug}`} target="_blank" rel="noreferrer"
+                className="absolute top-4 right-4 rounded-full bg-success px-2.5 py-1 text-[12px] font-semibold text-white hover:opacity-85">
+                {t.cases.badge.published}
+              </a>
+            ) : c ? (
+              <span className={`absolute top-4 right-4 rounded-full border px-2.5 py-1 text-[12px] font-semibold ${
+                c.status === "review" ? "border-warning text-warning" : "border-line text-fg-secondary"}`}>
+                {t.cases.badge[c.status]}
               </span>
-            )}
-          </Link>
-        </li>
-      ))}
+            ) : null}
+          </li>
+        );
+      })}
     </ul>
   );
 }
