@@ -14,7 +14,7 @@ export default function UxLawsPage() {
   return (
     <div className="min-h-screen">
       <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
-        <span className="min-w-0 truncate font-display text-lg leading-none font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
+        <span className="min-w-0 truncate font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
         <Link href="/app" className="inline-flex shrink-0 items-center gap-1 text-meta font-semibold opacity-80 hover:opacity-100 hover:underline"><ArrowLeft aria-hidden className="size-4" />{l.back}</Link>
       </header>
 
@@ -33,7 +33,7 @@ export default function UxLawsPage() {
         {UX_LAW_GROUPS.map((g) => (
           <section key={g.id} id={g.id} aria-labelledby={`${g.id}-h`} className="flex scroll-mt-6 flex-col gap-4">
             <div>
-              <h2 id={`${g.id}-h`} className="font-display text-display-sm leading-none font-bold uppercase">{g.title}</h2>
+              <h2 id={`${g.id}-h`} className="font-display text-display-sm leading-[1.1] font-bold uppercase">{g.title}</h2>
               <p className="mt-2 max-w-[62ch] text-fg-secondary">{g.lede}</p>
             </div>
             <ul className="grid gap-3 md:grid-cols-2">

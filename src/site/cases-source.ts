@@ -27,6 +27,7 @@ function toCase(slug: string, content: Snapshot, locale: Locale, updatedAt?: str
     liveUrl: c.liveUrl,
     gallery: c.gallery,
     sample: c.sample,
+    adult: c.adult,
     updatedAt,
   };
 }

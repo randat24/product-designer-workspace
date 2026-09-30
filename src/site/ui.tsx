@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
+import { Anchor, Building2, Landmark } from "lucide-react";
 import { AWARD_TILE, AwardSvg } from "./award-icons";
 import { trackAttrs } from "./analytics/track";
 import { dict, type Award, type Case, type Locale } from "./content";
@@ -35,7 +36,7 @@ export function SectionTitle({
   return (
     <h2
       id={id}
-      className="font-display text-[clamp(28px,4vw,40px)] font-bold uppercase leading-none tracking-[-0.005em]"
+      className="font-display text-[clamp(28px,4vw,40px)] font-bold uppercase leading-[1.1] tracking-[0.01em]"
     >
       {children}
     </h2>
@@ -48,12 +49,15 @@ const linkBtn =
 type LinkButtonProps = {
   href: string;
   children: React.ReactNode;
+  /** A 16 px Lucide icon after the label (buttons always carry one: docs/DESIGN-SYSTEM.md, Иконография). */
+  icon?: React.ReactNode;
   download?: boolean;
   /** Analytics data attributes, from trackAttrs(). */
   track?: Record<string, string>;
 };
 
-function LinkButton({ href, children, download, track, className }: LinkButtonProps & { className: string }) {
+function LinkButton({ href, children: label, icon, download, track, className }: LinkButtonProps & { className: string }) {
+  const children = <>{label}{icon}</>;
   if (href.startsWith("/") && !download)
     return (
       <Link href={href} className={className} {...track}>
@@ -151,15 +155,24 @@ export function CaseCard({
       className="group flex flex-col gap-4"
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
-      <div className="transition-transform duration-200 group-hover:-translate-y-1">
-        <CaseCover item={item} label={label} />
+      <div className="relative overflow-hidden rounded-[14px] transition-transform duration-200 group-hover:-translate-y-1">
+        {/* 18+: the cover is blurred on the card too; the case page asks for the visitor's age. */}
+        <div className={cn(item.adult && "blur-xl")}><CaseCover item={item} label={label} /></div>
+        {item.adult && (
+          <span aria-hidden className="absolute inset-0 grid place-items-center">
+            <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">
+              {dict(locale).adult.badge}
+            </span>
+          </span>
+        )}
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <p className="flex flex-wrap items-center gap-2 text-[13px] text-fg-secondary">
           {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? p.concept : p.real} />}
+          {item.adult && <AdultBadge label={dict(locale).adult.badge} />}
           {item.client} · {item.year}
         </p>
-        <Title className="font-display text-[24px] font-bold uppercase leading-[1.05] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
+        <Title className="font-display text-[24px] font-bold uppercase leading-[1.1] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
           {item.title}
         </Title>
         <p className="text-fg-secondary">{item.summary}</p>
@@ -178,6 +191,15 @@ export function CaseCard({
   );
 }
 
+/** 18+ marker on case cards and pages. */
+export function AdultBadge({ label }: { label: string }) {
+  return (
+    <span className="rounded-full border-[1.5px] border-danger px-2 py-0.5 text-[11px] font-bold tracking-[0.06em] text-danger">
+      {label}
+    </span>
+  );
+}
+
 /** "Real project" / "Concept" marker on case cards and pages. */
 export function KindBadge({ kind, label }: { kind: "real" | "concept"; label: string }) {
   return (
@@ -193,16 +215,40 @@ export function KindBadge({ kind, label }: { kind: "real" | "concept"; label: st
 }
 
 /** Award card: the vector medal on a dark tile with a centred caption. */
-export function AwardCard({ award }: { award: Award }) {
+const ISSUER_ICON = { state: Landmark, city: Building2, brigade: Anchor } as const;
+/** Gold accent under the award title (the notebook's warning tone on dark). */
+const AWARD_GOLD = "#f2c46b";
+
+/**
+ * One award on a dark tile: number, issuer mark, the medal on a soft disc, title, gold rule, description.
+ * `wide` puts the medal on the left (the two leading awards on large screens).
+ */
+export function AwardCard({ award, index, wide = false }: { award: Award; index: number; wide?: boolean }) {
+  const Issuer = ISSUER_ICON[award.issuerKind];
   return (
     <figure
-      className="flex flex-col items-center gap-3 rounded-[14px] border-[1.5px] border-white/10 px-3 pb-5 pt-4 text-center text-[#eceef7]"
+      className={cn(
+        "relative flex h-full flex-col overflow-hidden rounded-[18px] border border-white/10 p-6 text-[#eceef7] sm:p-7",
+        wide && "sm:flex-row sm:items-center sm:gap-8",
+      )}
       style={{ background: AWARD_TILE }}
     >
-      <AwardSvg icon={award.icon} className="h-40 w-auto" />
-      <figcaption className="flex flex-col gap-1">
-        <span className="text-[13px] font-semibold leading-snug">{award.title}</span>
-        <span className="text-[12px] opacity-60">{award.issuer}</span>
+      <span className="absolute top-6 left-6 text-[15px] font-semibold tabular-nums opacity-70 sm:top-7 sm:left-7">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span title={award.issuer}
+        className="absolute top-5 right-5 grid size-12 place-items-center rounded-[14px] border border-white/10 bg-white/[0.03] sm:top-6 sm:right-6">
+        <Issuer aria-hidden className="size-6 opacity-80" strokeWidth={1.5} />
+        <span className="sr-only">{award.issuer}</span>
+      </span>
+      <div className={cn("relative mx-auto mt-12 flex shrink-0 items-center justify-center", wide ? "h-56 w-44 sm:mx-0 sm:mt-0 sm:h-72 sm:w-52" : "h-56 w-44")}>
+        <span aria-hidden className={cn("absolute aspect-square rounded-full bg-white/[0.04]", wide ? "h-44 sm:h-48" : "h-48")} />
+        <AwardSvg icon={award.icon} className="relative max-h-full max-w-full object-contain" />
+      </div>
+      <figcaption className={cn("mt-6 flex flex-col gap-4", wide && "sm:mt-0 sm:flex-1 sm:pt-10 sm:pr-8")}>
+        <span className="text-[20px] font-semibold leading-snug sm:text-[22px]">{award.title}</span>
+        <span aria-hidden className="h-[3px] w-12 rounded-full" style={{ background: AWARD_GOLD }} />
+        <span className="text-[14px] leading-[1.6] opacity-75">{award.description}</span>
       </figcaption>
     </figure>
   );

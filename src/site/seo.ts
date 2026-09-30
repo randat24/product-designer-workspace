@@ -128,6 +128,7 @@ export function caseLd(locale: Locale, c: Case): Json {
     author: { "@id": personId() },
     creator: { "@id": personId() },
     keywords: c.tags.join(", "),
+    ...(c.adult ? { isFamilyFriendly: false, audience: { "@type": "PeopleAudience", suggestedMinAge: 18 } } : {}),
     genre: c.kind === "concept" ? "Design concept" : "Product design case study",
     ...(c.year ? { temporalCoverage: c.year.replace(/\s*—\s*/, "/") } : {}),
     ...(c.updatedAt ? { dateModified: c.updatedAt } : {}),

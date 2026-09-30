@@ -97,7 +97,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
       <header className="flex items-center justify-between gap-3 bg-rail px-4 py-3 text-rail-fg sm:px-6">
         <div className="min-w-0">
           <p className="text-caption font-semibold opacity-70">{lv.title} · {code}</p>
-          <p className="truncate font-display text-xl leading-tight font-bold uppercase">{participant}</p>
+          <p className="truncate font-display text-xl leading-[1.1] font-bold uppercase">{participant}</p>
         </div>
         <div className="flex items-center gap-3">
           {startedAt && (

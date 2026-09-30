@@ -28,7 +28,7 @@
 
 **Публичные вспомогательные**
 - `/` — 307 на `/uk` или `/en` по `Accept-Language` (server component `redirect()`).
-- `/cv/hennadii-fedorov-cv-uk.pdf`, `/awards/*.svg` — статические файлы.
+- `/cv/hennadii-fedorov-cv-uk.pdf`, `/cv/hennadii-fedorov-cv-en.pdf` (`npm run cv`), `/awards/*.svg` — статические файлы.
 
 **Приватные, не должны попадать в поиск**
 - `/app` (выбор пространства), `/w/[ws]/**` (весь инструмент), `/account`.
