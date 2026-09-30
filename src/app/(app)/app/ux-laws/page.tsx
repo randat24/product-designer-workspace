@@ -49,6 +49,14 @@ export default function UxLawsPage() {
                     {law.name} <span lang="en" className="font-medium text-fg-secondary">· {law.original}</span>
                   </h3>
                   <p className="text-[14px]">{law.essence}</p>
+                  <details className="group text-[13px]">
+                    <summary className="cursor-pointer font-semibold text-fg-secondary hover:text-fg">{l.more}</summary>
+                    <p className="mt-2 text-fg-secondary"><span className="font-semibold text-fg">{l.origin}:</span> {law.origin}</p>
+                    <p className="mt-2 font-semibold">{l.takeaways}</p>
+                    <ul className="mt-1 flex list-disc flex-col gap-1 pl-5">
+                      {law.takeaways.map((x) => <li key={x}>{x}</li>)}
+                    </ul>
+                  </details>
                   <p className="mt-auto rounded-[10px] bg-subtle px-3 py-2 text-[13px]">
                     <span className="font-semibold">{l.check}:</span> {law.check}
                   </p>
