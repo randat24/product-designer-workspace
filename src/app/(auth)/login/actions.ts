@@ -16,7 +16,7 @@ async function origin() {
 
 function safeNext(next: FormDataEntryValue | null) {
   const v = typeof next === "string" ? next : "";
-  return v.startsWith("/") && !v.startsWith("//") ? v : "/";
+  return v.startsWith("/") && !v.startsWith("//") && v !== "/" ? v : "/app";
 }
 
 export async function signInWithPassword(_prev: LoginState, formData: FormData): Promise<LoginState> {

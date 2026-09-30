@@ -7,7 +7,19 @@
 
 ## Статус
 
-**Анализ конкурентов, часть 2: готово, ждёт ревью.** Phase 1–8a и быстрая страница проектов: в `main`.
+**Публичный сайт (портфолио + резюме): готово, ждёт ревью.** Phase 1–8a, быстрая страница проектов и анализ конкурентов: в `main`.
+
+| Публичный сайт | Проверено |
+|---|---|
+| `/` отправляет на `/uk` или `/en` по языку браузера; переключатель UA / EN сохраняет текущую страницу | e2e |
+| Главная: имя, короткий оффер, статус «Відкритий до проєктів», вибрані роботи, блок «Служба», контакт | скриншоты: десктоп, мобильный, тёмная тема |
+| Роботи `/[locale]/cases` и кейс `/[locale]/cases/[slug]`: 4 кейса-заглушки (обложки в цветах стикеров, метрики, разделы, «Наступний кейс») | скриншоты |
+| Про мене `/[locale]/about`: данные из резюме — опыт, навыки, образование, языки, формат работы; служба в ЗСУ и 3 заглушки наград; резюме PDF в `public/cv/` | скриншоты |
+| Инструмент переехал на `/app` (вход — ссылка «Вхід» в подвале); публичные страницы не требуют входа | e2e |
+
+Тексты кейсов и награды — заглушки: контент и фото наград меняются в `src/site/content.ts`. Название сайта и домен — позже.
+
+Анализ конкурентов, часть 2:
 
 | Анализ конкурентов, часть 2 | Проверено |
 |---|---|
@@ -159,7 +171,8 @@ insert into public.signup_allowlist (email) values ('colleague@example.com');
 docs/                    PRD, ARCHITECTURE, DATABASE, IA, MVP, ROADMAP, DESIGN-SYSTEM, AI, adr/
 supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo · 006 competitors + matrix + attachments · 007 research · 008 synthesis
 supabase/tests/database/ pgTAP
-src/app/                 маршруты (docs/IA.md)
+src/app/                 маршруты (docs/IA.md); (site)/[locale] — публичный сайт, (app) — инструмент на /app
+src/site/                контент сайта uk/en (content.ts) и его компоненты
 src/domains/<name>/      schema.ts (Zod) · queries.ts · actions.ts · компоненты · index.ts (public API)
 src/shared/              entities.ts (реестр сущностей) · navigation.ts · i18n · ui · lib
 ```

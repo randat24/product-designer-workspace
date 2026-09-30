@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <h1 className="page-title">{t.auth.title}</h1>
             <p className="text-fg-secondary">{t.auth.lede}</p>
           </div>
-          <LoginForm next={next ?? "/"} initialError={error ? t.auth.callbackFailed : undefined} />
+          <LoginForm next={next ?? "/app"} initialError={error ? t.auth.callbackFailed : undefined} />
         </div>
       </main>
     </div>
