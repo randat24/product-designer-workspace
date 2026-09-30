@@ -89,9 +89,9 @@ export function CommandPalette({ items: staticItems, load, triggerClassName }: {
   return (
     <>
       <button type="button" onClick={open}
-        className={cn("flex h-8 w-full items-center justify-between gap-2 rounded-control border border-line bg-canvas px-2.5 text-meta text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
+        className={cn("flex h-11 w-full items-center md:h-8 justify-between gap-2 rounded-control border border-line bg-canvas px-2.5 text-meta text-fg-secondary hover:bg-subtle hover:text-fg", triggerClassName)}>
         {t.palette.open}
-        <kbd className="font-sans text-caption">⌘K</kbd>
+        <kbd className="hidden font-sans text-caption md:inline">⌘K</kbd>
       </button>
 
       {/* Clicking the backdrop closes it for mouse users; the keyboard has Esc (native <dialog>). */}

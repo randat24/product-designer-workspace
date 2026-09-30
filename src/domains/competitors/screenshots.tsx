@@ -90,7 +90,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
                 )}
                 {canEdit && (
                   <button type="button" onClick={() => remove(s.id)} aria-label={`${t.competitors.removeScreenshot}: ${s.fileName}`}
-                    className="absolute top-1.5 right-1.5 grid size-8 place-items-center rounded-control bg-surface/90 text-fg-secondary opacity-0 shadow group-hover:opacity-100 focus:opacity-100 hover:text-danger">
+                    className="absolute top-1.5 right-1.5 grid size-8 place-items-center rounded-control bg-surface/90 text-fg-secondary [@media(hover:hover)]:opacity-0 shadow group-hover:opacity-100 focus:opacity-100 hover:text-danger">
                     <span aria-hidden>×</span>
                   </button>
                 )}

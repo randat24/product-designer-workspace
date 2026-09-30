@@ -43,8 +43,9 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
 
       <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
+      {/* On a phone the step list comes first as the readable overview; the editor works below it. */}
       <div className="md:hidden"><StepList nodes={flow.nodes} edges={flow.edges} /></div>
-      <div className="hidden md:block">
+      <div>
         <FlowEditor flowId={flow.id} nodes={flow.nodes} edges={flow.edges} edgeCases={flow.edgeCases} screens={screens}
           viewport={isViewport(flow.viewport) ? flow.viewport : null} canEdit={ctx.canEdit} base={ctx.base} />
       </div>

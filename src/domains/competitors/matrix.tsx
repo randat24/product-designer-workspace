@@ -190,7 +190,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                             </button>
                           ) : canEdit && (
                             <button type="button" onClick={() => setEditing(key)} aria-label={m.editNote(cellName)}
-                              className="absolute top-1 right-1 grid size-6 place-items-center rounded-chip text-caption text-fg-secondary opacity-0 group-hover/cell:opacity-100 focus:opacity-100 hover:bg-surface/80 hover:text-fg">
+                              className="absolute top-1 right-1 grid size-6 place-items-center rounded-chip text-caption text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover/cell:opacity-100 focus:opacity-100 hover:bg-surface/80 hover:text-fg">
                               <span aria-hidden>✎</span>
                             </button>
                           )}
@@ -201,7 +201,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                       <td className="border-b border-line p-1 text-center">
                         <button type="button" aria-label={`${m.deleteFeature}: ${f.name}`}
                           disabled={rows.pending} onClick={() => rows.run(() => deleteFeature(f.id))}
-                          className="grid size-8 place-items-center rounded-control text-fg-secondary opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
+                          className="hit grid size-8 place-items-center rounded-control text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover/row:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
                           <span aria-hidden>×</span>
                         </button>
                       </td>

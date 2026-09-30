@@ -1,7 +1,7 @@
 "use client";
 
 import "@xyflow/react/dist/style.css";
-import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Background, Controls, Handle, MarkerType, MiniMap, Position, ReactFlow, ReactFlowProvider,
   useEdgesState, useNodesState, useReactFlow,
@@ -105,12 +105,6 @@ const nodeTypes = { step: StepNodeView };
 
 // ---------------------------------------------------------------- editor
 
-const subscribeWide = (cb: () => void) => {
-  const mq = window.matchMedia("(min-width: 1024px)");
-  mq.addEventListener("change", cb);
-  return () => mq.removeEventListener("change", cb);
-};
-const useWide = () => useSyncExternalStore(subscribeWide, () => window.matchMedia("(min-width: 1024px)").matches, () => false);
 
 type Props = {
   flowId: string;
@@ -133,8 +127,9 @@ export function FlowEditor(props: Props) {
 }
 
 function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, screens: initialScreens, viewport, canEdit, base }: Props) {
-  const wide = useWide();
-  const editable = canEdit && wide;
+  // Editing works on every width, phones included (owner decision, docs/QUALITY_REVIEW.md §4):
+  // links can be made from the inspector as well as by dragging.
+  const editable = canEdit;
   const rf = useReactFlow<StepNode, LinkEdge>();
   const wrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<StepNode>(initialNodes.map(toNode));
@@ -206,7 +201,6 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
       <section aria-labelledby="canvas-h" className="flex flex-col gap-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 id="canvas-h" className="text-heading font-semibold">{f.canvas}</h2>
-          {canEdit && !wide && <p className="text-meta text-fg-secondary">{f.readOnlyHint}</p>}
         </div>
 
         {editable && (
@@ -263,6 +257,8 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
             <h3 id="inspector-h" className="text-caption font-bold tracking-wide text-fg-secondary uppercase">{f.inspector}</h3>
             {node ? (
               <NodeInspector key={node.id} node={node} screens={screens} editable={editable} base={base}
+                targets={nodeOptions.filter((o) => o.id !== node.id && !edges.some((e) => e.source === node.id && e.target === o.id))}
+                onLinkTo={(target) => void onConnect({ source: node.id, target, sourceHandle: null, targetHandle: null })}
                 onPatch={(patch) => patchNode(node.id, patch)}
                 onScreenCreated={(s) => { setScreens((xs) => [...xs, s].sort((a, b) => a.code.localeCompare(b.code, "ru", { numeric: true }))); patchNode(node.id, { screen: s }); }}
                 onDelete={async () => {
@@ -299,8 +295,11 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
 const selectClass = "h-9 w-full rounded-control border border-line bg-surface px-2 text-sm disabled:opacity-70";
 const fieldLabel = "text-meta font-semibold text-fg-secondary";
 
-function NodeInspector({ node, screens, editable, base, onPatch, onScreenCreated, onDelete, report }: {
+function NodeInspector({ node, screens, editable, base, targets, onLinkTo, onPatch, onScreenCreated, onDelete, report }: {
   base: string;
+  /** Steps this one can link to (not itself, not already linked). */
+  targets: { id: string; label: string }[];
+  onLinkTo: (target: string) => void;
   node: StepNode;
   screens: Screen[];
   editable: boolean;
@@ -368,6 +367,18 @@ function NodeInspector({ node, screens, editable, base, onPatch, onScreenCreated
               + {f.screenCreate}
             </Button>
           )}
+        </div>
+      )}
+
+      {editable && targets.length > 0 && (
+        // Linking without dragging: for touch screens and the keyboard.
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="node-link" className={fieldLabel}>{f.linkTo}</label>
+          <select id="node-link" className={selectClass} value=""
+            onChange={(e) => { if (e.target.value) onLinkTo(e.target.value); }}>
+            <option value="">{f.linkToPlaceholder}</option>
+            {targets.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+          </select>
         </div>
       )}
 

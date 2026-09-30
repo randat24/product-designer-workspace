@@ -89,7 +89,7 @@ export function UnlinkButton({ linkId, label }: { linkId: string; label: string 
     <ActionError error={error} className="text-caption text-danger" />
     <button type="button" disabled={pending} aria-label={`${t.trace.unlink}: ${label}`}
       onClick={() => run(() => unlinkEntities(linkId))}
-      className="grid size-7 shrink-0 place-items-center rounded-chip text-fg-secondary opacity-0 group-hover:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
+      className="hit grid size-7 shrink-0 place-items-center rounded-chip text-fg-secondary [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus:opacity-100 hover:bg-subtle hover:text-danger">
       <span aria-hidden>×</span>
     </button>
     </>
