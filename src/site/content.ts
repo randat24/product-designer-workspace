@@ -1,6 +1,8 @@
 // Public site content (portfolio + CV) in Ukrainian and English.
 // Cases are placeholders for now; the CV part follows the resume in public/cv/.
 
+import type { AwardIcon } from "./award-icons";
+
 export const LOCALES = ["uk", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
 
@@ -29,6 +31,12 @@ export type Case = {
   tags: string[];
   metrics: { value: string; label: string }[];
   sections: CaseSection[];
+};
+
+export type Award = {
+  icon: AwardIcon;
+  title: string;
+  issuer: string;
 };
 
 type Job = {
@@ -70,7 +78,6 @@ type Dictionary = {
     serviceTitle: string;
     serviceText: string;
     awards: string;
-    awardPlaceholder: string;
     skills: string;
     education: string;
     languages: string;
@@ -82,7 +89,8 @@ type Dictionary = {
   education: { title: string; place: string; year: string }[];
   languages: { name: string; level: string }[];
   availability: string[];
-  awards: { year: string; title: string }[];
+  awards: Award[];
+  awardsPhoto: { image: string; caption: string };
   contact: { title: string; lead: string; write: string };
   footer: { rights: string; login: string };
   cases_list: Case[];
@@ -121,7 +129,6 @@ const uk: Dictionary = {
     serviceText:
       "З березня 2022 року я у Збройних Силах України — одним із перших став на оборону своєї країни та рідного Миколаєва. Служба навчила того ж, що й добрий дизайн: чіткої комунікації, регламентів, які працюють під тиском, і відповідальності за результат. Я продовжую боротися — і в дизайні теж.",
     awards: "Нагороди",
-    awardPlaceholder: "Фото нагороди зʼявиться згодом",
     skills: "Навички",
     education: "Освіта",
     languages: "Мови",
@@ -216,10 +223,41 @@ const uk: Dictionary = {
     "Статус учасника бойових дій: роботодавець може отримати компенсацію від Державної служби зайнятості",
   ],
   awards: [
-    { year: "2022", title: "Нагорода" },
-    { year: "2024", title: "Нагорода" },
-    { year: "—", title: "Нагорода" },
+    {
+      icon: "defence-of-ukraine",
+      title: "Відзнака Президента України «За оборону України»",
+      issuer: "Президент України",
+    },
+    {
+      icon: "defence-of-mykolaiv",
+      title: "Хрест «За оборону Миколаєва», 2022",
+      issuer: "Місто Миколаїв",
+    },
+    {
+      icon: "marine-brigade-36",
+      title: "Памʼятна медаль 36-ї окремої бригади морської піхоти «Курська операція»",
+      issuer: "36 ОБрМП",
+    },
+    {
+      icon: "honour-and-loyalty",
+      title: "Медаль «За честь і вірність обовʼязку»",
+      issuer: "36 ОБрМП",
+    },
+    {
+      icon: "veteran-of-war",
+      title: "Нагрудний знак «Ветеран війни»",
+      issuer: "Україна",
+    },
+    {
+      icon: "military-service-veteran",
+      title: "Нагрудний знак «Ветеран військової служби»",
+      issuer: "Україна",
+    },
   ],
+  awardsPhoto: {
+    image: "/awards/defence-of-mykolaiv-case.webp",
+    caption: "Хрест «За оборону Миколаєва» з посвідченням",
+  },
   contact: {
     title: "Є задача?",
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
@@ -262,7 +300,6 @@ const en: Dictionary = {
     serviceText:
       "Since March 2022 I have served in the Armed Forces of Ukraine — among the first to stand up for my country and my home city of Mykolaiv. Service taught me what good design does too: clear communication, processes that hold under pressure, and ownership of the outcome. I keep fighting — in design as well.",
     awards: "Awards",
-    awardPlaceholder: "Photo coming soon",
     skills: "Skills",
     education: "Education",
     languages: "Languages",
@@ -356,10 +393,41 @@ const en: Dictionary = {
     "Happy to do a test task or a trial sprint",
   ],
   awards: [
-    { year: "2022", title: "Award" },
-    { year: "2024", title: "Award" },
-    { year: "—", title: "Award" },
+    {
+      icon: "defence-of-ukraine",
+      title: "Presidential Award “For the Defence of Ukraine”",
+      issuer: "President of Ukraine",
+    },
+    {
+      icon: "defence-of-mykolaiv",
+      title: "Cross “For the Defence of Mykolaiv”, 2022",
+      issuer: "City of Mykolaiv",
+    },
+    {
+      icon: "marine-brigade-36",
+      title: "Commemorative medal of the 36th Separate Marine Brigade, “Kursk operation”",
+      issuer: "36th Separate Marine Brigade",
+    },
+    {
+      icon: "honour-and-loyalty",
+      title: "Medal “For Honour and Loyalty to Duty”",
+      issuer: "36th Separate Marine Brigade",
+    },
+    {
+      icon: "veteran-of-war",
+      title: "“War Veteran” badge",
+      issuer: "Ukraine",
+    },
+    {
+      icon: "military-service-veteran",
+      title: "“Veteran of Military Service” badge",
+      issuer: "Ukraine",
+    },
   ],
+  awardsPhoto: {
+    image: "/awards/defence-of-mykolaiv-case.webp",
+    caption: "The Cross “For the Defence of Mykolaiv” with its certificate",
+  },
   contact: {
     title: "Have a project?",
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AWARD_TILE, AwardSvg } from "@/site/award-icons";
 import { CONTACTS, dict, isLocale } from "@/site/content";
 import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 import { notFound } from "next/navigation";
@@ -77,8 +78,21 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
           <div className="flex flex-col gap-4">
             <p className="text-[17px] leading-[1.6]">{d.about.serviceText}</p>
-            <Link href={`/${locale}/about#service`} className="w-fit text-[14px] font-semibold underline underline-offset-4">
-              {d.about.awards} →
+            <Link href={`/${locale}/about#service`} className="group flex w-fit flex-wrap items-center gap-3">
+              <span className="flex -space-x-3">
+                {d.awards.map((a) => (
+                  <span
+                    key={a.icon}
+                    className="flex h-14 w-12 items-center justify-center rounded-[8px] border-2 border-rail text-[#b3b8e6]"
+                    style={{ background: AWARD_TILE }}
+                  >
+                    <AwardSvg icon={a.icon} className="h-[82%] w-auto" />
+                  </span>
+                ))}
+              </span>
+              <span className="text-[14px] font-semibold underline underline-offset-4">
+                {d.about.awards} · {d.awards.length} →
+              </span>
             </Link>
           </div>
         </div>
