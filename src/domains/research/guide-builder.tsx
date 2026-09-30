@@ -54,7 +54,7 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
           return (
             <li key={section.value} aria-labelledby={`sec-${section.value}`} className="flex flex-col gap-2.5">
               <div className="flex items-baseline gap-3">
-                <span className="display-num text-[22px] leading-none text-fg-secondary tabular-nums">{si + 1}</span>
+                <span className="display-num text-display-xs leading-none text-fg-secondary tabular-nums">{si + 1}</span>
                 <div>
                   <h2 id={`sec-${section.value}`} className="text-heading font-semibold">{section.label}</h2>
                   <p className="text-meta text-fg-secondary">{section.hint}</p>

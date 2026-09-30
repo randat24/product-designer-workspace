@@ -43,7 +43,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
       <div className="flex flex-col gap-1 px-5 pt-5 pb-3 lg:pt-7">
         <Link href={`/w/${wsSlug}`} className="text-meta opacity-70 hover:opacity-100">{wsName}</Link>
         <div className="flex items-start justify-between gap-2">
-          <span className="font-display text-[22px] leading-[1.05] font-bold uppercase lg:text-[26px]" title={projectName}>
+          <span className="font-display text-display-xs leading-[1.05] font-bold uppercase lg:text-display-sm" title={projectName}>
             {projectName}
           </span>
           <Link href={`${base}/settings`} aria-current={pathname === `${base}/settings` ? "page" : undefined}

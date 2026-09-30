@@ -205,7 +205,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
                   s.state === "soon" && "bg-transparent text-fg-secondary",
                 )}>
                 <span className="flex items-baseline gap-3">
-                  <span className="display-num text-[22px] leading-none tabular-nums">{i + 1}</span>
+                  <span className="display-num text-display-xs leading-none tabular-nums">{i + 1}</span>
                   <span className="font-bold">{s.label}</span>
                   <StageIcon state={s.state} />
                 </span>

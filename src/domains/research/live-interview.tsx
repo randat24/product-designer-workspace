@@ -122,7 +122,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
           )}
           {step.kind === "question" && (
             <>
-              <h1 className="text-[26px] leading-tight font-bold sm:text-[32px]">{step.q.text}</h1>
+              <h1 className="text-display-sm leading-tight font-bold sm:text-display-md">{step.q.text}</h1>
               {step.q.probes.length > 0 && (
                 <ul className="flex flex-wrap gap-2">
                   {step.q.probes.map((p) => (

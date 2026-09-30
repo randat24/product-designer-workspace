@@ -25,7 +25,7 @@ export default async function SynthesisPage({ params }: { params: Promise<{ ws: 
       <dl className="mb-6 flex flex-wrap gap-x-8 gap-y-2">
         {([["quotes", overview.quotes], ["observations", overview.observations], ["patterns", overview.patterns], ["insights", overview.insights]] as const).map(([k, v]) => (
           <div key={k} className="flex items-baseline gap-2">
-            <dd className="display-num text-[26px] leading-none tabular-nums">{v}</dd>
+            <dd className="display-num text-display-sm leading-none tabular-nums">{v}</dd>
             <dt className="text-meta font-semibold text-fg-secondary">{t.synthesis.stats[k]}</dt>
           </div>
         ))}

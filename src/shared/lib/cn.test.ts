@@ -8,6 +8,9 @@ describe("cn knows the design-system scales", () => {
   it("a colour replaces the colour, not the size token", () => {
     expect(cn("text-meta text-fg-secondary", "text-danger")).toBe("text-meta text-danger");
   });
+  it("display sizes are sizes too", () => {
+    expect(cn("display-num text-display-lg text-fg", "text-display-xs")).toBe("display-num text-fg text-display-xs");
+  });
   it("a radius token replaces the radius", () => {
     expect(cn("rounded-control", "rounded-panel")).toBe("rounded-panel");
   });

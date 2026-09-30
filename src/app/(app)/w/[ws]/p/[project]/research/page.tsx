@@ -40,7 +40,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
           {([["participants", stats.participants], ["interviews", stats.interviews], ["conducted", stats.conducted], ["questions", stats.questions]] as const).map(([k, v]) => (
             <div key={k} className="flex flex-col-reverse rounded-panel border border-line bg-surface p-4">
               <dt className="text-meta font-semibold text-fg-secondary">{t.research.stats[k]}</dt>
-              <dd className="display-num text-[34px] leading-none tabular-nums">{v}</dd>
+              <dd className="display-num text-display-md leading-none tabular-nums">{v}</dd>
             </div>
           ))}
         </dl>

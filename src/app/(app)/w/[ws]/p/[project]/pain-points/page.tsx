@@ -12,7 +12,7 @@ import { t } from "@/shared/i18n/ru";
 export const metadata: Metadata = { title: t.synthesis.painPoints.title };
 const s = t.synthesis.painPoints;
 const SEV_CLASS: Record<string, string> = {
-  critical: "bg-danger text-on-status", high: "bg-entity-problem text-on-status", medium: "bg-warning/10 text-warning", low: "bg-subtle text-fg-secondary",
+  critical: "bg-danger text-on-status", high: "bg-danger/10 text-danger", medium: "bg-warning/10 text-warning", low: "bg-subtle text-fg-secondary",
 };
 
 export default async function PainPointsPage({ params }: { params: Promise<{ ws: string; project: string }> }) {

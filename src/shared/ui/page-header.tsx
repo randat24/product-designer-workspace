@@ -21,13 +21,13 @@ export function PageHeader({ eyebrow, title, lede, progress, stat, children }: {
       </div>
       {stat && (
         <p className="ml-auto text-right">
-          <span className="display-num block text-[44px] leading-none tabular-nums">{stat.value}</span>
+          <span className="display-num block text-display-lg leading-none tabular-nums">{stat.value}</span>
           <span className="text-caption font-medium text-fg-secondary">{stat.caption}</span>
         </p>
       )}
       {progress && (
         <p className="ml-auto text-right">
-          <span className="display-num block text-[44px] leading-none tabular-nums">{Math.round(progress.value)}%</span>
+          <span className="display-num block text-display-lg leading-none tabular-nums">{Math.round(progress.value)}%</span>
           <span className="text-caption font-medium text-fg-secondary">{progress.caption}</span>
         </p>
       )}

@@ -33,7 +33,7 @@ export default function UxLawsPage() {
         {UX_LAW_GROUPS.map((g) => (
           <section key={g.id} id={g.id} aria-labelledby={`${g.id}-h`} className="flex scroll-mt-6 flex-col gap-4">
             <div>
-              <h2 id={`${g.id}-h`} className="font-display text-[26px] leading-none font-bold uppercase">{g.title}</h2>
+              <h2 id={`${g.id}-h`} className="font-display text-display-sm leading-none font-bold uppercase">{g.title}</h2>
               <p className="mt-2 max-w-[62ch] text-fg-secondary">{g.lede}</p>
             </div>
             <ul className="grid gap-3 md:grid-cols-2">

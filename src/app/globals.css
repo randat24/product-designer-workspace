@@ -141,6 +141,15 @@
   --text-meta--line-height: 1.55;
   --text-body: 15px;
   --text-body--line-height: 1.55;
+  /* Display scale (Oswald numbers and short display headings): stage numbers, stats, big percentages. */
+  --text-display-xs: 22px;
+  --text-display-xs--line-height: 1;
+  --text-display-sm: 26px;
+  --text-display-sm--line-height: 1;
+  --text-display-md: 34px;
+  --text-display-md--line-height: 1;
+  --text-display-lg: 44px;
+  --text-display-lg--line-height: 1;
 
   /* Radius scale (D2): chips · controls (buttons, fields) · panels · hero panels. */
   --radius-chip: 6px;

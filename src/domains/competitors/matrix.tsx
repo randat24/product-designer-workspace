@@ -144,7 +144,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                       i % 2 ? "rotate-[.7deg]" : "-rotate-[.6deg]",
                     )}>
                     <span className="text-sm leading-tight font-bold">{p.name}</span>
-                    <span className="text-caption font-semibold opacity-70">{p.is_own_product ? t.competitors.ownBadge : p.code}</span>
+                    <span className="text-caption font-semibold opacity-80">{p.is_own_product ? t.competitors.ownBadge : p.code}</span>
                   </Link>
                 </th>
               ))}
@@ -215,7 +215,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
                 <th scope="row" className="sticky left-0 z-[1] border-r border-line bg-surface p-3 text-left text-meta font-bold">Итого</th>
                 {products.map((p) => (
                   <td key={p.id} className="p-3 text-center">
-                    <span className="display-num text-[22px] tabular-nums">{score(p.id)}</span>
+                    <span className="display-num text-display-xs tabular-nums">{score(p.id)}</span>
                     <span className="text-caption text-fg-secondary"> / {features.length}</span>
                   </td>
                 ))}
@@ -274,8 +274,8 @@ function NoteEditor({ initial, label, placeholder, onSave, onCancel }: {
         }}
         className="w-full resize-none rounded-chip border border-line bg-surface px-1.5 py-1 text-caption leading-snug focus:border-fg focus:outline-none" />
       <div className="flex gap-1">
-        <Button size="sm" className="h-7 px-2 text-caption" onClick={() => onSave(text)}>{m.saveNote}</Button>
-        <Button variant="ghost" size="sm" className="h-7 px-2 text-caption" onClick={onCancel}>{m.cancelNote}</Button>
+        <Button size="sm" onClick={() => onSave(text)}>{m.saveNote}</Button>
+        <Button variant="ghost" size="sm" onClick={onCancel}>{m.cancelNote}</Button>
       </div>
     </div>
   );

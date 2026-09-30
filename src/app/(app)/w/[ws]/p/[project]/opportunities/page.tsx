@@ -65,7 +65,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
                                 <li key={o.id}>
                                   <Link href={`${ctx.base}/opportunities/${o.code}`}
                                     className="block rounded-control bg-[var(--s2)] px-2.5 py-1.5 text-meta leading-snug font-semibold text-on-sticky hover:brightness-95">
-                                    <span className="opacity-60">{o.code}</span> {o.title}
+                                    <span className="opacity-80">{o.code}</span> {o.title}
                                   </Link>
                                 </li>
                               ))}
