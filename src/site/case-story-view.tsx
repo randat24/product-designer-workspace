@@ -168,7 +168,9 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
   return (
     <>
       <Intro>{data.intro}</Intro>
-      <div className="overflow-x-auto rounded-[14px] border border-line bg-surface">
+      {/* Scrolls sideways on a phone: focusable so the keyboard can scroll it too (WCAG 2.1.1). */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+      <div tabIndex={0} role="region" aria-label={labels.competitors} className="overflow-x-auto rounded-[14px] border border-line bg-surface">
         <table className="w-full min-w-[560px] border-collapse text-[14px]">
           <thead>
             <tr>
