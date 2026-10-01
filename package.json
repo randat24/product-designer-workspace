@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "e2e": "playwright test",
-    "cv": "jiti scripts/build-cv.ts"
+    "cv": "jiti scripts/build-cv.ts",
+    "postinstall": "patch-package --error-on-fail"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "5.3.0",
@@ -44,6 +45,7 @@
     "@types/react-dom": "19.3.0",
     "eslint": "9.39.5",
     "eslint-config-next": "15.5.27",
+    "patch-package": "8.0.1",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
     "vitest": "3.2.7"
