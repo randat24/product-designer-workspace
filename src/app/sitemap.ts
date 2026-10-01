@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...entry("", latest, 1, "monthly"),
     ...entry("/cases", latest, 0.8, "monthly"),
     ...entry("/about", CONTENT_UPDATED, 0.7, "yearly"),
+    ...entry("/start-project", "2026-10-01", 0.6, "yearly"),
     ...entry("/privacy", "2026-10-01", 0.2, "yearly"),
     ...cases.flatMap((c) => entry(`/cases/${c.slug}`, c.updatedAt ?? CONTENT_UPDATED, 0.9, "yearly")),
   ];

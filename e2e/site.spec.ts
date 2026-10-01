@@ -8,6 +8,7 @@ const PAGES = [
   { path: "/en/cases", lang: "en" },
   { path: "/uk/about", lang: "uk" },
   { path: "/en/privacy", lang: "en" },
+  { path: "/uk/start-project", lang: "uk" },
 ];
 
 async function checkPage(page: Page, testInfo: TestInfo, path: string, lang: string, contrast = true) {

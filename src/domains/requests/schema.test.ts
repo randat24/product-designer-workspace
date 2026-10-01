@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { budgetBand, findBudgetRange } from "./config";
+import { briefFileName } from "./file-name";
+import { budgetLabel } from "./labels";
 import { normalizeUrl, requestSchema, toDbPayload } from "./schema";
 
 const valid = () => ({
@@ -114,5 +116,24 @@ describe("budget config", () => {
     expect(budgetBand("uah_400000_plus")).toBe("5k_plus");
     expect(budgetBand("estimate")).toBe("estimate");
     expect(budgetBand(null)).toBe("undecided");
+  });
+});
+
+describe("budgetLabel", () => {
+  it("formats ranges, open bounds and special answers per language", () => {
+    expect(budgetLabel({ range: "usd_2500_5000", min: 2500, max: 5000, currency: "USD" }, "en")).toBe("$2,500–5,000");
+    expect(budgetLabel({ range: "usd_lt_500", min: 0, max: 500, currency: "USD" }, "uk")).toBe("До $500");
+    expect(budgetLabel({ range: "uah_400000_plus", min: 400000, max: null, currency: "UAH" }, "uk")).toMatch(/^₴400\s000\+$/);
+    expect(budgetLabel({ range: "estimate" }, "uk")).toBe("Потрібна оцінка");
+    expect(budgetLabel({ range: "custom", min: 3000, currency: "EUR" }, "en")).toBe("€3,000+");
+  });
+});
+
+describe("briefFileName", () => {
+  it("transliterates Ukrainian names and falls back to the request code", () => {
+    expect(briefFileName("Стефа Книжки", "REQ-2026-0001", "2026-10-01T10:00:00Z")).toBe("Project-Brief-Stefa-Knyzhky-2026-10-01.pdf");
+    expect(briefFileName("Stefa Books", "REQ-2026-0001", "2026-10-01T10:00:00Z")).toBe("Project-Brief-Stefa-Books-2026-10-01.pdf");
+    expect(briefFileName(null, "REQ-2026-0012", "2026-10-01T10:00:00Z")).toBe("Project-Brief-REQ-2026-0012-2026-10-01.pdf");
+    expect(briefFileName("Їжак / ґанок!", "REQ-1", "2026-01-02")).toBe("Project-Brief-Yizhak-ganok-2026-01-02.pdf");
   });
 });

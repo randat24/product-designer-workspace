@@ -5,9 +5,10 @@ import { CONTACTS, dict, isLocale } from "@/site/content";
 import { trackAttrs } from "@/site/analytics/track";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, graph, localeUrl, pageMetadata, personId, personLd } from "@/site/seo";
-import { FileDown } from "lucide-react";
+import { ArrowRight, FileDown } from "lucide-react";
 import { ContactMenu } from "@/site/contact-menu";
-import { AwardCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
+import { INTAKE } from "@/site/intake/content";
+import { AwardCard, Eyebrow, PrimaryLink, SectionTitle, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 import { ExternalIcon } from "@/site/social-icons";
 
@@ -229,6 +230,9 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             <p className="text-[17px] leading-[1.55] text-fg-secondary">{d.about.ctaText}</p>
           </div>
           <div className="flex flex-wrap gap-3">
+            <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "about" })}>
+              {INTAKE[locale].cta}
+            </PrimaryLink>
             <ContactMenu
               label={d.home.cta}
               heading={d.ui.writeVia}
@@ -236,10 +240,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               copiedLabel={d.ui.copied}
               contacts={CONTACTS}
               location="about"
+              variant="secondary"
             />
-            <SecondaryLink href={CONTACTS.cv[locale]} download icon={<FileDown aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "about" })}>
-              {d.home.ctaCv}
-            </SecondaryLink>
           </div>
         </div>
       </section>
