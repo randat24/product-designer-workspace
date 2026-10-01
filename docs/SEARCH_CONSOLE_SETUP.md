@@ -20,8 +20,11 @@
 Вернуться в Search Console → **Verify**. Если не прошло — подождать 10–60 минут и нажать ещё раз.
 Запись не удалять: она нужна для постоянного подтверждения.
 
-> Альтернатива без DNS (ресурс *URL prefix*): meta-тег `google-site-verification`. Его можно добавить в
-> `generateMetadata` раскладки сайта (`verification: { google: "…" }`), но способ через DNS надёжнее.
+> **Без своего домена** (сайт пока на `*.vercel.app`): ресурс **URL prefix** →
+> `https://product-designer-workspace.vercel.app/` → способ **HTML tag**. Из тега
+> `<meta name="google-site-verification" content="…">` скопировать значение `content` и добавить в Vercel переменную
+> `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` (Production) → Redeploy → **Verify**. Код уже выводит тег на страницах сайта.
+> Когда появится домен — добавить ресурс **Domain** с подтверждением через DNS, как выше.
 
 ### 3. Отправить sitemap
 

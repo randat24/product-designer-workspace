@@ -1,5 +1,5 @@
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
-import { expectAccessible, horizontalOverflow, watchErrors } from "./helpers";
+import { expectAccessible, horizontalOverflow, hydrationDiff, watchErrors } from "./helpers";
 
 // Public site: every page renders, has one h1 and the right language, passes axe, and does not
 // scroll sideways on a phone.
@@ -13,11 +13,16 @@ async function checkPage(page: Page, testInfo: TestInfo, path: string, lang: str
   const errors = watchErrors(page);
   const res = await page.goto(path);
   expect(res?.status()).toBe(200);
+  const serverHtml = (await res?.text()) ?? "";
   await expect(page.locator("html")).toHaveAttribute("lang", lang);
   await expect(page.locator("h1")).toHaveCount(1);
   await expectAccessible(page, testInfo, { contrast });
   expect(await horizontalOverflow(page)).toEqual([]);
-  expect(errors).toEqual([]);
+  // A hydration error says nothing about where it happened: put the first server/client difference in the message.
+  const hydration = errors.some((e) => /Minified React error #4(18|19|23|25)|Hydration/i.test(e))
+    ? `\n${await hydrationDiff(page, testInfo, serverHtml)}`
+    : "";
+  expect(errors, `page errors${hydration}`).toEqual([]);
 }
 
 for (const p of PAGES) {
