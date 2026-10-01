@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
-import { useFieldAutosave } from "@/shared/ui/autosave";
+import { useFieldAutosave, autosaveLabel } from "@/shared/ui/autosave";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { saveAnswer } from "./actions";
 
 /**
@@ -67,7 +67,7 @@ export function AnswerField({ interviewId, questionId, answerId, initial, readOn
         onSelect={selectionActions ? onSelect : undefined}
         placeholder={placeholder ?? t.research.interview.answerPlaceholder} maxLength={20000}
         onChange={(e) => field.onChange(e.target.value)} onBlur={field.onBlur}
-        aria-invalid={field.status === "error"}
+        aria-invalid={field.invalid}
         className={cn(
           "w-full resize-y rounded-control border border-transparent bg-subtle px-3 py-2 leading-normal font-medium [field-sizing:content]",
           "placeholder:font-normal placeholder:text-fg-secondary hover:border-line focus:border-fg focus:bg-surface focus:outline-none",
@@ -75,9 +75,12 @@ export function AnswerField({ interviewId, questionId, answerId, initial, readOn
           className,
         )} />
       <span aria-live="polite" className="pointer-events-none absolute right-2 bottom-1.5 text-caption text-fg-secondary">
-        {field.status === "saving" ? t.autosave.saving : field.status === "error" ? <span className="text-danger">{t.autosave.failed}</span> : ""}
+        {field.status === "saving" || field.status === "slow" ? autosaveLabel(field.status) : ""}
       </span>
       </div>
+      {(field.status === "error" || field.status === "offline") && (
+        <p role="alert" className="mt-1 text-meta text-danger">{autosaveLabel(field.status, field.error ?? undefined)}</p>
+      )}
       {selectionActions && selection && selectionActions(selection)}
     </div>
   );

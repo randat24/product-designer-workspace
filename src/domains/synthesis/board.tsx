@@ -4,11 +4,11 @@ import { ArrowRight } from "lucide-react";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useFieldAutosave } from "@/shared/ui/autosave";
+import { FieldSaveNote, useFieldAutosave } from "@/shared/ui/autosave";
 import { Input, Select } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { createInsightFromPattern, createObservation, createPattern, deletePattern, moveCard, renamePattern } from "./actions";
@@ -21,7 +21,7 @@ const NONE = "__none__";
 
 /**
  * Synthesis board (docs/IA.md /synthesis): pattern columns with observation and quote
- * cards in participant colours. Drag and drop, or "Переместить в…" from the keyboard.
+ * cards in participant colours. Drag and drop, or "Перемістити в…" from the keyboard.
  */
 export function SynthesisBoard({ projectId, base, patterns, cards: initialCards, participants, canEdit }: {
   projectId: string;
@@ -127,6 +127,7 @@ function ColumnHeader({ pattern, count, canEdit, onDelete }: { pattern: Pattern 
       <input aria-label={`${b.patternPlaceholder} ${pattern.code}`} value={title.value} readOnly={!canEdit} maxLength={200}
         onChange={(e) => title.onChange(e.target.value)} onBlur={title.onBlur}
         className="w-full rounded-chip border border-transparent bg-transparent px-1 py-0.5 text-body font-bold text-on-sticky focus:bg-white/55 focus:outline-none" />
+      <FieldSaveNote status={title.status} error={title.error} className="text-caption font-semibold text-on-sticky" />
       {canEdit && (
         <form action={createInsightFromPattern}>
           <input type="hidden" name="patternId" value={pattern.id} />

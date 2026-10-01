@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { TriangleAlert } from "lucide-react";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ENTITIES, isEntityType, type EntityType } from "@/shared/entities";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { getTraceGraph, listLinkCandidates, listRules, resolveEntities, type ResolvedEntity, type TraceEdge } from "./queries";

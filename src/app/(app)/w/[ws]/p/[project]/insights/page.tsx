@@ -8,7 +8,7 @@ import { createSynthesisEntity } from "@/domains/synthesis/actions";
 import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.synthesis.insights.title };
 const s = t.synthesis.insights;
@@ -23,7 +23,7 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
   return (
     <div className="max-w-6xl">
       <PageHeader title={s.title} lede={s.lede}
-        progress={{ value: insights.length ? (supported / insights.length) * 100 : 0, caption: `${supported} / ${insights.length} с источниками` }} />
+        progress={{ value: insights.length ? (supported / insights.length) * 100 : 0, caption: `${supported} / ${insights.length} з джерелами` }} />
       {ctx.canEdit && (
         <form action={createSynthesisEntity} className="mb-5">
           <input type="hidden" name="type" value="insight" />

@@ -7,7 +7,7 @@ import { getBoard, listInsights, listOpportunities, listPainPoints } from "@/dom
 import { listFlows } from "@/domains/flows";
 import { listDecisions, listScreens } from "@/domains/design";
 import type { CommandItem } from "@/shared/ui/command-palette";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 /**
  * Entities and other projects for ⌘K, loaded when the palette first opens instead of on every

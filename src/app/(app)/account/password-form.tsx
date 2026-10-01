@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Field, Input } from "@/shared/ui/field";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { changePassword, type PasswordState } from "./actions";
 
 export function PasswordForm({ autoFocus = false }: { autoFocus?: boolean }) {

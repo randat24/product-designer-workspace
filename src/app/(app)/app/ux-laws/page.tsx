@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { UX_LAW_GROUPS, UX_LAWS, uxLawUrl } from "@/domains/ux-laws";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ArrowLeft } from "lucide-react";
 
 const l = t.uxLaws;

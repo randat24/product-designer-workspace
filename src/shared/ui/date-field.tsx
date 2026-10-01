@@ -1,9 +1,9 @@
 "use client";
 
 // A date field in the design-system look. The native picker of <input type="date"> cannot be styled (its
-// popup is drawn by the browser), so this is a text field for typing (дд.мм.гггг) plus our own calendar:
+// popup is drawn by the browser), so this is a text field for typing (дд.мм.рррр) plus our own calendar:
 // a dialog with a month grid, keyboard navigation (arrows, PageUp/PageDown, Home/End, Enter, Esc),
-// «Сегодня» and «Очистить». The value stays an ISO date (YYYY-MM-DD) or "" — the same as the old input.
+// «Сьогодні» and «Очистити». The value stays an ISO date (YYYY-MM-DD) or "" — the same as the old input.
 
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
@@ -12,14 +12,13 @@ import { addDays, addMonths, formatDateInput, fromIso, iso, parseDateInput, type
 
 export type { DateLocale };
 
-const TEXT: Record<DateLocale, { placeholder: string; open: string; prev: string; next: string; today: string; clear: string; tag: string }> = {
-  ru: { placeholder: "дд.мм.гггг", open: "Выбрать дату", prev: "Предыдущий месяц", next: "Следующий месяц", today: "Сегодня", clear: "Очистить", tag: "ru-RU" },
-  uk: { placeholder: "дд.мм.рррр", open: "Вибрати дату", prev: "Попередній місяць", next: "Наступний місяць", today: "Сьогодні", clear: "Очистити", tag: "uk-UA" },
-  en: { placeholder: "dd/mm/yyyy", open: "Choose a date", prev: "Previous month", next: "Next month", today: "Today", clear: "Clear", tag: "en-GB" },
+const TEXT: Record<DateLocale, { placeholder: string; open: string; prev: string; next: string; today: string; clear: string; tag: string; bad: string }> = {
+  uk: { placeholder: "дд.мм.рррр", open: "Вибрати дату", prev: "Попередній місяць", next: "Наступний місяць", today: "Сьогодні", clear: "Очистити", tag: "uk-UA", bad: "Це не схоже на дату. Введіть у форматі дд.мм.рррр або виберіть у календарі." },
+  en: { placeholder: "dd/mm/yyyy", open: "Choose a date", prev: "Previous month", next: "Next month", today: "Today", clear: "Clear", tag: "en-GB", bad: "That doesn't look like a date. Type it as dd/mm/yyyy or pick one in the calendar." },
 };
 
 export function DateField({
-  id, value, onChange, locale = "ru", readOnly, invalid, describedBy, className, size = "md",
+  id, value, onChange, locale = "uk", readOnly, invalid, describedBy, className, size = "md",
 }: {
   id: string;
   /** ISO date (YYYY-MM-DD) or "". */
@@ -72,7 +71,7 @@ export function DateField({
           value={text}
           readOnly={readOnly}
           aria-invalid={invalid || badText || undefined}
-          aria-describedby={describedBy}
+          aria-describedby={[describedBy, badText && `${id}-bad`].filter(Boolean).join(" ") || undefined}
           onChange={(e) => { setText(e.target.value); setBadText(false); }}
           onBlur={commitText}
           onKeyDown={(e) => {
@@ -104,6 +103,7 @@ export function DateField({
           </button>
         )}
       </div>
+      {badText && <p id={`${id}-bad`} role="alert" className="mt-1 text-meta text-danger">{tx.bad}</p>}
       {open && (
         <CalendarPopover
           id={dialogId}

@@ -12,7 +12,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { Panel, Select, Textarea } from "@/shared/ui/field";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { WorkspaceHeader } from "../../workspace-header";
 
 type Params = Promise<{ ws: string; code: string }>;
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 const r = t.requests;
 const dt = (iso: string, time = false) =>
-  new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric", ...(time ? { hour: "2-digit", minute: "2-digit" } : {}) })
+  new Intl.DateTimeFormat("uk-UA", { day: "numeric", month: "long", year: "numeric", ...(time ? { hour: "2-digit", minute: "2-digit" } : {}) })
     .format(new Date(iso));
 
 function Rows({ rows }: { rows: [string, React.ReactNode][] }) {
@@ -66,7 +66,7 @@ export default async function RequestPage({ params }: { params: Params }) {
     ? `https://t.me/${client.telegram.replace(/^@/, "")}`
     : `mailto:${client.email}?subject=${encodeURIComponent(`${s.project.name ?? r.noName} (${req.code})`)}`;
   const links = (ls: { kind: string; url: string }[]) =>
-    ls.length ? <ul className="flex flex-col gap-1">{ls.map((l) => <li key={l.url}>{label("linkKinds", l.kind, "ru")}: {ext(l.url)}</li>)}</ul> : null;
+    ls.length ? <ul className="flex flex-col gap-1">{ls.map((l) => <li key={l.url}>{label("linkKinds", l.kind, "uk")}: {ext(l.url)}</li>)}</ul> : null;
 
   return (
     <div className="min-h-screen">
@@ -90,19 +90,19 @@ export default async function RequestPage({ params }: { params: Params }) {
               [r.rows.name, client.name], [r.rows.company, client.company], [r.rows.role, client.role],
               [r.rows.email, <a key="e" href={`mailto:${client.email}`} className="underline underline-offset-2">{client.email}</a>],
               [r.rows.phone, client.phone], [r.rows.telegram, client.telegram], [r.rows.website, client.website ? ext(client.website) : null],
-              [r.rows.channel, client.preferred_channel === "other" ? client.preferred_channel_note : label("channels", client.preferred_channel, "ru")],
+              [r.rows.channel, client.preferred_channel === "other" ? client.preferred_channel_note : label("channels", client.preferred_channel, "uk")],
             ]} />
           </Block>
           <Block title={r.sections.project}>
             <Rows rows={[
-              [r.rows.types, [...labels("types", s.project.types.filter((x) => x !== "other"), "ru"), s.project.type_other].filter(Boolean).join(", ")],
+              [r.rows.types, [...labels("types", s.project.types.filter((x) => x !== "other"), "uk"), s.project.type_other].filter(Boolean).join(", ")],
             ]} />
           </Block>
           <Block title={r.sections.overview}>
             <Rows rows={[
               [r.rows.summary, s.about.summary], [r.rows.whatItDoes, s.about.what_it_does], [r.rows.problem, s.about.problem],
               [r.rows.whyNow, s.about.why_now],
-              [r.rows.goals, [...labels("goals", s.about.goals.filter((g) => g !== "other"), "ru"), s.about.goal_other].filter(Boolean).join(", ")],
+              [r.rows.goals, [...labels("goals", s.about.goals.filter((g) => g !== "other"), "uk"), s.about.goal_other].filter(Boolean).join(", ")],
             ]} />
           </Block>
           <Block title={r.sections.existing}>
@@ -117,7 +117,7 @@ export default async function RequestPage({ params }: { params: Params }) {
           <Block title={r.sections.audience}>
             <Rows rows={[
               [r.rows.audience, s.audience.audience], [r.rows.primaryUsers, s.audience.primary_users], [r.rows.geography, s.audience.geography],
-              [r.rows.market, label("markets", s.audience.market, "ru")], [r.rows.demographics, s.audience.demographics],
+              [r.rows.market, label("markets", s.audience.market, "uk")], [r.rows.demographics, s.audience.demographics],
               [r.rows.painPoints, s.audience.pain_points],
             ]} />
           </Block>
@@ -145,19 +145,19 @@ export default async function RequestPage({ params }: { params: Params }) {
           </Block>
           <Block title={r.sections.scope}>
             <Rows rows={[
-              [r.rows.items, labels("scope", s.scope.items, "ru").join(", ")],
+              [r.rows.items, labels("scope", s.scope.items, "uk").join(", ")],
               ["", s.scope.needs_advice ? r.advice : null],
             ]} />
           </Block>
           <Block title={r.sections.materials}>
-            <Rows rows={[[r.rows.items, labels("materials", s.materials.items, "ru").join(", ")], [r.rows.links, links(s.materials.links)]]} />
+            <Rows rows={[[r.rows.items, labels("materials", s.materials.items, "uk").join(", ")], [r.rows.links, links(s.materials.links)]]} />
           </Block>
           <Block title={r.sections.budget}>
-            <Rows rows={[[r.rows.range, budgetLabel(s.budget, "ru")], [r.rows.note, s.budget.note]]} />
+            <Rows rows={[[r.rows.range, budgetLabel(s.budget, "uk")], [r.rows.note, s.budget.note]]} />
           </Block>
           <Block title={r.sections.timeline}>
             <Rows rows={[
-              [r.rows.start, label("start", s.timeline.start, "ru")],
+              [r.rows.start, label("start", s.timeline.start, "uk")],
               [r.rows.deadlineDate, s.timeline.has_deadline && s.timeline.deadline_date ? dt(`${s.timeline.deadline_date}T12:00:00Z`) : null],
               [r.rows.reason, s.timeline.has_deadline ? s.timeline.deadline_reason : null],
             ]} />

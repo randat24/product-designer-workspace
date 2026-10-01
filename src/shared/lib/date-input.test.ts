@@ -18,10 +18,9 @@ describe("parseDateInput", () => {
 
 describe("formatDateInput", () => {
   it("formats an ISO date for the locale", () => {
-    expect(formatDateInput("2026-09-29", "ru")).toBe("29.09.2026");
     expect(formatDateInput("2026-09-29", "uk")).toBe("29.09.2026");
     expect(formatDateInput("2026-09-29", "en")).toBe("29/09/2026");
-    expect(formatDateInput("", "ru")).toBe("");
+    expect(formatDateInput("", "uk")).toBe("");
   });
 });
 

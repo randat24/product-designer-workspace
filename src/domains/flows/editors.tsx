@@ -5,7 +5,7 @@ import { TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { Input } from "@/shared/ui/field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { deleteFlow, saveFlowMeta } from "./actions";
 import { FLOW_STATUSES, type FlowMeta } from "./schema";
 
@@ -20,7 +20,7 @@ export function FlowMetaEditor({ id, initial, canEdit }: { id: string; initial: 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="flow-name" className="text-meta font-semibold text-fg-secondary">{f.fields.name}</label>
         <Input id="flow-name" value={v.name} readOnly={!canEdit} maxLength={200} className="h-11 text-heading font-bold"
-          aria-invalid={status === "error"} onChange={(e) => update({ name: e.target.value })} />
+          aria-invalid={error?.field === "name"} onChange={(e) => update({ name: e.target.value })} />
       </div>
       <TextField id="flow-description" label={f.fields.description} value={v.description ?? ""} readOnly={!canEdit}
         onChange={(description) => update({ description })} />

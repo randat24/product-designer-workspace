@@ -9,7 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { Select } from "@/shared/ui/field";
 import { BackLink } from "@/shared/ui/back-link";
 
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return { title: `${decodeURIComponent((await params).code).toUpperCase()} · ${t.research.participants.title}` };
 }
 const pt = t.research.participants;
-const dateFmt = new Intl.DateTimeFormat("ru", { day: "numeric", month: "long", year: "numeric" });
+const dateFmt = new Intl.DateTimeFormat("uk", { day: "numeric", month: "long", year: "numeric" });
 
 export default async function ParticipantPage({ params }: { params: Promise<Params> }) {
   const { ws, project: slug, code } = await params;

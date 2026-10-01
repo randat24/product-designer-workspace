@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import { updateTracked } from "@/shared/lib/supabase/tracked-update";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { decisionSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
 
@@ -94,7 +94,7 @@ export async function addState(screenId: string, kind: string): Promise<Result> 
 export async function deleteState(id: string): Promise<Result> {
   if (!uuid.safeParse(id).success) return fail();
   const supabase = await createClient();
-  // The standard five stay; mark them "Не нужно" instead.
+  // The standard five stay; mark them "Не потрібно" instead.
   const { error } = await supabase.from("screen_states").delete().eq("id", id)
     .not("kind", "in", "(default,loading,empty,error,success)");
   if (error) return fail(t.autosave.readOnly);

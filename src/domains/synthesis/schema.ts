@@ -3,47 +3,47 @@ import { z } from "zod";
 const text = (max = 5000) => z.string().trim().max(max).nullish().transform((v) => v || null);
 
 export const OBSERVATION_KINDS = [
-  { value: "pain", label: "Боль", color: "var(--entity-problem)" },
-  { value: "need", label: "Потребность", color: "var(--entity-opportunity)" },
-  { value: "behavior", label: "Поведение", color: "var(--entity-research)" },
-  { value: "emotion", label: "Эмоция", color: "var(--entity-synthesis)" },
+  { value: "pain", label: "Біль", color: "var(--entity-problem)" },
+  { value: "need", label: "Потреба", color: "var(--entity-opportunity)" },
+  { value: "behavior", label: "Поведінка", color: "var(--entity-research)" },
+  { value: "emotion", label: "Емоція", color: "var(--entity-synthesis)" },
   { value: "fact", label: "Факт", color: "var(--entity-decision)" },
-  { value: "workaround", label: "Обходной путь", color: "var(--entity-structure)" },
+  { value: "workaround", label: "Обхідний шлях", color: "var(--entity-structure)" },
 ] as const;
 export type ObservationKind = (typeof OBSERVATION_KINDS)[number]["value"];
 export const kindOf = (k: string) => OBSERVATION_KINDS.find((x) => x.value === k) ?? OBSERVATION_KINDS[2];
 
 export const LEVELS = [
-  { value: "low", label: "Низкая" },
-  { value: "medium", label: "Средняя" },
-  { value: "high", label: "Высокая" },
+  { value: "low", label: "Низька" },
+  { value: "medium", label: "Середня" },
+  { value: "high", label: "Висока" },
 ] as const;
 export const IMPACT_LEVELS = [
-  { value: "low", label: "Низкий" },
-  { value: "medium", label: "Средний" },
-  { value: "high", label: "Высокий" },
+  { value: "low", label: "Низький" },
+  { value: "medium", label: "Середній" },
+  { value: "high", label: "Високий" },
 ] as const;
 export const EFFORT_LEVELS = [
-  { value: "low", label: "Малые" },
-  { value: "medium", label: "Средние" },
-  { value: "high", label: "Большие" },
+  { value: "low", label: "Малі" },
+  { value: "medium", label: "Середні" },
+  { value: "high", label: "Великі" },
 ] as const;
 export const INSIGHT_STATUSES = [
-  { value: "draft", label: "Черновик" },
-  { value: "validated", label: "Подтверждён" },
-  { value: "rejected", label: "Отклонён" },
+  { value: "draft", label: "Чернетка" },
+  { value: "validated", label: "Підтверджено" },
+  { value: "rejected", label: "Відхилено" },
 ] as const;
 export const SEVERITIES = [
-  { value: "critical", label: "Критичная" },
-  { value: "high", label: "Высокая" },
-  { value: "medium", label: "Средняя" },
-  { value: "low", label: "Низкая" },
+  { value: "critical", label: "Критична" },
+  { value: "high", label: "Висока" },
+  { value: "medium", label: "Середня" },
+  { value: "low", label: "Низька" },
 ] as const;
 export const OPPORTUNITY_STATUSES = [
-  { value: "open", label: "Открыта" },
-  { value: "in_design", label: "В проектировании" },
-  { value: "addressed", label: "Решена" },
-  { value: "dropped", label: "Отложена" },
+  { value: "open", label: "Відкрита" },
+  { value: "in_design", label: "У проєктуванні" },
+  { value: "addressed", label: "Розв'язана" },
+  { value: "dropped", label: "Відкладена" },
 ] as const;
 export const labelOf = (list: readonly { value: string; label: string }[], v: string) => list.find((x) => x.value === v)?.label ?? v;
 
@@ -51,7 +51,7 @@ export const labelOf = (list: readonly { value: string; label: string }[], v: st
 export const SEVERITY_WEIGHT: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1 };
 
 export const insightSchema = z.object({
-  title: z.string().trim().min(1, { error: "Сформулируйте инсайт" }).max(300),
+  title: z.string().trim().min(1, { error: "Сформулюйте інсайт" }).max(300),
   statement: text(),
   confidence: z.enum(["low", "medium", "high"]),
   status: z.enum(["draft", "validated", "rejected"]),
@@ -59,7 +59,7 @@ export const insightSchema = z.object({
 export type InsightFields = z.output<typeof insightSchema>;
 
 export const painPointSchema = z.object({
-  title: z.string().trim().min(1, { error: "Назовите боль" }).max(300),
+  title: z.string().trim().min(1, { error: "Назвіть біль" }).max(300),
   description: text(),
   severity: z.enum(["critical", "high", "medium", "low"]),
   segment_label: text(80),
@@ -67,7 +67,7 @@ export const painPointSchema = z.object({
 export type PainPointFields = z.output<typeof painPointSchema>;
 
 export const opportunitySchema = z.object({
-  title: z.string().trim().min(1, { error: "Назовите возможность" }).max(300),
+  title: z.string().trim().min(1, { error: "Назвіть можливість" }).max(300),
   description: text(),
   hmw: text(1000),
   impact: z.enum(["low", "medium", "high"]),

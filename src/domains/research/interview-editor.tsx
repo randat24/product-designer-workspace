@@ -8,7 +8,7 @@ import { ChipGroup } from "@/shared/ui/chips";
 import { Input } from "@/shared/ui/field";
 import { DateField } from "@/shared/ui/date-field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { deleteAnswer, deleteInterview, saveInterviewMeta } from "./actions";

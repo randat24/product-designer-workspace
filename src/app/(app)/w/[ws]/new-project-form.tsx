@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { createProject, type CreateProjectState } from "@/domains/projects/actions";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/field";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 /** One field and Enter: the project opens right away; description and platforms live in its settings. */
 export function NewProjectForm({ workspaceId, autoFocus }: { workspaceId: string; autoFocus?: boolean }) {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findNavItem } from "@/shared/navigation";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { PageHeader } from "@/shared/ui/page-header";
 
 export async function generateMetadata({ params }: { params: Promise<{ section: string[] }> }): Promise<Metadata> {

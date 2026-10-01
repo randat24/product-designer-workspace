@@ -1,8 +1,8 @@
-// Typed dates in the tool and the site's form: dd.mm.yyyy (ru, uk) or dd/mm/yyyy (en) ⇄ ISO YYYY-MM-DD.
+// Typed dates in the tool and the site's form: dd.mm.yyyy (uk) or dd/mm/yyyy (en) ⇄ ISO YYYY-MM-DD.
 
-export type DateLocale = "ru" | "uk" | "en";
+export type DateLocale = "uk" | "en";
 
-const SEP: Record<DateLocale, string> = { ru: ".", uk: ".", en: "/" };
+const SEP: Record<DateLocale, string> = { uk: ".", en: "/" };
 
 export const pad = (n: number) => String(n).padStart(2, "0");
 export const iso = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;

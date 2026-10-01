@@ -9,7 +9,7 @@ import { DateField } from "@/shared/ui/date-field";
 import { cn } from "@/shared/lib/cn";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { deleteDecision, deleteScreen, saveDecision, saveScreen } from "./actions";
 import { Button, IconButton } from "@/shared/ui/button";
 import {

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FieldError, Input } from "@/shared/ui/field";
 import { DateField } from "@/shared/ui/date-field";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { saveBrief } from "./actions";

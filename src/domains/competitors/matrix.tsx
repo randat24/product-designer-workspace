@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/shared/ui/field";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addFeature, addUxTemplate, deleteFeature, setCellNote, setFeatureValue, updateFeature } from "./actions";
@@ -212,7 +212,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
             ))}
             {features.length > 0 && (
               <tr>
-                <th scope="row" className="sticky left-0 z-[1] border-r border-line bg-surface p-3 text-left text-meta font-bold">Итого</th>
+                <th scope="row" className="sticky left-0 z-[1] border-r border-line bg-surface p-3 text-left text-meta font-bold">Разом</th>
                 {products.map((p) => (
                   <td key={p.id} className="p-3 text-center">
                     <span className="display-num text-display-xs tabular-nums">{score(p.id)}</span>

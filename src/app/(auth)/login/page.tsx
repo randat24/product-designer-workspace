@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: t.auth.title };

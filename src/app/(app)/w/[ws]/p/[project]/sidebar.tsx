@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { CURRENT_PHASE, visibleNav } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
 import { CommandPalette, type CommandItem } from "@/shared/ui/command-palette";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { NAV_ICONS } from "@/shared/nav-icons";
 import { BookOpen, Check, ChevronLeft, Globe, Settings } from "lucide-react";
 
@@ -39,7 +39,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
     el.scrollLeft = link.offsetLeft - el.clientWidth / 2 + link.offsetWidth / 2;
   }, [activeHref]);
   return (
-    <nav aria-label="Разделы проекта"
+    <nav aria-label="Розділи проєкту"
       className="z-20 bg-rail text-rail-fg lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
       <div className="flex flex-col gap-1 px-5 pt-5 pb-3 lg:pt-7">
         <Link href={`/w/${wsSlug}`}

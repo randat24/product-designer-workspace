@@ -3,7 +3,7 @@ import { Globe } from "lucide-react";
 import { getCurrentUser, listMyWorkspaces } from "@/domains/projects";
 import { countNewRequests } from "@/domains/requests/queries";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { WorkspaceSwitcher } from "./workspace-switcher";
 
 /** The workspace bar (brand, switcher, way back to the site, account) shared by the projects and requests pages. */

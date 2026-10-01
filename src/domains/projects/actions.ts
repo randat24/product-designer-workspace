@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/shared/lib/supabase/server";
 import { slugify } from "@/shared/lib/slug";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { z } from "zod";
 import { createProjectSchema, updateProjectSchema } from "./schema";
 

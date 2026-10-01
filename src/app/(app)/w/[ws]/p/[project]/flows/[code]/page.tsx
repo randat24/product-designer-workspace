@@ -10,7 +10,7 @@ import { RemindersPanel } from "@/domains/competitors/reminders";
 import { TracePanel } from "@/domains/trace";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };

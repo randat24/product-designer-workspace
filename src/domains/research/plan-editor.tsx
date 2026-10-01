@@ -5,7 +5,7 @@ import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { FieldError, Input } from "@/shared/ui/field";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { savePlan } from "./actions";
 import { RESEARCH_METHODS, RESEARCH_STATUSES, type PlanFields } from "./schema";
 import { Button, IconButton } from "@/shared/ui/button";
