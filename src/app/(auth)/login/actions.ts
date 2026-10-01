@@ -42,3 +42,22 @@ export async function signInWithGoogle(formData: FormData) {
   if (error || !data.url) redirect("/login?error=oauth");
   redirect(data.url);
 }
+
+export type ResetState = { sent?: boolean; error?: string } | undefined;
+
+/**
+ * Sends a password-recovery link. The link goes through /auth/callback (PKCE code → session) and lands on
+ * /account?reset=1, where the person sets a new password. The answer is the same whether the account exists
+ * or not, so the form does not reveal which emails are registered.
+ */
+export async function requestPasswordReset(_prev: ResetState, formData: FormData): Promise<ResetState> {
+  const email = z.email().safeParse(String(formData.get("email") ?? "").trim());
+  if (!email.success) return { error: t.auth.invalidEmail };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email.data, {
+    redirectTo: `${await origin()}/auth/callback?next=${encodeURIComponent("/account?reset=1")}`,
+  });
+  if (error?.status === 429) return { error: t.auth.tooManyAttempts };
+  return { sent: true };
+}

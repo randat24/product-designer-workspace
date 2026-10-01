@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Field, Input } from "@/shared/ui/field";
@@ -25,6 +26,9 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
             aria-invalid={!!state?.error} aria-describedby={state?.error ? "password-error" : undefined} />
         </Field>
         <Button type="submit" disabled={pending}>{pending ? t.auth.signingIn : t.auth.signIn}</Button>
+        <Link href="/login/forgot" className="hit w-fit text-meta font-semibold text-fg-secondary underline underline-offset-4 hover:text-fg">
+          {t.auth.forgot}
+        </Link>
       </form>
       {GOOGLE_ENABLED && (
         <>
