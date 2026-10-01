@@ -11,13 +11,21 @@ export function Section({ id, title, children }: { id: string; title: string; ch
   );
 }
 
-export function TextField({ id, label, hint, value, readOnly, onChange }: {
+export function TextField({ id, label, hint, badge, value, readOnly, onChange }: {
   id: string; label: string; hint?: string; value: string; readOnly: boolean; onChange: (v: string) => void;
+  /** A short mark next to the label, e.g. «со слов клиента» for text that came from a project request. */
+  badge?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-meta font-semibold text-fg-secondary">{label}</label>
+      <span className="flex flex-wrap items-center gap-2">
+        <label htmlFor={id} className="text-meta font-semibold text-fg-secondary">{label}</label>
+        {badge && (
+          <span id={`${id}-badge`} className="rounded-full border border-warning px-2 py-px text-caption font-semibold text-warning">{badge}</span>
+        )}
+      </span>
       <Textarea id={id} value={value} readOnly={readOnly} maxLength={5000} rows={2} placeholder={hint}
+        aria-describedby={badge ? `${id}-badge` : undefined}
         onChange={(e) => onChange(e.target.value)}
         className="min-h-16 resize-y [field-sizing:content]" />
     </div>

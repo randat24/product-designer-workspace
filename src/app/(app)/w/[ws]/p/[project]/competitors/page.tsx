@@ -88,6 +88,9 @@ export default async function CompetitorsPage({ params, searchParams }: {
                     <span className="rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
                       {c.is_own_product ? t.competitors.ownBadge : COMPETITOR_KINDS.find((k) => k.value === c.kind)?.label}
                     </span>
+                    {c.origin === "client" && (
+                      <span className="rounded-full border border-warning px-2.5 py-0.5 text-caption font-semibold text-warning">{t.requests.clientOrigin}</span>
+                    )}
                     {c.url && <span className="truncate text-caption text-fg-secondary">{c.url.replace(/^https?:\/\/(www\.)?/, "")}</span>}
                   </span>
                   {c.is_own_product ? (

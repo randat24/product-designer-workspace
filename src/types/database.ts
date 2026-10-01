@@ -23,7 +23,7 @@ type ProjectRow = {
   id: string; workspace_id: string; name: string; slug: string; description: string | null;
   status: Database["public"]["Enums"]["project_status"]; platforms: string[]; current_stage: string | null;
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
-  archived_at: string | null;
+  archived_at: string | null; source_request_id: string | null;
 };
 type CaseStudyRow = {
   id: string; workspace_id: string; project_id: string; slug: string;
@@ -78,6 +78,7 @@ type ProjectBriefRow = {
   timeline_start: string | null; timeline_end: string | null;
   team: Json; links: Json;
   existing_product: string | null; business_requirements: string | null; technical_constraints: string | null;
+  client_input: Json;
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
 };
 type CompetitorRow = {
@@ -86,7 +87,7 @@ type CompetitorRow = {
   positioning: string | null; target_audience: string | null; pricing: string | null;
   onboarding_notes: string | null; navigation_notes: string | null; ux_patterns: string | null; ui_patterns: string | null;
   strengths: string | null; weaknesses: string | null; reviews_summary: string | null;
-  opportunities: string | null; borrow: string | null; position: number;
+  opportunities: string | null; borrow: string | null; position: number; origin: "designer" | "client";
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string; archived_at: string | null;
 };
 type ComparisonFeatureRow = {
@@ -322,6 +323,10 @@ export type Database = {
         Returns: Json;
       };
       get_request_brief: { Args: { p_token: string }; Returns: Json };
+      convert_project_request: {
+        Args: { p_request: string; p_name: string; p_slug: string; p_platforms: string[]; p_brief: Json };
+        Returns: string;
+      };
       flow_stats: {
         Args: { p_project: string };
         Returns: { flow_id: string; node_count: number; screen_count: number; missing_cases: number }[];

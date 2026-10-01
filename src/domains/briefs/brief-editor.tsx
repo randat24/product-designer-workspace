@@ -17,19 +17,28 @@ type TextKey = {
   [K in keyof Brief]: Brief[K] extends string | null ? K : never;
 }[keyof Brief];
 
-export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHref }: {
+export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHref, clientInput }: {
   projectId: string;
   initial: Brief;
   canEdit: boolean;
   platforms: string[];
   settingsHref: string;
+  /** Client wording from the project request this project came from (see convert_project_request). */
+  clientInput?: { code: string; fields: Partial<Record<string, string>> };
 }) {
   const { value: brief, update, status, error } = useAutosave(initial, (b) => saveBrief(projectId, b), canEdit);
 
-  const text = (key: TextKey, label: string, hint?: string) => (
-    <TextField id={key} label={label} hint={hint} value={brief[key] ?? ""} readOnly={!canEdit}
-      onChange={(v) => update({ [key]: v } as Partial<Brief>)} />
-  );
+  // While a field still holds the client's words, say so: it is input to verify, not research.
+  const fromClient = (key: TextKey) =>
+    clientInput && clientInput.fields[key] !== undefined && (brief[key] ?? "") === clientInput.fields[key]
+      ? t.requests.fromRequest(clientInput.code) : undefined;
+  const text = (key: TextKey, label: string, hint?: string) => {
+    const mark = fromClient(key);
+    return (
+      <TextField id={key} label={label} hint={hint} badge={mark} value={brief[key] ?? ""} readOnly={!canEdit}
+        onChange={(v) => update({ [key]: v } as Partial<Brief>)} />
+    );
+  };
 
   return (
     <div className="flex flex-col gap-8">

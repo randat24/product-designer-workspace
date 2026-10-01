@@ -44,7 +44,10 @@ set local role anon;
 select throws_ok($$ select submit_project_request(pg_temp.payload(), 'wrong', pg_temp.ip(1), gen_random_uuid()) $$,
   '42501', 'forbidden', 'a wrong secret is refused');
 reset role;
-insert into private.intake_secret (secret_hash) values (encode(sha256(convert_to('s3cret', 'UTF8')), 'hex'));
+-- Independent of the database's own settings (rolled back at the end).
+delete from intake_settings;
+insert into private.intake_secret (secret_hash) values (encode(sha256(convert_to('s3cret', 'UTF8')), 'hex'))
+  on conflict (id) do update set secret_hash = excluded.secret_hash;
 set local role anon;
 select throws_ok($$ select submit_project_request(pg_temp.payload(), 's3cret', pg_temp.ip(1), gen_random_uuid()) $$,
   '42501', 'intake_disabled', 'no receiving workspace: the form is off');

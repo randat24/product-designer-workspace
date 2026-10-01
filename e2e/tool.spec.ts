@@ -15,7 +15,8 @@ async function openDemoProject(page: Page): Promise<string> {
   await expect(page).toHaveURL(/\/w\/[^/]+$/);
   // A fresh account shows the demo button; later runs already have the project. Wait for either.
   const demo = page.getByRole("button", { name: "Открыть демо-проект" });
-  const existing = page.locator('main a[href*="/p/"]').first();
+  // The demo project by its slug: other projects (e.g. one made from a project request) may be listed first.
+  const existing = page.locator('main a[href*="/p/restaurant-app"]').first();
   await expect(demo.or(existing)).toBeVisible();
   if (await demo.isVisible()) await demo.click();
   else await existing.click();
@@ -124,4 +125,47 @@ test("project backup: settings download the whole project as JSON", async ({ pag
   expect(data.counts.interviews).toBeGreaterThan(0);
   expect(data.counts.insights).toBeGreaterThan(0);
   expect(data.tables.project_counters).toBeUndefined();
+});
+
+// Last in this file: converting adds a project, and the tests above expect the demo project to exist first.
+// Needs a new request in the workspace: e2e/intake.spec.ts sends one when INTAKE_SUBMIT_SECRET is set (CI).
+test("requests: review a request and turn it into a project", async ({ page }, testInfo) => {
+  test.skip(!process.env.INTAKE_SUBMIT_SECRET, "no project requests without INTAKE_SUBMIT_SECRET");
+  test.setTimeout(120_000);
+  const errors = watchErrors(page);
+  await page.goto("/app");
+  await expect(page).toHaveURL(/\/w\/[^/]+$/);
+  await page.getByRole("link", { name: /^Заявки/ }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Заявки" })).toBeVisible();
+  await expectAccessible(page, testInfo);
+  expect(await horizontalOverflow(page)).toEqual([]);
+
+  // The newest request that is still new (each run sends its own in intake.spec.ts).
+  await page.getByRole("link", { name: "Новые", exact: true }).click();
+  const first = page.locator('main a[href*="/requests/REQ-"]').first();
+  await expect(first).toBeVisible();
+  await first.click();
+  await expect(page.getByText("Данные клиента — не проверены исследованием")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "О проекте" })).toBeVisible();
+  await expectAccessible(page, testInfo);
+  expect(await horizontalOverflow(page)).toEqual([]);
+
+  // The designer's PDF copy.
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Бриф (PDF, UK)" }).first().click()]);
+  expect(download.suggestedFilename()).toMatch(/^Project-Brief-.+-uk\.pdf$/);
+
+  // Status and a private note.
+  await page.getByLabel("Статус").selectOption("qualified");
+  await page.getByRole("button", { name: "Сохранить" }).click();
+  await expect(page.locator("article header").getByText("Подходит", { exact: true })).toBeVisible();
+  await page.getByLabel("Добавить заметку").fill("Уточнить сроки");
+  await page.getByRole("button", { name: "Добавить заметку" }).click();
+  await expect(page.getByText("Уточнить сроки")).toBeVisible();
+
+  // Request → project: the brief says where its text came from.
+  await page.getByRole("button", { name: "Сделать проектом" }).click();
+  await expect(page).toHaveURL(/\/p\/[^/]+\/brief$/, { timeout: 20_000 });
+  await expect(page.getByText(/Часть брифа заполнена из заявки REQ-/)).toBeVisible();
+  await expect(page.getByText(/Со слов клиента \(REQ-/).first()).toBeVisible();
+  expect(errors).toEqual([]);
 });

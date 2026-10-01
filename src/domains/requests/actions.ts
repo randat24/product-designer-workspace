@@ -2,10 +2,12 @@
 
 import { createHmac } from "node:crypto";
 import { headers } from "next/headers";
+import { after } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/shared/lib/env";
 import type { Database, Json } from "@/types/database";
 import { requestSchema, toDbPayload } from "./schema";
+import { notifyNewRequest } from "./notify";
 import { verifyTurnstile } from "./turnstile";
 
 export type SubmitMeta = {
@@ -75,5 +77,7 @@ export async function submitProjectRequest(input: unknown, meta: SubmitMeta): Pr
     return { ok: false, error: "server" };
   }
   const r = data as { code: string; token: string; submitted_at: string; project_name: string | null; duplicate: boolean };
+  // After the response: a slow or failing mail service never delays or breaks the submission.
+  if (!r.duplicate) after(() => notifyNewRequest(parsed.data, r.code));
   return { ok: true, code: r.code, token: r.token, submittedAt: r.submitted_at, projectName: r.project_name, duplicate: r.duplicate };
 }

@@ -4,7 +4,7 @@ import { createClient } from "@/shared/lib/supabase/server";
 import type { FeatureValue } from "./schema";
 
 const LIST_COLUMNS =
-  "id, code, name, url, kind, is_own_product, positioning, strengths, weaknesses, borrow, position, updated_at";
+  "id, code, name, url, kind, is_own_product, origin, positioning, strengths, weaknesses, borrow, position, updated_at";
 
 /** Competitors of a project; our product first, then by position. */
 export const listCompetitors = cache(async (projectId: string) => {

@@ -1,20 +1,19 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getWorkspaceBySlug, listMyWorkspaces, listProjects, getCurrentUser, PLATFORMS } from "@/domains/projects";
+import { getWorkspaceBySlug, listProjects, PLATFORMS } from "@/domains/projects";
 import { createDemoProject } from "@/domains/projects/actions";
 import { listCaseStudies } from "@/domains/cases";
-import { Globe } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { t } from "@/shared/i18n/ru";
 import { NewProjectForm } from "./new-project-form";
-import { WorkspaceSwitcher } from "./workspace-switcher";
+import { WorkspaceHeader, WorkspaceTabs } from "./workspace-header";
 
 export const metadata: Metadata = { title: t.workspace.projects };
 
 export default async function WorkspacePage({ params }: { params: Promise<{ ws: string }> }) {
   const { ws } = await params;
-  const [workspace, workspaces, user] = await Promise.all([getWorkspaceBySlug(ws), listMyWorkspaces(), getCurrentUser()]);
+  const workspace = await getWorkspaceBySlug(ws);
   if (!workspace) notFound();
   const [all, cases] = await Promise.all([listProjects(workspace.id), listCaseStudies(workspace.id)]);
   const projects = all.filter((p) => !p.archived_at);
@@ -22,23 +21,10 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
 
   return (
     <div className="min-h-screen">
-      <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
-        <span className="flex min-w-0 items-center gap-4">
-          <span className="font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
-          <WorkspaceSwitcher current={workspace.slug} workspaces={workspaces} />
-        </span>
-        <form action="/auth/signout" method="post" className="flex items-center gap-3 text-meta">
-          {/* The tool lives next to the portfolio; this is the way back to it. */}
-          <Link href="/uk" className="hit inline-flex items-center gap-1.5 font-semibold opacity-80 hover:opacity-100 hover:underline">
-            <Globe aria-hidden className="size-4 shrink-0" />
-            <span className="sr-only sm:not-sr-only">{t.auth.toSite}</span>
-          </Link>
-          <Link href="/account" className="hidden opacity-70 hover:opacity-100 hover:underline sm:inline">{user?.email}</Link>
-          <button className="rounded-control border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
-        </form>
-      </header>
+      <WorkspaceHeader current={workspace.slug} />
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(18px,4vw,56px)] py-10">
+        <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="projects" />
         <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-hero border-[1.5px] border-fg bg-surface p-6 md:p-8">
           <h1 id="new-h" className="page-title">{t.workspace.newProject}</h1>
           <NewProjectForm workspaceId={workspace.id} autoFocus />
