@@ -141,7 +141,7 @@ type Dictionary = {
   privacy: {
     title: string;
     lede: string;
-    sections: { title: string; body: string }[];
+    sections: { title: string; body: string; id?: string }[];
     bannerText: string;
     accept: string;
     decline: string;
@@ -477,6 +477,12 @@ const uk: Dictionary = {
       {
         title: "Що не збирається",
         body: "Імена, адреси пошти, номери телефонів, вміст форм і параметри посилань на сайт не передаються жодному сервісу.",
+      },
+      {
+        // Requires the owner's (or a lawyer's) review before relying on it: docs/CLIENT_INTAKE.md §12.
+        id: "requests",
+        title: "Заявки на проєкт",
+        body: `Коли ви надсилаєте заявку через форму «Обговорити проєкт», я отримую ваші контакти (ім'я, email і, якщо вкажете, компанію, посаду, телефон, Telegram, сайт) та відповіді про проєкт, зокрема бюджет і терміни. Вони потрібні лише для того, щоб розглянути заявку та зв'язатися з вами щодо цього проєкту. Дані зберігаються в базі даних Supabase; доступ до них маю тільки я. Вони не продаються й не передаються іншим компаніям для реклами. IP-адреса не зберігається — лише її знеособлений відбиток, щоб обмежити кількість заявок. Від спаму форму може захищати Cloudflare Turnstile. Чернетка форми зберігається лише у вашому браузері (без контактів) і видаляється після надсилання або через 7 днів. Щоб отримати копію своїх даних або видалити їх, напишіть на ${CONTACTS.email}.`,
       },
       {
         title: "Файли Figma",
@@ -829,6 +835,12 @@ const en: Dictionary = {
       {
         title: "What is not collected",
         body: "Names, email addresses, phone numbers, form contents and link parameters are not sent to any service.",
+      },
+      {
+        // Requires the owner's (or a lawyer's) review before relying on it: docs/CLIENT_INTAKE.md §12.
+        id: "requests",
+        title: "Project requests",
+        body: `When you send a request through the “Discuss a project” form, I receive your contact details (name, email and, if you add them, company, role, phone, Telegram, website) and your answers about the project, including budget and timeline. They are used only to review the request and to contact you about this project. The data is stored in a Supabase database that only I can access. It is not sold or shared with other companies for advertising. Your IP address is not stored — only an anonymised fingerprint used to limit the number of requests. The form may be protected from spam by Cloudflare Turnstile. The form draft is kept only in your browser (without contact details) and is removed after you send it or after 7 days. To get a copy of your data or have it deleted, write to ${CONTACTS.email}.`,
       },
       {
         title: "Figma files",

@@ -25,7 +25,7 @@ export default async function Privacy({ params }: { params: Promise<{ locale: st
         <p className="text-[clamp(17px,2vw,20px)] leading-[1.55] text-fg-secondary">{p.lede}</p>
       </header>
       {p.sections.map((s) => (
-        <section key={s.title} className="flex flex-col gap-2 border-t border-line pt-5">
+        <section key={s.title} id={s.id} className="flex scroll-mt-24 flex-col gap-2 border-t border-line pt-5">
           <h2 className="font-display text-[22px] font-bold uppercase leading-[1.1] tracking-[0.01em]">{s.title}</h2>
           <p className="text-[17px] leading-[1.6]">{s.body}</p>
         </section>

@@ -19,8 +19,12 @@ const SECURITY_HEADERS = [
 const config: NextConfig = {
   typedRoutes: false,
   poweredByHeader: false,
-  // Fonts read from disk by the Open Graph image route.
-  outputFileTracingIncludes: { "/og": ["./src/site/og/fonts/**"] },
+  // Fonts read from disk: the Open Graph image route and the project brief PDF (client copy and workspace).
+  outputFileTracingIncludes: {
+    "/og": ["./src/site/og/fonts/**"],
+    "/api/project-request/**": ["./src/domains/requests/pdf/fonts/**"],
+    "/w/**": ["./src/domains/requests/pdf/fonts/**"],
+  },
   // globalNotFound: one 404 page (app/global-not-found.tsx) for the several root layouts.
   experimental: { serverActions: { bodySizeLimit: "2mb" }, globalNotFound: true },
   async headers() {

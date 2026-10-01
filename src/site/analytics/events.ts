@@ -17,10 +17,18 @@ export type AnalyticsEvent =
   | "certificate_open"
   | "language_switch"
   | "theme_switch"
-  | "portfolio_cta_click";
+  | "portfolio_cta_click"
+  // Project request funnel: step numbers and coarse buckets only, never the answers.
+  | "project_request_cta"
+  | "project_request_started"
+  | "project_request_step_completed"
+  | "project_request_reviewed"
+  | "project_request_submitted"
+  | "project_request_failed"
+  | "project_brief_downloaded";
 
 /** Where on the page the interaction happened. */
-export type AnalyticsLocation = "header" | "hero" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found";
+export type AnalyticsLocation = "header" | "hero" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found" | "confirmation";
 
 export type AnalyticsParams = Partial<{
   location: AnalyticsLocation;
@@ -32,4 +40,10 @@ export type AnalyticsParams = Partial<{
   theme: "light" | "dark";
   provider: string;
   page: number;
+  step: number;
+  step_id: string;
+  project_types_count: number;
+  has_existing: boolean;
+  budget_band: string;
+  reason: string;
 }>;

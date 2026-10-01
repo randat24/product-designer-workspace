@@ -23,13 +23,51 @@ type ProjectRow = {
   id: string; workspace_id: string; name: string; slug: string; description: string | null;
   status: Database["public"]["Enums"]["project_status"]; platforms: string[]; current_stage: string | null;
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
-  archived_at: string | null;
+  archived_at: string | null; source_request_id: string | null;
 };
 type CaseStudyRow = {
   id: string; workspace_id: string; project_id: string; slug: string;
   status: Database["public"]["Enums"]["case_status"]; position: number; content: Json;
   published_at: string | null; created_at: string; updated_at: string;
 };
+type ClientRow = {
+  id: string; workspace_id: string; name: string; email: string; company: string | null; role: string | null;
+  phone: string | null; telegram: string | null; website: string | null;
+  preferred_channel: "email" | "telegram" | "phone" | "other"; preferred_channel_note: string | null;
+  auth_user_id: string | null; created_at: string; updated_at: string;
+};
+type ProjectRequestRow = {
+  id: string; workspace_id: string; client_id: string; code: string;
+  status: Database["public"]["Enums"]["request_status"]; locale: "uk" | "en"; form_version: number; idempotency_key: string;
+  project_types: string[]; project_type_other: string | null; project_name: string | null; project_name_unknown: boolean;
+  has_existing: boolean; existing_url: string | null; existing_description: string | null; existing_dislikes: string | null;
+  existing_works_well: string | null; existing_must_change: string | null;
+  summary: string; what_it_does: string | null; problem: string | null; why_now: string | null;
+  goals: string[]; goal_other: string | null;
+  audience: string | null; primary_users: string | null; geography: string | null;
+  market: "b2b" | "b2c" | "b2b2c" | "internal" | "unknown" | null; demographics: string | null; pain_points: string | null;
+  scope: string[]; scope_needs_advice: boolean; materials: string[];
+  budget_range: string | null; budget_min: number | null; budget_max: number | null;
+  budget_currency: "USD" | "EUR" | "UAH" | null; budget_note: string | null;
+  start_preference: string | null; has_deadline: boolean; deadline_date: string | null; deadline_reason: string | null;
+  additional_info: string | null; consent_at: string; privacy_policy_version: string;
+  client_token_hash: string | null; client_token_expires_at: string | null;
+  submitted_at: string; archived_at: string | null; created_at: string; updated_at: string;
+};
+type RequestCompetitorRow = {
+  id: string; workspace_id: string; request_id: string; name: string; url: string | null;
+  likes: string | null; dislikes: string | null; why: string | null; position: number;
+};
+type RequestReferenceRow = { id: string; workspace_id: string; request_id: string; url: string; note: string | null; position: number };
+type RequestLinkRow = {
+  id: string; workspace_id: string; request_id: string; link_group: "existing" | "materials"; kind: string; url: string; position: number;
+};
+type RequestNoteRow = { id: string; workspace_id: string; request_id: string; body: string; author_id: string | null; created_at: string };
+type RequestDocumentRow = {
+  id: string; workspace_id: string; request_id: string; document_type: Database["public"]["Enums"]["request_document_type"];
+  version: number; locale: "uk" | "en"; template_version: number; content: Json; generated_at: string; created_by: string | null;
+};
+type IntakeSettingsRow = { workspace_id: string; enabled: boolean; privacy_policy_version: string; updated_at: string };
 type EntityTypeRow = {
   type: string; table_name: string; prefix: string; code_sep: string; code_pad: number; domain: string; phase: number;
 };
@@ -40,6 +78,7 @@ type ProjectBriefRow = {
   timeline_start: string | null; timeline_end: string | null;
   team: Json; links: Json;
   existing_product: string | null; business_requirements: string | null; technical_constraints: string | null;
+  client_input: Json;
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string;
 };
 type CompetitorRow = {
@@ -48,7 +87,7 @@ type CompetitorRow = {
   positioning: string | null; target_audience: string | null; pricing: string | null;
   onboarding_notes: string | null; navigation_notes: string | null; ux_patterns: string | null; ui_patterns: string | null;
   strengths: string | null; weaknesses: string | null; reviews_summary: string | null;
-  opportunities: string | null; borrow: string | null; position: number;
+  opportunities: string | null; borrow: string | null; position: number; origin: "designer" | "client";
   created_by: string | null; updated_by: string | null; created_at: string; updated_at: string; archived_at: string | null;
 };
 type ComparisonFeatureRow = {
@@ -239,6 +278,17 @@ export type Database = {
       flow_edges: { Row: FlowEdgeRow; Insert: Ins<FlowEdgeRow, "project_id" | "flow_id" | "source_node_id" | "target_node_id">; Update: Upd<FlowEdgeRow>; Relationships: [] };
       flow_edge_cases: { Row: FlowEdgeCaseRow; Insert: Ins<FlowEdgeCaseRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowEdgeCaseRow>; Relationships: [] };
       case_studies: { Row: CaseStudyRow; Insert: Ins<CaseStudyRow, "project_id" | "slug">; Update: Upd<CaseStudyRow>; Relationships: [] };
+      clients: { Row: ClientRow; Insert: never; Update: Upd<ClientRow>; Relationships: [] };
+      project_requests: {
+        Row: ProjectRequestRow; Insert: never; Update: Upd<ProjectRequestRow>;
+        Relationships: [{ foreignKeyName: "project_requests_client_id_fkey"; columns: ["client_id"]; isOneToOne: false; referencedRelation: "clients"; referencedColumns: ["id"] }];
+      };
+      project_request_competitors: { Row: RequestCompetitorRow; Insert: never; Update: never; Relationships: [] };
+      project_request_references: { Row: RequestReferenceRow; Insert: never; Update: never; Relationships: [] };
+      project_request_links: { Row: RequestLinkRow; Insert: never; Update: never; Relationships: [] };
+      project_request_notes: { Row: RequestNoteRow; Insert: Ins<RequestNoteRow, "request_id" | "body">; Update: never; Relationships: [] };
+      project_request_documents: { Row: RequestDocumentRow; Insert: never; Update: never; Relationships: [] };
+      intake_settings: { Row: IntakeSettingsRow; Insert: never; Update: Upd<IntakeSettingsRow>; Relationships: [] };
       entity_types: { Row: EntityTypeRow; Insert: EntityTypeRow; Update: Partial<EntityTypeRow>; Relationships: [] };
       project_counters: { Row: ProjectCounterRow; Insert: Insert<ProjectCounterRow, "project_id" | "entity_type">; Update: Partial<ProjectCounterRow>; Relationships: [] };
       trace_relations: { Row: TraceRelationRow; Insert: TraceRelationRow; Update: Partial<TraceRelationRow>; Relationships: [] };
@@ -268,6 +318,15 @@ export type Database = {
       };
       decision_stats: { Args: { p_project: string }; Returns: { decision_id: string; evidence: number; targets: number }[] };
       project_stage_counts: { Args: { p_project: string }; Returns: Json };
+      submit_project_request: {
+        Args: { p_payload: Json; p_secret: string; p_ip_hash: string; p_idempotency_key: string };
+        Returns: Json;
+      };
+      get_request_brief: { Args: { p_token: string }; Returns: Json };
+      convert_project_request: {
+        Args: { p_request: string; p_name: string; p_slug: string; p_platforms: string[]; p_brief: Json };
+        Returns: string;
+      };
       flow_stats: {
         Args: { p_project: string };
         Returns: { flow_id: string; node_count: number; screen_count: number; missing_cases: number }[];
@@ -309,6 +368,8 @@ export type Database = {
       screen_state_kind: "default" | "loading" | "empty" | "error" | "success" | "disabled" | "permission_denied" | "offline" | "partial";
       screen_state_status: "missing" | "designed" | "n_a";
       decision_status: "proposed" | "accepted" | "superseded" | "rejected";
+      request_status: "submitted" | "reviewing" | "qualified" | "accepted" | "declined" | "converted";
+      request_document_type: "project_brief" | "discovery_summary" | "project_scope" | "proposal" | "estimate" | "statement_of_work" | "design_brief";
     };
     CompositeTypes: { [_ in never]: never };
   };

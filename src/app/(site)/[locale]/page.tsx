@@ -8,8 +8,9 @@ import { CONTACTS, dict, isLocale, type Locale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
 import { JsonLd } from "@/site/json-ld";
 import { graph, pageMetadata, personLd, websiteLd } from "@/site/seo";
-import { FileText, Mail } from "lucide-react";
+import { ArrowRight, FileText, Mail } from "lucide-react";
 import { ContactMenu } from "@/site/contact-menu";
+import { INTAKE } from "@/site/intake/content";
 import { LinkedInIcon, TelegramIcon } from "@/site/social-icons";
 import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
 
@@ -53,6 +54,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </p>
           <Signature className="signature-draw -my-2 h-16 w-auto self-start text-fg sm:h-20" title={d.name} />
           <div className="flex flex-wrap gap-3">
+            <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "hero" })}>
+              {INTAKE[locale].cta}
+            </PrimaryLink>
             <ContactMenu
               label={d.home.cta}
               heading={d.ui.writeVia}
@@ -60,6 +64,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               copiedLabel={d.ui.copied}
               contacts={CONTACTS}
               location="hero"
+              variant="secondary"
             />
             <SecondaryLink href={CONTACTS.cv[locale]} download icon={<FileText aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "hero" })}>
               {d.home.ctaCv}
@@ -141,9 +146,12 @@ function Contact({ locale }: { locale: Locale }) {
         <SectionTitle>{d.contact.title}</SectionTitle>
         <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.contact.lead}</p>
         <div className="flex flex-wrap gap-3">
-          <PrimaryLink href={`mailto:${CONTACTS.email}`} icon={<Mail aria-hidden className="size-4" />} track={trackAttrs("contact_email_click", { location: "contact" })}>
-            {d.contact.write}
+          <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "contact" })}>
+            {INTAKE[locale].cta}
           </PrimaryLink>
+          <SecondaryLink href={`mailto:${CONTACTS.email}`} icon={<Mail aria-hidden className="size-4" />} track={trackAttrs("contact_email_click", { location: "contact" })}>
+            {d.contact.write}
+          </SecondaryLink>
           <SecondaryLink href={CONTACTS.telegram} icon={<TelegramIcon className="size-4" />} track={trackAttrs("telegram_click", { location: "contact" })}>Telegram</SecondaryLink>
           <SecondaryLink href={CONTACTS.linkedin} icon={<LinkedInIcon className="size-4" />} track={trackAttrs("linkedin_click", { location: "contact" })}>LinkedIn</SecondaryLink>
         </div>

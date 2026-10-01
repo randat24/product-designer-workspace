@@ -22,6 +22,9 @@
 - [ ] `NEXT_PUBLIC_GA_ID=G-…` — только Production (после [GA4_SETUP.md](GA4_SETUP.md)).
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` **нет** среди `NEXT_PUBLIC_*` и в репозитории (сайту он не нужен).
 - [ ] `SITE_INDEXABLE` и `ANALYTICS_FORCE` в Vercel **не заданы**.
+- [ ] Форма «Обговорити проєкт»: `INTAKE_SUBMIT_SECRET` (Production, Sensitive) и его хэш в базе,
+  `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`, при уведомлениях — `RESEND_API_KEY`, `INTAKE_NOTIFY_EMAIL`
+  ([CLIENT_INTAKE.md](CLIENT_INTAKE.md) §14).
 - [ ] Redeploy production после изменения переменных.
 
 ## 4. Supabase
@@ -33,6 +36,9 @@
   Встроенная почта Supabase шлёт мало писем в час и только адресам участников проекта; для приглашённых
   коллег подключите свой SMTP (Authentication → Emails → SMTP Settings).
 - [ ] Опубликованные кейсы на месте (`/uk/cases` показывает их).
+- [ ] Миграции `20261007000017_project_requests.sql` и `20261008000018_request_conversion.sql` применены; в `intake_settings` одна строка с вашим пространством.
+- [ ] Тестовая заявка на `/uk/start-project` проходит, PDF скачивается и читается по-украински; затем удалите её
+  в инструменте (раздел «Заявки»).
 
 ## 5. Проверка production
 

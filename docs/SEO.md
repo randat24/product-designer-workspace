@@ -12,6 +12,9 @@
 | `/uk/cases`, `/en/cases` | да | ISR 60 с |
 | `/uk/cases/[slug]`, `/en/cases/[slug]` | да, кроме кейсов-примеров (`sample: true`) | ISR 60 с, новые кейсы — при первом запросе |
 | `/uk/about`, `/en/about` | да | статика |
+| `/uk/start-project`, `/en/start-project` | да (сама форма; ответы клиента не попадают ни в один URL) | статика + клиентская форма |
+| `/uk/privacy`, `/en/privacy` | да | статика |
+| `/api/project-request/brief` | нет: `X-Robots-Tag: noindex`, только POST с одноразовым токеном, `Cache-Control: private, no-store` | route handler |
 | любой неизвестный URL | нет, статус 404 | `app/global-not-found.tsx` (язык из URL или браузера) |
 | неизвестный кейс `/uk/cases/nope` | нет, статус 404 | `app/(site)/[locale]/not-found.tsx` |
 | `/app`, `/w/**`, `/account` | нет: `X-Robots-Tag` + `Disallow` в robots.txt; без входа — 307 на `/login` | инструмент |

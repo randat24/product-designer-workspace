@@ -18,6 +18,7 @@ import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/socia
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
 import { container } from "@/site/ui";
 import { SiteNav } from "@/site/site-nav";
+import { INTAKE } from "@/site/intake/content";
 
 // Root layout of the public site: <html lang> follows the locale. The private workspace has its
 // own root (app/_root/tool-root.tsx). Only /uk and /en exist: any other first segment matches no
@@ -97,6 +98,10 @@ export default async function SiteLayout({
                 {d.name}
               </Link>
               <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
+              <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "header" })}
+                className="hidden h-9 items-center rounded-[8px] bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:inline-flex">
+                {INTAKE[locale].cta}
+              </Link>
               <div className="ml-auto flex items-center gap-2 sm:ml-0">
                 <ThemeToggle labelLight={d.ui.themeLight} labelDark={d.ui.themeDark} />
                 <LangSwitch current={locale} />
@@ -127,6 +132,7 @@ export default async function SiteLayout({
                     <li><Link href={`/${locale}`} className="hit hover:underline">{d.ui.home}</Link></li>
                     <li><Link href={`/${locale}/cases`} className="hit hover:underline">{d.nav.work}</Link></li>
                     <li><Link href={`/${locale}/about`} className="hit hover:underline">{d.nav.about}</Link></li>
+                    <li><Link href={`/${locale}/start-project`} className="hit hover:underline" {...trackAttrs("project_request_cta", { location: "footer" })}>{INTAKE[locale].cta}</Link></li>
                   </ul>
                 </nav>
               </div>

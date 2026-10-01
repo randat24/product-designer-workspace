@@ -10,10 +10,11 @@ import { figmaFileUrl } from "@/shared/lib/figma";
 import { CaseStoryView } from "@/site/case-story-view";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl, pageMetadata } from "@/site/seo";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { ContactMenu } from "@/site/contact-menu";
 import { AdultGate } from "@/site/adult-gate";
-import { AdultBadge, CaseCover, Eyebrow, KindBadge, SecondaryLink, container } from "@/site/ui";
+import { AdultBadge, CaseCover, Eyebrow, KindBadge, PrimaryLink, SecondaryLink, container } from "@/site/ui";
+import { INTAKE } from "@/site/intake/content";
 
 // Cases published later in the tool are rendered on first visit and then cached.
 export const revalidate = 60;
@@ -192,14 +193,20 @@ export default async function CasePage({ params }: { params: Params }) {
         ) : (
           <span />
         )}
-        <ContactMenu
-              label={d.home.cta}
-              heading={d.ui.writeVia}
-              copyLabel={d.ui.copyEmail}
-              copiedLabel={d.ui.copied}
-              contacts={CONTACTS}
-              location="case"
-            />
+        <div className="flex flex-wrap gap-3">
+          <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "case" })}>
+            {INTAKE[locale].cta}
+          </PrimaryLink>
+          <ContactMenu
+            label={d.home.cta}
+            heading={d.ui.writeVia}
+            copyLabel={d.ui.copyEmail}
+            copiedLabel={d.ui.copied}
+            contacts={CONTACTS}
+            location="case"
+            variant="secondary"
+          />
+        </div>
       </div>
       </div>
     </article>

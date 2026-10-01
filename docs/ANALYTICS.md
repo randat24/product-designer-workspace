@@ -44,6 +44,13 @@ GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Тол�
 | `case_gallery_open` | открытие страницы проекта в галерее | `case_slug`, `page` |
 | `case_figma_load` | «Завантажити файл тут» — файл Figma открыт в окне на странице кейса | `case_slug` |
 | `case_figma_open` | «Відкрити у Figma» — файл в новой вкладке | `case_slug`, `location` |
+| `project_request_cta` | кнопка «Обговорити проєкт» | `location`: `header` / `hero` / `contact` / `about` / `case` / `footer` |
+| `project_request_started` | «Почати» или «Продовжити» на форме | — |
+| `project_request_step_completed` | шаг пройден без ошибок | `step` (1–9), `step_id` |
+| `project_request_reviewed` | открыт экран проверки | — |
+| `project_request_submitted` | заявка сохранена | `project_types_count`, `has_existing`, `budget_band` (`undecided` / `estimate` / `custom` / `lt_1k` / `1k_5k` / `5k_plus`) |
+| `project_request_failed` | отправка не удалась | `reason`: `validation` / `spam` / `captcha` / `rate_limit` / `unavailable` / `server` |
+| `project_brief_downloaded` | скачан или отправлен бриф (PDF) | `location`: `confirmation` |
 | `certificate_open` | сертификат на «Про мене» | `provider` (организация, выдавшая сертификат) |
 | `language_switch` | переключатель UA / EN | `from`, `to` |
 | `theme_switch` | светлая / тёмная тема | `theme` |
@@ -51,6 +58,8 @@ GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Тол�
 | `contact_menu_open` | открытие меню «Написати мені» (до выбора канала) | `location` |
 
 Персональных данных нет: ни email, ни имён, ни идентификаторов пользователя, ни query-строк. Slug кейса — публичная часть URL.
+Форма заявки отправляет только номер шага и грубые корзины: ни ответов, ни названия проекта, ни ссылок, ни сумм.
+«Брошенные» заявки отдельным событием не считаем — воронку по `project_request_step_completed` видно и так.
 
 Enhanced measurement GA4 дополнительно отправит `click` (исходящие ссылки) и `file_download` (PDF) — это другие
 имена, не дубли. Если они не нужны — выключить соответствующие переключатели в Data stream.

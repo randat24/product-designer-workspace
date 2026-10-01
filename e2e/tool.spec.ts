@@ -15,7 +15,8 @@ async function openDemoProject(page: Page): Promise<string> {
   await expect(page).toHaveURL(/\/w\/[^/]+$/);
   // A fresh account shows the demo button; later runs already have the project. Wait for either.
   const demo = page.getByRole("button", { name: "Открыть демо-проект" });
-  const existing = page.locator('main a[href*="/p/"]').first();
+  // The demo project by its slug: other projects (e.g. one made from a project request) may be listed first.
+  const existing = page.locator('main a[href*="/p/restaurant-app"]').first();
   await expect(demo.or(existing)).toBeVisible();
   if (await demo.isVisible()) await demo.click();
   else await existing.click();
@@ -124,4 +125,78 @@ test("project backup: settings download the whole project as JSON", async ({ pag
   expect(data.counts.interviews).toBeGreaterThan(0);
   expect(data.counts.insights).toBeGreaterThan(0);
   expect(data.tables.project_counters).toBeUndefined();
+});
+
+/** Sends a project request the way the public form does (the anon RPC with the narrow secret); returns its code. */
+async function submitRequest(name: string): Promise<string> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const hex = () => Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
+  const res = await fetch(`${url}/rest/v1/rpc/submit_project_request`, {
+    method: "POST",
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      p_payload: {
+        locale: "uk",
+        client: { name: "Олена", email: "olena@example.com" },
+        project: { types: ["redesign"], name },
+        about: { summary: "Онлайн-бібліотека з підпискою", problem: "Складно обрати книжку" },
+        competitors: [{ name: "Yakaboo", url: "https://yakaboo.ua" }],
+        timeline: { has_deadline: true, deadline_date: "2026-12-01" },
+        consent: { given: true },
+      },
+      p_secret: process.env.INTAKE_SUBMIT_SECRET,
+      p_ip_hash: hex(),
+      p_idempotency_key: crypto.randomUUID(),
+    }),
+  });
+  expect(res.ok, await res.clone().text()).toBe(true);
+  return ((await res.json()) as { code: string }).code;
+}
+
+// Last in this file: converting adds a project, and the tests above expect the demo project to exist first.
+// Each run (desktop, phone) sends and converts its own request, so the two never pick the same one.
+test("requests: review a request and turn it into a project", async ({ page }, testInfo) => {
+  test.skip(!process.env.INTAKE_SUBMIT_SECRET || !process.env.NEXT_PUBLIC_SUPABASE_URL,
+    "no project requests without INTAKE_SUBMIT_SECRET and the database URL");
+  test.setTimeout(120_000);
+  const code = await submitRequest(`E2E ${testInfo.project.name} ${Date.now()}`);
+  const errors = watchErrors(page);
+  await page.goto("/app");
+  await expect(page).toHaveURL(/\/w\/[^/]+$/);
+  await page.getByRole("link", { name: /^Заявки/ }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Заявки" })).toBeVisible();
+  await expectAccessible(page, testInfo);
+  expect(await horizontalOverflow(page)).toEqual([]);
+
+  // The new request is listed under «Новые». It is opened by its address: on a busy runner a click right
+  // after the filter navigation was sometimes dropped by the client router.
+  const newFilter = page.getByRole("link", { name: "Новые", exact: true });
+  await newFilter.click();
+  await expect(newFilter).toHaveAttribute("aria-current", "page");
+  const row = page.locator(`main a[href$="/requests/${code}"]`);
+  await expect(row).toBeVisible();
+  await page.goto((await row.getAttribute("href"))!);
+  await expect(page.getByText("Данные клиента — не проверены исследованием")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "О проекте" })).toBeVisible();
+  await expectAccessible(page, testInfo);
+  expect(await horizontalOverflow(page)).toEqual([]);
+
+  // The designer's PDF copy.
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Бриф (PDF, UK)" }).first().click()]);
+  expect(download.suggestedFilename()).toMatch(/^Project-Brief-.+-uk\.pdf$/);
+
+  // Status and a private note.
+  await page.getByLabel("Статус").selectOption("qualified");
+  await page.getByRole("button", { name: "Сохранить" }).click();
+  await expect(page.locator("article header").getByText("Подходит", { exact: true })).toBeVisible();
+  await page.getByLabel("Добавить заметку").fill("Уточнить сроки");
+  await page.getByRole("button", { name: "Добавить заметку" }).click();
+  await expect(page.getByText("Уточнить сроки")).toBeVisible();
+
+  // Request → project: the brief says where its text came from.
+  await page.getByRole("button", { name: "Сделать проектом" }).click();
+  await expect(page).toHaveURL(/\/p\/[^/]+\/brief$/, { timeout: 20_000 });
+  await expect(page.getByText(/Часть брифа заполнена из заявки REQ-/)).toBeVisible();
+  await expect(page.getByText(/Со слов клиента \(REQ-/).first()).toBeVisible();
+  expect(errors).toEqual([]);
 });
