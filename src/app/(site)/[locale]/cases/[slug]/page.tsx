@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { CONTACTS, LOCALES, dict, isLocale } from "@/site/content";
 import { trackAttrs } from "@/site/analytics/track";
 import { getCases } from "@/site/cases-source";
+import { CaseFigma } from "@/site/case-figma";
 import { CaseGallery } from "@/site/case-gallery";
+import { figmaFileUrl } from "@/shared/lib/figma";
 import { CaseStoryView } from "@/site/case-story-view";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl, pageMetadata } from "@/site/seo";
@@ -50,6 +52,8 @@ export default async function CasePage({ params }: { params: Params }) {
   const index = cases.findIndex((c) => c.slug === slug);
   const item = cases[index];
   if (!item) notFound();
+  // The snapshot is data from the tool: show the window only for a real Figma file link.
+  const figma = item.figma ? figmaFileUrl(item.figma) : null;
   const next = cases.length > 1 ? cases[(index + 1) % cases.length]! : null;
   // 18+ cases: everything below the facts waits for the visitor's age confirmation.
   const gate = (node: React.ReactNode) =>
@@ -136,6 +140,14 @@ export default async function CasePage({ params }: { params: Params }) {
         <section id="pages" aria-labelledby="pages-h" className={`${container} mt-14 scroll-mt-24`}>
           <h2 id="pages-h" className="mb-3 font-display text-[28px] font-bold uppercase leading-[1.1]">{d.project.pages}</h2>
           <CaseGallery items={item.gallery} labels={d.project} caseSlug={item.slug} />
+        </section>
+      )}
+
+      {figma && (
+        <section id="figma" aria-labelledby="figma-h" className={`${container} mt-14 scroll-mt-24`}>
+          <h2 id="figma-h" className="mb-3 font-display text-[28px] font-bold uppercase leading-[1.1]">{d.project.figma}</h2>
+          <p className="mb-5 max-w-[680px] text-fg-secondary">{d.project.figmaLead}</p>
+          <CaseFigma url={figma} poster={item.cover?.src} labels={d.project} caseSlug={item.slug} />
         </section>
       )}
 

@@ -6,7 +6,7 @@ import { getCaseForProject } from "@/domains/cases";
 import { createCaseStudy, setCaseStatus } from "@/domains/cases/actions";
 import { Download } from "lucide-react";
 import { Button } from "@/shared/ui/button";
-import { Checkbox, Panel, Select } from "@/shared/ui/field";
+import { Checkbox, Input, Panel, Select } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/ru";
 import { DeleteForm, GeneralForm } from "./forms";
@@ -59,6 +59,12 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                   <Checkbox name="sample" value="1" defaultChecked={caseStudy.sample} disabled={!canEdit} aria-describedby="case-sample-hint" />
                   {t.cases.sample}
                 </label>
+                <label className="flex w-full flex-col gap-1.5 text-sm font-semibold">
+                  {t.cases.figma}
+                  <Input name="figma" type="text" inputMode="url" defaultValue={caseStudy.figma} disabled={!canEdit}
+                    placeholder={t.cases.figmaPlaceholder} pattern="\s*(https://)?(www\.)?figma\.com/(design|file|proto|board|slides|deck)/.+"
+                    aria-describedby="case-figma-hint" />
+                </label>
                 {canEdit && <Button type="submit" variant="secondary">{t.cases.save}</Button>}
                 {caseStudy.status === "published" && caseStudy.hasContent && (
                   <a href={`/uk/cases/${caseStudy.slug}`} target="_blank" rel="noreferrer"
@@ -68,6 +74,7 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
               <p className="text-meta text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
               <p id="case-adult-hint" className="text-meta text-fg-secondary">{t.cases.adultHint}</p>
               <p id="case-sample-hint" className="text-meta text-fg-secondary">{t.cases.sampleHint}</p>
+              <p id="case-figma-hint" className="text-meta text-fg-secondary">{t.cases.figmaHint}</p>
               {!caseStudy.hasContent && <p className="text-meta text-warning">{t.cases.emptyContent}</p>}
             </>
           ) : (
