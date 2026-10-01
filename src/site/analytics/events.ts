@@ -2,6 +2,7 @@
 // Parameters never carry personal data: no emails, names, user ids or query strings.
 
 export type AnalyticsEvent =
+  | "contact_menu_open"
   | "contact_email_click"
   | "telegram_click"
   | "linkedin_click"

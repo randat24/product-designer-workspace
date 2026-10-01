@@ -13,11 +13,15 @@
 
 ## 2. Поток данных (Data stream)
 
-1. **Website URL**: итоговый домен сайта (например, `https://fedorov.design`), **Stream name**: «Site».
+1. **Website URL**: пока `https://product-designer-workspace.vercel.app` (ресурс уже создан с этим адресом),
+   **Stream name**: «Site». После перехода на свой домен адрес меняется в том же потоке (шестерёнка потока → URL) —
+   новый поток не нужен, история сохраняется. См. [DOMAIN_SWITCH.md](DOMAIN_SWITCH.md).
 2. **Enhanced measurement** — оставить включённым. Внутри (значок шестерёнки) проверить, что включено
    **Page views → Page changes based on browser history events**: без этого переходы внутри сайта не посчитаются.
    *Site search*, *Form interactions* и *Video engagement* можно выключить — на сайте этого нет.
 3. Нажать **Create stream** и скопировать **Measurement ID** вида `G-XXXXXXXXXX`.
+   Найти его позже: **Admin → Data collection and modification → Data streams → Site** (справа вверху).
+   ID публичный (он виден в коде любой страницы) — его можно пересылать.
 
 ## 3. Подключить к сайту
 
@@ -27,7 +31,8 @@
 
 ## 4. Проверить, что данные идут
 
-1. Открыть сайт в обычной вкладке (не в режиме инкогнито с блокировщиком рекламы).
+1. Открыть сайт в обычной вкладке (не в режиме инкогнито с блокировщиком рекламы) и нажать **«Дозволити»** в баннере
+   внизу. Без согласия GA4 получает только обезличенные пинги, и в Realtime посетитель может не появиться.
 2. GA4 → **Reports → Realtime**: через 10–30 секунд появится 1 пользователь и события `page_view`.
 3. Нажать «Написати мені» или открыть кейс — в Realtime появятся `contact_email_click`, `case_open`.
 
@@ -50,14 +55,17 @@
 | Case | `case_slug` |
 | Location | `location` |
 | Language to | `to` |
+| CTA | `cta` |
 
 ## 7. Хранение данных и приватность
 
 - **Admin → Data collection and modification → Data retention** → **14 months**.
 - **Google signals** — не включать (сайт их и так отключает).
-- Сайт не передаёт email, имена и параметры адреса; рекламные cookie запрещены по умолчанию.
-  Если понадобится баннер согласия (например, для посетителей из ЕС), его можно добавить позже:
-  код уже вызывает `gtag('consent', 'default', …)`.
+- Сайт не передаёт email, имена и параметры адреса; рекламные cookie запрещены всегда.
+- Cookie аналитики ставятся только после «Дозволити» в баннере согласия; что собирается — на странице
+  «Конфіденційність» (`/uk/privacy`, `/en/privacy`). Подробности — [ANALYTICS.md](ANALYTICS.md#согласие-баннер-cookie).
+- **Admin → Data streams → Site → Configure tag settings → Define internal traffic**: правило `internal`
+  с вашим IP, затем **Admin → Data filters → Internal Traffic → Active** — ваши визиты не попадут в отчёты.
 
 ## 8. Связать с Search Console
 

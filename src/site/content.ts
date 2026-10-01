@@ -131,7 +131,22 @@ type Dictionary = {
   awards: Award[];
   story: StoryLabels;
   contact: { title: string; lead: string; write: string };
-  footer: { rights: string; login: string; top: string; certificate: string };
+  footer: { rights: string; login: string; top: string; certificate: string; privacy: string };
+  /** Analytics consent banner and the privacy page. */
+  privacy: {
+    title: string;
+    lede: string;
+    sections: { title: string; body: string }[];
+    bannerText: string;
+    accept: string;
+    decline: string;
+    more: string;
+    manage: string;
+    stateGranted: string;
+    stateDenied: string;
+    stateUnset: string;
+    updated: string;
+  };
   seo: {
     home: { title: string; description: string };
     cases: { title: string; description: string };
@@ -436,7 +451,38 @@ const uk: Dictionary = {
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
     write: "Написати на пошту",
   },
-  footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат" },
+  footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат", privacy: "Конфіденційність" },
+  privacy: {
+    title: "Конфіденційність",
+    lede: "Що цей сайт дізнається про відвідувачів і навіщо. Коротко: лише знеособлену статистику, без імен, пошти й реклами.",
+    sections: [
+      {
+        title: "Vercel Web Analytics",
+        body: "Рахує перегляди сторінок, країну, тип пристрою й джерело переходу. Не використовує cookie й не впізнає вас між візитами. Працює завжди — дозвіл не потрібен.",
+      },
+      {
+        title: "Google Analytics 4",
+        body: "Показує, які кейси читають і як зі мною звʼязуються (натискання «Написати мені», завантаження резюме). Cookie Google Analytics записуються лише після вашої згоди. Без згоди Google отримує тільки знеособлені сигнали без cookie. Рекламні функції й Google Signals вимкнені.",
+      },
+      {
+        title: "Що не збирається",
+        body: "Імена, адреси пошти, номери телефонів, вміст форм і параметри посилань на сайт не передаються жодному сервісу.",
+      },
+      {
+        title: "Ваш вибір",
+        body: "Згоду можна змінити будь-коли кнопкою нижче. Вибір зберігається лише у вашому браузері.",
+      },
+    ],
+    bannerText: "Сайт рахує відвідування без cookie. Дозволите Google Analytics — я краще бачитиму, які кейси вам цікаві.",
+    accept: "Дозволити",
+    decline: "Відмовитися",
+    more: "Докладніше",
+    manage: "Змінити вибір",
+    stateGranted: "Зараз: Google Analytics дозволено.",
+    stateDenied: "Зараз: Google Analytics вимкнено.",
+    stateUnset: "Зараз: ви ще не обрали.",
+    updated: "Оновлено 1 жовтня 2026",
+  },
   seo: {
     home: {
       title: "Геннадій Федоров — продуктовий дизайнер, UI/UX",
@@ -748,7 +794,38 @@ const en: Dictionary = {
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",
     write: "Email me",
   },
-  footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate" },
+  footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate", privacy: "Privacy" },
+  privacy: {
+    title: "Privacy",
+    lede: "What this site learns about visitors and why. In short: anonymous statistics only — no names, no email, no ads.",
+    sections: [
+      {
+        title: "Vercel Web Analytics",
+        body: "Counts page views, country, device type and referrer. It uses no cookies and does not recognise you between visits. Always on — no consent needed.",
+      },
+      {
+        title: "Google Analytics 4",
+        body: "Shows which cases people read and how they get in touch (clicking «Write to me», downloading the CV). Google Analytics cookies are set only after you agree. Without consent Google receives only anonymous, cookieless signals. Advertising features and Google Signals are off.",
+      },
+      {
+        title: "What is not collected",
+        body: "Names, email addresses, phone numbers, form contents and link parameters are not sent to any service.",
+      },
+      {
+        title: "Your choice",
+        body: "You can change your consent at any time with the button below. The choice is stored only in your browser.",
+      },
+    ],
+    bannerText: "This site counts visits without cookies. Allow Google Analytics and I'll see better which cases interest you.",
+    accept: "Allow",
+    decline: "Decline",
+    more: "Details",
+    manage: "Change my choice",
+    stateGranted: "Now: Google Analytics is allowed.",
+    stateDenied: "Now: Google Analytics is off.",
+    stateUnset: "Now: you have not chosen yet.",
+    updated: "Updated 1 October 2026",
+  },
   seo: {
     home: {
       title: "Hennadii Fedorov — Product Designer, UI/UX",
