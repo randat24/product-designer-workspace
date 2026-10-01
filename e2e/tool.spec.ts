@@ -107,3 +107,21 @@ test("command palette: Ctrl+K, type, Enter navigates; Esc closes", async ({ page
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
 });
+
+test("project backup: settings download the whole project as JSON", async ({ page }) => {
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/settings`);
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("link", { name: "Скачать проект (JSON)" }).click(),
+  ]);
+  expect(download.suggestedFilename()).toMatch(/^[a-z0-9-]+-\d{4}-\d{2}-\d{2}\.json$/);
+  const fs = await import("node:fs/promises");
+  const data = JSON.parse(await fs.readFile((await download.path())!, "utf8"));
+  expect(data.format).toBe("pdw-project-export");
+  expect(data.project.slug).toBe(base.split("/").pop());
+  // The demo project has research and synthesis: the backup is not an empty shell.
+  expect(data.counts.interviews).toBeGreaterThan(0);
+  expect(data.counts.insights).toBeGreaterThan(0);
+  expect(data.tables.project_counters).toBeUndefined();
+});
