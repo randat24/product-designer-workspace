@@ -206,15 +206,15 @@ test("requests: review a request and turn it into a project", async ({ page }, t
   await expectAccessible(page, testInfo);
   expect(await horizontalOverflow(page)).toEqual([]);
 
-  // The new request is listed under «Новые» and opens from the list.
-  const newFilter = page.getByRole("link", { name: "Новые", exact: true });
+  // The new request is listed under «Нові» and opens from the list.
+  const newFilter = page.getByRole("link", { name: "Нові", exact: true });
   await newFilter.click();
   await expect(newFilter).toHaveAttribute("aria-current", "page");
   const row = page.locator(`main a[href$="/requests/${code}"]`);
   await row.click();
   await expect(page).toHaveURL(new RegExp(`/requests/${code}$`));
-  await expect(page.getByText("Данные клиента — не проверены исследованием")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "О проекте" })).toBeVisible();
+  await expect(page.getByText("Дані клієнта — не перевірені дослідженням")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Про проєкт" })).toBeVisible();
   await expectAccessible(page, testInfo);
   expect(await horizontalOverflow(page)).toEqual([]);
 
