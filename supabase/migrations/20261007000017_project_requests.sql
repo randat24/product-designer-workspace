@@ -178,7 +178,7 @@ returns trigger language plpgsql set search_path = '' as $$
 begin
   if tg_op = 'DELETE' then
     if old.status = 'converted' then
-      raise exception 'project_requests: a converted request is project history; archive it instead' using errcode = '42501';
+      raise exception 'project_requests: a converted request is project history, archive it instead' using errcode = '42501';
     end if;
     return old;
   end if;
