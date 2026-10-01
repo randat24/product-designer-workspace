@@ -17,7 +17,8 @@ GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Тол�
 ## Как устроено
 
 - `src/site/analytics/google-analytics.tsx` — загрузка `gtag.js` через `next/script` (`afterInteractive`, не блокирует отрисовку).
-  - Consent по умолчанию: рекламное хранилище и персонализация — `denied`, аналитика — `granted`.
+  - Consent Mode v2: по умолчанию всё `denied`; `analytics_storage` становится `granted` только после «Дозволити»
+    в баннере согласия (см. ниже). Рекламное хранилище и персонализация — всегда `denied`.
   - `allow_google_signals: false`, `allow_ad_personalization_signals: false`.
   - `page_location` = адрес без query-строки (UTM и любые параметры не уходят в отчёт страниц).
 - Просмотры страниц: первый — из `config`, переходы внутри сайта — enhanced measurement GA4
@@ -45,6 +46,7 @@ GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Тол�
 | `language_switch` | переключатель UA / EN | `from`, `to` |
 | `theme_switch` | светлая / тёмная тема | `theme` |
 | `portfolio_cta_click` | «Дивитися роботи →» на «Про мене» | `cta`, `location` |
+| `contact_menu_open` | открытие меню «Написати мені» (до выбора канала) | `location` |
 
 Персональных данных нет: ни email, ни имён, ни идентификаторов пользователя, ни query-строк. Slug кейса — публичная часть URL.
 
@@ -61,6 +63,17 @@ Enhanced measurement GA4 дополнительно отправит `click` (и
 1. Локально: `ANALYTICS_FORCE=true NEXT_PUBLIC_GA_ID=G-… npm run build && npm start`, открыть сайт,
    в консоли браузера `dataLayer` — там `config` и события после кликов.
 2. На production: GA4 → Admin → DebugView (с расширением Google Analytics Debugger) или Reports → Realtime.
+
+## Согласие (баннер cookie)
+
+- Баннер показывается всем посетителям, но только когда GA4 включён (`gaId()` не пустой): без GA cookie нет и спрашивать не о чем.
+  Две равные кнопки «Дозволити» / «Відмовитися» и ссылка «Докладніше» на `/{locale}/privacy`.
+- Выбор хранится в `localStorage` (`analytics-consent` = `granted` / `denied`), `src/site/analytics/consent.ts`.
+  Скрипт в `<head>` читает его до загрузки `gtag.js`, поэтому вернувшийся посетитель сразу получает свой режим.
+- До согласия и при отказе GA4 работает в режиме Consent Mode без cookie: Google получает обезличенные пинги
+  и достраивает модельные данные. Отчёты будут неполными — это ожидаемо.
+- Изменить выбор: страница «Конфіденційність» → «Змінити вибір» (баннер появится снова).
+- Vercel Web Analytics и Speed Insights не используют cookie и от выбора не зависят.
 
 ## Добавить событие
 

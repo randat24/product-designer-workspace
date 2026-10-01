@@ -86,7 +86,7 @@ export function SecondaryLink(props: LinkButtonProps) {
   return <LinkButton {...props} className={cn(linkBtn, "border-[1.5px] border-fg text-fg hover:bg-subtle")} />;
 }
 
-/** Placeholder cover in a sticky-note colour: an abstract screen until real images arrive. */
+/** Cover in a sticky-note colour: the case's real screen when it has one, otherwise an abstract placeholder. */
 export function CaseCover({
   item,
   label,
@@ -96,6 +96,25 @@ export function CaseCover({
   label: string;
   large?: boolean;
 }) {
+  if (item.cover) {
+    return (
+      <div
+        className={cn("relative overflow-hidden rounded-[14px]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
+        style={{ background: item.sticker }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known */}
+        <img
+          src={item.cover.src}
+          alt={large ? item.cover.alt : ""}
+          width={item.cover.width}
+          height={item.cover.height}
+          loading={large ? "eager" : "lazy"}
+          decoding="async"
+          className="absolute left-[8%] top-[12%] w-[92%] rounded-[10px] border-2 border-black/15 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)]"
+        />
+      </div>
+    );
+  }
   return (
     <div
       className={cn(

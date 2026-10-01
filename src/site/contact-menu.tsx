@@ -47,7 +47,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
 
   return (
     <div ref={root} className="relative">
-      <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((o) => !o)}
+      <button type="button" aria-expanded={open} aria-controls={id} onClick={() => { if (!open) track("contact_menu_open", { location }); setOpen(!open); }}
         className={cn(
           "inline-flex h-11 items-center justify-center gap-2 rounded-[10px] border-[1.5px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]",
           variant === "primary" ? "border-accent bg-accent text-on-accent hover:bg-accent-hover" : "border-fg text-fg hover:bg-subtle",

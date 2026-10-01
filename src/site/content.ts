@@ -4,6 +4,7 @@
 import type { AwardIcon } from "./award-icons";
 import type { CaseStory, StoryLabels } from "./case-story";
 import { restaurantEn, restaurantUk } from "./cases/restaurant-booking";
+import { workspaceEn, workspaceGalleryEn, workspaceGalleryUk, workspaceUk } from "./cases/designer-workspace";
 
 export const LOCALES = ["uk", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -46,6 +47,8 @@ export type Case = {
   sample?: boolean;
   /** Last change of the published snapshot (ISO), from the database. */
   updatedAt?: string;
+  /** Real screen for the cover; without it the cover is an abstract placeholder. */
+  cover?: GalleryItem;
   /** Made for an 18+ audience: marked on the card, the mockups open only after the visitor confirms their age. */
   adult?: boolean;
 };
@@ -131,7 +134,22 @@ type Dictionary = {
   awards: Award[];
   story: StoryLabels;
   contact: { title: string; lead: string; write: string };
-  footer: { rights: string; login: string; top: string; certificate: string };
+  footer: { rights: string; login: string; top: string; certificate: string; privacy: string };
+  /** Analytics consent banner and the privacy page. */
+  privacy: {
+    title: string;
+    lede: string;
+    sections: { title: string; body: string }[];
+    bannerText: string;
+    accept: string;
+    decline: string;
+    more: string;
+    manage: string;
+    stateGranted: string;
+    stateDenied: string;
+    stateUnset: string;
+    updated: string;
+  };
   seo: {
     home: { title: string; description: string };
     cases: { title: string; description: string };
@@ -436,7 +454,38 @@ const uk: Dictionary = {
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
     write: "Написати на пошту",
   },
-  footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат" },
+  footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат", privacy: "Конфіденційність" },
+  privacy: {
+    title: "Конфіденційність",
+    lede: "Що цей сайт дізнається про відвідувачів і навіщо. Коротко: лише знеособлену статистику, без імен, пошти й реклами.",
+    sections: [
+      {
+        title: "Vercel Web Analytics",
+        body: "Рахує перегляди сторінок, країну, тип пристрою й джерело переходу. Не використовує cookie й не впізнає вас між візитами. Працює завжди — дозвіл не потрібен.",
+      },
+      {
+        title: "Google Analytics 4",
+        body: "Показує, які кейси читають і як зі мною звʼязуються (натискання «Написати мені», завантаження резюме). Cookie Google Analytics записуються лише після вашої згоди. Без згоди Google отримує тільки знеособлені сигнали без cookie. Рекламні функції й Google Signals вимкнені.",
+      },
+      {
+        title: "Що не збирається",
+        body: "Імена, адреси пошти, номери телефонів, вміст форм і параметри посилань на сайт не передаються жодному сервісу.",
+      },
+      {
+        title: "Ваш вибір",
+        body: "Згоду можна змінити будь-коли кнопкою нижче. Вибір зберігається лише у вашому браузері.",
+      },
+    ],
+    bannerText: "Сайт рахує відвідування без cookie. Дозволите Google Analytics — я краще бачитиму, які кейси вам цікаві.",
+    accept: "Дозволити",
+    decline: "Відмовитися",
+    more: "Докладніше",
+    manage: "Змінити вибір",
+    stateGranted: "Зараз: Google Analytics дозволено.",
+    stateDenied: "Зараз: Google Analytics вимкнено.",
+    stateUnset: "Зараз: ви ще не обрали.",
+    updated: "Оновлено 1 жовтня 2026",
+  },
   seo: {
     home: {
       title: "Геннадій Федоров — продуктовий дизайнер, UI/UX",
@@ -748,7 +797,38 @@ const en: Dictionary = {
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",
     write: "Email me",
   },
-  footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate" },
+  footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate", privacy: "Privacy" },
+  privacy: {
+    title: "Privacy",
+    lede: "What this site learns about visitors and why. In short: anonymous statistics only — no names, no email, no ads.",
+    sections: [
+      {
+        title: "Vercel Web Analytics",
+        body: "Counts page views, country, device type and referrer. It uses no cookies and does not recognise you between visits. Always on — no consent needed.",
+      },
+      {
+        title: "Google Analytics 4",
+        body: "Shows which cases people read and how they get in touch (clicking «Write to me», downloading the CV). Google Analytics cookies are set only after you agree. Without consent Google receives only anonymous, cookieless signals. Advertising features and Google Signals are off.",
+      },
+      {
+        title: "What is not collected",
+        body: "Names, email addresses, phone numbers, form contents and link parameters are not sent to any service.",
+      },
+      {
+        title: "Your choice",
+        body: "You can change your consent at any time with the button below. The choice is stored only in your browser.",
+      },
+    ],
+    bannerText: "This site counts visits without cookies. Allow Google Analytics and I'll see better which cases interest you.",
+    accept: "Allow",
+    decline: "Decline",
+    more: "Details",
+    manage: "Change my choice",
+    stateGranted: "Now: Google Analytics is allowed.",
+    stateDenied: "Now: Google Analytics is off.",
+    stateUnset: "Now: you have not chosen yet.",
+    updated: "Updated 1 October 2026",
+  },
   seo: {
     home: {
       title: "Hennadii Fedorov — Product Designer, UI/UX",
@@ -925,33 +1005,26 @@ uk.cases_list = [
   {
     slug: "designer-workspace",
     kind: "real",
-    sample: true,
+    story: workspaceUk,
+    gallery: workspaceGalleryUk,
+    cover: workspaceGalleryUk[0],
     sticker: "var(--s3)",
     year: "2026",
     title: "Робочий простір продуктового дизайнера",
     client: "Власний продукт",
-    role: "Дизайн і розробка",
+    role: "Продукт, дизайн і розробка",
     summary:
-      "Інструмент, де дослідження, флоу, екрани й рішення повʼязані в один ланцюжок — і кожне рішення має «чому».",
-    tags: ["SaaS", "Трасування рішень", "Next.js"],
+      "Інструмент, де дослідження, сценарії, екрани й рішення пов'язані в один ланцюжок — і кожне рішення має «чому». З нього публікуються кейси на цей сайт.",
+    tags: ["Власний продукт", "Трасування рішень", "Next.js · Supabase"],
     metrics: [
-      { value: "1", label: "поле, щоб створити проєкт" },
-      { value: "8", label: "етапів процесу" },
-      { value: "∞", label: "звʼязків між артефактами" },
+      { value: "9", label: "етапів у ланцюжку проєкту" },
+      { value: "8", label: "типів кроків у редакторі сценаріїв" },
+      { value: "196", label: "автоматичних перевірок бази" },
     ],
     sections: [
-      {
-        title: "Задача",
-        body: "Приклад тексту: артефакти дизайну живуть у різних інструментах, і через місяць ніхто не памʼятає, чому екран саме такий.",
-      },
-      {
-        title: "Рішення",
-        body: "Приклад тексту: єдиний ланцюжок дослідження → інсайти → проблеми → флоу → екрани → рішення, з автоматичними звʼязками.",
-      },
-      {
-        title: "Стан",
-        body: "Приклад тексту: MVP у роботі, ним я веду власні проєкти.",
-      },
+      { title: "Задача", body: workspaceUk.overview.challenge },
+      { title: "Рішення", body: workspaceUk.overview.solution },
+      { title: "Результат", body: workspaceUk.overview.outcome },
     ],
   },
 ];
@@ -1050,30 +1123,24 @@ en.cases_list = [
   },
   {
     ...uk.cases_list[3]!,
+    story: workspaceEn,
+    gallery: workspaceGalleryEn,
+    cover: workspaceGalleryEn[0],
     title: "Product designer workspace",
     client: "Own product",
-    role: "Design & development",
+    role: "Product, design & development",
     summary:
-      "A tool where research, flows, screens and decisions form one chain — and every decision has a “why”.",
-    tags: ["SaaS", "Decision tracing", "Next.js"],
+      "A tool where research, flows, screens and decisions form one chain — and every decision has a “why”. The case studies on this site are published from it.",
+    tags: ["Own product", "Decision tracing", "Next.js · Supabase"],
     metrics: [
-      { value: "1", label: "field to create a project" },
-      { value: "8", label: "process stages" },
-      { value: "∞", label: "links between artifacts" },
+      { value: "9", label: "stages in the project chain" },
+      { value: "8", label: "step types in the flow editor" },
+      { value: "196", label: "automated database checks" },
     ],
     sections: [
-      {
-        title: "Problem",
-        body: "Sample copy: design artifacts live in different tools, and a month later nobody remembers why a screen looks the way it does.",
-      },
-      {
-        title: "Solution",
-        body: "Sample copy: one chain of research → insights → problems → flows → screens → decisions, linked automatically.",
-      },
-      {
-        title: "Status",
-        body: "Sample copy: MVP in progress; I run my own projects in it.",
-      },
+      { title: "Problem", body: workspaceEn.overview.challenge },
+      { title: "Solution", body: workspaceEn.overview.solution },
+      { title: "Outcome", body: workspaceEn.overview.outcome },
     ],
   },
 ];

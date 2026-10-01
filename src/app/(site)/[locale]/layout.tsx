@@ -8,7 +8,8 @@ import "../../globals.css";
 import { getSiteUrl } from "@/shared/lib/site-url";
 import { CONTACTS, LOCALES, dict, isLocale, type Locale } from "@/site/content";
 import { AnalyticsClickListener } from "@/site/analytics/click-listener";
-import { GoogleAnalytics } from "@/site/analytics/google-analytics";
+import { GoogleAnalytics, gaId } from "@/site/analytics/google-analytics";
+import { ConsentBanner } from "@/site/consent-banner";
 import { trackAttrs } from "@/site/analytics/track";
 import { BackToTop } from "@/site/back-to-top";
 import { LangSwitch } from "@/site/lang-switch";
@@ -20,8 +21,9 @@ import { SiteNav } from "@/site/site-nav";
 
 // Root layout of the public site: <html lang> follows the locale. The private workspace has its
 // own root (app/_root/tool-root.tsx). Only /uk and /en exist: any other first segment matches no
-// route and gets app/global-not-found.tsx. Case pages opt back into dynamic slugs (new cases).
-export const dynamicParams = false;
+// route and gets app/global-not-found.tsx (the middleware lets only /uk and /en through).
+// No `dynamicParams = false` here: it also applies to the nested [slug] of case pages, and a case
+// published after the deploy would 404 until the next build.
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -158,6 +160,7 @@ export default async function SiteLayout({
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] opacity-60">
                 <span>© {year} · {d.footer.rights}</span>
                 {/* The private workspace: not for crawlers. */}
+                <Link href={`/${locale}/privacy`} className="hit hover:underline">{d.footer.privacy}</Link>
                 <Link href="/app" rel="nofollow" prefetch={false} className="hit hover:underline">{d.footer.login}</Link>
               </div>
             </div>
@@ -166,6 +169,7 @@ export default async function SiteLayout({
         <BackToTop label={d.ui.toTop} />
         <AnalyticsClickListener />
         <GoogleAnalytics />
+        {gaId() && <ConsentBanner labels={d.privacy} privacyHref={`/${locale}/privacy`} />}
         {/* Vercel serves /_vercel/speed-insights only on its own deployments. */}
         {/* Vercel Web Analytics (pageviews, no cookies) and Speed Insights; only on Vercel, where /_vercel/* exists. */}
         {process.env.VERCEL && <Analytics />}
