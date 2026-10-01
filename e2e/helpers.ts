@@ -48,3 +48,28 @@ export async function horizontalOverflow(page: Page) {
       .map((el) => `${el.tagName.toLowerCase()}.${String(el.className).split(" ").slice(0, 3).join(".")}`);
   });
 }
+
+/**
+ * Where the server HTML and the hydrated page differ, for a hydration error (React #418, rare and random in CI).
+ * Production React names no component, so this compares the visible text of the server response with the
+ * page after React recovered (it re-renders on the client) and returns the first differing spot with context.
+ * Both documents are attached to the report as well.
+ */
+export async function hydrationDiff(page: Page, testInfo: TestInfo, serverHtml: string) {
+  const dom = await page.content();
+  await testInfo.attach("server.html", { body: serverHtml, contentType: "text/html" });
+  await testInfo.attach("hydrated.html", { body: dom, contentType: "text/html" });
+  const [server, client] = await page.evaluate((html) => {
+    const text = (doc: Document) => {
+      doc.querySelectorAll("script, style, noscript, template").forEach((n) => n.remove());
+      return (doc.body?.textContent ?? "").replace(/\s+/g, " ").trim();
+    };
+    const parse = (s: string) => new DOMParser().parseFromString(s, "text/html");
+    return [text(parse(html)), text(parse(document.documentElement.outerHTML))];
+  }, serverHtml);
+  let i = 0;
+  while (i < server.length && server[i] === client[i]) i++;
+  if (i === server.length && i === client.length) return "visible text is identical (the mismatch is in attributes or markup)";
+  const at = Math.max(0, i - 80);
+  return `first difference at char ${i}:\n  server: …${server.slice(at, i + 120)}…\n  client: …${client.slice(at, i + 120)}…`;
+}

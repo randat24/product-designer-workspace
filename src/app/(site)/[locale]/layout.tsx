@@ -34,6 +34,8 @@ export const viewport: Viewport = {
   ],
 };
 
+const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
@@ -46,6 +48,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     authors: [{ name: d.name, url: `${getSiteUrl()}/${locale}/about` }],
     creator: d.name,
     formatDetection: { telephone: false, email: false, address: false },
+    // Search Console «URL prefix» property on the current address (before a domain with DNS verification exists).
+    ...(googleVerification ? { verification: { google: googleVerification } } : {}),
   };
 }
 
