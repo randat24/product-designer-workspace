@@ -3,6 +3,7 @@
 
 import type { AwardIcon } from "./award-icons";
 import type { CaseStory, StoryLabels } from "./case-story";
+import { neuralEn, neuralUk } from "./cases/neural-webcam";
 import { restaurantEn, restaurantUk } from "./cases/restaurant-booking";
 import { workspaceEn, workspaceGalleryEn, workspaceGalleryUk, workspaceUk } from "./cases/designer-workspace";
 
@@ -22,7 +23,8 @@ export const CONTACTS = {
   cv: { uk: "/cv/hennadii-fedorov-cv-uk.pdf", en: "/cv/hennadii-fedorov-cv-en.pdf" } satisfies Record<Locale, string>,
 };
 
-export type CaseSection = { title: string; body: string };
+/** A text section of a case without a full story; `image` shows its picture (a slide, a screen) under the text. */
+export type CaseSection = { title: string; body: string; image?: GalleryItem };
 
 export type Case = {
   slug: string;
@@ -53,6 +55,8 @@ export type Case = {
   cover?: GalleryItem;
   /** Made for an 18+ audience: marked on the card, the mockups open only after the visitor confirms their age. */
   adult?: boolean;
+  /** 18+ case whose cover is safe for everyone (a logo, not a screen): shown unblurred on the card and the page. */
+  coverSafe?: boolean;
 };
 
 export type GalleryItem = {
@@ -416,7 +420,7 @@ const uk: Dictionary = {
       title: "36 окрема бригада морської піхоти",
       issuer: "36 ОБрМП",
       issuerKind: "brigade",
-      description: "Памʼятна нагорода 36-ї окремої бригади морської піхоти Збройних Сил України. На аверсі — емблема підрозділу та девізи «Борітеся — поборете» і «Вірні завжди».",
+      description: "Памʼятна медаль 36-ї окремої бригади морської піхоти ВМС ЗСУ за участь у Курській операції. На аверсі — емблема бригади з девізом «Борітеся — поборете» та написи «36 окрема бригада морської піхоти» і «Курська операція». На реверсі — емблема морської піхоти України (якір із мечем і тризубом), напис «За честь і вірність обовʼязку» та номер нагороди — № 298. Колодка обтягнута стрічкою темно-зеленого, синього, сірого й білого кольорів.",
     },
     {
       icon: "honour-and-loyalty",
@@ -774,7 +778,7 @@ const en: Dictionary = {
       title: "36th Separate Marine Brigade",
       issuer: "36th Separate Marine Brigade",
       issuerKind: "brigade",
-      description: "Commemorative award of the 36th Separate Marine Brigade of the Armed Forces of Ukraine. The obverse carries the unit emblem and the mottos “Fight and you will prevail” and “Always faithful”.",
+      description: "Commemorative medal of the 36th Separate Marine Brigade of the Ukrainian Navy for taking part in the Kursk operation. The obverse carries the brigade emblem with the motto “Fight and you will prevail” and the inscriptions “36th Separate Marine Brigade” and “Kursk operation”. The reverse shows the emblem of the Ukrainian Marine Corps (an anchor with a sword and the trident), the words “For honour and loyalty to duty” and the award number, No. 298. The ribbon is dark green, blue, grey and white.",
     },
     {
       icon: "honour-and-loyalty",
@@ -932,42 +936,7 @@ const en: Dictionary = {
 // Placeholder cases (same structure in both languages).
 // ---------------------------------------------------------------------
 uk.cases_list = [
-  {
-    slug: "subscription-platform",
-    kind: "real",
-    sample: true,
-    sticker: "var(--s6)",
-    year: "2020 — 2022",
-    title: "Медіаплатформа з підпискою",
-    client: "Subscription Media Platform (NDA)",
-    role: "UX → Product Designer",
-    summary:
-      "Онбординг, пейвол і кабінет автора для платформи платного контенту. Дизайн-система з нуля.",
-    tags: ["Онбординг", "Пейвол", "Дизайн-система"],
-    metrics: [
-      { value: "+00%", label: "конверсія в підписку (приклад)" },
-      { value: "0 тиж.", label: "до першого релізу (приклад)" },
-      { value: "000", label: "компонентів у системі (приклад)" },
-    ],
-    sections: [
-      {
-        title: "Задача",
-        body: "Приклад тексту: користувачі йшли з онбордингу, не дійшовши до пейволу. Бізнесу потрібна була зрозуміла дорога від першого візиту до підписки.",
-      },
-      {
-        title: "Дослідження",
-        body: "Приклад тексту: інтервʼю з авторами й читачами, аналіз воронки, розбір конкурентів. Головний інсайт — людям треба побачити цінність до оплати.",
-      },
-      {
-        title: "Рішення",
-        body: "Приклад тексту: короткий онбординг з вибором тем, пейвол після першої цінності, кабінет автора зі статистикою. Все — на токенах дизайн-системи.",
-      },
-      {
-        title: "Результат",
-        body: "Приклад тексту: зростання конверсії, скорочення часу на новий екран, команда розвиває продукт без дизайнера на кожен чих.",
-      },
-    ],
-  },
+  neuralUk,
   {
     slug: "wgroup-design-system",
     kind: "real",
@@ -1067,37 +1036,7 @@ uk.cases_list = [
 ];
 
 en.cases_list = [
-  {
-    ...uk.cases_list[0]!,
-    title: "Subscription media platform",
-    role: "UX → Product Designer",
-    summary:
-      "Onboarding, paywall and a creator dashboard for a paid content platform. Design system from scratch.",
-    tags: ["Onboarding", "Paywall", "Design system"],
-    metrics: [
-      { value: "+00%", label: "subscription conversion (sample)" },
-      { value: "0 wks", label: "to first release (sample)" },
-      { value: "000", label: "components in the system (sample)" },
-    ],
-    sections: [
-      {
-        title: "Problem",
-        body: "Sample copy: users dropped out of onboarding before reaching the paywall. The business needed a clear path from first visit to subscription.",
-      },
-      {
-        title: "Research",
-        body: "Sample copy: interviews with creators and readers, funnel analysis, competitor review. Key insight — people need to see value before paying.",
-      },
-      {
-        title: "Solution",
-        body: "Sample copy: short onboarding with topic picking, the paywall after the first moment of value, a creator dashboard with stats. All built on design-system tokens.",
-      },
-      {
-        title: "Outcome",
-        body: "Sample copy: higher conversion, faster new screens, the team grows the product without a designer for every tweak.",
-      },
-    ],
-  },
+  neuralEn,
   {
     ...uk.cases_list[1]!,
     title: "A design system for a studio",
