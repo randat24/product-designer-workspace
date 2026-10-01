@@ -29,7 +29,11 @@ const config: NextConfig = {
   experimental: { serverActions: { bodySizeLimit: "2mb" }, globalNotFound: true },
   // A case renamed after it went live keeps its old address working.
   async redirects() {
-    return [{ source: "/:locale(uk|en)/cases/subscription-platform", destination: "/:locale/cases/neural-webcam", permanent: true }];
+    return [
+      { source: "/:locale(uk|en)/cases/subscription-platform", destination: "/:locale/cases/neural-webcam", permanent: true },
+      // The project itself was renamed too: old bookmarks into the notebook keep working.
+      { source: "/w/:ws/p/subscription-platform/:path*", destination: "/w/:ws/p/neural-webcam/:path*", permanent: true },
+    ];
   },
   async headers() {
     return [
