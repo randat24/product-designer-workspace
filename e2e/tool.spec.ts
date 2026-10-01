@@ -141,10 +141,14 @@ test("requests: review a request and turn it into a project", async ({ page }, t
   expect(await horizontalOverflow(page)).toEqual([]);
 
   // The newest request that is still new (each run sends its own in intake.spec.ts).
-  await page.getByRole("link", { name: "Новые", exact: true }).click();
+  // Wait for the filter to apply before picking a row: a click on the old list would race the filter navigation.
+  const newFilter = page.getByRole("link", { name: "Новые", exact: true });
+  await newFilter.click();
+  await expect(newFilter).toHaveAttribute("aria-current", "page");
   const first = page.locator('main a[href*="/requests/REQ-"]').first();
   await expect(first).toBeVisible();
   await first.click();
+  await expect(page).toHaveURL(/\/requests\/REQ-\d{4}-\d+$/);
   await expect(page.getByText("Данные клиента — не проверены исследованием")).toBeVisible();
   await expect(page.getByRole("heading", { name: "О проекте" })).toBeVisible();
   await expectAccessible(page, testInfo);
