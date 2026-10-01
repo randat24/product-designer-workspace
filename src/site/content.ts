@@ -114,6 +114,14 @@ type Dictionary = {
     languages: string;
     availability: string;
     download: string;
+    /** Designer-first intro: role line above the title, facts, process and a closing call to action. */
+    eyebrow: string;
+    facts: { value: string; label: string }[];
+    approach: string;
+    approachLead: string;
+    steps: { title: string; text: string }[];
+    ctaTitle: string;
+    ctaText: string;
   };
   jobs: Job[];
   skills: { group: string; items: string }[];
@@ -216,6 +224,34 @@ const uk: Dictionary = {
     languages: "Мови",
     availability: "Формат роботи",
     download: "Завантажити резюме (PDF)",
+    eyebrow: "Product / UI-UX дизайнер · Миколаїв, дистанційно",
+    facts: [
+      { value: "7", label: "років у вебі та продуктових командах" },
+      { value: "2", label: "дизайн-системи, зібрані з нуля" },
+      { value: "2", label: "дизайнери під моїм менторством" },
+    ],
+    approach: "Як я працюю",
+    approachLead: "Від питань до продукту, який команда розвиває без мене. Кожен крок лишає артефакт, на який можна спертися.",
+    steps: [
+      {
+        title: "Дослідження",
+        text: "Інтервʼю з користувачами, аналіз конкурентів, клікабельні прототипи. Рішення спираються на те, що люди роблять, а не на здогадки.",
+      },
+      {
+        title: "Структура і сценарії",
+        text: "Інформаційна архітектура й користувацькі шляхи від онбордингу до оплати, з усіма станами: завантаження, порожньо, помилка.",
+      },
+      {
+        title: "Дизайн-система",
+        text: "Токени, компоненти, адаптивні сітки й правила підтримки. Нові екрани збираються швидше, а інтерфейс лишається передбачуваним.",
+      },
+      {
+        title: "Handoff і UI QA",
+        text: "Специфікації, які розробка читає без питань, і перевірка реалізації перед релізом: що задумано, те й вийшло.",
+      },
+    ],
+    ctaTitle: "Працюймо разом",
+    ctaText: "Відкритий до проєктної роботи або part-time, 20 годин на тиждень. Розкажіть про продукт — відповім протягом доби.",
   },
   jobs: [
     {
@@ -499,8 +535,36 @@ const en: Dictionary = {
     skills: "Skills",
     education: "Education",
     languages: "Languages",
-    availability: "How I work",
-    download: "Download CV (PDF, Ukrainian)",
+    availability: "Working terms",
+    download: "Download CV (PDF)",
+    eyebrow: "Product / UI-UX designer · Mykolaiv, remote",
+    facts: [
+      { value: "7", label: "years in web and product teams" },
+      { value: "2", label: "design systems built from scratch" },
+      { value: "2", label: "designers mentored" },
+    ],
+    approach: "How I work",
+    approachLead: "From questions to a product the team can evolve without me. Every step leaves an artefact the next one can rely on.",
+    steps: [
+      {
+        title: "Research",
+        text: "User interviews, competitor analysis, clickable prototypes. Decisions rest on what people do, not on guesses.",
+      },
+      {
+        title: "Structure and flows",
+        text: "Information architecture and user journeys from onboarding to payment, with every state: loading, empty, error.",
+      },
+      {
+        title: "Design system",
+        text: "Tokens, components, responsive grids and upkeep rules. New screens come together faster and the interface stays predictable.",
+      },
+      {
+        title: "Handoff and UI QA",
+        text: "Specs developers read without questions, and a check of the build before release: what was designed is what ships.",
+      },
+    ],
+    ctaTitle: "Let's work together",
+    ctaText: "Open to project work or part-time, 20 hours a week. Tell me about your product and I'll reply within a day.",
   },
   jobs: [
     {
