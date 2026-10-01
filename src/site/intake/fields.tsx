@@ -7,6 +7,7 @@
 import { Plus, X } from "lucide-react";
 import { useId } from "react";
 import { cn } from "@/shared/lib/cn";
+import { DateField } from "@/shared/ui/date-field";
 
 const control =
   "w-full rounded-[10px] border-[1.5px] bg-surface px-3.5 text-[16px] text-fg placeholder:text-fg-secondary/70 transition-colors duration-[120ms] focus:border-fg";
@@ -41,7 +42,7 @@ const describedBy = (id: string, hint?: string, error?: string) =>
 export function TextField({ id, label, hint, error, optional, value, onChange, type = "text", placeholder, inputMode, autoComplete, maxLength, className }: {
   id: string; label: string; hint?: string; error?: string; optional?: string;
   value: string; onChange: (v: string) => void;
-  type?: "text" | "email" | "tel" | "url" | "date" | "number";
+  type?: "text" | "email" | "tel" | "url" | "number";
   placeholder?: string; inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"]; autoComplete?: string; maxLength?: number;
   className?: string;
 }) {
@@ -61,6 +62,19 @@ export function TextField({ id, label, hint, error, optional, value, onChange, t
         aria-describedby={describedBy(id, hint, error)}
         className={cn(control, "h-12", error ? bad : ok)}
       />
+    </FieldShell>
+  );
+}
+
+/** A date in the site's language: typed (дд.мм.рррр / dd/mm/yyyy) or picked in our calendar; the value is ISO or "". */
+export function DateInput({ id, label, hint, error, optional, value, onChange, locale, className }: {
+  id: string; label: string; hint?: string; error?: string; optional?: string;
+  value: string; onChange: (v: string) => void; locale: "uk" | "en"; className?: string;
+}) {
+  return (
+    <FieldShell id={id} label={label} hint={hint} error={error} optional={optional} className={className}>
+      <DateField id={id} size="lg" locale={locale} value={value} onChange={onChange}
+        invalid={!!error} describedBy={describedBy(id, hint, error)} />
     </FieldShell>
   );
 }

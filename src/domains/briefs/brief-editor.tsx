@@ -4,6 +4,7 @@ import { Plus, X } from "lucide-react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { FieldError, Input } from "@/shared/ui/field";
+import { DateField } from "@/shared/ui/date-field";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/ru";
 import { useAutosave, SaveToast } from "@/shared/ui/autosave";
@@ -95,10 +96,10 @@ export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHr
           {(["timeline_start", "timeline_end"] as const).map((key) => (
             <div key={key} className="flex flex-col gap-1.5">
               <label htmlFor={key} className="text-meta font-semibold text-fg-secondary">{f[key]}</label>
-              <Input id={key} type="date" value={brief[key] ?? ""} readOnly={!canEdit}
-                aria-invalid={error?.field === key}
-                aria-describedby={error?.field === key ? `${key}-error` : undefined}
-                onChange={(e) => update({ [key]: e.target.value || null })} />
+              <DateField id={key} value={brief[key] ?? ""} readOnly={!canEdit}
+                invalid={error?.field === key}
+                describedBy={error?.field === key ? `${key}-error` : undefined}
+                onChange={(v) => update({ [key]: v || null })} />
               <FieldError id={key} message={error?.field === key ? error.message : null} />
             </div>
           ))}
