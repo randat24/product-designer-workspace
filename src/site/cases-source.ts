@@ -30,6 +30,7 @@ function toCase(slug: string, content: Snapshot, locale: Locale, updatedAt?: str
     figma: c.figma,
     sample: c.sample,
     adult: c.adult,
+    coverSafe: c.coverSafe,
     updatedAt,
   };
 }

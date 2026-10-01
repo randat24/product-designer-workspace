@@ -106,9 +106,12 @@ export default async function CasePage({ params }: { params: Params }) {
           ))}
         </dl>
       </div>
+      {item.coverSafe && (
+        <div className={`${container} mt-8`}><CaseCover item={item} label={d.cases.placeholder} large /></div>
+      )}
       {gate(<>
       <div className={`${container} mt-8 flex flex-col gap-8`}>
-        <CaseCover item={item} label={d.cases.placeholder} large />
+        {!item.coverSafe && <CaseCover item={item} label={d.cases.placeholder} large />}
         {/* Live product, or a note that the pages can be browsed here (no site / a concept). */}
         {item.liveUrl ? (
           <div className="flex">
@@ -125,7 +128,7 @@ export default async function CasePage({ params }: { params: Params }) {
         {item.story && item.sample && (
           <p className="rounded-[10px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-secondary">{d.story.sample}</p>
         )}
-        {!item.story && (
+        {!item.story && item.metrics.length > 0 && (
         <ul className="grid gap-4 sm:grid-cols-3">
           {item.metrics.map((m) => (
             <li key={m.label} className="rounded-[14px] border border-line bg-surface p-5">
@@ -165,13 +168,22 @@ export default async function CasePage({ params }: { params: Params }) {
               <h2 className="font-display text-[28px] font-bold uppercase leading-[1.1]">{s.title}</h2>
             </div>
             <div className="flex max-w-[680px] flex-col gap-6">
-              <p className="text-[18px] leading-[1.65]">{s.body}</p>
-              {i % 2 === 1 && (
+              <p className="whitespace-pre-line text-[18px] leading-[1.65]">{s.body}</p>
+              {/* Sample cases keep a dashed slot where a picture will go; real sections bring their own. */}
+              {item.sample && !s.image && i % 2 === 1 && (
                 <div className="flex aspect-[16/9] items-center justify-center rounded-[14px] border-[1.5px] border-dashed border-line bg-subtle text-[14px] text-fg-secondary">
                   {d.cases.placeholder}
                 </div>
               )}
             </div>
+            {s.image && (
+              <figure className="flex flex-col gap-2 md:col-span-2">
+                {/* eslint-disable-next-line @next/next/no-img-element -- static case images with known size */}
+                <img src={s.image.src} alt={s.image.alt} width={s.image.width} height={s.image.height} loading="lazy" decoding="async"
+                  className="h-auto w-full rounded-[14px] border border-line" />
+                {s.image.caption && <figcaption className="text-[14px] text-fg-secondary">{s.image.caption}</figcaption>}
+              </figure>
+            )}
           </section>
         ))}
       </div>

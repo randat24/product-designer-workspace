@@ -54,9 +54,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </p>
           <Signature className="signature-draw -my-2 h-16 w-auto self-start text-fg sm:h-20" title={d.name} />
           <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "hero" })}>
-              {INTAKE[locale].cta}
-            </PrimaryLink>
+            {/* «Обговорити проєкт» lives in the header; the hero keeps the direct ways to reach me. */}
             <ContactMenu
               label={d.home.cta}
               heading={d.ui.writeVia}
@@ -64,7 +62,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               copiedLabel={d.ui.copied}
               contacts={CONTACTS}
               location="hero"
-              variant="secondary"
             />
             <SecondaryLink href={CONTACTS.cv[locale]} download icon={<FileText aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "hero" })}>
               {d.home.ctaCv}

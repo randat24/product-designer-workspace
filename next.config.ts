@@ -27,6 +27,10 @@ const config: NextConfig = {
   },
   // globalNotFound: one 404 page (app/global-not-found.tsx) for the several root layouts.
   experimental: { serverActions: { bodySizeLimit: "2mb" }, globalNotFound: true },
+  // A case renamed after it went live keeps its old address working.
+  async redirects() {
+    return [{ source: "/:locale(uk|en)/cases/subscription-platform", destination: "/:locale/cases/neural-webcam", permanent: true }];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: SECURITY_HEADERS },
