@@ -4,6 +4,7 @@ import { getMyRole, getProjectBySlug, getWorkspaceBySlug } from "@/domains/proje
 import { setProjectArchived } from "@/domains/projects/actions";
 import { getCaseForProject } from "@/domains/cases";
 import { createCaseStudy, setCaseStatus } from "@/domains/cases/actions";
+import { Download } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { Checkbox, Panel, Select } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
@@ -81,6 +82,17 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
             </div>
           )}
         </Panel>
+      </section>
+
+      <section aria-labelledby="export-h" className="flex flex-col gap-3">
+        <h2 id="export-h" className="text-heading font-semibold">{t.settings.exportTitle}</h2>
+        <p className="max-w-prose text-fg-secondary">{t.settings.exportBody}</p>
+        {/* A plain link: the route answers with a file (Content-Disposition), the page stays. */}
+        <a href={`/w/${workspace.slug}/p/${project.slug}/export`} download
+          className="inline-flex h-9 w-fit items-center gap-1.5 rounded-control border-[1.5px] border-fg px-3.5 text-sm font-semibold transition-colors duration-[120ms] hover:bg-subtle">
+          <Download aria-hidden className="size-4" />
+          {t.settings.exportAction}
+        </a>
       </section>
 
       {canEdit && (

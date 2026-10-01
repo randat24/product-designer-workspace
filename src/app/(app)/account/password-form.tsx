@@ -6,12 +6,12 @@ import { Field, Input } from "@/shared/ui/field";
 import { t } from "@/shared/i18n/ru";
 import { changePassword, type PasswordState } from "./actions";
 
-export function PasswordForm() {
+export function PasswordForm({ autoFocus = false }: { autoFocus?: boolean }) {
   const [state, action, pending] = useActionState<PasswordState, FormData>(changePassword, undefined);
   return (
     <form action={action} className="flex flex-col gap-3" noValidate>
       <Field label={t.auth.newPassword} htmlFor="password">
-        <Input id="password" name="password" type="password" autoComplete="new-password" minLength={12} required
+        <Input id="password" name="password" type="password" autoComplete="new-password" minLength={12} required autoFocus={autoFocus}
           aria-describedby="password-hint" />
         <p id="password-hint" className="text-caption text-fg-secondary">{t.auth.passwordHint}</p>
       </Field>
