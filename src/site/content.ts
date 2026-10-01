@@ -47,6 +47,8 @@ export type Case = {
   sample?: boolean;
   /** Last change of the published snapshot (ISO), from the database. */
   updatedAt?: string;
+  /** Figma file of the project (design, prototype or board), shown in a window on the case page. */
+  figma?: string;
   /** Real screen for the cover; without it the cover is an abstract placeholder. */
   cover?: GalleryItem;
   /** Made for an 18+ audience: marked on the card, the mockups open only after the visitor confirms their age. */
@@ -195,6 +197,11 @@ type Dictionary = {
     conceptNote: string;
     pages: string;
     pagesLead: string;
+    figma: string;
+    figmaLead: string;
+    figmaLoad: string;
+    figmaOpen: string;
+    figmaFrame: string;
     /** "{n}" and "{total}" are filled in by the gallery. */
     open: string;
     close: string;
@@ -472,6 +479,10 @@ const uk: Dictionary = {
         body: "Імена, адреси пошти, номери телефонів, вміст форм і параметри посилань на сайт не передаються жодному сервісу.",
       },
       {
+        title: "Файли Figma",
+        body: "Вікно з файлом Figma на сторінці кейсу завантажується лише після натискання «Завантажити файл тут». Тоді Figma може записати свої cookie за власними правилами.",
+      },
+      {
         title: "Ваш вибір",
         body: "Згоду можна змінити будь-коли кнопкою нижче. Вибір зберігається лише у вашому браузері.",
       },
@@ -540,6 +551,11 @@ const uk: Dictionary = {
     conceptNote: "Це дизайн-концепт: продукт не запускався, сторінки проєкту можна переглянути нижче.",
     pages: "Сторінки проєкту",
     pagesLead: "Натисніть на сторінку, щоб переглянути її на весь екран. Гортати — стрілками.",
+    figma: "Дизайн у Figma",
+    figmaLead: "Робочий файл проєкту: макети, компоненти й прототип у тому вигляді, в якому я з ними працюю.",
+    figmaLoad: "Завантажити файл тут",
+    figmaOpen: "Відкрити у Figma",
+    figmaFrame: "Файл проєкту у Figma",
     open: "Сторінка {n} з {total}",
     close: "Закрити",
     prev: "Попередня сторінка",
@@ -815,6 +831,10 @@ const en: Dictionary = {
         body: "Names, email addresses, phone numbers, form contents and link parameters are not sent to any service.",
       },
       {
+        title: "Figma files",
+        body: "The Figma window on a case page loads only after you click “Load the file here”. Figma may then set its own cookies under its own rules.",
+      },
+      {
         title: "Your choice",
         body: "You can change your consent at any time with the button below. The choice is stored only in your browser.",
       },
@@ -883,6 +903,11 @@ const en: Dictionary = {
     conceptNote: "This is a design concept: the product was not launched, browse the project pages below.",
     pages: "Project pages",
     pagesLead: "Click a page to view it full screen. Use the arrow keys to flip through.",
+    figma: "Design in Figma",
+    figmaLead: "The working file of the project: mockups, components and the prototype as I work with them.",
+    figmaLoad: "Load the file here",
+    figmaOpen: "Open in Figma",
+    figmaFrame: "Project file in Figma",
     open: "Page {n} of {total}",
     close: "Close",
     prev: "Previous page",

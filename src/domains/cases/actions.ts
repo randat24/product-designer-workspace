@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import { figmaFileUrl } from "@/shared/lib/figma";
 import type { Json } from "@/types/database";
 
 const statusSchema = z.enum(["draft", "review", "published"]);
@@ -32,12 +33,21 @@ export async function setCaseStatus(formData: FormData) {
   const status = statusSchema.parse(formData.get("caseStatus"));
   const adult = formData.get("adult") === "1";
   const sample = formData.get("sample") === "1";
+  // Figma link: empty clears it; anything that is not a Figma file link is refused rather than saved.
+  const figmaInput = String(formData.get("figma") ?? "").trim();
+  const figma = figmaInput ? figmaFileUrl(figmaInput) : null;
+  if (figmaInput && !figma) throw new Error("setCaseStatus: not a Figma file link");
   const supabase = await createClient();
   const { data: current, error: readError } = await supabase.from("case_studies").select("content").eq("id", caseId).single();
   if (readError) throw readError;
-  // The 18+ and sample flags live in each language of the snapshot, next to the rest of the case, so the site reads them as is.
+  // The 18+ and sample flags and the Figma link live in each language of the snapshot, next to the rest of the case,
+  // so the site reads them as is.
   const content = { ...((current.content ?? {}) as Record<string, Record<string, unknown>>) };
-  for (const locale of ["uk", "en"]) if (content[locale]) content[locale] = { ...content[locale], adult, sample };
+  for (const locale of ["uk", "en"]) {
+    if (!content[locale]) continue;
+    const { figma: _old, ...rest } = content[locale];
+    content[locale] = { ...rest, adult, sample, ...(figma ? { figma } : {}) };
+  }
   const { error } = await supabase.from("case_studies").update({ status, content: content as Json }).eq("id", caseId);
   if (error) throw error;
   revalidatePath("/w", "layout");

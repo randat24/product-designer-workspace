@@ -83,20 +83,23 @@ function Overview({ story, labels }: { story: CaseStory; labels: StoryLabels }) 
 }
 
 function Process({ story }: { story: CaseStory }) {
+  // Rows, not narrow columns: the value sits beside its label, so a long label never squeezes into a 120px card.
   return (
-    <ol className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-7">
+    <ol className="grid gap-3 sm:grid-cols-2">
       {story.process.map((p, i) => (
         <li
           key={p.stage}
-          className="relative flex flex-col gap-1 rounded-[12px] border border-line bg-surface p-4"
+          className="flex items-center gap-5 rounded-[12px] border border-line bg-surface px-5 py-4"
           style={{ background: tint(STAGE_COLOR[p.stage], 8) }}
         >
-          <span className="display-num text-[11px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
-          {/* Large text: the entity colour with a little of the text colour, so the lightest one (opportunities) still reaches 3:1. */}
-          <span className="display-num text-[34px] leading-none" style={{ color: `color-mix(in srgb, ${STAGE_COLOR[p.stage]} 80%, var(--fg))` }}>
-            {p.value}
+          <span className="flex w-[84px] shrink-0 flex-col gap-1">
+            <span className="display-num text-[11px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
+            {/* Large text: the entity colour with a little of the text colour, so the lightest one (opportunities) still reaches 3:1. */}
+            <span className="display-num text-[34px] leading-none" style={{ color: `color-mix(in srgb, ${STAGE_COLOR[p.stage]} 80%, var(--fg))` }}>
+              {p.value}
+            </span>
           </span>
-          <span className="text-[13px] leading-snug text-fg-secondary">{p.label}</span>
+          <span className="text-[15px] leading-snug text-fg-secondary">{p.label}</span>
         </li>
       ))}
     </ol>

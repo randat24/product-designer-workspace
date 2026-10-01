@@ -42,6 +42,8 @@ GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Тол�
 | `case_next` | «Наступний кейс» | `case_slug`, `next_slug` |
 | `case_live_open` | «Відкрити сайт проєкту» | `case_slug`, `location` |
 | `case_gallery_open` | открытие страницы проекта в галерее | `case_slug`, `page` |
+| `case_figma_load` | «Завантажити файл тут» — файл Figma открыт в окне на странице кейса | `case_slug` |
+| `case_figma_open` | «Відкрити у Figma» — файл в новой вкладке | `case_slug`, `location` |
 | `certificate_open` | сертификат на «Про мене» | `provider` (организация, выдавшая сертификат) |
 | `language_switch` | переключатель UA / EN | `from`, `to` |
 | `theme_switch` | светлая / тёмная тема | `theme` |
