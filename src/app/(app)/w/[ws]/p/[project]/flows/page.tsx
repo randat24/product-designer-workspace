@@ -11,7 +11,7 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.flows.title };
 const f = t.flows;

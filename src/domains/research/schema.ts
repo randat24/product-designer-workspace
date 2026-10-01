@@ -3,62 +3,62 @@ import { z } from "zod";
 const text = (max = 5000) => z.string().trim().max(max).nullish().transform((v) => v || null);
 
 export const GUIDE_SECTIONS = [
-  { value: "intro", label: "Вступление", hint: "Знакомство, цель разговора, согласие на запись" },
-  { value: "context", label: "Контекст", hint: "Кто человек, чем занимается, как устроен его день" },
-  { value: "current_behavior", label: "Текущее поведение", hint: "Как сейчас решает задачу — на примере последнего раза" },
-  { value: "problems", label: "Проблемы", hint: "Что раздражает, где теряет время и деньги" },
-  { value: "motivation", label: "Мотивация", hint: "Зачем это делает, что считает хорошим результатом" },
-  { value: "experience", label: "Опыт с продуктами", hint: "Чем пользовался, что понравилось и почему ушёл" },
-  { value: "expectations", label: "Ожидания", hint: "Каким видит идеальный вариант — без прямых вопросов «купили бы?»" },
-  { value: "closing", label: "Завершение", hint: "Что не спросили, можно ли связаться ещё раз" },
+  { value: "intro", label: "Вступ", hint: "Знайомство, мета розмови, згода на запис" },
+  { value: "context", label: "Контекст", hint: "Хто людина, чим займається, як влаштований її день" },
+  { value: "current_behavior", label: "Поточна поведінка", hint: "Як зараз розв'язує задачу — на прикладі останнього разу" },
+  { value: "problems", label: "Проблеми", hint: "Що дратує, де втрачає час і гроші" },
+  { value: "motivation", label: "Мотивація", hint: "Навіщо це робить, що вважає добрим результатом" },
+  { value: "experience", label: "Досвід із продуктами", hint: "Чим користувався, що сподобалося і чому пішов" },
+  { value: "expectations", label: "Очікування", hint: "Яким бачить ідеальний варіант — без прямих питань «купили б?»" },
+  { value: "closing", label: "Завершення", hint: "Що не запитали, чи можна зв'язатися ще раз" },
 ] as const;
 export type GuideSection = (typeof GUIDE_SECTIONS)[number]["value"];
 export const sectionLabel = (s: string) => GUIDE_SECTIONS.find((x) => x.value === s)?.label ?? s;
 
-/** Starter questions per section (Knowledge template "Глубинное интервью"). */
+/** Starter questions per section (Knowledge template "Глибинне інтерв'ю"). */
 export const GUIDE_TEMPLATE: { section: GuideSection; text: string; probes: string[]; is_key?: boolean }[] = [
-  { section: "intro", text: "Расскажите немного о себе: чем занимаетесь?", probes: [] },
-  { section: "context", text: "Как выглядит ваш обычный день?", probes: ["Где в нём находится [задача]?"] },
-  { section: "current_behavior", text: "Расскажите, как вы в последний раз [решали задачу]?", probes: ["С чего начали?", "Сколько времени заняло?"], is_key: true },
-  { section: "current_behavior", text: "Какими сервисами или способами пользуетесь?", probes: ["Почему именно ими?"] },
-  { section: "problems", text: "Что в этом процессе раздражает или отнимает больше всего времени?", probes: ["Можете вспомнить конкретный случай?"], is_key: true },
-  { section: "motivation", text: "Зачем вы это делаете? Что для вас хороший результат?", probes: [] },
-  { section: "experience", text: "Пробовали ли другие решения? Почему перестали ими пользоваться?", probes: [] },
-  { section: "expectations", text: "Если бы можно было взмахнуть волшебной палочкой, что бы изменилось?", probes: ["Почему это важно?"] },
-  { section: "closing", text: "Что важное я не спросил(а)?", probes: [] },
+  { section: "intro", text: "Розкажіть трохи про себе: чим займаєтеся?", probes: [] },
+  { section: "context", text: "Який вигляд має ваш звичайний день?", probes: ["Де в ньому [задача]?"] },
+  { section: "current_behavior", text: "Розкажіть, як ви останнього разу [розв'язували задачу]?", probes: ["З чого почали?", "Скільки часу забрало?"], is_key: true },
+  { section: "current_behavior", text: "Якими сервісами чи способами користуєтеся?", probes: ["Чому саме ними?"] },
+  { section: "problems", text: "Що в цьому процесі дратує або забирає найбільше часу?", probes: ["Можете згадати конкретний випадок?"], is_key: true },
+  { section: "motivation", text: "Навіщо ви це робите? Що для вас добрий результат?", probes: [] },
+  { section: "experience", text: "Чи пробували інші рішення? Чому перестали ними користуватися?", probes: [] },
+  { section: "expectations", text: "Якби можна було махнути чарівною паличкою, що б змінилося?", probes: ["Чому це важливо?"] },
+  { section: "closing", text: "Що важливе я не запитав(-ла)?", probes: [] },
 ];
 
 export const RESEARCH_METHODS = [
-  { value: "interview", label: "Интервью" },
-  { value: "usability", label: "Юзабилити-тест" },
-  { value: "survey", label: "Опрос" },
-  { value: "diary", label: "Дневниковое" },
-  { value: "other", label: "Другое" },
+  { value: "interview", label: "Інтерв'ю" },
+  { value: "usability", label: "Юзабіліті-тест" },
+  { value: "survey", label: "Опитування" },
+  { value: "diary", label: "Щоденникове" },
+  { value: "other", label: "Інше" },
 ] as const;
 
 export const RESEARCH_STATUSES = [
-  { value: "draft", label: "Черновик" },
-  { value: "active", label: "Идёт" },
+  { value: "draft", label: "Чернетка" },
+  { value: "active", label: "Триває" },
   { value: "done", label: "Завершено" },
 ] as const;
 
 export const INTERVIEW_STATUSES = [
-  { value: "planned", label: "Запланировано" },
-  { value: "in_progress", label: "Идёт" },
+  { value: "planned", label: "Заплановано" },
+  { value: "in_progress", label: "Триває" },
   { value: "done", label: "Проведено" },
-  { value: "synthesized", label: "Разобрано" },
+  { value: "synthesized", label: "Розібрано" },
 ] as const;
 export type InterviewStatus = (typeof INTERVIEW_STATUSES)[number]["value"];
 export const interviewStatusLabel = (s: string) => INTERVIEW_STATUSES.find((x) => x.value === s)?.label ?? s;
 
 export const INTERVIEW_MODES = [
   { value: "remote", label: "Онлайн" },
-  { value: "in_person", label: "Лично" },
+  { value: "in_person", label: "Особисто" },
   { value: "phone", label: "Телефон" },
 ] as const;
 
 export const planSchema = z.object({
-  title: z.string().trim().min(1, { error: "Введите название" }).max(200),
+  title: z.string().trim().min(1, { error: "Введіть назву" }).max(200),
   goal: text(),
   questions: z.array(z.string().trim().max(500).catch("")).max(30).catch([]).transform((a) => a.filter(Boolean)),
   hypotheses_text: text(),
@@ -71,7 +71,7 @@ export const planSchema = z.object({
 export type PlanFields = z.output<typeof planSchema>;
 
 export const guideMetaSchema = z.object({
-  title: z.string().trim().min(1, { error: "Введите название" }).max(200),
+  title: z.string().trim().min(1, { error: "Введіть назву" }).max(200),
   intro: text(),
   outro: text(),
 });

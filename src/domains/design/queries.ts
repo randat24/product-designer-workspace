@@ -118,5 +118,5 @@ export async function getEvidenceSuggestions(base: string, decisionId: string) {
   }));
   const resolved = await resolveEntities(base, [...found.values()]);
   const order = (t: string) => EVIDENCE_TYPES.indexOf(t as EntityType);
-  return [...resolved.values()].sort((a, b) => order(b.type) - order(a.type) || a.code.localeCompare(b.code, "ru", { numeric: true }));
+  return [...resolved.values()].sort((a, b) => order(b.type) - order(a.type) || a.code.localeCompare(b.code, "uk", { numeric: true }));
 }

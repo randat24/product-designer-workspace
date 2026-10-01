@@ -80,7 +80,7 @@ export const listReminders = cache(async (projectId: string): Promise<Reminder[]
       competitor: r.competitors.name, competitorCode: r.competitors.code,
       feature: r.comparison_features.name, kind: r.comparison_features.kind, note: r.note!.trim(), done: r.note_done,
     }))
-    .sort((a, b) => Number(a.done) - Number(b.done) || a.kind.localeCompare(b.kind) || a.feature.localeCompare(b.feature, "ru"));
+    .sort((a, b) => Number(a.done) - Number(b.done) || a.kind.localeCompare(b.kind) || a.feature.localeCompare(b.feature, "uk"));
 });
 
 export type Screenshot = { id: string; fileName: string; caption: string | null; url: string | null };

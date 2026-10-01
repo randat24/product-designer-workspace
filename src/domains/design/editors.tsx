@@ -5,10 +5,11 @@ import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { FieldError, Input, Select } from "@/shared/ui/field";
+import { DateField } from "@/shared/ui/date-field";
 import { cn } from "@/shared/lib/cn";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { deleteDecision, deleteScreen, saveDecision, saveScreen } from "./actions";
 import { Button, IconButton } from "@/shared/ui/button";
 import {
@@ -190,8 +191,8 @@ export function DecisionEditor({ id, initial, others, canEdit }: {
         <div className="flex flex-wrap gap-4">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="decided_at" className={labelClass}>{f.decided_at}</label>
-            <Input id="decided_at" type="date" className="w-44" readOnly={ro} value={v.decided_at ?? ""}
-              onChange={(e) => update({ decided_at: e.target.value || null })} />
+            <DateField id="decided_at" className="w-48" readOnly={ro} value={v.decided_at ?? ""}
+              onChange={(d) => update({ decided_at: d || null })} />
           </div>
           <div className="flex min-w-64 flex-1 flex-col gap-1.5">
             <label htmlFor="superseded_by" className={labelClass}>{f.superseded_by}</label>

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import type { Database } from "@/types/database";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 // Shape of the "Рабочая тетрадь дизайнера" export (v1). Unknown keys are ignored.
 const str = z.string().catch("").transform((s) => s.trim());
@@ -70,13 +70,13 @@ export async function importNotebook(_prev: ImportState, formData: FormData): Pr
   // Competitors
   const competitors = parsed.competitors.filter((c) => c.name);
   if (competitors.length) {
-    const kind = (k?: string) => (k === "Косвенный" ? "indirect" : "direct") as "direct" | "indirect";
+    const kind = (k?: string) => (k === "Косвенный" || k === "Непрямий" ? "indirect" : "direct") as "direct" | "indirect";
     const { error } = await supabase.from("competitors").insert(competitors.map((c, i) => ({
       project_id: pid, name: c.name!.slice(0, 120), kind: kind(c.kind), url: c.url || null,
       strengths: c.strengths || null, weaknesses: c.weaknesses || null, borrow: c.borrow || null, position: 100 + i,
     })));
     if (error) return { error: t.research.import.failed };
-    done.push(`конкуренты: ${competitors.length}`);
+    done.push(`конкуренти: ${competitors.length}`);
   }
 
   // Guide + questions
@@ -85,7 +85,7 @@ export async function importNotebook(_prev: ImportState, formData: FormData): Pr
   let guideId: string | null = null;
   if (questions.length) {
     const { data: guide, error } = await supabase.from("interview_guides").insert({
-      project_id: pid, title: "Импорт из тетради", intro: parsed.interview.intro || null, outro: parsed.interview.outro || null,
+      project_id: pid, title: "Імпорт із зошита", intro: parsed.interview.intro || null, outro: parsed.interview.outro || null,
     }).select("id").single();
     if (error) return { error: t.research.import.failed };
     guideId = guide.id;
@@ -94,13 +94,13 @@ export async function importNotebook(_prev: ImportState, formData: FormData): Pr
     }))).select("id, position");
     if (e2 || !rows) return { error: t.research.import.failed };
     for (const r of rows) questionIds.set(questions[r.position - 1]!.id, r.id);
-    done.push(`вопросы: ${questions.length}`);
+    done.push(`питання: ${questions.length}`);
   }
 
   // Respondents → participants + done interviews + answers
   let answerCount = 0;
   for (const r of parsed.respondents) {
-    const generic = !r.name || /^(Юзер|Респондент|User)\s*\d+$/i.test(r.name);
+    const generic = !r.name || /^(Юзер|Респондент|Користувач|User)\s*\d+$/i.test(r.name);
     const { data: p, error } = await supabase.from("participants").insert({
       project_id: pid, display_name: generic ? null : r.name!.slice(0, 120), role: r.role?.slice(0, 200) || (generic ? r.name : null) || null,
     }).select("id").single();
@@ -117,15 +117,15 @@ export async function importNotebook(_prev: ImportState, formData: FormData): Pr
       answerCount += rows.length;
     }
   }
-  if (parsed.respondents.length) done.push(`участники: ${parsed.respondents.length}`, `ответы: ${answerCount}`);
+  if (parsed.respondents.length) done.push(`учасники: ${parsed.respondents.length}`, `відповіді: ${answerCount}`);
 
   const skipped = [
-    parsed.insights.length && `инсайты (${parsed.insights.length})`,
-    parsed.flow.length && `шаги сценария (${parsed.flow.length})`,
-    parsed.screens.length && `экраны (${parsed.screens.length})`,
+    parsed.insights.length && `інсайти (${parsed.insights.length})`,
+    parsed.flow.length && `кроки сценарію (${parsed.flow.length})`,
+    parsed.screens.length && `екрани (${parsed.screens.length})`,
   ].filter(Boolean);
 
   revalidatePath("/w/[ws]/p/[project]", "layout");
-  const summary = done.length ? done.join(", ") : "нечего переносить";
+  const summary = done.length ? done.join(", ") : "нічого переносити";
   return { ok: t.research.import.done(summary) + (skipped.length ? `. ${t.research.import.skipped(skipped.join(", "))}` : "") };
 }

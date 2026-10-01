@@ -1,5 +1,5 @@
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import type { Enums } from "@/types/database";
 
 const TONE: Record<Enums<"request_status">, string> = {

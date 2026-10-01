@@ -7,7 +7,7 @@ import { createSynthesisEntity } from "@/domains/synthesis/actions";
 import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.synthesis.opportunities.title };
 const s = t.synthesis.opportunities;

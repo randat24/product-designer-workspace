@@ -15,7 +15,7 @@ import { track } from "../analytics/track";
 import type { Locale } from "../content";
 import { INTAKE } from "./content";
 import { clearDraft, readDone, readDraft, writeDone, writeDraft, type DoneState } from "./draft";
-import { AddButton, Checkbox, ChoiceGroup, ItemCard, Select, TextArea, TextField } from "./fields";
+import { AddButton, Checkbox, ChoiceGroup, DateInput, ItemCard, Select, TextArea, TextField } from "./fields";
 import { Done } from "./done";
 import { Turnstile } from "./turnstile";
 
@@ -512,7 +512,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
               onChange={(v) => set("budget", { has_deadline: v === "yes" })} />
             {d.has_deadline && (
               <div className="flex flex-col gap-4 rounded-[14px] border-[1.5px] border-line bg-surface p-4 sm:p-5">
-                <TextField id={f("deadline_date")} {...b.deadlineDate} error={err("deadline_date")} type="date" className="max-w-[240px]"
+                <DateInput id={f("deadline_date")} {...b.deadlineDate} error={err("deadline_date")} locale={locale} className="max-w-[260px]"
                   value={d.deadline_date} onChange={(v) => set("budget", { deadline_date: v })} />
                 <TextField id={f("deadline_reason")} {...b.deadlineReason} optional={opt} error={err("deadline_reason")} maxLength={1000}
                   value={d.deadline_reason} onChange={(v) => set("budget", { deadline_reason: v })} />

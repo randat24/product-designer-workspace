@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/shared/lib/supabase/server";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export type PasswordState = { ok?: boolean; error?: string } | undefined;
 

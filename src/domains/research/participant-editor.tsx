@@ -5,7 +5,7 @@ import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { Section, TextField } from "@/shared/ui/form-section";
 import { Input, Checkbox } from "@/shared/ui/field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { deleteParticipant, saveParticipant } from "./actions";
 import type { ParticipantFields } from "./schema";
 

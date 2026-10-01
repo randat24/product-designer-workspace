@@ -7,14 +7,14 @@ import { ENTITIES, type EntityType } from "@/shared/entities";
 import { EntityChip } from "@/shared/ui/entity-chip";
 import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { linkEntities, unlinkEntities } from "./actions";
 import type { LinkRule, ResolvedEntity } from "./queries";
 import { Button, IconButton } from "@/shared/ui/button";
 
 /**
- * "Связать…": pick any entity of an allowed type; the direction and relation come
+ * "Пов'язати…": pick any entity of an allowed type; the direction and relation come
  * from trace_relation_rules (docs/DESIGN-SYSTEM.md LinkPicker).
  */
 export function LinkPicker({ projectId, entity, candidates, upRules, downRules }: {

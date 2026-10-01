@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef } from "react";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { importNotebook, type ImportState } from "./actions";
 
 /** Upload a notebook export (JSON) into the current project. */

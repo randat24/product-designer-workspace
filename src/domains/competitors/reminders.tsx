@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { setReminderDone } from "./actions";
 import type { Reminder } from "./queries";
 import { Checkbox } from "@/shared/ui/field";
@@ -11,7 +11,7 @@ import { Checkbox } from "@/shared/ui/field";
 const r = t.competitors.reminders;
 
 /**
- * "Где мы можем быть лучше": notes on competitors' red cells, shown on the competitor matrices
+ * "Де ми можемо бути кращими": notes on competitors' red cells, shown on the competitor matrices
  * and while designing screens and flows, until marked done.
  */
 export function RemindersPanel({ base, initial, canEdit, compact = false }: {

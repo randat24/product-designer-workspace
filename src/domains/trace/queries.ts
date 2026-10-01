@@ -128,5 +128,5 @@ export async function listLinkCandidates(base: string, projectId: string, types:
     for (const r of (data ?? []) as { id: string }[]) refs.push({ type, id: r.id });
   }));
   const resolved = await resolveEntities(base, refs);
-  return [...resolved.values()].sort((a, b) => a.code.localeCompare(b.code, "ru", { numeric: true }));
+  return [...resolved.values()].sort((a, b) => a.code.localeCompare(b.code, "uk", { numeric: true }));
 }

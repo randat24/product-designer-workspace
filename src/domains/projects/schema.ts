@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export { PLATFORMS } from "./constants";
 

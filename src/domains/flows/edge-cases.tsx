@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Input, Select } from "@/shared/ui/field";
 import { Button, IconButton } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { addEdgeCase, deleteEdgeCase, saveEdgeCase } from "./actions";
 import { EDGE_CASE_STATUSES, type EdgeCaseKind, type EdgeCaseStatus } from "./schema";
 import type { EdgeCase } from "./queries";

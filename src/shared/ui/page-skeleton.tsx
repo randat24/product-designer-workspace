@@ -1,4 +1,4 @@
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 /**
  * Doherty threshold (docs/UX_LAWS.md, UX-24): shown at once while a page loads, in the shape of

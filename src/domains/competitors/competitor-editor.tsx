@@ -5,7 +5,7 @@ import { Section, TextField } from "@/shared/ui/form-section";
 import { FieldError, Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { deleteCompetitor, saveCompetitor } from "./actions";
 import { COMPETITOR_KINDS, type CompetitorFields } from "./schema";
 

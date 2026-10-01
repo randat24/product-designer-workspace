@@ -5,7 +5,7 @@ import Link from "next/link";
 import { BriefEditor, briefCompleteness, getBrief } from "@/domains/briefs";
 import { createClient } from "@/shared/lib/supabase/server";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.brief.title };
 

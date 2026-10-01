@@ -3,12 +3,12 @@
 import { ArrowDown, ArrowUp, CornerDownRight, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAutosave, SaveToast } from "@/shared/ui/autosave";
+import { autosaveLabel, useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { TextField } from "@/shared/ui/form-section";
 import { Input, Select } from "@/shared/ui/field";
 import { Button, IconButton } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addQuestion, applyGuideTemplate, deleteQuestion, moveQuestion, saveGuideMeta, saveQuestion } from "./actions";
 import { GUIDE_SECTIONS, type GuideMeta, type GuideSection } from "./schema";
@@ -85,7 +85,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
   q: GuideQuestion; canEdit: boolean; first: boolean; last: boolean; onMove: (d: -1 | 1) => void; onDelete: () => void;
   onSectionSaved: () => void;
 }) {
-  const { value, update, status } = useAutosave(
+  const { value, update, status, error } = useAutosave(
     { section: q.section as GuideSection, text: q.text, probes: q.probes, is_key: q.is_key },
     async (v) => {
       if (!v.text.trim()) return { ok: true as const };
@@ -100,7 +100,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
     <li className={cn("flex flex-col gap-2 rounded-panel border border-line bg-surface p-2.5 pl-3", value.is_key && "border-l-4 border-l-fg")}>
       <div className="flex items-start gap-2">
         <Input aria-label={`${t.research.matrix.question}: ${value.text}`} value={value.text} readOnly={!canEdit} maxLength={1000}
-          aria-invalid={status === "error"} onChange={(e) => update({ text: e.target.value })} className="font-semibold" />
+          aria-invalid={!!error?.field} onChange={(e) => update({ text: e.target.value })} className="font-semibold" />
         {canEdit && (
           <div className="flex shrink-0 flex-wrap items-center justify-end">
             <Select aria-label={`${g.section}: ${value.text}`} value={value.section}
@@ -119,6 +119,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
         )}
         {!canEdit && value.is_key && <span className="shrink-0 rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">{g.isKey}</span>}
       </div>
+      {(status === "error" || status === "offline") && <p role="alert" className="text-meta text-danger">{autosaveLabel(status, error?.message)}</p>}
       {(value.probes.length > 0 || canEdit) && (
         <div className="flex flex-col gap-1 pl-4">
           {value.probes.map((probe, i) => (

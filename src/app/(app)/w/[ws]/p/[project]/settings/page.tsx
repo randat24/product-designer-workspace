@@ -8,7 +8,7 @@ import { Download } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { Checkbox, Input, Panel, Select } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { DeleteForm, GeneralForm } from "./forms";
 
 export const metadata: Metadata = { title: t.settings.title };

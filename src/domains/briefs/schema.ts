@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { withScheme } from "@/shared/lib/url";
 
 const text = (max = 5000) =>

@@ -7,7 +7,7 @@ import { InterviewEditor } from "@/domains/research/interview-editor";
 import { listInterviewSynthesis } from "@/domains/synthesis";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };

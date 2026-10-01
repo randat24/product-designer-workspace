@@ -8,11 +8,11 @@ import { createDecision } from "@/domains/design/actions";
 import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.decisions.title };
 const dc = t.decisions;
-const dateFmt = new Intl.DateTimeFormat("ru", { day: "numeric", month: "short", year: "numeric" });
+const dateFmt = new Intl.DateTimeFormat("uk", { day: "numeric", month: "short", year: "numeric" });
 
 export default async function DecisionsPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
   const { ws, project: slug } = await params;
