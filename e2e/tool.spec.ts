@@ -168,14 +168,13 @@ test("requests: review a request and turn it into a project", async ({ page }, t
   await expectAccessible(page, testInfo);
   expect(await horizontalOverflow(page)).toEqual([]);
 
-  // The new request is listed under «Новые». It is opened by its address: on a busy runner a click right
-  // after the filter navigation was sometimes dropped by the client router.
+  // The new request is listed under «Новые» and opens from the list.
   const newFilter = page.getByRole("link", { name: "Новые", exact: true });
   await newFilter.click();
   await expect(newFilter).toHaveAttribute("aria-current", "page");
   const row = page.locator(`main a[href$="/requests/${code}"]`);
-  await expect(row).toBeVisible();
-  await page.goto((await row.getAttribute("href"))!);
+  await row.click();
+  await expect(page).toHaveURL(new RegExp(`/requests/${code}$`));
   await expect(page.getByText("Данные клиента — не проверены исследованием")).toBeVisible();
   await expect(page.getByRole("heading", { name: "О проекте" })).toBeVisible();
   await expectAccessible(page, testInfo);
