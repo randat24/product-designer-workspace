@@ -449,9 +449,9 @@ const uk: Dictionary = {
         "Кейси продуктового дизайну: від дослідження користувачів і аналізу конкурентів до флоу, екранів і рішень, переданих у розробку.",
     },
     about: {
-      title: "Про мене — досвід, навички, служба",
+      title: "Про мене — продуктовий дизайнер: підхід, досвід, навички",
       description:
-        "Геннадій Федоров — продуктовий і UI/UX дизайнер з Миколаєва: досвід у продуктових командах, дизайн-системи, UX-дослідження. З 22.02.2022 — у Збройних Силах України.",
+        "Геннадій Федоров — продуктовий і UI/UX дизайнер. 7 років у продуктових командах: UX-дослідження, дизайн-системи з нуля, handoff і UI QA.",
     },
     notFound: { title: "Сторінку не знайдено", description: "Такої сторінки немає або її перенесли." },
     ogRole: "Продуктовий дизайнер",
@@ -761,9 +761,9 @@ const en: Dictionary = {
         "Product design case studies: from user research and competitor analysis to flows, screens and decisions handed off to development.",
     },
     about: {
-      title: "About — experience, skills, service",
+      title: "About — product designer: approach, experience, skills",
       description:
-        "Hennadii Fedorov, product and UI/UX designer from Mykolaiv, Ukraine: experience in product teams, design systems, UX research. Serving in the Armed Forces of Ukraine since 22 February 2022.",
+        "Hennadii Fedorov, product and UI/UX designer. 7 years in product teams: UX research, design systems from scratch, handoff and UI QA.",
     },
     notFound: { title: "Page not found", description: "This page does not exist or has moved." },
     ogRole: "Product Designer",
