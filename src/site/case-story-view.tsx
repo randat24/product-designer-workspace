@@ -92,7 +92,8 @@ function Process({ story }: { story: CaseStory }) {
           style={{ background: tint(STAGE_COLOR[p.stage], 8) }}
         >
           <span className="display-num text-[11px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
-          <span className="display-num text-[34px] leading-none" style={{ color: STAGE_COLOR[p.stage] }}>
+          {/* Large text: the entity colour with a little of the text colour, so the lightest one (opportunities) still reaches 3:1. */}
+          <span className="display-num text-[34px] leading-none" style={{ color: `color-mix(in srgb, ${STAGE_COLOR[p.stage]} 80%, var(--fg))` }}>
             {p.value}
           </span>
           <span className="text-[13px] leading-snug text-fg-secondary">{p.label}</span>

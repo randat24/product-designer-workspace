@@ -4,6 +4,7 @@
 import type { AwardIcon } from "./award-icons";
 import type { CaseStory, StoryLabels } from "./case-story";
 import { restaurantEn, restaurantUk } from "./cases/restaurant-booking";
+import { workspaceEn, workspaceGalleryEn, workspaceGalleryUk, workspaceUk } from "./cases/designer-workspace";
 
 export const LOCALES = ["uk", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -46,6 +47,8 @@ export type Case = {
   sample?: boolean;
   /** Last change of the published snapshot (ISO), from the database. */
   updatedAt?: string;
+  /** Real screen for the cover; without it the cover is an abstract placeholder. */
+  cover?: GalleryItem;
   /** Made for an 18+ audience: marked on the card, the mockups open only after the visitor confirms their age. */
   adult?: boolean;
 };
@@ -1002,33 +1005,26 @@ uk.cases_list = [
   {
     slug: "designer-workspace",
     kind: "real",
-    sample: true,
+    story: workspaceUk,
+    gallery: workspaceGalleryUk,
+    cover: workspaceGalleryUk[0],
     sticker: "var(--s3)",
     year: "2026",
     title: "Робочий простір продуктового дизайнера",
     client: "Власний продукт",
-    role: "Дизайн і розробка",
+    role: "Продукт, дизайн і розробка",
     summary:
-      "Інструмент, де дослідження, флоу, екрани й рішення повʼязані в один ланцюжок — і кожне рішення має «чому».",
-    tags: ["SaaS", "Трасування рішень", "Next.js"],
+      "Інструмент, де дослідження, сценарії, екрани й рішення пов'язані в один ланцюжок — і кожне рішення має «чому». З нього публікуються кейси на цей сайт.",
+    tags: ["Власний продукт", "Трасування рішень", "Next.js · Supabase"],
     metrics: [
-      { value: "1", label: "поле, щоб створити проєкт" },
-      { value: "8", label: "етапів процесу" },
-      { value: "∞", label: "звʼязків між артефактами" },
+      { value: "9", label: "етапів у ланцюжку проєкту" },
+      { value: "8", label: "типів кроків у редакторі сценаріїв" },
+      { value: "196", label: "автоматичних перевірок бази" },
     ],
     sections: [
-      {
-        title: "Задача",
-        body: "Приклад тексту: артефакти дизайну живуть у різних інструментах, і через місяць ніхто не памʼятає, чому екран саме такий.",
-      },
-      {
-        title: "Рішення",
-        body: "Приклад тексту: єдиний ланцюжок дослідження → інсайти → проблеми → флоу → екрани → рішення, з автоматичними звʼязками.",
-      },
-      {
-        title: "Стан",
-        body: "Приклад тексту: MVP у роботі, ним я веду власні проєкти.",
-      },
+      { title: "Задача", body: workspaceUk.overview.challenge },
+      { title: "Рішення", body: workspaceUk.overview.solution },
+      { title: "Результат", body: workspaceUk.overview.outcome },
     ],
   },
 ];
@@ -1127,30 +1123,24 @@ en.cases_list = [
   },
   {
     ...uk.cases_list[3]!,
+    story: workspaceEn,
+    gallery: workspaceGalleryEn,
+    cover: workspaceGalleryEn[0],
     title: "Product designer workspace",
     client: "Own product",
-    role: "Design & development",
+    role: "Product, design & development",
     summary:
-      "A tool where research, flows, screens and decisions form one chain — and every decision has a “why”.",
-    tags: ["SaaS", "Decision tracing", "Next.js"],
+      "A tool where research, flows, screens and decisions form one chain — and every decision has a “why”. The case studies on this site are published from it.",
+    tags: ["Own product", "Decision tracing", "Next.js · Supabase"],
     metrics: [
-      { value: "1", label: "field to create a project" },
-      { value: "8", label: "process stages" },
-      { value: "∞", label: "links between artifacts" },
+      { value: "9", label: "stages in the project chain" },
+      { value: "8", label: "step types in the flow editor" },
+      { value: "196", label: "automated database checks" },
     ],
     sections: [
-      {
-        title: "Problem",
-        body: "Sample copy: design artifacts live in different tools, and a month later nobody remembers why a screen looks the way it does.",
-      },
-      {
-        title: "Solution",
-        body: "Sample copy: one chain of research → insights → problems → flows → screens → decisions, linked automatically.",
-      },
-      {
-        title: "Status",
-        body: "Sample copy: MVP in progress; I run my own projects in it.",
-      },
+      { title: "Problem", body: workspaceEn.overview.challenge },
+      { title: "Solution", body: workspaceEn.overview.solution },
+      { title: "Outcome", body: workspaceEn.overview.outcome },
     ],
   },
 ];

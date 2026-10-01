@@ -21,8 +21,9 @@ import { SiteNav } from "@/site/site-nav";
 
 // Root layout of the public site: <html lang> follows the locale. The private workspace has its
 // own root (app/_root/tool-root.tsx). Only /uk and /en exist: any other first segment matches no
-// route and gets app/global-not-found.tsx. Case pages opt back into dynamic slugs (new cases).
-export const dynamicParams = false;
+// route and gets app/global-not-found.tsx (the middleware lets only /uk and /en through).
+// No `dynamicParams = false` here: it also applies to the nested [slug] of case pages, and a case
+// published after the deploy would 404 until the next build.
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));

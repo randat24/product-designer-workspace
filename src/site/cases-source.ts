@@ -26,6 +26,7 @@ function toCase(slug: string, content: Snapshot, locale: Locale, updatedAt?: str
     kind: c.kind,
     liveUrl: c.liveUrl,
     gallery: c.gallery,
+    cover: c.cover,
     sample: c.sample,
     adult: c.adult,
     updatedAt,
