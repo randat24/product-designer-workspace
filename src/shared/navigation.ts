@@ -6,65 +6,65 @@ export type NavItem = { segment: string; label: string; phase: number; mvp: bool
 export type NavGroup = { title: string; items: NavItem[] };
 
 export const PROJECT_NAV: NavGroup[] = [
-  { title: "Проект", items: [{ segment: "", label: "Обзор", phase: 1, mvp: true }] },
+  { title: "Проєкт", items: [{ segment: "", label: "Огляд", phase: 1, mvp: true }] },
   {
-    title: "Исследование",
+    title: "Дослідження",
     items: [
       { segment: "brief", label: "Бриф", phase: 2, mvp: true },
-      { segment: "competitors", label: "Конкуренты", phase: 3, mvp: true },
-      { segment: "research", label: "Исследования", phase: 4, mvp: true },
-      { segment: "research/participants", label: "Участники", phase: 4, mvp: true },
-      { segment: "research/matrix", label: "Матрица ответов", phase: 4, mvp: true },
+      { segment: "competitors", label: "Конкуренти", phase: 3, mvp: true },
+      { segment: "research", label: "Дослідження", phase: 4, mvp: true },
+      { segment: "research/participants", label: "Учасники", phase: 4, mvp: true },
+      { segment: "research/matrix", label: "Матриця відповідей", phase: 4, mvp: true },
     ],
   },
   {
-    title: "Определение",
+    title: "Визначення",
     items: [
       { segment: "synthesis", label: "Синтез", phase: 5, mvp: true },
-      { segment: "insights", label: "Инсайты", phase: 5, mvp: true },
-      { segment: "pain-points", label: "Боли", phase: 5, mvp: true },
-      { segment: "opportunities", label: "Возможности", phase: 5, mvp: true },
-      { segment: "users", label: "Сегменты", phase: 6, mvp: false },
+      { segment: "insights", label: "Інсайти", phase: 5, mvp: true },
+      { segment: "pain-points", label: "Болі", phase: 5, mvp: true },
+      { segment: "opportunities", label: "Можливості", phase: 5, mvp: true },
+      { segment: "users", label: "Сегменти", phase: 6, mvp: false },
       { segment: "jtbd", label: "JTBD", phase: 6, mvp: false },
-      { segment: "hypotheses", label: "Гипотезы", phase: 6, mvp: false },
+      { segment: "hypotheses", label: "Гіпотези", phase: 6, mvp: false },
     ],
   },
   {
     title: "Структура",
     items: [
-      { segment: "requirements", label: "Требования", phase: 6, mvp: false },
-      { segment: "features", label: "Функции", phase: 6, mvp: false },
-      { segment: "ia", label: "Информационная архитектура", phase: 7, mvp: false },
-      { segment: "flows", label: "Сценарии", phase: 7, mvp: true },
+      { segment: "requirements", label: "Вимоги", phase: 6, mvp: false },
+      { segment: "features", label: "Функції", phase: 6, mvp: false },
+      { segment: "ia", label: "Інформаційна архітектура", phase: 7, mvp: false },
+      { segment: "flows", label: "Сценарії", phase: 7, mvp: true },
     ],
   },
   {
     title: "Дизайн",
     items: [
-      { segment: "screens", label: "Экраны", phase: 8, mvp: true },
-      { segment: "ui", label: "UI-основы", phase: 8, mvp: false },
+      { segment: "screens", label: "Екрани", phase: 8, mvp: true },
+      { segment: "ui", label: "UI-основи", phase: 8, mvp: false },
     ],
   },
   {
     title: "Система",
     items: [
-      { segment: "system/tokens", label: "Токены", phase: 9, mvp: false },
-      { segment: "system/components", label: "Компоненты", phase: 9, mvp: false },
-      { segment: "system/motion", label: "Анимации", phase: 9, mvp: false },
-      { segment: "system/responsive", label: "Адаптивность", phase: 9, mvp: false },
+      { segment: "system/tokens", label: "Токени", phase: 9, mvp: false },
+      { segment: "system/components", label: "Компоненти", phase: 9, mvp: false },
+      { segment: "system/motion", label: "Анімації", phase: 9, mvp: false },
+      { segment: "system/responsive", label: "Адаптивність", phase: 9, mvp: false },
     ],
   },
   {
-    title: "Проверка",
+    title: "Перевірка",
     items: [
-      { segment: "tests", label: "Юзабилити-тесты", phase: 10, mvp: false },
-      { segment: "findings", label: "Находки", phase: 10, mvp: false },
+      { segment: "tests", label: "Юзабіліті-тести", phase: 10, mvp: false },
+      { segment: "findings", label: "Знахідки", phase: 10, mvp: false },
     ],
   },
   {
     title: "Передача",
     items: [
-      { segment: "decisions", label: "Журнал решений", phase: 8, mvp: true },
+      { segment: "decisions", label: "Журнал рішень", phase: 8, mvp: true },
       { segment: "handoff", label: "Handoff", phase: 11, mvp: false },
     ],
   },

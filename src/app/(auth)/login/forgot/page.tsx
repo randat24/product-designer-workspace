@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ForgotForm } from "./forgot-form";
 
 export const metadata: Metadata = { title: t.auth.forgotTitle };

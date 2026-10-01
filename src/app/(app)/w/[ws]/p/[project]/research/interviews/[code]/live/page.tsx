@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getProjectContext } from "@/domains/projects";
 import { getInterviewByCode, participantTitle } from "@/domains/research";
 import { LiveInterview } from "@/domains/research/live-interview";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.research.live.title };
 

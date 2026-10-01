@@ -4,7 +4,7 @@ import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { addState, deleteState, saveState } from "./actions";
 import { KEY_STATES, STATE_KINDS, STATE_STATUSES, type StateKind, type StateStatus } from "./schema";
 import type { ScreenState } from "./queries";

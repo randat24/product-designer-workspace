@@ -11,7 +11,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import { Input, Select } from "@/shared/ui/field";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import {
   addEdge, addNode, createScreenForNode, deleteElements, linkScreen, moveNodes, saveViewport, updateEdge, updateNode,
 } from "./actions";
@@ -261,7 +261,7 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
                 targets={nodeOptions.filter((o) => o.id !== node.id && !edges.some((e) => e.source === node.id && e.target === o.id))}
                 onLinkTo={(target) => void onConnect({ source: node.id, target, sourceHandle: null, targetHandle: null })}
                 onPatch={(patch) => patchNode(node.id, patch)}
-                onScreenCreated={(s) => { setScreens((xs) => [...xs, s].sort((a, b) => a.code.localeCompare(b.code, "ru", { numeric: true }))); patchNode(node.id, { screen: s }); }}
+                onScreenCreated={(s) => { setScreens((xs) => [...xs, s].sort((a, b) => a.code.localeCompare(b.code, "uk", { numeric: true }))); patchNode(node.id, { screen: s }); }}
                 onDelete={async () => {
                   const connected = edges.filter((e) => e.source === node.id || e.target === node.id).map((e) => e.id);
                   if (!report(await deleteElements([node.id], connected))) return;

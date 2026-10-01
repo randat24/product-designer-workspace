@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/shared/lib/supabase/server";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { PasswordForm } from "./password-form";
 import { BackLink } from "@/shared/ui/back-link";
 

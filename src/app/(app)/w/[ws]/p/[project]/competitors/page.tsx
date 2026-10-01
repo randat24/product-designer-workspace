@@ -7,7 +7,7 @@ import { createCompetitor } from "@/domains/competitors/actions";
 import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { CompetitorTabs } from "./tabs";
 
 export const metadata: Metadata = { title: t.competitors.title };

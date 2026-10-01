@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Enums } from "@/types/database";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
 
 export type ScreenStatus = Enums<"screen_status">;

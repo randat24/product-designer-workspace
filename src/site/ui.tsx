@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
-import { Anchor, Building2, Landmark } from "lucide-react";
-import { AWARD_TILE, AwardSvg } from "./award-icons";
 import { trackAttrs } from "./analytics/track";
-import { dict, type Award, type Case, type Locale } from "./content";
+import { dict, type Case, type Locale } from "./content";
 
 export const container = "mx-auto w-full max-w-[1120px] px-4 sm:px-8";
 
@@ -175,9 +173,9 @@ export function CaseCard({
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
       <div className="relative overflow-hidden rounded-[14px] transition-transform duration-200 group-hover:-translate-y-1">
-        {/* 18+: the cover is blurred on the card too; the case page asks for the visitor's age. */}
-        <div className={cn(item.adult && "blur-xl")}><CaseCover item={item} label={label} /></div>
-        {item.adult && (
+        {/* 18+: the cover is blurred on the card too (unless it is a safe one, like a logo); the case page asks for the visitor's age. */}
+        <div className={cn(item.adult && !item.coverSafe && "blur-xl")}><CaseCover item={item} label={label} /></div>
+        {item.adult && !item.coverSafe && (
           <span aria-hidden className="absolute inset-0 grid place-items-center">
             <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">
               {dict(locale).adult.badge}
@@ -233,42 +231,3 @@ export function KindBadge({ kind, label }: { kind: "real" | "concept"; label: st
   );
 }
 
-/** Award card: the vector medal on a dark tile with a centred caption. */
-const ISSUER_ICON = { state: Landmark, city: Building2, brigade: Anchor } as const;
-/** Gold accent under the award title (the notebook's warning tone on dark). */
-const AWARD_GOLD = "#f2c46b";
-
-/**
- * One award on a dark tile: number, issuer mark, the medal on a soft disc, title, gold rule, description.
- * `wide` puts the medal on the left (the two leading awards on large screens).
- */
-export function AwardCard({ award, index, wide = false }: { award: Award; index: number; wide?: boolean }) {
-  const Issuer = ISSUER_ICON[award.issuerKind];
-  return (
-    <figure
-      className={cn(
-        "relative flex h-full flex-col overflow-hidden rounded-[18px] border border-white/10 p-6 text-[#eceef7] sm:p-7",
-        wide && "sm:flex-row sm:items-center sm:gap-8",
-      )}
-      style={{ background: AWARD_TILE }}
-    >
-      <span className="absolute top-6 left-6 text-[15px] font-semibold tabular-nums opacity-70 sm:top-7 sm:left-7">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <span title={award.issuer}
-        className="absolute top-5 right-5 grid size-12 place-items-center rounded-[14px] border border-white/10 bg-white/[0.03] sm:top-6 sm:right-6">
-        <Issuer aria-hidden className="size-6 opacity-80" strokeWidth={1.5} />
-        <span className="sr-only">{award.issuer}</span>
-      </span>
-      <div className={cn("relative mx-auto mt-12 flex shrink-0 items-center justify-center", wide ? "h-56 w-44 sm:mx-0 sm:mt-0 sm:h-72 sm:w-52" : "h-56 w-44")}>
-        <span aria-hidden className={cn("absolute aspect-square rounded-full bg-white/[0.04]", wide ? "h-44 sm:h-48" : "h-48")} />
-        <AwardSvg icon={award.icon} className="relative max-h-full max-w-full object-contain" />
-      </div>
-      <figcaption className={cn("mt-6 flex flex-col gap-4", wide && "sm:mt-0 sm:flex-1 sm:pt-10 sm:pr-8")}>
-        <span className="text-[20px] font-semibold leading-snug sm:text-[22px]">{award.title}</span>
-        <span aria-hidden className="h-[3px] w-12 rounded-full" style={{ background: AWARD_GOLD }} />
-        <span className="text-[14px] leading-[1.6] opacity-75">{award.description}</span>
-      </figcaption>
-    </figure>
-  );
-}

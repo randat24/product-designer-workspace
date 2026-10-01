@@ -1,5 +1,5 @@
 import { SectionTabs } from "@/shared/ui/section-tabs";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 /** Cards | Feature matrix | UX review switch for the competitors section. */
 export function CompetitorTabs({ base, current }: { base: string; current: "cards" | "matrix" | "ux" }) {

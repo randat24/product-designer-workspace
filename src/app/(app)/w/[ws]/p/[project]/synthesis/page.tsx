@@ -5,7 +5,7 @@ import { getBoard, getSynthesisOverview } from "@/domains/synthesis";
 import { SynthesisBoard } from "@/domains/synthesis/board";
 import { listParticipants } from "@/domains/research";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export const metadata: Metadata = { title: t.synthesis.title };
 

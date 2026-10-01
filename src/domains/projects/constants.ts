@@ -6,7 +6,7 @@ export const PLATFORMS = [
 ] as const;
 
 export const PROJECT_STATUSES = [
-  { value: "active", label: "В работе" },
-  { value: "paused", label: "На паузе" },
-  { value: "done", label: "Завершён" },
+  { value: "active", label: "У роботі" },
+  { value: "paused", label: "На паузі" },
+  { value: "done", label: "Завершено" },
 ] as const;

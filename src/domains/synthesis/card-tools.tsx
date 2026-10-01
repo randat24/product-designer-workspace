@@ -2,10 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useFieldAutosave, useAutosave, SaveToast } from "@/shared/ui/autosave";
+import { FieldSaveNote, useFieldAutosave, useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { ChipGroup } from "@/shared/ui/chips";
 import { Button } from "@/shared/ui/button";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { createObservation, saveObservation, saveQuoteText } from "./actions";
 import { OBSERVATION_KINDS, type ObservationKind } from "./schema";
 
@@ -14,8 +14,11 @@ const area = "w-full resize-y rounded-control border border-transparent bg-subtl
 export function QuoteText({ id, initial, canEdit }: { id: string; initial: string; canEdit: boolean }) {
   const f = useFieldAutosave(initial, (v) => saveQuoteText(id, v), canEdit);
   return (
-    <textarea aria-label={t.synthesis.quotes.text} value={f.value} readOnly={!canEdit} maxLength={2000}
-      onChange={(e) => f.onChange(e.target.value)} onBlur={f.onBlur} className={`${area} italic`} />
+    <>
+      <textarea aria-label={t.synthesis.quotes.text} value={f.value} readOnly={!canEdit} maxLength={2000} aria-invalid={f.invalid}
+        onChange={(e) => f.onChange(e.target.value)} onBlur={f.onBlur} className={`${area} italic`} />
+      <FieldSaveNote status={f.status} error={f.error} />
+    </>
   );
 }
 

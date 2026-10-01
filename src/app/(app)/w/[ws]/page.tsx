@@ -5,7 +5,7 @@ import { getWorkspaceBySlug, listProjects, PLATFORMS } from "@/domains/projects"
 import { createDemoProject } from "@/domains/projects/actions";
 import { listCaseStudies } from "@/domains/cases";
 import { Button } from "@/shared/ui/button";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { NewProjectForm } from "./new-project-form";
 import { WorkspaceHeader, WorkspaceTabs } from "./workspace-header";
 

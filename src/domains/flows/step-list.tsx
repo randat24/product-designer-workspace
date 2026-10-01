@@ -1,4 +1,4 @@
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { branchColor, nodeKind, type Branch, type NodeKind } from "./schema";
 import type { FlowEdge, FlowNode } from "./queries";
 

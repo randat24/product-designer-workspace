@@ -11,12 +11,12 @@ import { ImportNotebook } from "@/domains/importer/import-notebook";
 import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ResearchTabs } from "./tabs";
 
 export const metadata: Metadata = { title: t.research.title };
 
-const dateFmt = new Intl.DateTimeFormat("ru", { day: "numeric", month: "short" });
+const dateFmt = new Intl.DateTimeFormat("uk", { day: "numeric", month: "short" });
 const card = "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg";
 const empty = "rounded-panel border-[1.5px] border-dashed border-line p-6 text-center text-fg-secondary";
 

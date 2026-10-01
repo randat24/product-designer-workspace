@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Field, Input } from "@/shared/ui/field";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { signInWithGoogle, signInWithPassword, type LoginState } from "./actions";
 
 // Show the Google button only once the provider is enabled in Supabase → Authentication → Providers.

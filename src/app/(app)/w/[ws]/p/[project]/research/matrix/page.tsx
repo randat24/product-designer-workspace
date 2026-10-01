@@ -6,7 +6,7 @@ import { getResearchMatrix, listGuides } from "@/domains/research";
 import { ResearchMatrix } from "@/domains/research/research-matrix";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ResearchTabs } from "../tabs";
 
 export const metadata: Metadata = { title: t.research.matrix.title };

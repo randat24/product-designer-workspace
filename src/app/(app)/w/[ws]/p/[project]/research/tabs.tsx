@@ -1,5 +1,5 @@
 import { SectionTabs } from "@/shared/ui/section-tabs";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export function ResearchTabs({ base, current }: { base: string; current: "overview" | "participants" | "matrix" }) {
   return (

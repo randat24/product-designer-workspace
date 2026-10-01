@@ -5,7 +5,7 @@ import { deleteProject, updateProject, type DeleteProjectState, type UpdateProje
 import { PLATFORMS, PROJECT_STATUSES } from "@/domains/projects/constants";
 import { Button } from "@/shared/ui/button";
 import { Field, Input, Textarea, Select, Checkbox } from "@/shared/ui/field";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 type Project = { id: string; name: string; description: string | null; platforms: string[]; status: string };
 

@@ -5,7 +5,7 @@ import { Section, TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { FieldError, Input } from "@/shared/ui/field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { deleteSynthesisEntity, saveInsight, saveOpportunity, savePainPoint } from "./actions";
 import {
   EFFORT_LEVELS, IMPACT_LEVELS, INSIGHT_STATUSES, LEVELS, OPPORTUNITY_STATUSES, SEVERITIES,

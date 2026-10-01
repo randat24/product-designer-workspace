@@ -6,17 +6,17 @@ import { expectAccessible, watchErrors } from "./helpers";
 test("forgot password: from sign-in to the «link sent» message", async ({ page }, testInfo) => {
   const errors = watchErrors(page);
   await page.goto("/login");
-  await page.getByRole("link", { name: "Забыли пароль?" }).click();
+  await page.getByRole("link", { name: "Забули пароль?" }).click();
   await expect(page).toHaveURL(/\/login\/forgot$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Восстановить пароль");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Відновити пароль");
   await expectAccessible(page, testInfo);
 
-  await page.getByLabel("Эл. почта").fill("not-an-email");
-  await page.getByRole("button", { name: "Отправить ссылку" }).click();
-  await expect(page.getByText("Введите адрес эл. почты целиком", { exact: false })).toBeVisible();
+  await page.getByLabel("Ел. пошта").fill("not-an-email");
+  await page.getByRole("button", { name: "Надіслати посилання" }).click();
+  await expect(page.getByText("Введіть адресу ел. пошти повністю", { exact: false })).toBeVisible();
 
-  await page.getByLabel("Эл. почта").fill("nobody@example.test");
-  await page.getByRole("button", { name: "Отправить ссылку" }).click();
-  await expect(page.getByRole("status")).toContainText("Если такой аккаунт есть");
+  await page.getByLabel("Ел. пошта").fill("nobody@example.test");
+  await page.getByRole("button", { name: "Надіслати посилання" }).click();
+  await expect(page.getByRole("main").getByRole("status")).toContainText("Якщо такий акаунт є");
   expect(errors).toEqual([]);
 });

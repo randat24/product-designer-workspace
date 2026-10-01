@@ -5,7 +5,7 @@ import { briefCompleteness, getBrief } from "@/domains/briefs";
 import { countsFromRow, stageProgress } from "@/domains/projects/progress";
 import { CURRENT_PHASE, visibleNav } from "@/shared/navigation";
 import type { CommandItem } from "@/shared/ui/command-palette";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { loadPaletteEntities } from "./palette-actions";
 import { Sidebar } from "./sidebar";
 
@@ -39,11 +39,11 @@ export default async function ProjectLayout({ children, params }: {
       })),
     ),
     { id: "ux-laws", label: t.uxLaws.title, href: "/app/ux-laws", group: t.palette.sections, hint: t.uxLaws.nav },
-    { id: "action:research-matrix", label: t.research.matrix.title, href: `${base}/research/matrix`, group: t.palette.actions, keywords: "матрица ответов research" },
-    { id: "action:matrix", label: t.palette.matrix, href: `${base}/competitors/matrix`, group: t.palette.actions, keywords: "matrix сравнение" },
-    { id: "action:ux-review", label: t.competitors.ux.title, href: `${base}/competitors/ux`, group: t.palette.actions, keywords: "ux review юзабилити нильсен эвристики законы" },
-    { id: "action:settings", label: t.palette.settings, href: `${base}/settings`, group: t.palette.actions, keywords: "settings archive архив удалить" },
-    { id: "action:new", label: t.palette.newProject, href: `/w/${workspace.slug}#new-h`, group: t.palette.actions, keywords: "new project создать" },
+    { id: "action:research-matrix", label: t.research.matrix.title, href: `${base}/research/matrix`, group: t.palette.actions, keywords: "матриця відповідей research матрица" },
+    { id: "action:matrix", label: t.palette.matrix, href: `${base}/competitors/matrix`, group: t.palette.actions, keywords: "matrix порівняння" },
+    { id: "action:ux-review", label: t.competitors.ux.title, href: `${base}/competitors/ux`, group: t.palette.actions, keywords: "ux review юзабіліті нільсен евристики закони" },
+    { id: "action:settings", label: t.palette.settings, href: `${base}/settings`, group: t.palette.actions, keywords: "settings archive архів видалити" },
+    { id: "action:new", label: t.palette.newProject, href: `/w/${workspace.slug}#new-h`, group: t.palette.actions, keywords: "new project створити" },
     { id: "action:all", label: t.palette.allProjects, href: `/w/${workspace.slug}`, group: t.palette.actions, keywords: "projects" },
   ];
 

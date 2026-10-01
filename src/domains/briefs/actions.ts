@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { briefCompleteness, briefSchema, EMPTY_BRIEF, type Brief, type BriefInput } from "./schema";
 

@@ -6,8 +6,9 @@ import { useAutosave, SaveToast } from "@/shared/ui/autosave";
 import { TextField } from "@/shared/ui/form-section";
 import { ChipGroup } from "@/shared/ui/chips";
 import { Input } from "@/shared/ui/field";
+import { DateField } from "@/shared/ui/date-field";
 import { ConfirmDelete } from "@/shared/ui/confirm-delete";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ConfirmIconButton } from "@/shared/ui/confirm-delete";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { deleteAnswer, deleteInterview, saveInterviewMeta } from "./actions";
@@ -60,8 +61,8 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
           <div className="flex flex-wrap gap-4">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="conducted_at" className="text-meta font-semibold text-fg-secondary">{iv.fields.conducted_at}</label>
-              <Input id="conducted_at" type="date" className="w-44" readOnly={!canEdit} value={m.conducted_at?.slice(0, 10) ?? ""}
-                onChange={(e) => update({ conducted_at: e.target.value || null })} />
+              <DateField id="conducted_at" className="w-48" readOnly={!canEdit} value={m.conducted_at?.slice(0, 10) ?? ""}
+                onChange={(v) => update({ conducted_at: v || null })} />
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="duration_min" className="text-meta font-semibold text-fg-secondary">{iv.fields.duration_min}</label>

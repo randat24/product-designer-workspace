@@ -22,15 +22,15 @@ const snap = (patch: Partial<BriefSnapshot> = {}): BriefSnapshot => ({
 describe("requestToBrief", () => {
   it("maps the client's answers into brief fields with workspace labels", () => {
     const b = requestToBrief(snap());
-    expect(b.product_description).toBe("Онлайн-бібліотека\n\nПочему сейчас: Запуск");
+    expect(b.product_description).toBe("Онлайн-бібліотека\n\nЧому зараз: Запуск");
     expect(b.problem).toBe("Складно обрати");
-    expect(b.goals).toEqual(["Сделать удобнее", "Інвестори"]);
-    expect(b.target_audience).toContain("Рынок: B2C");
-    expect(b.target_audience).toContain("Боли (со слов клиента): Довго шукати");
-    expect(b.business_requirements).toContain("Ожидаемый объём работ: UX-дизайн");
-    expect(b.business_requirements).toContain("просит совета");
+    expect(b.goals).toEqual(["Зробити зручнішим", "Інвестори"]);
+    expect(b.target_audience).toContain("Ринок: B2C — для людей");
+    expect(b.target_audience).toContain("Болі (зі слів клієнта): Довго шукати");
+    expect(b.business_requirements).toContain("Очікуваний обсяг робіт: UX-дизайн");
+    expect(b.business_requirements).toContain("просить поради");
     expect(b.links).toEqual([
-      { title: "Текущий продукт", url: "https://stefa.example/" },
+      { title: "Поточний продукт", url: "https://stefa.example/" },
       { title: "Figma", url: "https://figma.com/design/x" },
       { title: "Референс: Чистота", url: "https://linear.app/" },
     ]);
@@ -65,9 +65,9 @@ describe("buildNewRequestNotice", () => {
       consent: true,
     });
     const n = buildNewRequestNotice(d, "REQ-2026-0012", "https://site.example/app/requests/REQ-2026-0012");
-    expect(n.subject).toBe("Новая заявка REQ-2026-0012: Stefa <Books>");
+    expect(n.subject).toBe("Нова заявка REQ-2026-0012: Stefa <Books>");
     expect(n.text).toMatch(/Бюджет: \$2\s500–5\s000/);
-    expect(n.text).toContain("Открыть заявку: https://site.example/app/requests/REQ-2026-0012");
+    expect(n.text).toContain("Відкрити заявку: https://site.example/app/requests/REQ-2026-0012");
     for (const secret of ["olena@example.com", "+380", "@olena", "Секретний опис", "тільки для вас"]) {
       expect(n.text + n.html).not.toContain(secret);
     }

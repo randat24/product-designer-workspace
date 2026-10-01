@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Enums } from "@/types/database";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 const f = t.flows;
 

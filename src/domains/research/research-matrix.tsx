@@ -2,9 +2,9 @@
 
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { useFieldAutosave } from "@/shared/ui/autosave";
+import { FieldSaveNote, useFieldAutosave } from "@/shared/ui/autosave";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { ActionError, useAction } from "@/shared/ui/use-action";
 import { addRespondent, renameParticipant } from "./actions";
 import { AnswerField } from "./answer-field";
@@ -114,6 +114,8 @@ function StickyHeader({ color, tilt, participant, href, canEdit }: {
       <input aria-label={`${mx.rolePlaceholder} ${participant.code}`} value={role.value} readOnly={!canEdit} maxLength={200}
         placeholder={mx.rolePlaceholder} onChange={(e) => role.onChange(e.target.value)} onBlur={role.onBlur}
         className={cn(input, "text-sm")} />
+      <FieldSaveNote status={name.status === "idle" || name.status === "saved" ? role.status : name.status}
+        error={name.error ?? role.error} className="text-caption font-semibold text-on-sticky" />
     </div>
   );
 }

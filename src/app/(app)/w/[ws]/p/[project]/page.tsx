@@ -14,7 +14,7 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { CURRENT_PHASE, findNavItem } from "@/shared/navigation";
 import { cn } from "@/shared/lib/cn";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 
 export async function generateMetadata({ params }: { params: Promise<{ ws: string; project: string }> }): Promise<Metadata> {
   const { ws, project } = await params;
@@ -40,7 +40,7 @@ const BRIEF_ANCHOR: Record<BriefKeyField, string> = {
 };
 
 // Date only: the server renders in UTC and does not know the viewer's time zone.
-const dateFmt = new Intl.DateTimeFormat("ru", { day: "numeric", month: "short" });
+const dateFmt = new Intl.DateTimeFormat("uk", { day: "numeric", month: "short" });
 
 export default async function ProjectOverview({ params }: { params: Promise<{ ws: string; project: string }> }) {
   const { ws, project: slug } = await params;
@@ -94,11 +94,11 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
       const supported = synth.insights - synth.unsupported.length;
       const state: StageState = synth.insights > 0 && synth.unsupported.length === 0 ? "done" : synth.insights > 0 ? "active" : "todo";
       return [{ segment, label: item.label, phase: item.phase, state, percent: synth.insights ? (supported / synth.insights) * 100 : 0,
-        detail: `${supported} / ${synth.insights} с источниками` }];
+        detail: `${supported} / ${synth.insights} з джерелами` }];
     }
     if (segment === "opportunities") {
       const state: StageState = synth.opportunities > 0 ? "done" : synth.painPoints > 0 ? "active" : "todo";
-      return [{ segment, label: item.label, phase: item.phase, state, detail: `${synth.painPoints} болей · ${synth.opportunities} возможностей` }];
+      return [{ segment, label: item.label, phase: item.phase, state, detail: `${synth.painPoints} болів · ${synth.opportunities} можливостей` }];
     }
     if (segment === "flows") {
       const covered = flows.filter((f) => f.missing === 0).length;

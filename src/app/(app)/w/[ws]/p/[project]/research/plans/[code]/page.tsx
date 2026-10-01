@@ -6,7 +6,7 @@ import { getPlanByCode, listGuides } from "@/domains/research";
 import { PlanEditor } from "@/domains/research/plan-editor";
 import { PageHeader } from "@/shared/ui/page-header";
 import { EntityChip } from "@/shared/ui/entity-chip";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
 
 type Params = { ws: string; project: string; code: string };

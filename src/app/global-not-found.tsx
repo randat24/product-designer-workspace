@@ -63,16 +63,16 @@ export default async function GlobalNotFound() {
 
 function ToolNotFound() {
   return (
-    <html lang="ru">
+    <html lang="uk">
       <head>
-        <title>Страница не найдена</title>
+        <title>Сторінку не знайдено</title>
         <meta name="robots" content="noindex, nofollow" />
       </head>
       <body>
         <main className="mx-auto flex max-w-md flex-col gap-3 px-6 py-24">
-          <h1 className="text-title font-semibold">Страница не найдена</h1>
-          <p className="text-fg-secondary">Проект или пространство не существует, либо у вас нет к нему доступа.</p>
-          <Link href="/app" className="text-accent hover:underline">К проектам</Link>
+          <h1 className="text-title font-semibold">Сторінку не знайдено</h1>
+          <p className="text-fg-secondary">Проєкту або простору не існує, або у вас немає до нього доступу.</p>
+          <Link href="/app" className="text-accent hover:underline">До проєктів</Link>
         </main>
       </body>
     </html>

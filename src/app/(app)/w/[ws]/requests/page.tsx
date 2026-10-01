@@ -6,12 +6,12 @@ import { REQUEST_FILTERS, REQUEST_SORTS, listRequests, type RequestFilter, type 
 import { budgetLabel, label, labels } from "@/domains/requests/labels";
 import { StatusBadge } from "@/domains/requests/status-badge";
 import { cn } from "@/shared/lib/cn";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { WorkspaceHeader, WorkspaceTabs } from "../workspace-header";
 
 export const metadata: Metadata = { title: t.requests.title };
 
-const date = (iso: string) => new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
+const date = (iso: string) => new Intl.DateTimeFormat("uk-UA", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
 
 export default async function RequestsPage({ params, searchParams }: {
   params: Promise<{ ws: string }>;
@@ -82,11 +82,11 @@ export default async function RequestsPage({ params, searchParams }: {
                         {[client?.name, client?.company].filter(Boolean).join(" · ")}
                       </span>
                     </span>
-                    <span className="truncate text-sm">{labels("types", row.project_types, "ru").join(", ")}</span>
+                    <span className="truncate text-sm">{labels("types", row.project_types, "uk").join(", ")}</span>
                     <span className="flex flex-col text-sm">
-                      <span className="font-semibold">{budgetLabel({ range: row.budget_range, min: row.budget_min, max: row.budget_max, currency: row.budget_currency }, "ru")}</span>
+                      <span className="font-semibold">{budgetLabel({ range: row.budget_range, min: row.budget_min, max: row.budget_max, currency: row.budget_currency }, "uk")}</span>
                       <span className="text-fg-secondary">
-                        {[label("start", row.start_preference, "ru"), row.has_deadline && row.deadline_date ? r.deadline(date(row.deadline_date)) : null].filter(Boolean).join(", ")}
+                        {[label("start", row.start_preference, "uk"), row.has_deadline && row.deadline_date ? r.deadline(date(row.deadline_date)) : null].filter(Boolean).join(", ")}
                       </span>
                     </span>
                     <span className="flex items-center gap-2 md:justify-end">

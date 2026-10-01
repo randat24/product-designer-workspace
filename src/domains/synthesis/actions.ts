@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import { updateTracked } from "@/shared/lib/supabase/tracked-update";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import {
   insightSchema, observationSchema, opportunitySchema, painPointSchema,
   type InsightFields, type OpportunityFields, type PainPointFields,
@@ -147,7 +147,7 @@ export async function deletePattern(id: string) {
 }
 
 /**
- * "Сформулировать инсайт" from a board column: the insight gets every card of the
+ * "Сформулювати інсайт" from a board column: the insight gets every card of the
  * cluster as a source and the pattern as its origin (docs/MVP.md §3).
  */
 export async function createInsightFromPattern(formData: FormData) {

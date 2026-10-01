@@ -8,13 +8,13 @@ import { AUTH_FILE, contrastViolations, expectAccessible, horizontalOverflow, wa
 test.skip(!hasToolUser, "E2E_EMAIL / E2E_PASSWORD not set");
 test.use({ storageState: AUTH_FILE });
 
-const ERROR_TITLE = "Не получилось открыть страницу";
+const ERROR_TITLE = "Не вдалося відкрити сторінку";
 
 async function openDemoProject(page: Page): Promise<string> {
   await page.goto("/app");
   await expect(page).toHaveURL(/\/w\/[^/]+$/);
   // A fresh account shows the demo button; later runs already have the project. Wait for either.
-  const demo = page.getByRole("button", { name: "Открыть демо-проект" });
+  const demo = page.getByRole("button", { name: "Відкрити демо-проєкт" });
   // The demo project by its slug: other projects (e.g. one made from a project request) may be listed first.
   const existing = page.locator('main a[href*="/p/restaurant-app"]').first();
   await expect(demo.or(existing)).toBeVisible();
@@ -27,13 +27,13 @@ async function openDemoProject(page: Page): Promise<string> {
 
 /** The project shell is rendered (past the loading skeleton) and React has hydrated. */
 async function ready(page: Page) {
-  await expect(page.getByRole("navigation", { name: "Разделы проекта" }).locator("a").first()).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByRole("navigation", { name: "Розділи проєкту" }).locator("a").first()).toBeVisible({ timeout: 20_000 });
   await page.waitForLoadState("networkidle");
 }
 
 /** Section pages from the navigation rail plus the first detail page of each list. */
 async function collectPages(page: Page, base: string) {
-  const sections = await page.getByRole("navigation", { name: "Разделы проекта" })
+  const sections = await page.getByRole("navigation", { name: "Розділи проєкту" })
     .locator(`a[href^="${base}"]`).evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href")!))]);
   const pages = [...sections];
   for (const s of sections) {
@@ -84,14 +84,52 @@ test("brief autosaves and keeps the text after reload", async ({ page }) => {
   const base = await openDemoProject(page);
   await page.goto(`${base}/brief`);
   await ready(page);
-  const field = page.getByLabel("Что за продукт");
-  const text = `Проверка автосохранения ${Date.now()}`;
+  const field = page.getByLabel("Що за продукт");
+  const text = `Перевірка автозбереження ${Date.now()}`;
   await field.clear();
   await field.fill(text);
-  await expect(page.getByRole("status").filter({ hasText: "Сохранено" })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
   await page.reload();
   await ready(page);
-  await expect(page.getByLabel("Что за продукт")).toHaveValue(text);
+  await expect(page.getByLabel("Що за продукт")).toHaveValue(text);
+});
+
+test("offline: edits wait for the connection and save once it is back", async ({ page, context }) => {
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/brief`);
+  await ready(page);
+  await context.setOffline(true);
+  await expect(page.getByText("Немає з'єднання з інтернетом", { exact: false })).toBeVisible();
+  const text = `Офлайн-правка ${Date.now()}`;
+  await page.getByLabel("Що за продукт").fill(text);
+  await expect(page.getByRole("status").filter({ hasText: "Зміни збережуться, щойно зв'язок повернеться" }).first()).toBeVisible({ timeout: 10_000 });
+  await context.setOffline(false);
+  await expect(page.getByText("З'єднання відновлено")).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 15_000 });
+  await page.reload();
+  await ready(page);
+  await expect(page.getByLabel("Що за продукт")).toHaveValue(text);
+});
+
+test("date field: a typed date that is not a date is explained", async ({ page }) => {
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/brief`);
+  await ready(page);
+  const date = page.locator('input[placeholder="дд.мм.рррр"]').first();
+  await date.fill("31.02.2026");
+  await date.press("Enter");
+  await expect(date).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByRole("alert").filter({ hasText: "Це не схоже на дату" })).toBeVisible();
+  await date.fill("");
+  await date.press("Enter");
+  await expect(page.getByRole("alert").filter({ hasText: "Це не схоже на дату" })).toHaveCount(0);
+});
+
+test("a record that does not exist says so and leads back", async ({ page }) => {
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/insights/INS-999`);
+  await expect(page.getByRole("heading", { level: 1, name: "Цього вже немає або доступ закрито" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "До огляду проєкту" })).toHaveAttribute("href", base);
 });
 
 test("command palette: Ctrl+K, type, Enter navigates; Esc closes", async ({ page }, testInfo) => {
@@ -100,7 +138,7 @@ test("command palette: Ctrl+K, type, Enter navigates; Esc closes", async ({ page
   await page.keyboard.press("Control+k");
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await page.keyboard.type("Экраны");
+  await page.keyboard.type("Екрани");
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(`${base}/screens`);
   await page.keyboard.press("Control+k");
@@ -114,7 +152,7 @@ test("project backup: settings download the whole project as JSON", async ({ pag
   await page.goto(`${base}/settings`);
   const [download] = await Promise.all([
     page.waitForEvent("download"),
-    page.getByRole("link", { name: "Скачать проект (JSON)" }).click(),
+    page.getByRole("link", { name: "Завантажити проєкт (JSON)" }).click(),
   ]);
   expect(download.suggestedFilename()).toMatch(/^[a-z0-9-]+-\d{4}-\d{2}-\d{2}\.json$/);
   const fs = await import("node:fs/promises");
@@ -186,16 +224,16 @@ test("requests: review a request and turn it into a project", async ({ page }, t
 
   // Status and a private note.
   await page.getByLabel("Статус").selectOption("qualified");
-  await page.getByRole("button", { name: "Сохранить" }).click();
-  await expect(page.locator("article header").getByText("Подходит", { exact: true })).toBeVisible();
-  await page.getByLabel("Добавить заметку").fill("Уточнить сроки");
-  await page.getByRole("button", { name: "Добавить заметку" }).click();
-  await expect(page.getByText("Уточнить сроки")).toBeVisible();
+  await page.getByRole("button", { name: "Зберегти" }).click();
+  await expect(page.locator("article header").getByText("Підходить", { exact: true })).toBeVisible();
+  await page.getByLabel("Додати нотатку").fill("Уточнити терміни");
+  await page.getByRole("button", { name: "Додати нотатку" }).click();
+  await expect(page.getByText("Уточнити терміни")).toBeVisible();
 
   // Request → project: the brief says where its text came from.
-  await page.getByRole("button", { name: "Сделать проектом" }).click();
+  await page.getByRole("button", { name: "Зробити проєктом" }).click();
   await expect(page).toHaveURL(/\/p\/[^/]+\/brief$/, { timeout: 20_000 });
-  await expect(page.getByText(/Часть брифа заполнена из заявки REQ-/)).toBeVisible();
-  await expect(page.getByText(/Со слов клиента \(REQ-/).first()).toBeVisible();
+  await expect(page.getByText(/Частину брифу заповнено із заявки REQ-/)).toBeVisible();
+  await expect(page.getByText(/Зі слів клієнта \(REQ-/).first()).toBeVisible();
   expect(errors).toEqual([]);
 });

@@ -6,7 +6,7 @@ import { getProjectContext } from "@/domains/projects";
 import { getGuide } from "@/domains/research";
 import { GuideBuilder } from "@/domains/research/guide-builder";
 import { PageHeader } from "@/shared/ui/page-header";
-import { t } from "@/shared/i18n/ru";
+import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
 
 export const metadata: Metadata = { title: t.research.guides };
