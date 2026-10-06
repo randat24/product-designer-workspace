@@ -17,8 +17,8 @@ export class CasesUnavailableError extends Error {
 
 /**
  * Cases shown on the site: the published case studies, in their order (docs/HANDOFF_TRIAGE.md, F04).
- * - Without database settings (a local or CI build with no Supabase) the built-in sample cases are shown:
- *   that is the explicit offline mode.
+ * - The built-in sample cases are shown only in the explicit offline mode: SITE_SAMPLE_CASES=1 (a CI build with
+ *   no database running) or no database settings at all (a local build).
  * - With settings, only the database counts. When it cannot be read, this throws: an already built page
  *   keeps its last good version (ISR does not replace it with an error), and a new render shows the
  *   «temporarily unavailable» page — never sample cases or an outdated copy from the code.
@@ -27,7 +27,7 @@ export class CasesUnavailableError extends Error {
 export async function getCases(locale: Locale): Promise<Case[]> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return DICTIONARIES[locale].cases_list;
+  if (process.env.SITE_SAMPLE_CASES === "1" || !url || !key) return DICTIONARIES[locale].cases_list;
   let rows: { slug: string; content: unknown; content_updated_at: string | null }[];
   try {
     const db = createClient<Database>(url, key, {

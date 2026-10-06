@@ -49,8 +49,14 @@ describe("getCases (docs/HANDOFF_TRIAGE.md, F04)", () => {
     await expect(getCases("uk")).rejects.toBeInstanceOf(CasesUnavailableError);
   });
 
-  it("no configuration: the built-in samples (local and CI builds without a database)", async () => {
+  it("no configuration: the built-in samples (a local build without a database)", async () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     expect(await getCases("en")).toBe(DICTIONARIES.en.cases_list);
+  });
+
+  it("explicit sample mode (CI build with no database): the samples, the database is not asked", async () => {
+    vi.stubEnv("SITE_SAMPLE_CASES", "1");
+    result.value = { data: null, error: { message: "would fail" } };
+    expect(await getCases("uk")).toBe(DICTIONARIES.uk.cases_list);
   });
 });

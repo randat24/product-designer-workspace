@@ -16,6 +16,8 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
+      # No database runs in this job: the site is built with its built-in sample cases (src/site/cases-source.ts).
+      SITE_SAMPLE_CASES: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
