@@ -6,11 +6,10 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { figmaFileUrl } from "@/shared/lib/figma";
 import type { Json } from "@/types/database";
 import { t } from "@/shared/i18n/uk";
-import { denied, invalid, transient } from "@/shared/lib/action-result";
+import { denied, invalid, transient, type Failure } from "@/shared/lib/action-result";
+import { snapshotProblem } from "@/site/case-snapshot";
 import type { AutosaveResult } from "@/shared/ui/autosave";
 import { CASE_LOCALES, caseDraftSchema, mergeDraft, type CaseDraft, type CaseLocale } from "./schema";
-
-const statusSchema = z.enum(["draft", "review", "published"]);
 
 /** Creates a draft case for a project; the site address follows the project slug. */
 export async function createCaseStudy(formData: FormData) {
@@ -32,9 +31,14 @@ export async function createCaseStudy(formData: FormData) {
   revalidatePath("/w", "layout");
 }
 
+/**
+ * Case settings: workflow status (draft / review) and the 18+, sample and Figma marks. The marks go into the
+ * draft like the texts do, so the site changes only on «Опублікувати». A published case keeps its status here:
+ * it is taken down with «Зняти з публікації» in the case editor.
+ */
 export async function setCaseStatus(formData: FormData) {
   const caseId = z.string().uuid().parse(formData.get("caseId"));
-  const status = statusSchema.parse(formData.get("caseStatus"));
+  const status = z.enum(["draft", "review"]).safeParse(formData.get("caseStatus")).data;
   const adult = formData.get("adult") === "1";
   const sample = formData.get("sample") === "1";
   // Figma link: empty clears it; anything that is not a Figma file link is refused rather than saved.
@@ -42,29 +46,66 @@ export async function setCaseStatus(formData: FormData) {
   const figma = figmaInput ? figmaFileUrl(figmaInput) : null;
   if (figmaInput && !figma) throw new Error("setCaseStatus: not a Figma file link");
   const supabase = await createClient();
-  const { data: current, error: readError } = await supabase.from("case_studies").select("content").eq("id", caseId).single();
+  const { data: current, error: readError } = await supabase.from("case_studies").select("draft, status").eq("id", caseId).single();
   if (readError) throw readError;
-  // The 18+ and sample flags and the Figma link live in each language of the snapshot, next to the rest of the case,
-  // so the site reads them as is.
-  const content = { ...((current.content ?? {}) as Record<string, Record<string, unknown>>) };
+  // The marks live in each language of the snapshot, next to the rest of the case, so the site reads them as is.
+  const draft = { ...((current.draft ?? {}) as Record<string, Record<string, unknown>>) };
   for (const locale of ["uk", "en"]) {
-    if (!content[locale]) continue;
-    const { figma: _old, ...rest } = content[locale];
-    content[locale] = { ...rest, adult, sample, ...(figma ? { figma } : {}) };
+    if (!draft[locale]) continue;
+    const { figma: _old, ...rest } = draft[locale];
+    draft[locale] = { ...rest, adult, sample, ...(figma ? { figma } : {}) };
   }
-  const { error } = await supabase.from("case_studies").update({ status, content: content as Json }).eq("id", caseId);
+  const nextStatus = current.status === "published" ? "published" : (status ?? current.status);
+  const { error } = await supabase.from("case_studies").update({ status: nextStatus, draft: draft as Json }).eq("id", caseId);
   if (error) throw error;
   revalidatePath("/w", "layout");
-  // The public site re-reads cases on its own (revalidate = 60); refresh it now:
-  // the "cases" data cache and the pages built from it.
+}
+
+/** The site re-reads cases on its own (revalidate = 60); this refreshes the "cases" data cache and its pages now. */
+function refreshSite() {
   revalidateTag("cases");
   revalidatePath("/[locale]", "layout");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/w", "layout");
+}
+
+type PublishResult = { ok: true } | Failure;
+
+/**
+ * «Опублікувати»: the draft becomes what the site shows (docs/HANDOFF_TRIAGE.md, V06). Refused when the draft
+ * has no Ukrainian title or a shape the case page cannot render, so a broken case never reaches the site.
+ */
+export async function publishCase(caseId: string): Promise<PublishResult> {
+  if (!z.uuid().safeParse(caseId).success) return invalid();
+  const supabase = await createClient();
+  const { data: current, error: readError } = await supabase.from("case_studies").select("draft").eq("id", caseId).maybeSingle();
+  if (readError) return transient();
+  if (!current) return denied(t.caseEditor.readOnly);
+  if (snapshotProblem(current.draft, "uk") || snapshotProblem(current.draft, "en")) return invalid(t.caseEditor.publishInvalid);
+  const { data, error } = await supabase.from("case_studies")
+    .update({ content: current.draft, status: "published", content_updated_at: new Date().toISOString() })
+    .eq("id", caseId).select("id");
+  if (error) return transient();
+  if (!data.length) return denied(t.caseEditor.readOnly);
+  refreshSite();
+  return { ok: true };
+}
+
+/** «Зняти з публікації»: the case leaves the site (list, page, sitemap); its draft and last snapshot stay. */
+export async function unpublishCase(caseId: string): Promise<PublishResult> {
+  if (!z.uuid().safeParse(caseId).success) return invalid();
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("case_studies").update({ status: "draft" }).eq("id", caseId).select("id");
+  if (error) return transient();
+  if (!data.length) return denied(t.caseEditor.readOnly);
+  refreshSite();
+  return { ok: true };
 }
 
 /**
- * Saves one language of the case from the editor (autosave). A published case changes on the site right away:
- * the snapshot is what the site reads. No conflict check: both language tabs and the status form write this row
- * from the same page; each save merges only its own language into the current snapshot.
+ * Saves one language of the case from the editor (autosave) into the draft; the site changes only on «Опублікувати».
+ * No conflict check: both language tabs and the settings form write this row from the same page; each save merges
+ * only its own language into the current draft.
  */
 export async function saveCaseDraft(caseId: string, locale: CaseLocale, input: CaseDraft): Promise<AutosaveResult> {
   if (!z.uuid().safeParse(caseId).success || !CASE_LOCALES.includes(locale)) return invalid();
@@ -74,16 +115,14 @@ export async function saveCaseDraft(caseId: string, locale: CaseLocale, input: C
     return invalid(t.caseEditor.invalid, issue?.path[0]?.toString());
   }
   const supabase = await createClient();
-  const { data: current, error: readError } = await supabase.from("case_studies").select("content, status").eq("id", caseId).single();
+  const { data: current, error: readError } = await supabase.from("case_studies").select("draft").eq("id", caseId).single();
   if (readError) return transient();
-  const content = mergeDraft(current.content, locale, parsed.data);
-  const { data, error } = await supabase.from("case_studies").update({ content: content as Json }).eq("id", caseId).select("id");
+  const draft = mergeDraft(current.draft, locale, parsed.data);
+  const { data, error } = await supabase.from("case_studies").update({ draft: draft as Json }).eq("id", caseId).select("id");
   if (error) return transient();
   // Row-level security filters the update instead of failing: nothing written means no right to edit.
   if (!data.length) return denied(t.caseEditor.readOnly);
-  if (current.status === "published") {
-    revalidateTag("cases");
-    revalidatePath("/[locale]", "layout");
-  }
+  // The editor page re-renders so its publish bar knows the draft now differs from the site.
+  revalidatePath("/w/[ws]/p/[project]/case", "page");
   return { ok: true };
 }

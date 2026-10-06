@@ -41,7 +41,8 @@ export async function GET(request: NextRequest) {
   const locale: Locale = isLocale(raw) ? raw : "uk";
   const d = dict(locale);
   const slug = params.get("case");
-  const item = slug ? (await getCases(locale)).find((c) => c.slug === slug) : undefined;
+  // Cases unreadable right now: the generic card is better than no preview at all.
+  const item = slug ? (await getCases(locale).catch(() => [])).find((c) => c.slug === slug) : undefined;
   const accent = item ? (STICKER[item.sticker] ?? "#f7dc52") : "#f7dc52";
 
   const image = new ImageResponse(

@@ -331,7 +331,8 @@ test("project backup: settings download the whole project as JSON", async ({ pag
 // A 4×2 PNG: enough for the browser to read its size before uploading.
 const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAIAAADwyuo0AAAAEklEQVR4nGNUidzCAANMDEgAABxWATVTVbcvAAAAAElFTkSuQmCC", "base64");
 
-test("case editor: texts and a picture save and stay after reload", async ({ page }) => {
+test("case editor: texts and a picture save and stay after reload", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
   const base = await openDemoProject(page);
   await page.goto(`${base}/case`);
   await ready(page);
@@ -357,6 +358,63 @@ test("case editor: texts and a picture save and stay after reload", async ({ pag
   await ready(page);
   await expect(page.locator("#uk-title")).toHaveValue(title);
   await expect(page.locator("#uk-s0-image-alt")).toHaveValue("Знак на білому");
+});
+
+test("case publication: the site changes only on publish, and unpublishing takes the case off everywhere", async ({ page, context }, testInfo) => {
+  savesSharedRecord(testInfo);
+  test.setTimeout(120_000);
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/case`);
+  await ready(page);
+  const create = page.getByRole("button", { name: "Створити кейс" });
+  if (await create.isVisible()) {
+    await create.click();
+    await expect(create).toHaveCount(0);
+  }
+  const slug = (await page.getByRole("link", { name: /Попередній перегляд \(uk\)/ }).getAttribute("href"))!.split("/")[3]!;
+  const site = await context.newPage();
+  const siteTitle = async () => {
+    const res = await site.goto(`/uk/cases/${slug}`);
+    return res?.status() === 200 ? (await site.locator("h1").first().textContent())?.trim() : `HTTP ${res?.status()}`;
+  };
+  const saved = () => expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+
+  // 1. First version: typed into the draft, then published.
+  const first = `Опублікований кейс ${Date.now()}`;
+  await page.locator("#uk-title").fill(first);
+  await saved();
+  await page.getByRole("button", { name: /^Опублікувати/ }).click();
+  await expect(page.getByText("Опубліковано. Сайт оновиться за кілька секунд.")).toBeVisible();
+  await expect.poll(siteTitle, { timeout: 30_000 }).toBe(first);
+
+  // 2. An edit stays in the draft: the site keeps the published text; the preview shows the new one.
+  const second = `Чернетка ${Date.now()}`;
+  await page.locator("#uk-title").fill(second);
+  await saved();
+  await expect(page.getByText("Є зміни, яких ще немає на сайті.")).toBeVisible();
+  expect(await siteTitle()).toBe(first);
+  await site.goto(`/uk/cases/${slug}/preview`);
+  await expect(site.getByRole("note")).toContainText("Попередній перегляд чернетки");
+  await expect(site.locator("h1").first()).toHaveText(second);
+
+  // 3. Publishing the change puts it on the site.
+  await page.getByRole("button", { name: "Опублікувати зміни" }).click();
+  await expect(page.getByText("На сайті остання версія.")).toBeVisible();
+  await expect.poll(siteTitle, { timeout: 30_000 }).toBe(second);
+
+  // 4. Unpublish: gone from the page, the list and the sitemap.
+  await page.getByRole("button", { name: "Зняти з публікації" }).click();
+  await page.getByRole("button", { name: /Точно зняти/ }).click();
+  await expect(page.getByText("Кейс знято з сайту. Чернетка залишилась.")).toBeVisible();
+  await expect.poll(siteTitle, { timeout: 30_000 }).toBe("HTTP 404");
+  await site.goto("/uk/cases");
+  await expect(site.locator(`main a[href="/uk/cases/${slug}"]`)).toHaveCount(0);
+  const sitemap = await (await site.request.get("/sitemap.xml")).text();
+  expect(sitemap).not.toContain(`/cases/${slug}<`);
+  // The draft is kept for the next publication.
+  await page.reload();
+  await ready(page);
+  await expect(page.locator("#uk-title")).toHaveValue(second);
 });
 
 /** Sends a project request the way the public form does (the anon RPC with the narrow secret); returns its code. */

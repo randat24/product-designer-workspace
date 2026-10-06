@@ -19,11 +19,22 @@ export const getCaseForProject = cache(async (projectId: string) => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("case_studies")
-    .select("id, slug, status, content, published_at, updated_at")
+    .select("id, slug, status, content, draft, published_at, content_updated_at, updated_at")
     .eq("project_id", projectId)
     .maybeSingle();
   if (error) throw error;
-  return data && { ...data, hasContent: hasContent(data.content), adult: isAdult(data.content), sample: isSample(data.content), figma: figmaOf(data.content) };
+  if (!data) return null;
+  return {
+    ...data,
+    // What the site shows (`content`) and what the editor and settings change (`draft`).
+    hasContent: hasContent(data.content),
+    hasDraftContent: hasContent(data.draft),
+    // jsonb comes back with its keys in a fixed order, so equal snapshots serialise equally.
+    hasUnpublished: JSON.stringify(data.draft) !== JSON.stringify(data.content),
+    adult: isAdult(data.draft),
+    sample: isSample(data.draft),
+    figma: figmaOf(data.draft),
+  };
 });
 
 /** Made for an 18+ audience: the flag sits in every language of the snapshot (see setCaseStatus). */
