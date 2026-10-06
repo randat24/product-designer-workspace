@@ -12,6 +12,11 @@ insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-00000000000b', 'boris@example.com'),
   ('00000000-0000-0000-0000-00000000000c', 'chris@example.com');
 
+-- Bucket settings, read before switching role (signed-in users cannot list buckets).
+select ok((select public from storage.buckets where id = 'case-media'), 'case media bucket is public');
+select ok(not exists (select 1 from storage.buckets where id = 'case-media' and 'image/svg+xml' = any (allowed_mime_types)),
+  'svg is not accepted');
+
 select pg_temp.login('00000000-0000-0000-0000-00000000000a');
 set local role authenticated;
 
@@ -22,9 +27,6 @@ values ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-0000000
 insert into projects (id, workspace_id, name, slug)
 values ('20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', 'P1', 'p1');
 
-select ok((select public from storage.buckets where id = 'case-media'), 'case media bucket is public');
-select ok(not exists (select 1 from storage.buckets where id = 'case-media' and 'image/svg+xml' = any (allowed_mime_types)),
-  'svg is not accepted');
 
 select lives_ok($$ insert into storage.objects (bucket_id, name)
   values ('case-media', '20000000-0000-0000-0000-000000000001/case/a.webp') $$, 'editor uploads into own project');
@@ -38,9 +40,8 @@ select throws_ok($$ insert into storage.objects (bucket_id, name)
 select pg_temp.login('00000000-0000-0000-0000-00000000000b');
 select throws_ok($$ insert into storage.objects (bucket_id, name)
   values ('case-media', '20000000-0000-0000-0000-000000000001/case/c.webp') $$, '42501', null, 'outsider cannot upload');
-delete from storage.objects where bucket_id = 'case-media';
-select pg_temp.login('00000000-0000-0000-0000-00000000000a');
-select is((select count(*)::int from storage.objects where bucket_id = 'case-media'), 1, 'outsider cannot delete');
+-- Deleting goes through the Storage API (direct deletes are blocked), so check what the outsider can see.
+select is((select count(*)::int from storage.objects where bucket_id = 'case-media'), 0, 'outsider does not list project files');
 
 select * from finish();
 rollback;
