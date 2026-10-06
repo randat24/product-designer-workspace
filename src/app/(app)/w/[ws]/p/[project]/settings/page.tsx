@@ -43,15 +43,19 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
             <>
               <form action={setCaseStatus} className="flex flex-wrap items-end gap-3">
                 <input type="hidden" name="caseId" value={caseStudy.id} />
-                <label className="flex flex-col gap-1.5 text-sm font-semibold">
-                  {t.cases.statusLabel}
-                  <Select name="caseStatus" defaultValue={caseStudy.status} disabled={!canEdit}
-                    className="w-auto">
-                    {(["draft", "review", "published"] as const).map((s) => (
-                      <option key={s} value={s}>{t.cases.status[s]}</option>
-                    ))}
-                  </Select>
-                </label>
+                {caseStudy.status === "published" ? (
+                  <p className="flex h-9 items-center text-sm font-semibold">{t.cases.status.published}</p>
+                ) : (
+                  <label className="flex flex-col gap-1.5 text-sm font-semibold">
+                    {t.cases.statusLabel}
+                    <Select name="caseStatus" defaultValue={caseStudy.status} disabled={!canEdit}
+                      className="w-auto">
+                      {(["draft", "review"] as const).map((s) => (
+                        <option key={s} value={s}>{t.cases.status[s]}</option>
+                      ))}
+                    </Select>
+                  </label>
+                )}
                 <label className="flex h-9 items-center gap-2 text-sm font-semibold" title={t.cases.adultHint}>
                   <Checkbox name="adult" value="1" defaultChecked={caseStudy.adult} disabled={!canEdit} aria-describedby="case-adult-hint" />
                   {t.cases.adult}
@@ -79,7 +83,8 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
               <p id="case-adult-hint" className="text-meta text-fg-secondary">{t.cases.adultHint}</p>
               <p id="case-sample-hint" className="text-meta text-fg-secondary">{t.cases.sampleHint}</p>
               <p id="case-figma-hint" className="text-meta text-fg-secondary">{t.cases.figmaHint}</p>
-              {!caseStudy.hasContent && <p className="text-meta text-warning">{t.cases.emptyContent}</p>}
+              <p className="text-meta text-fg-secondary">{t.cases.publishNote}</p>
+              {!caseStudy.hasDraftContent && <p className="text-meta text-warning">{t.cases.emptyContent}</p>}
             </>
           ) : (
             <div className="flex flex-wrap items-center gap-3">

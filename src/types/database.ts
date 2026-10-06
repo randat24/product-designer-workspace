@@ -27,8 +27,8 @@ type ProjectRow = {
 };
 type CaseStudyRow = {
   id: string; workspace_id: string; project_id: string; slug: string;
-  status: Database["public"]["Enums"]["case_status"]; position: number; content: Json;
-  published_at: string | null; created_at: string; updated_at: string;
+  status: Database["public"]["Enums"]["case_status"]; position: number; content: Json; draft: Json;
+  published_at: string | null; content_updated_at: string | null; created_at: string; updated_at: string;
 };
 type ClientRow = {
   id: string; workspace_id: string; name: string; email: string; company: string | null; role: string | null;

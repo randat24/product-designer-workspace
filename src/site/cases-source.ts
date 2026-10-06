@@ -2,51 +2,33 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import { DICTIONARIES, type Case, type Locale } from "./content";
+import { snapshotToCase } from "./case-snapshot";
 
 /** Published cases are re-read at most once a minute; publishing in the tool needs no rebuild. */
 export const CASES_REVALIDATE = 60;
 
-type Snapshot = Partial<Record<Locale, Partial<Case>>>;
-
-function toCase(slug: string, content: Snapshot, locale: Locale, updatedAt?: string): Case | null {
-  const c = content[locale] ?? content.uk;
-  if (!c?.title) return null;
-  return {
-    slug,
-    sticker: c.sticker ?? "var(--s3)",
-    year: c.year ?? "",
-    title: c.title,
-    client: c.client ?? "",
-    role: c.role ?? "",
-    summary: c.summary ?? "",
-    tags: c.tags ?? [],
-    metrics: c.metrics ?? [],
-    sections: c.sections ?? [],
-    story: c.story,
-    kind: c.kind,
-    liveUrl: c.liveUrl,
-    gallery: c.gallery,
-    cover: c.cover,
-    figma: c.figma,
-    sample: c.sample,
-    adult: c.adult,
-    coverSafe: c.coverSafe,
-    product: c.product,
-    seo: c.seo,
-    updatedAt,
-  };
+/** The database could not be read: the page says "temporarily unavailable" instead of showing other cases. */
+export class CasesUnavailableError extends Error {
+  constructor(cause?: unknown) {
+    super("cases: the database could not be read", { cause });
+    this.name = "CasesUnavailableError";
+  }
 }
 
 /**
- * Cases shown on the site: the published case studies from the workspace, in their order.
- * Falls back to the built-in samples only when the database is not reachable
- * (no keys in a local build, network error) so the site never renders empty by accident.
+ * Cases shown on the site: the published case studies, in their order (docs/HANDOFF_TRIAGE.md, F04).
+ * - Without database settings (a local or CI build with no Supabase) the built-in sample cases are shown:
+ *   that is the explicit offline mode.
+ * - With settings, only the database counts. When it cannot be read, this throws: an already built page
+ *   keeps its last good version (ISR does not replace it with an error), and a new render shows the
+ *   «temporarily unavailable» page — never sample cases or an outdated copy from the code.
+ * - A snapshot whose shape the page cannot render is left out, with a log line, instead of breaking the list.
  */
 export async function getCases(locale: Locale): Promise<Case[]> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const fallback = DICTIONARIES[locale].cases_list;
-  if (!url || !key) return fallback;
+  if (!url || !key) return DICTIONARIES[locale].cases_list;
+  let rows: { slug: string; content: unknown; content_updated_at: string | null }[];
   try {
     const db = createClient<Database>(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -56,13 +38,18 @@ export async function getCases(locale: Locale): Promise<Case[]> {
     });
     const { data, error } = await db
       .from("case_studies")
-      .select("slug, content, updated_at")
+      .select("slug, content, content_updated_at")
       .eq("status", "published")
       .order("position")
       .order("published_at", { ascending: false });
-    if (error || !data) return fallback;
-    return data.map((r) => toCase(r.slug, r.content as Snapshot, locale, r.updated_at)).filter((c): c is Case => c !== null);
-  } catch {
-    return fallback;
+    if (error || !data) throw error ?? new Error("no data");
+    rows = data;
+  } catch (e) {
+    throw new CasesUnavailableError(e);
   }
+  return rows.flatMap((r) => {
+    const item = snapshotToCase(r.slug, r.content, locale, r.content_updated_at ?? undefined);
+    if (!item) console.error(`cases: the published snapshot of "${r.slug}" (${locale}) cannot be shown; check it in the case editor`);
+    return item ? [item] : [];
+  });
 }

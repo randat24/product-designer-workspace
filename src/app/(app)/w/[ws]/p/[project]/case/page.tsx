@@ -5,6 +5,7 @@ import { getMyRole, getProjectBySlug, getWorkspaceBySlug } from "@/domains/proje
 import { getCaseForProject } from "@/domains/cases";
 import { createCaseStudy } from "@/domains/cases/actions";
 import { CaseEditor } from "@/domains/cases/case-editor";
+import { PublishBar } from "@/domains/cases/publish-bar";
 import { draftFromSnapshot } from "@/domains/cases/schema";
 import { Button } from "@/shared/ui/button";
 import { Panel } from "@/shared/ui/field";
@@ -22,24 +23,20 @@ export default async function CasePage({ params }: { params: Promise<{ ws: strin
   const [role, caseStudy] = await Promise.all([getMyRole(workspace.id), getCaseForProject(project.id)]);
   const canEdit = role === "owner" || role === "editor";
   const settingsHref = `/w/${ws}/p/${slug}/settings`;
-  const content = caseStudy?.content as { uk?: { story?: unknown; product?: unknown } } | null;
+  const draft = caseStudy?.draft as { uk?: { story?: unknown; product?: unknown } } | null;
 
   return (
     <div className="max-w-4xl">
       <PageHeader title={t.caseEditor.title} lede={t.caseEditor.lede} />
       {caseStudy ? (
         <>
-          <p className="mb-6 flex flex-wrap items-baseline gap-x-4 gap-y-1 rounded-control border border-line bg-surface px-4 py-3 text-sm">
-            <span>{caseStudy.status === "published" ? t.caseEditor.published : t.caseEditor.notPublished}</span>
+          <PublishBar caseId={caseStudy.id} slug={caseStudy.slug} published={caseStudy.status === "published" && caseStudy.hasContent}
+            hasUnpublished={caseStudy.hasUnpublished} canEdit={canEdit} />
+          <p className="mb-6 text-sm">
             <Link href={settingsHref} className="font-semibold underline underline-offset-2">{t.caseEditor.settingsLink}</Link>
-            {caseStudy.status === "published" && caseStudy.hasContent && (
-              <a href={`/uk/cases/${caseStudy.slug}`} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-2">
-                {t.caseEditor.open}
-              </a>
-            )}
           </p>
-          <CaseEditor caseId={caseStudy.id} projectId={project.id} canEdit={canEdit} hasStory={Boolean(content?.uk?.story || content?.uk?.product)}
-            drafts={{ uk: draftFromSnapshot(caseStudy.content, "uk"), en: draftFromSnapshot(caseStudy.content, "en") }} />
+          <CaseEditor caseId={caseStudy.id} projectId={project.id} canEdit={canEdit} hasStory={Boolean(draft?.uk?.story || draft?.uk?.product)}
+            drafts={{ uk: draftFromSnapshot(caseStudy.draft, "uk"), en: draftFromSnapshot(caseStudy.draft, "en") }} />
         </>
       ) : (
         <Panel className="flex flex-col items-start gap-3">
