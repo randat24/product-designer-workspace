@@ -12,7 +12,7 @@
 ### Стек и развёртывание
 - Next.js 15.5 (App Router), React 19, TypeScript strict, Tailwind 4, Supabase (Auth + Postgres + Storage), Vercel (`vercel.json`: только `framework: nextjs`).
 - `next.config.ts`: `typedRoutes: false`, лимит тела server actions 2 MB. Заголовков, редиректов, настроек изображений нет.
-- Шрифты: `@fontsource-variable/manrope` и `oswald`, подключены CSS-импортом в корневом `layout.tsx` (self-hosted, `font-display: swap`, подмножества по `unicode-range`).
+- Шрифты: статические `@fontsource/manrope` и `@fontsource/oswald` (400–700), объявлены в `src/app/fonts.css` (вариативные в Safari рисовались тонким начертанием) (self-hosted, `font-display: swap`, подмножества по `unicode-range`).
 - Одна корневая раскладка `src/app/layout.tsx` с `<html lang="ru">` для всего: и для инструмента, и для сайта.
 
 ### Карта URL
