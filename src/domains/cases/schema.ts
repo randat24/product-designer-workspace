@@ -1,4 +1,6 @@
 import { z } from "zod";
+import type { ProductStory } from "@/site/product-story";
+import { productStorySchema } from "./product-blocks";
 
 export const CASE_LOCALES = ["uk", "en"] as const;
 export type CaseLocale = (typeof CASE_LOCALES)[number];
@@ -22,6 +24,8 @@ export type CaseImage = z.infer<typeof imageSchema>;
 
 /** One language of a case as the editor sees it; the rest of the snapshot (story, gallery, flags) is kept as is. */
 export const caseDraftSchema = z.object({
+  /** The long product story (src/site/product-story.ts); null when the page shows the simple sections. */
+  product: productStorySchema.nullable(),
   title: text(200),
   summary: text(1000),
   role: text(200),
@@ -34,7 +38,7 @@ export const caseDraftSchema = z.object({
   cover: imageSchema.nullable(),
   sections: z.array(z.object({ title: text(200), body: text(10000), image: imageSchema.nullable() })).max(40),
 });
-export type CaseDraft = z.infer<typeof caseDraftSchema>;
+export type CaseDraft = Omit<z.infer<typeof caseDraftSchema>, "product"> & { product: ProductStory | null };
 
 type Snapshot = Record<string, Record<string, unknown> | undefined>;
 
@@ -49,7 +53,10 @@ export function draftFromSnapshot(content: unknown, locale: CaseLocale): CaseDra
   const c = (content as Snapshot | null)?.[locale] ?? {};
   const sections = Array.isArray(c.sections) ? (c.sections as Record<string, unknown>[]) : [];
   const metrics = Array.isArray(c.metrics) ? (c.metrics as Record<string, unknown>[]) : [];
+  const product = c.product as ProductStory | undefined;
   return {
+    // Kept exactly as stored: the server checks it only when it is saved again.
+    product: product && Array.isArray(product.sections) ? product : null,
     title: str(c.title),
     summary: str(c.summary),
     role: str(c.role),
@@ -70,12 +77,12 @@ function toGalleryItem(image: CaseImage) {
 }
 
 /**
- * Writes one language back into the snapshot. Fields the editor does not show (story, gallery, sticker,
+ * Writes one language back into the snapshot, the product story included. Fields the editor does not show (story, gallery, sticker,
  * the 18+ / sample flags, Figma link) stay untouched; empty optional fields are dropped, as the site expects.
  */
 export function mergeDraft(content: unknown, locale: CaseLocale, draft: CaseDraft): Snapshot {
   const snapshot = { ...((content ?? {}) as Snapshot) };
-  const { cover: _cover, liveUrl: _live, ...previous } = snapshot[locale] ?? {};
+  const { cover: _cover, liveUrl: _live, product: _product, ...previous } = snapshot[locale] ?? {};
   snapshot[locale] = {
     ...previous,
     title: draft.title,
@@ -93,6 +100,7 @@ export function mergeDraft(content: unknown, locale: CaseLocale, draft: CaseDraf
     })),
     ...(draft.liveUrl ? { liveUrl: draft.liveUrl } : {}),
     ...(draft.cover ? { cover: toGalleryItem(draft.cover) } : {}),
+    ...(draft.product ? { product: draft.product } : {}),
   };
   return snapshot;
 }

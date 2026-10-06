@@ -417,6 +417,55 @@ test("case publication: the site changes only on publish, and unpublishing takes
   await expect(page.locator("#uk-title")).toHaveValue(second);
 });
 
+test("product story: blocks written in the editor appear on the site after publishing", async ({ page, context }, testInfo) => {
+  savesSharedRecord(testInfo);
+  test.setTimeout(120_000);
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/case`);
+  await ready(page);
+  const create = page.getByRole("button", { name: "Створити кейс" });
+  if (await create.isVisible()) {
+    await create.click();
+    await expect(create).toHaveCount(0);
+  }
+  const slug = (await page.getByRole("link", { name: /Попередній перегляд \(uk\)/ }).getAttribute("href"))!.split("/")[3]!;
+  await page.locator("#uk-title").fill(`Продуктовий кейс ${Date.now()}`);
+
+  // Start the story (or reuse the one a previous run left in the draft) and add a flows block.
+  const start = page.getByRole("button", { name: "Створити продуктову історію" });
+  if (await start.isVisible()) await start.click();
+  await page.locator("#uk-p-disciplines").fill("Product Design, Brand Identity");
+  await page.getByLabel("Тип нового блоку").selectOption({ label: "Сценарії" });
+  await page.getByRole("button", { name: "Додати блок" }).click();
+  const block = page.locator("details[open]").last();
+  const flowTitle = `Онбординг ${Date.now()}`;
+  await block.getByLabel("Заголовок блоку").fill("Ключові сценарії");
+  await block.getByRole("button", { name: "Додати", exact: true }).click();
+  await block.getByLabel("Назва").fill(flowTitle);
+  await block.getByLabel("Кроки").fill("Гість\nРеєстрація\nПрофіль");
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+
+  await page.getByRole("button", { name: /^Опублікувати/ }).click();
+  await expect(page.getByText("Опубліковано. Сайт оновиться за кілька секунд.")).toBeVisible();
+
+  const site = await context.newPage();
+  await expect.poll(async () => {
+    await site.goto(`/uk/cases/${slug}`);
+    return site.getByRole("heading", { name: flowTitle }).count();
+  }, { timeout: 30_000 }).toBe(1);
+  await expect(site.getByText("Brand Identity").first()).toBeVisible();
+  await expect(site.getByText("Реєстрація", { exact: true }).first()).toBeVisible();
+
+  // Leave the shared demo case as other tests expect it: a simple page, taken off the site.
+  page.once("dialog", (d) => void d.accept());
+  await page.getByRole("button", { name: "Прибрати продуктову історію" }).click();
+  await page.getByRole("button", { name: /Точно прибрати/ }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+  await page.getByRole("button", { name: "Зняти з публікації" }).click();
+  await page.getByRole("button", { name: /Точно зняти/ }).click();
+  await expect(page.getByText("Кейс знято з сайту. Чернетка залишилась.")).toBeVisible();
+});
+
 /** Sends a project request the way the public form does (the anon RPC with the narrow secret); returns its code. */
 async function submitRequest(name: string): Promise<string> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
