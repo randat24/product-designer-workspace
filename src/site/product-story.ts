@@ -23,7 +23,8 @@ export type ProductSection = Base & (
   | { kind: "screens"; items: GalleryItem[] }
   | { kind: "checklist"; body: string[]; items: string[] }
   | { kind: "system"; body: string[]; groups: { title: string; items: string[] }[] }
-  | { kind: "brand"; body: string[]; parts: { shape: BrandShape; title: string; meaning: string }[]; formula: string; image: GalleryItem }
+  /** `image` may be missing while the block is being written in the editor; the page then shows the block without it. */
+  | { kind: "brand"; body: string[]; parts: { shape: BrandShape; title: string; meaning: string }[]; formula: string; image?: GalleryItem }
   | { kind: "timeline"; steps: { title: string; body: string }[] }
   | { kind: "figure"; body: string[]; images: GalleryItem[] }
   | { kind: "trust"; items: { icon: TrustIcon; title: string; body: string }[] }

@@ -112,12 +112,19 @@ export async function saveCaseDraft(caseId: string, locale: CaseLocale, input: C
   const parsed = caseDraftSchema.safeParse(input);
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
-    return invalid(t.caseEditor.invalid, issue?.path[0]?.toString());
+    const field = issue?.path[0]?.toString();
+    // A product story error names the block, so it can be found among many: «блок 3 → items → 2 → title».
+    if (field === "product") {
+      const where = (issue?.path.slice(1) ?? []).map((x) => (typeof x === "number" ? x + 1 : String(x))).join(" → ").replace(/^sections → /, "блок ");
+      return invalid(`${t.caseEditor.product.invalid} (${where})`, field);
+    }
+    return invalid(t.caseEditor.invalid, field);
   }
   const supabase = await createClient();
   const { data: current, error: readError } = await supabase.from("case_studies").select("draft").eq("id", caseId).single();
   if (readError) return transient();
-  const draft = mergeDraft(current.draft, locale, parsed.data);
+  // Checked by the schema above; its loose product type is the stored ProductStory.
+  const draft = mergeDraft(current.draft, locale, parsed.data as CaseDraft);
   const { data, error } = await supabase.from("case_studies").update({ draft: draft as Json }).eq("id", caseId).select("id");
   if (error) return transient();
   // Row-level security filters the update instead of failing: nothing written means no right to edit.

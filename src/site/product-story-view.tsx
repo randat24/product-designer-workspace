@@ -341,7 +341,7 @@ function Glyph({ shape }: { shape: BrandShape }) {
   );
 }
 
-function Brand({ body, parts, formula, image }: { body: string[]; parts: { shape: BrandShape; title: string; meaning: string }[]; formula: string; image: GalleryItem }) {
+function Brand({ body, parts, formula, image }: { body: string[]; parts: { shape: BrandShape; title: string; meaning: string }[]; formula: string; image?: GalleryItem }) {
   return (
     <div className="flex flex-col gap-10">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
@@ -359,7 +359,7 @@ function Brand({ body, parts, formula, image }: { body: string[]; parts: { shape
         </ul>
       </div>
       <p className="text-center font-display text-[clamp(24px,3.6vw,44px)] font-bold uppercase leading-[1.1] text-white">{formula}</p>
-      <Figures images={[image]} dark />
+      {image && <Figures images={[image]} dark />}
     </div>
   );
 }
