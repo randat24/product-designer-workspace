@@ -22,7 +22,7 @@ export default async function CasePage({ params }: { params: Promise<{ ws: strin
   const [role, caseStudy] = await Promise.all([getMyRole(workspace.id), getCaseForProject(project.id)]);
   const canEdit = role === "owner" || role === "editor";
   const settingsHref = `/w/${ws}/p/${slug}/settings`;
-  const content = caseStudy?.content as { uk?: { story?: unknown } } | null;
+  const content = caseStudy?.content as { uk?: { story?: unknown; product?: unknown } } | null;
 
   return (
     <div className="max-w-4xl">
@@ -38,7 +38,7 @@ export default async function CasePage({ params }: { params: Promise<{ ws: strin
               </a>
             )}
           </p>
-          <CaseEditor caseId={caseStudy.id} projectId={project.id} canEdit={canEdit} hasStory={Boolean(content?.uk?.story)}
+          <CaseEditor caseId={caseStudy.id} projectId={project.id} canEdit={canEdit} hasStory={Boolean(content?.uk?.story || content?.uk?.product)}
             drafts={{ uk: draftFromSnapshot(caseStudy.content, "uk"), en: draftFromSnapshot(caseStudy.content, "en") }} />
         </>
       ) : (

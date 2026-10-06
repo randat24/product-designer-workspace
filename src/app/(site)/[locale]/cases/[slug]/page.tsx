@@ -8,6 +8,7 @@ import { CaseFigma } from "@/site/case-figma";
 import { CaseGallery } from "@/site/case-gallery";
 import { figmaFileUrl } from "@/shared/lib/figma";
 import { CaseStoryView } from "@/site/case-story-view";
+import { ProductStoryView } from "@/site/product-story-view";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl, pageMetadata } from "@/site/seo";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -37,8 +38,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return pageMetadata({
     locale,
     path: `/cases/${slug}`,
-    title: item.title,
-    description: item.summary,
+    title: item.seo?.title ?? item.title,
+    description: item.seo?.description ?? item.summary,
     type: "article",
     caseSlug: slug,
     noindex: item.sample,
@@ -56,9 +57,10 @@ export default async function CasePage({ params }: { params: Params }) {
   // The snapshot is data from the tool: show the window only for a real Figma file link.
   const figma = item.figma ? figmaFileUrl(item.figma) : null;
   const next = cases.length > 1 ? cases[(index + 1) % cases.length]! : null;
-  // 18+ cases: everything below the facts waits for the visitor's age confirmation.
+  // 18+ cases: everything below the facts waits for the visitor's age confirmation. A product case is
+  // diagrams and brand work only (no product imagery of the audience), so it is not hidden behind the gate.
   const gate = (node: React.ReactNode) =>
-    item.adult ? <AdultGate labels={d.adult} backHref={`/${locale}/cases`}>{node}</AdultGate> : node;
+    item.adult && !item.product ? <AdultGate labels={d.adult} backHref={`/${locale}/cases`}>{node}</AdultGate> : node;
 
   return (
     <article className="pb-20 pt-10">
@@ -91,6 +93,16 @@ export default async function CasePage({ params }: { params: Params }) {
           )}
           <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[1.1]">{item.title}</h1>
           <p className="text-[clamp(17px,2vw,20px)] text-fg-secondary">{item.summary}</p>
+          {item.product && (
+            <>
+              <ul className="flex flex-wrap gap-2">
+                {item.product.disciplines.map((x) => (
+                  <li key={x} className="rounded-full border border-line px-3.5 py-1.5 text-[14px] font-semibold">{x}</li>
+                ))}
+              </ul>
+              {item.product.note && <p className="text-[14px] text-fg-secondary">{item.product.note}</p>}
+            </>
+          )}
         </header>
         <dl className={`grid grid-cols-2 gap-4 border-y border-line py-5 ${item.story ? "lg:grid-cols-6" : "sm:grid-cols-3"}`}>
           {[
@@ -155,7 +167,9 @@ export default async function CasePage({ params }: { params: Params }) {
         </section>
       )}
 
-      {item.story ? (
+      {item.product ? (
+        <div className="mt-12"><ProductStoryView story={item.product} /></div>
+      ) : item.story ? (
         <div className="mt-12">
           <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} />
         </div>
