@@ -33,7 +33,7 @@ export default async function PainPointPage({ params }: { params: Promise<Params
       <PageHeader title={p.title} eyebrow={<EntityChip type="pain_point" code={p.code} />}
         stat={{ value: freq, caption: s.frequencyLong() }} />
       <div className="flex flex-col gap-8">
-        <PainPointEditor key={p.id} id={p.id} canEdit={ctx.canEdit}
+        <PainPointEditor key={p.id} id={p.id} canEdit={ctx.canEdit} version={p.updated_at}
           initial={{ title: p.title, description: p.description, severity: p.severity, segment_label: p.segment_label }} />
         <section aria-labelledby="evidence-h" className="flex flex-col gap-3">
           <h2 id="evidence-h" className="text-heading font-semibold">{t.synthesis.insights.evidence}</h2>

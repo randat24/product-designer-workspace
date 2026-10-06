@@ -16,7 +16,7 @@ export default async function BriefPage({ params }: { params: Promise<{ ws: stri
   if (!workspace || !project) notFound();
 
   const [brief, role, source] = await Promise.all([getBrief(project.id), getMyRole(workspace.id), getBriefSource(project.id)]);
-  const { updatedAt: _updatedAt, ...initial } = brief;
+  const { updatedAt, ...initial } = brief;
   const progress = briefCompleteness(initial);
 
   return (
@@ -33,6 +33,7 @@ export default async function BriefPage({ params }: { params: Promise<{ ws: stri
         clientInput={source ?? undefined}
         projectId={project.id}
         initial={initial}
+        version={updatedAt}
         canEdit={role === "owner" || role === "editor"}
         platforms={project.platforms.map((p) => PLATFORMS.find((x) => x.value === p)?.label ?? p)}
         settingsHref={`/w/${ws}/p/${slug}/settings`}

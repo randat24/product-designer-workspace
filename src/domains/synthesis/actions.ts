@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
-import { updateTracked } from "@/shared/lib/supabase/tracked-update";
+import { denied, invalid, transient, type Failure } from "@/shared/lib/action-result";
+import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/uk";
 import {
   insightSchema, observationSchema, opportunitySchema, painPointSchema,
@@ -13,8 +14,8 @@ import {
 
 const uuid = z.uuid();
 const refresh = () => revalidatePath("/w/[ws]/p/[project]", "layout");
-type Result = { ok: true; id?: string; code?: string } | { ok: false; error: string; field?: string };
-const fail = (error: string = t.autosave.failed): Result => ({ ok: false, error });
+type Result = { ok: true; id?: string; code?: string; version?: string | null } | Failure;
+const fail = transient;
 
 async function projectBase(projectId: string) {
   const supabase = await createClient();
@@ -43,16 +44,16 @@ const quoteInput = z.object({
 /** Create a quote from a text selection in an answer (one action, docs/MVP.md §3). */
 export async function createQuote(input: z.input<typeof quoteInput>): Promise<Result> {
   const parsed = quoteInput.safeParse(input);
-  if (!parsed.success) return fail();
+  if (!parsed.success) return invalid();
   const q = parsed.data;
   const supabase = await createClient();
   const { data: iv } = await supabase.from("interviews").select("project_id").eq("id", q.interviewId).maybeSingle();
-  if (!iv) return fail();
+  if (!iv) return invalid();
   const { data, error } = await supabase.from("quotes").insert({
     project_id: iv.project_id, interview_id: q.interviewId, answer_id: q.answerId, text: q.text,
     start_offset: q.start, end_offset: q.end,
   }).select("id, code").single();
-  if (error) return fail(t.autosave.readOnly);
+  if (error) return denied();
   refresh();
   return { ok: true, id: data.id, code: data.code };
 }
@@ -70,7 +71,7 @@ const observationInput = z.object({
 /** Create an observation; from a quote it inherits the interview and is traced to it. */
 export async function createObservation(input: z.input<typeof observationInput>): Promise<Result> {
   const parsed = observationInput.safeParse(input);
-  if (!parsed.success) return fail();
+  if (!parsed.success) return invalid();
   const o = parsed.data;
   const supabase = await createClient();
   let interviewId = o.interviewId;
@@ -82,7 +83,7 @@ export async function createObservation(input: z.input<typeof observationInput>)
     project_id: o.projectId, interview_id: interviewId, participant_id: interviewId ? null : o.participantId ?? null,
     pattern_id: o.patternId ?? null, kind: o.kind, body_text: o.text, position: 1000,
   }).select("id, code").single();
-  if (error) return fail(t.autosave.readOnly);
+  if (error) return denied();
   if (o.quoteId) await link(o.projectId, "quote", o.quoteId, "observation", data.id, "evidences");
   refresh();
   return { ok: true, id: data.id, code: data.code };
@@ -90,23 +91,20 @@ export async function createObservation(input: z.input<typeof observationInput>)
 
 export async function saveObservation(id: string, input: z.input<typeof observationSchema>): Promise<Result> {
   const parsed = observationSchema.safeParse(input);
-  if (!uuid.safeParse(id).success || !parsed.success) return fail();
-  const res = await updateTracked("observations", { column: "id", value: id }, parsed.data, "body_text", (r) => String(r.body_text ?? "").slice(0, 80));
-  if (res === "error") return fail();
-  return res === "ok" ? { ok: true } : fail(t.autosave.readOnly);
+  if (!uuid.safeParse(id).success || !parsed.success) return invalid();
+  // No conflict check: on the board the same row also changes when a card moves between patterns.
+  return trackedSave(await updateTracked("observations", { column: "id", value: id }, parsed.data, "body_text", (r) => String(r.body_text ?? "").slice(0, 80)));
 }
 
 export async function saveQuoteText(id: string, text: string): Promise<Result> {
   const body = text.trim();
-  if (!uuid.safeParse(id).success || !body || body.length > 2000) return fail();
-  const res = await updateTracked("quotes", { column: "id", value: id }, { text: body }, "text", (r) => String(r.text ?? "").slice(0, 80));
-  if (res === "error") return fail();
-  return res === "ok" ? { ok: true } : fail(t.autosave.readOnly);
+  if (!uuid.safeParse(id).success || !body || body.length > 2000) return invalid();
+  return trackedSave(await updateTracked("quotes", { column: "id", value: id }, { text: body }, "text", (r) => String(r.text ?? "").slice(0, 80)));
 }
 
 /** Move a board card to a pattern (null = unclustered) at a position. */
 export async function moveCard(kind: "observation" | "quote", id: string, patternId: string | null, position: number) {
-  if (!uuid.safeParse(id).success || (patternId && !uuid.safeParse(patternId).success)) return fail();
+  if (!uuid.safeParse(id).success || (patternId && !uuid.safeParse(patternId).success)) return invalid();
   const supabase = await createClient();
   const table = kind === "quote" ? "quotes" : "observations";
   const { data, error } = await supabase.from(table).update({ pattern_id: patternId, position: Math.round(position) }).eq("id", id).select("id").maybeSingle();
@@ -119,7 +117,7 @@ export async function moveCard(kind: "observation" | "quote", id: string, patter
 
 export async function createPattern(projectId: string, title: string) {
   const body = title.trim().slice(0, 200) || t.synthesis.board.newPattern;
-  if (!uuid.safeParse(projectId).success) return fail();
+  if (!uuid.safeParse(projectId).success) return invalid();
   const supabase = await createClient();
   const { count } = await supabase.from("patterns").select("id", { count: "exact", head: true }).eq("project_id", projectId);
   const { error } = await supabase.from("patterns").insert({ project_id: projectId, title: body, position: (count ?? 0) + 1, color: `s${((count ?? 0) % 7) + 1}` });
@@ -130,15 +128,15 @@ export async function createPattern(projectId: string, title: string) {
 
 export async function renamePattern(id: string, title: string): Promise<Result> {
   const body = title.trim();
-  if (!uuid.safeParse(id).success || !body || body.length > 200) return fail();
+  if (!uuid.safeParse(id).success || !body || body.length > 200) return invalid();
   const supabase = await createClient();
   const { data, error } = await supabase.from("patterns").update({ title: body }).eq("id", id).select("id").maybeSingle();
   if (error) return fail();
-  return data ? { ok: true } : fail(t.autosave.readOnly);
+  return data ? { ok: true } : denied();
 }
 
 export async function deletePattern(id: string) {
-  if (!uuid.safeParse(id).success) return fail();
+  if (!uuid.safeParse(id).success) return invalid();
   const supabase = await createClient();
   const { error } = await supabase.from("patterns").delete().eq("id", id);
   if (error) return fail();
@@ -204,29 +202,27 @@ export async function createSynthesisEntity(formData: FormData) {
   redirect(`${await projectBase(projectId)}/${SEGMENT[type]}/${data.code}`);
 }
 
-async function save(table: "insights" | "pain_points" | "opportunities", id: string, fields: object): Promise<Result> {
-  if (!uuid.safeParse(id).success) return fail();
+async function save(table: "insights" | "pain_points" | "opportunities", id: string, fields: object, version?: string | null): Promise<Result> {
+  if (!uuid.safeParse(id).success) return invalid();
   // The shell shows code + title in ⌘K.
-  const res = await updateTracked(table, { column: "id", value: id }, fields, "title");
-  if (res === "error") return fail();
-  return res === "ok" ? { ok: true } : fail(t.autosave.readOnly);
+  return trackedSave(await updateTracked(table, { column: "id", value: id }, fields, "title", undefined, version));
 }
 function issue(err: z.ZodError): Result {
   const i = err.issues[0];
-  return { ok: false, error: i?.message ?? t.autosave.failed, field: i?.path[0]?.toString() };
+  return invalid(i?.message, i?.path[0]?.toString());
 }
 
-export async function saveInsight(id: string, input: InsightFields): Promise<Result> {
+export async function saveInsight(id: string, input: InsightFields, version?: string | null): Promise<Result> {
   const p = insightSchema.safeParse(input);
-  return p.success ? save("insights", id, p.data) : issue(p.error);
+  return p.success ? save("insights", id, p.data, version) : issue(p.error);
 }
-export async function savePainPoint(id: string, input: PainPointFields): Promise<Result> {
+export async function savePainPoint(id: string, input: PainPointFields, version?: string | null): Promise<Result> {
   const p = painPointSchema.safeParse(input);
-  return p.success ? save("pain_points", id, p.data) : issue(p.error);
+  return p.success ? save("pain_points", id, p.data, version) : issue(p.error);
 }
-export async function saveOpportunity(id: string, input: OpportunityFields): Promise<Result> {
+export async function saveOpportunity(id: string, input: OpportunityFields, version?: string | null): Promise<Result> {
   const p = opportunitySchema.safeParse(input);
-  return p.success ? save("opportunities", id, p.data) : issue(p.error);
+  return p.success ? save("opportunities", id, p.data, version) : issue(p.error);
 }
 
 /** Delete a synthesis entity and go back to its list. Links are cleaned up by the database. */

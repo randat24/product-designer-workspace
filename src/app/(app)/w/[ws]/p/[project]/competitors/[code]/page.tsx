@@ -33,6 +33,7 @@ export default async function CompetitorPage({ params }: { params: Promise<Param
         eyebrow={<span className="flex items-center gap-2"><EntityChip type="competitor" code={c.code} title={c.name} />{kind}</span>} />
       <CompetitorEditor
         key={c.id}
+        version={c.updated_at}
         id={c.id}
         isOwn={c.is_own_product}
         canEdit={ctx.canEdit}

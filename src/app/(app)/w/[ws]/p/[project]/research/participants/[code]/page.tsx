@@ -68,7 +68,7 @@ export default async function ParticipantPage({ params }: { params: Promise<Para
         )}
       </section>
 
-      <ParticipantEditor key={p.id} id={p.id} consentAt={p.consent_at} canEdit={ctx.canEdit} initial={{
+      <ParticipantEditor key={p.id} id={p.id} consentAt={p.consent_at} canEdit={ctx.canEdit} version={p.updated_at} initial={{
         display_name: p.display_name, role: p.role, segment_label: p.segment_label, age_range: p.age_range,
         context: p.context, contact: p.contact, consent: !!p.consent_at, tags: p.tags, notes: p.notes,
       }} />

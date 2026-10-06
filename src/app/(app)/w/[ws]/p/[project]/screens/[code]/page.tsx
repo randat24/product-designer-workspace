@@ -43,7 +43,7 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
         <Screenshots projectId={ctx.project.id} entityId={s.id} items={s.previews} canEdit={ctx.canEdit}
           entityType="screen" title={sc.preview} emptyText={sc.previewEmpty} />
 
-        <ScreenEditor key={s.id} id={s.id} canEdit={ctx.canEdit} initial={{
+        <ScreenEditor key={s.id} id={s.id} canEdit={ctx.canEdit} version={s.updated_at} initial={{
           name: s.name, purpose: s.purpose, user_goal: s.user_goal, entry_points: s.entry_points,
           primary_action: s.primary_action, secondary_actions: s.secondary_actions,
           content_hierarchy: asStrings(s.content_hierarchy), permissions: s.permissions,

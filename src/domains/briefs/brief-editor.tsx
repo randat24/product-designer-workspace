@@ -18,16 +18,17 @@ type TextKey = {
   [K in keyof Brief]: Brief[K] extends string | null ? K : never;
 }[keyof Brief];
 
-export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHref, clientInput }: {
+export function BriefEditor({ projectId, initial, canEdit, platforms, settingsHref, clientInput, version = null }: {
   projectId: string;
   initial: Brief;
   canEdit: boolean;
+  version?: string | null;
   platforms: string[];
   settingsHref: string;
   /** Client wording from the project request this project came from (see convert_project_request). */
   clientInput?: { code: string; fields: Partial<Record<string, string>> };
 }) {
-  const { value: brief, update, status, error } = useAutosave(initial, (b) => saveBrief(projectId, b), canEdit);
+  const { value: brief, update, status, error } = useAutosave(initial, (b, ver) => saveBrief(projectId, b, ver), canEdit, version);
 
   // While a field still holds the client's words, say so: it is input to verify, not research.
   const fromClient = (key: TextKey) =>

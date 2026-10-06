@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page, type Request, type TestInfo } from "@playwright/test";
 import { hasToolUser } from "../playwright.config";
 import { AUTH_FILE, contrastViolations, expectAccessible, horizontalOverflow, watchErrors } from "./helpers";
 
@@ -30,6 +30,17 @@ async function ready(page: Page) {
   await expect(page.getByRole("navigation", { name: "Розділи проєкту" }).locator("a").first()).toBeVisible({ timeout: 20_000 });
   await page.waitForLoadState("networkidle");
 }
+
+/**
+ * Tests that save into the shared demo project run on the desktop project only. Desktop and phone runs share the
+ * account and go in parallel: two runs editing the same record at once would (rightly) meet the two-tab conflict check.
+ */
+function savesSharedRecord(testInfo: TestInfo) {
+  test.skip(testInfo.project.name !== "desktop", "edits the shared demo project; covered by the desktop run");
+}
+
+/** A server action call (autosave and other in-page writes). */
+const isAction = (r: Request) => r.method() === "POST" && !!r.headers()["next-action"];
 
 /** Section pages from the navigation rail plus the first detail page of each list. */
 async function collectPages(page: Page, base: string) {
@@ -80,7 +91,8 @@ test("every section and detail page renders and is accessible", async ({ page },
   if (process.env.E2E_STRICT_MOBILE && testInfo.project.name === "phone") expect(overflow).toEqual({});
 });
 
-test("brief autosaves and keeps the text after reload", async ({ page }) => {
+test("brief autosaves and keeps the text after reload", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
   const base = await openDemoProject(page);
   await page.goto(`${base}/brief`);
   await ready(page);
@@ -94,7 +106,8 @@ test("brief autosaves and keeps the text after reload", async ({ page }) => {
   await expect(page.getByLabel("Що за продукт")).toHaveValue(text);
 });
 
-test("offline: edits wait for the connection and save once it is back", async ({ page, context }) => {
+test("offline: edits wait for the connection and save once it is back", async ({ page, context }, testInfo) => {
+  savesSharedRecord(testInfo);
   const base = await openDemoProject(page);
   await page.goto(`${base}/brief`);
   await ready(page);
@@ -106,12 +119,117 @@ test("offline: edits wait for the connection and save once it is back", async ({
   await context.setOffline(false);
   await expect(page.getByText("З'єднання відновлено")).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 15_000 });
+
+  // After the reconnect the pause before saving is back: a typed word goes as one save, not one per letter.
+  let saves = 0;
+  page.on("request", (r) => { if (isAction(r)) saves++; });
+  await page.getByLabel("Що за продукт").pressSequentially(" ще", { delay: 120 });
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+  expect(saves).toBe(1);
+
   await page.reload();
+  await ready(page);
+  await expect(page.getByLabel("Що за продукт")).toHaveValue(`${text} ще`);
+});
+
+test("leaving the page right after typing still saves the edit", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/brief`);
+  await ready(page);
+  const text = `Швидкий перехід ${Date.now()}`;
+  const saved = page.waitForResponse((r) => isAction(r.request()));
+  await page.getByLabel("Що за продукт").fill(text);
+  // Well inside the 800 ms pause: the editor unmounts before its timer fires.
+  await page.locator(`nav a[href="${base}/competitors"]`).first().click();
+  await expect(page).toHaveURL(new RegExp(`${base}/competitors$`));
+  await saved;
+  await page.goto(`${base}/brief`);
   await ready(page);
   await expect(page.getByLabel("Що за продукт")).toHaveValue(text);
 });
 
-test("date field: a typed date that is not a date is explained", async ({ page }) => {
+test("field autosave: going back to the earlier text while a save is on its way saves it too", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/research/matrix`);
+  await ready(page);
+  const name = page.getByRole("textbox", { name: /^Ім'я / }).first();
+  const label = (await name.getAttribute("aria-label"))!;
+  const a = `Учасник ${Date.now()}`;
+  let done = 0;
+  // Answers, not "finished" requests: the browser drops the rest of an action's stream once Next has read it.
+  page.on("response", (r) => { if (isAction(r.request())) done++; });
+  await name.fill(a);
+  await name.blur();
+  await expect.poll(() => done).toBe(1);
+
+  // Hold the next saves for a while so "B" is still on its way when the text goes back to "A".
+  let sent = 0;
+  await page.route("**/*", async (route) => {
+    if (isAction(route.request())) {
+      sent++;
+      await new Promise((r) => setTimeout(r, 1_500));
+    }
+    await route.continue();
+  });
+  await name.fill(`${a} Б`);
+  await expect.poll(() => sent).toBe(1);
+  await name.fill(a);
+  await expect.poll(() => done, { timeout: 15_000 }).toBe(3);
+
+  await page.unroute("**/*");
+  await page.reload();
+  await ready(page);
+  await expect(page.getByRole("textbox", { name: label })).toHaveValue(a);
+});
+
+test("a rejected value is explained and not sent again and again", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/screens`);
+  await ready(page);
+  await page.locator('main a[href*="/screens/"]').first().click();
+  await ready(page);
+  const figma = page.getByLabel("Посилання на Figma");
+  const before = await figma.inputValue();
+  let saves = 0;
+  page.on("request", (r) => { if (isAction(r)) saves++; });
+  await figma.fill("javascript:alert(1)");
+  await expect(page.locator("#figma-error")).toHaveText("Потрібне посилання на Figma: figma.com/… або https://…");
+  expect(saves).toBe(1);
+  // Longer than the first two automatic retries (3 s and 6 s): a rejected value is not retried.
+  await page.waitForTimeout(10_000);
+  expect(saves).toBe(1);
+  await figma.fill(before);
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+});
+
+test("two tabs: a save over a newer edit from the other tab is refused, not written", async ({ page, context }, testInfo) => {
+  savesSharedRecord(testInfo);
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/brief`);
+  await ready(page);
+  const other = await context.newPage();
+  await other.goto(`${base}/brief`);
+  await ready(other);
+
+  const theirs = `Друга вкладка ${Date.now()}`;
+  await other.getByLabel("Що за продукт").fill(theirs);
+  await expect(other.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+  await other.close();
+
+  await page.getByLabel("Що за продукт").fill(`Перша вкладка ${Date.now()}`);
+  await expect(page.getByRole("status").filter({ hasText: "змінили в іншій вкладці" })).toBeVisible({ timeout: 10_000 });
+  // The unsaved text is lost on reload, so the browser asks first; agree.
+  page.on("dialog", (d) => void d.accept());
+  await page.getByRole("button", { name: "Оновити сторінку" }).click();
+  await ready(page);
+  await expect(page.getByLabel("Що за продукт")).toHaveValue(theirs);
+});
+
+test("date field: a typed date that is not a date is explained", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
   const base = await openDemoProject(page);
   await page.goto(`${base}/brief`);
   await ready(page);

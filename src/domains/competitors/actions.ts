@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
-import { updateTracked } from "@/shared/lib/supabase/tracked-update";
+import { invalid, type Failure } from "@/shared/lib/action-result";
+import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/uk";
 import {
   ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME, competitorSchema, featureSchema, FEATURE_VALUES, isAssessed, UX_TEMPLATES,
@@ -42,22 +43,20 @@ export async function createCompetitor(formData: FormData) {
   redirect(`${base}/competitors/${data.code}`);
 }
 
-export type SaveResult = { ok: true } | { ok: false; error: string; field?: string };
+export type SaveResult = { ok: true; version: string | null } | Failure;
 
 /** Autosave target for the competitor card. */
-export async function saveCompetitor(id: string, input: CompetitorInput): Promise<SaveResult> {
-  if (!uuid.safeParse(id).success) return { ok: false, error: t.autosave.failed };
+export async function saveCompetitor(id: string, input: CompetitorInput, version?: string | null): Promise<SaveResult> {
+  if (!uuid.safeParse(id).success) return invalid();
   const parsed = competitorSchema.safeParse(input);
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
-    return { ok: false, error: issue?.message ?? t.autosave.failed, field: issue?.path[0]?.toString() };
+    return invalid(issue?.message, issue?.path[0]?.toString());
   }
   // The shell shows the name (⌘K) and whether the competitor counts as assessed (stage progress).
   const res = await updateTracked("competitors", { column: "id", value: id }, parsed.data, "name, strengths, weaknesses, is_own_product",
-    (r) => [r.name, isAssessed(r as Parameters<typeof isAssessed>[0])]);
-  if (res === "error") return { ok: false, error: t.autosave.failed };
-  if (res === "read-only") return { ok: false, error: t.autosave.readOnly };
-  return { ok: true };
+    (r) => [r.name, isAssessed(r as Parameters<typeof isAssessed>[0])], version);
+  return trackedSave(res);
 }
 
 export async function deleteCompetitor(formData: FormData) {
