@@ -244,3 +244,60 @@ body {
   background-size: 16px;
   padding-right: 2rem;
 }
+
+/* Neural WebCam case: its own accent from the product's logo blue (src/site/product-story-view.tsx).
+   --nw-blue fills (white text on it), --nw-ink is the accent for text and icons on the page background. */
+.nw {
+  --nw-blue: #2459b4;
+  --nw-glow: #71a1f2;
+  --nw-ink: #2459b4;
+  --nw-tint: #eaf1fc;
+  --nw-line: color-mix(in srgb, #2459b4 26%, transparent);
+  --nw-wash: #f5f8fd;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .nw {
+    --nw-ink: #8fb4f8;
+    --nw-tint: #1d2a55;
+    --nw-line: color-mix(in srgb, #8fb4f8 30%, transparent);
+    --nw-wash: #141836;
+  }
+}
+:root[data-theme="dark"] .nw {
+  --nw-ink: #8fb4f8;
+  --nw-tint: #1d2a55;
+  --nw-line: color-mix(in srgb, #8fb4f8 30%, transparent);
+  --nw-wash: #141836;
+}
+/* A chapter opener: navy in both themes, with a soft glow of the logo blue. */
+.nw-band {
+  color: #fff;
+  background:
+    radial-gradient(60% 70% at 85% 0%, color-mix(in srgb, #2459b4 45%, transparent), transparent 70%),
+    #0b1633;
+}
+/* Restrained motion: cards rise a little and diagram lines draw as they scroll into view.
+   Transform and stroke only (never opacity), so text keeps its contrast at every frame. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .nw-rise {
+      animation: nw-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    .nw-draw {
+      stroke-dasharray: 1;
+      animation: nw-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+@keyframes nw-rise {
+  from { transform: translateY(28px); }
+  to { transform: none; }
+}
+@keyframes nw-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}

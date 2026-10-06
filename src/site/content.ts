@@ -1,6 +1,7 @@
 // Public site content (portfolio + CV) in Ukrainian and English.
 // Cases are placeholders for now; the CV part follows the resume in public/cv/.
 
+import type { ProductStory } from "./product-story";
 import type { AwardIcon } from "./award-icons";
 import type { CaseStory, StoryLabels } from "./case-story";
 import { neuralEn, neuralUk } from "./cases/neural-webcam";
@@ -57,6 +58,10 @@ export type Case = {
   adult?: boolean;
   /** 18+ case whose cover is safe for everyone (a logo, not a screen): shown unblurred on the card and the page. */
   coverSafe?: boolean;
+  /** Editorial product case (roles, architecture, flows, brand…); shown instead of `sections`. */
+  product?: ProductStory;
+  /** Search title and description when they should differ from the case title and summary. */
+  seo?: { title: string; description: string };
 };
 
 export type GalleryItem = {

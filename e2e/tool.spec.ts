@@ -165,6 +165,37 @@ test("project backup: settings download the whole project as JSON", async ({ pag
   expect(data.tables.project_counters).toBeUndefined();
 });
 
+// A 4×2 PNG: enough for the browser to read its size before uploading.
+const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAIAAADwyuo0AAAAEklEQVR4nGNUidzCAANMDEgAABxWATVTVbcvAAAAAElFTkSuQmCC", "base64");
+
+test("case editor: texts and a picture save and stay after reload", async ({ page }) => {
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/case`);
+  await ready(page);
+  const create = page.getByRole("button", { name: "Створити кейс" });
+  if (await create.isVisible()) {
+    await create.click();
+    await expect(create).toHaveCount(0);
+  }
+  const title = `Кейс ${Date.now()}`;
+  await page.locator("#uk-title").fill(title);
+  await page.getByRole("button", { name: "Додати розділ" }).click();
+  await page.locator("#uk-s0-title").fill("Задача");
+  await page.locator("#uk-s0-image").setInputFiles({ name: "shot.png", mimeType: "image/png", buffer: PNG });
+  await expect(page.locator("#uk-s0-image-alt")).toBeVisible({ timeout: 15_000 });
+  await page.locator("#uk-s0-image-alt").fill("Знак на білому");
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+
+  // The English tab keeps its own texts.
+  await page.getByRole("tab", { name: "English" }).click();
+  await expect(page.locator("#en-title")).toBeVisible();
+
+  await page.reload();
+  await ready(page);
+  await expect(page.locator("#uk-title")).toHaveValue(title);
+  await expect(page.locator("#uk-s0-image-alt")).toHaveValue("Знак на білому");
+});
+
 /** Sends a project request the way the public form does (the anon RPC with the narrow secret); returns its code. */
 async function submitRequest(name: string): Promise<string> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;

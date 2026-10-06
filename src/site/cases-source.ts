@@ -31,6 +31,8 @@ function toCase(slug: string, content: Snapshot, locale: Locale, updatedAt?: str
     sample: c.sample,
     adult: c.adult,
     coverSafe: c.coverSafe,
+    product: c.product,
+    seo: c.seo,
     updatedAt,
   };
 }

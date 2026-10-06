@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getMyRole, getProjectBySlug, getWorkspaceBySlug } from "@/domains/projects";
 import { setProjectArchived } from "@/domains/projects/actions";
@@ -71,7 +72,10 @@ export default async function ProjectSettingsPage({ params }: { params: Promise<
                     className="ml-auto self-center text-sm font-semibold underline underline-offset-4">{t.cases.open}</a>
                 )}
               </form>
-              <p className="text-meta text-fg-secondary">{t.cases.address(caseStudy.slug)}</p>
+              <p className="flex flex-wrap items-baseline gap-x-4 text-meta text-fg-secondary">
+                {t.cases.address(caseStudy.slug)}
+                <Link href={`/w/${ws}/p/${slug}/case`} className="font-semibold text-fg underline underline-offset-2">{t.cases.edit}</Link>
+              </p>
               <p id="case-adult-hint" className="text-meta text-fg-secondary">{t.cases.adultHint}</p>
               <p id="case-sample-hint" className="text-meta text-fg-secondary">{t.cases.sampleHint}</p>
               <p id="case-figma-hint" className="text-meta text-fg-secondary">{t.cases.figmaHint}</p>
