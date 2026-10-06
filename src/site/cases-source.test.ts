@@ -17,6 +17,8 @@ describe("getCases (docs/HANDOFF_TRIAGE.md, F04)", () => {
   beforeEach(() => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "http://db.test");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "key");
+    // CI sets the sample mode for its build job; each test here chooses its own mode.
+    vi.stubEnv("SITE_SAMPLE_CASES", "");
   });
   afterEach(() => vi.unstubAllEnvs());
 
