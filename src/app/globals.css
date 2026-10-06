@@ -122,8 +122,8 @@
   --color-entity-design: var(--entity-design);
   --color-entity-decision: var(--entity-decision);
 
-  --font-sans: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Oswald Variable", "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
 
   --text-title: 20px;
   --text-title--line-height: 28px;
