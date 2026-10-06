@@ -5,6 +5,9 @@ import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import { figmaFileUrl } from "@/shared/lib/figma";
 import type { Json } from "@/types/database";
+import { t } from "@/shared/i18n/uk";
+import type { AutosaveResult } from "@/shared/ui/autosave";
+import { CASE_LOCALES, caseDraftSchema, mergeDraft, type CaseDraft, type CaseLocale } from "./schema";
 
 const statusSchema = z.enum(["draft", "review", "published"]);
 
@@ -55,4 +58,30 @@ export async function setCaseStatus(formData: FormData) {
   // the "cases" data cache and the pages built from it.
   revalidateTag("cases");
   revalidatePath("/[locale]", "layout");
+}
+
+/**
+ * Saves one language of the case from the editor (autosave). A published case changes on the site right away:
+ * the snapshot is what the site reads.
+ */
+export async function saveCaseDraft(caseId: string, locale: CaseLocale, input: CaseDraft): Promise<AutosaveResult> {
+  if (!z.uuid().safeParse(caseId).success || !CASE_LOCALES.includes(locale)) return { ok: false, error: t.autosave.failed };
+  const parsed = caseDraftSchema.safeParse(input);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    return { ok: false, error: t.caseEditor.invalid, field: issue?.path[0]?.toString() };
+  }
+  const supabase = await createClient();
+  const { data: current, error: readError } = await supabase.from("case_studies").select("content, status").eq("id", caseId).single();
+  if (readError) return { ok: false, error: t.autosave.failed };
+  const content = mergeDraft(current.content, locale, parsed.data);
+  const { data, error } = await supabase.from("case_studies").update({ content: content as Json }).eq("id", caseId).select("id");
+  if (error) return { ok: false, error: t.autosave.failed };
+  // Row-level security filters the update instead of failing: nothing written means no right to edit.
+  if (!data.length) return { ok: false, error: t.caseEditor.readOnly };
+  if (current.status === "published") {
+    revalidateTag("cases");
+    revalidatePath("/[locale]", "layout");
+  }
+  return { ok: true };
 }

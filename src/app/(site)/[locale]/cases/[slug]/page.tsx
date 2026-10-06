@@ -162,7 +162,7 @@ export default async function CasePage({ params }: { params: Params }) {
       ) : (
       <div className={`${container} mt-14 flex flex-col gap-12`}>
         {item.sections.map((s, i) => (
-          <section key={s.title} className="grid gap-4 md:grid-cols-[260px_1fr]">
+          <section key={`${i}-${s.title}`} className="grid gap-4 md:grid-cols-[260px_1fr]">
             <div className="flex items-baseline gap-3">
               <span className="display-num text-[14px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
               <h2 className="font-display text-[28px] font-bold uppercase leading-[1.1]">{s.title}</h2>

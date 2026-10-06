@@ -68,6 +68,7 @@ export const PROJECT_NAV: NavGroup[] = [
       { segment: "handoff", label: "Handoff", phase: 11, mvp: false },
     ],
   },
+  { title: "Портфоліо", items: [{ segment: "case", label: "Кейс на сайті", phase: 8, mvp: true }] },
 ];
 
 export const SHOW_POST_MVP = process.env.NEXT_PUBLIC_SHOW_POST_MVP === "1";
