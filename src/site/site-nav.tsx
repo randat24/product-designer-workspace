@@ -22,10 +22,10 @@ export function SiteNav({ locale, labels, ariaLabel, mobile }: {
   ];
   return (
     <nav aria-label={ariaLabel}
-      className={mobile ? "flex gap-2 pb-2.5 text-[14px] font-semibold sm:hidden" : "ml-auto hidden items-center gap-1 text-[14px] font-semibold sm:flex"}>
+      className={mobile ? "flex gap-2 pb-2.5 text-[14px] font-semibold lg:hidden" : "ml-auto hidden items-center gap-1 text-[14px] font-semibold lg:flex"}>
       {items.map((it) => {
         const cls = cn(
-          "hit relative rounded-[8px] px-2.5 py-1.5 transition-colors duration-[120ms]",
+          "hit relative whitespace-nowrap rounded-[8px] px-2.5 py-1.5 transition-colors duration-[120ms]",
           it.current ? "bg-subtle text-fg before:absolute before:inset-x-2.5 before:-bottom-[3px] before:h-[2px] before:rounded-full before:bg-fg" : "text-fg-secondary hover:bg-subtle hover:text-fg",
         );
         return it.anchor

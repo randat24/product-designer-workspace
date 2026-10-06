@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import "@fontsource-variable/manrope";
-import "@fontsource-variable/oswald";
+import "./fonts.css";
 import "./globals.css";
 import { dict, isLocale, type Locale } from "@/site/content";
 import { THEME_INIT_SCRIPT } from "@/site/theme-toggle";

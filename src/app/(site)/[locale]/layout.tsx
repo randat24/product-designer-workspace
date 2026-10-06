@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import "@fontsource-variable/manrope";
-import "@fontsource-variable/oswald";
+import "../../fonts.css";
 import "../../globals.css";
 import { getSiteUrl } from "@/shared/lib/site-url";
 import { CONTACTS, LOCALES, dict, isLocale, type Locale } from "@/site/content";
@@ -94,20 +93,22 @@ export default async function SiteLayout({
         <div className="flex min-h-dvh flex-col">
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/85 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:gap-4`}>
-              <Link href={`/${locale}`} className="hit font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[0.01em]">
+              <Link href={`/${locale}`} className="hit shrink-0 whitespace-nowrap font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[0.01em]">
                 {d.name}
               </Link>
               <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
               <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "header" })}
-                className="hidden h-9 items-center rounded-[8px] bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:inline-flex">
+                className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-[8px] bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:ml-auto md:inline-flex lg:ml-0">
                 {INTAKE[locale].cta}
               </Link>
-              <div className="ml-auto flex items-center gap-2 sm:ml-0">
+              <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
                 <ThemeToggle labelLight={d.ui.themeLight} labelDark={d.ui.themeDark} />
                 <LangSwitch current={locale} />
               </div>
             </div>
-            {/* Mobile: a second row instead of a hamburger — only three links. */}
+            {/* Phones and tablets (below lg): the links take a second row instead of a hamburger — only three links.
+                One row needs about 910px (name, links, «Обговорити проєкт», theme, language); squeezed below that, the
+                labels wrapped onto two lines. */}
             <div className={container}>
               <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} mobile />
             </div>

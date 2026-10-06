@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/manrope";
-import "@fontsource-variable/oswald";
+import "../fonts.css";
 import "../globals.css";
 import { t } from "@/shared/i18n/uk";
 import { NetworkBanner } from "@/shared/ui/network";
