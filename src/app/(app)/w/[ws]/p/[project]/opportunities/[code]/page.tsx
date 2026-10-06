@@ -13,6 +13,7 @@ import { EntityChip } from "@/shared/ui/entity-chip";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
+import { ActionForm } from "@/shared/ui/action-form";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -41,11 +42,11 @@ export default async function OpportunityPage({ params }: { params: Promise<Para
           <EvidenceList type="opportunity" id={o.id} base={ctx.base} empty={t.synthesis.insights.evidenceEmpty} />
         </section>
         {ctx.canEdit && (
-          <form action={createFlow}>
+          <ActionForm action={createFlow} idempotent>
             <input type="hidden" name="projectId" value={ctx.project.id} />
             <input type="hidden" name="opportunityId" value={o.id} />
             <Button type="submit" variant="secondary">{t.flows.fromOpportunity}<ArrowRight aria-hidden className="size-4" /></Button>
-          </form>
+          </ActionForm>
         )}
         {ctx.canEdit && <DeleteEntityButton type="opportunity" id={o.id} label={s.delete} />}
       </div>

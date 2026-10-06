@@ -139,11 +139,11 @@ export function ScreenEditor({ id, initial, canEdit, version = null }: { id: str
   );
 }
 
-function ArmedDelete({ action, id, label, confirm }: { action: (fd: FormData) => Promise<void>; id: string; label: string; confirm: string }) {
-  return <ConfirmDelete action={action} fields={{ id }} label={label} confirm={confirm} />;
-}
-export const DeleteScreenButton = ({ id }: { id: string }) => <ArmedDelete action={deleteScreen} id={id} label={sc.delete} confirm={sc.deleteConfirm} />;
-export const DeleteDecisionButton = ({ id }: { id: string }) => <ArmedDelete action={deleteDecision} id={id} label={dc.delete} confirm={dc.deleteConfirm} />;
+type DeleteProps = { id: string; projectId: string };
+export const DeleteScreenButton = ({ id, projectId }: DeleteProps) =>
+  <ConfirmDelete action={deleteScreen} fields={{ id, projectId }} label={sc.delete} confirm={sc.deleteConfirm} />;
+export const DeleteDecisionButton = ({ id, projectId }: DeleteProps) =>
+  <ConfirmDelete action={deleteDecision} fields={{ id, projectId }} label={dc.delete} confirm={dc.deleteConfirm} />;
 
 /** Decision Log entry (docs/IA.md /decisions/[code]), autosaved as a whole. */
 export function DecisionEditor({ id, initial, others, canEdit, version = null }: {

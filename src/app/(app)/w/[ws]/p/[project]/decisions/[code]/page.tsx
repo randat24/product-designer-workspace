@@ -15,6 +15,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
+import { ActionForm } from "@/shared/ui/action-form";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -97,7 +98,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
               <ul className="flex flex-col gap-1.5">
                 {suggestions.map((e) => (
                   <li key={`${e.type}:${e.id}`}>
-                    <form action={addEvidence} className="flex items-center gap-2">
+                    <ActionForm action={addEvidence} className="flex flex-wrap items-center gap-2">
                       <input type="hidden" name="decisionId" value={d.id} />
                       <input type="hidden" name="sourceType" value={e.type} />
                       <input type="hidden" name="sourceId" value={e.id} />
@@ -106,7 +107,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
                         {e.participant ? `${e.participant} · ` : ""}{e.title}
                       </Link>
                       <Button type="submit" variant="secondary" className="h-8 shrink-0" aria-label={`${dc.addEvidence}: ${e.code}`}><Plus aria-hidden className="size-4" />{dc.addEvidence}</Button>
-                    </form>
+                    </ActionForm>
                   </li>
                 ))}
               </ul>
@@ -114,7 +115,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
           )}
         </section>
 
-        {ctx.canEdit && <DeleteDecisionButton id={d.id} />}
+        {ctx.canEdit && <DeleteDecisionButton id={d.id} projectId={ctx.project.id} />}
       </div>
     </EntityLayout>
   );

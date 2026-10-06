@@ -228,6 +228,51 @@ test("two tabs: a save over a newer edit from the other tab is refused, not writ
   await expect(page.getByLabel("Що за продукт")).toHaveValue(theirs);
 });
 
+test("a lost answer: create and delete say so, keep the input, and a second press does it once", async ({ page }) => {
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/screens`);
+  await ready(page);
+  const name = `Екран без відповіді ${Date.now()}`;
+  const field = page.getByPlaceholder("Наприклад: картка ресторану");
+  await field.fill(name);
+
+  // The server gets the request and creates the screen, but the answer never reaches the browser.
+  const loseAnswer = async () => {
+    await page.route("**/*", async (route) => {
+      if (!isAction(route.request())) return route.continue();
+      await route.fetch();
+      await route.abort("failed");
+    });
+  };
+  await loseAnswer();
+  await page.getByRole("button", { name: "Новий екран" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "Не вдалося — зміну не збережено" })).toBeVisible();
+  await expect(field).toHaveValue(name);
+
+  await page.unroute("**/*");
+  await page.getByRole("button", { name: "Новий екран" }).click();
+  await expect(page).toHaveURL(/\/screens\/SCR-\d+$/);
+  await page.goto(`${base}/screens`);
+  await ready(page);
+  // The list link reads "SCR-007<name>".
+  const row = page.locator("main a").filter({ hasText: name });
+  await expect(row).toHaveCount(1);
+
+  // Delete with the answer lost, then again: the second press finds it gone and goes back to the list.
+  await row.click();
+  await ready(page);
+  await loseAnswer();
+  await page.getByRole("button", { name: "Видалити екран" }).click();
+  await page.getByRole("button", { name: /Точно видалити/ }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "Не вдалося — зміну не збережено" })).toBeVisible();
+  await page.unroute("**/*");
+  await page.getByRole("button", { name: "Видалити екран" }).click();
+  await page.getByRole("button", { name: /Точно видалити/ }).click();
+  await expect(page).toHaveURL(new RegExp(`${base}/screens$`));
+  await ready(page);
+  await expect(row).toHaveCount(0);
+});
+
 test("date field: a typed date that is not a date is explained", async ({ page }, testInfo) => {
   savesSharedRecord(testInfo);
   const base = await openDemoProject(page);

@@ -12,6 +12,7 @@ import { Input } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
+import { ActionForm } from "@/shared/ui/action-form";
 
 export const metadata: Metadata = { title: t.screens.title };
 const sc = t.screens;
@@ -28,11 +29,11 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
       <div>
         <PageHeader title={sc.title} lede={sc.lede} />
         {ctx.canEdit && (
-          <form action={createScreen} className="flex max-w-xl flex-wrap gap-2">
+          <ActionForm action={createScreen} idempotent className="flex max-w-xl flex-wrap gap-2">
             <input type="hidden" name="projectId" value={ctx.project.id} />
             <Input name="name" aria-label={sc.fields.name} required maxLength={200} placeholder={sc.namePlaceholder} className="min-w-0 flex-1" />
             <Button type="submit">{sc.add}</Button>
-          </form>
+          </ActionForm>
         )}
       </div>
 

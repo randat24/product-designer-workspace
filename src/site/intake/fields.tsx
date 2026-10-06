@@ -10,7 +10,7 @@ import { cn } from "@/shared/lib/cn";
 import { DateField } from "@/shared/ui/date-field";
 
 const control =
-  "w-full rounded-[10px] border-[1.5px] bg-surface px-3.5 text-[16px] text-fg placeholder:text-fg-secondary/70 transition-colors duration-[120ms] focus:border-fg";
+  "w-full rounded-[10px] border-[1.5px] bg-surface px-3.5 text-[16px] text-fg placeholder:text-fg-secondary transition-colors duration-[120ms] focus:border-fg";
 const ok = "border-line hover:border-fg-secondary";
 const bad = "border-danger";
 

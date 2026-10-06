@@ -9,6 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
+import { ActionForm } from "@/shared/ui/action-form";
 
 export const metadata: Metadata = { title: t.decisions.title };
 const dc = t.decisions;
@@ -25,10 +26,10 @@ export default async function DecisionsPage({ params }: { params: Promise<{ ws: 
       <div>
         <PageHeader title={dc.title} lede={dc.lede} />
         {ctx.canEdit && (
-          <form action={createDecision}>
+          <ActionForm action={createDecision} idempotent>
             <input type="hidden" name="projectId" value={ctx.project.id} />
             <Button type="submit" variant="secondary">{dc.add}</Button>
-          </form>
+          </ActionForm>
         )}
       </div>
 

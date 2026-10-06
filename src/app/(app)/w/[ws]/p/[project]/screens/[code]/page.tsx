@@ -17,6 +17,7 @@ import { EntityLayout } from "@/shared/ui/entity-layout";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/uk";
 import { BackLink } from "@/shared/ui/back-link";
+import { ActionForm } from "@/shared/ui/action-form";
 
 type Params = { ws: string; project: string; code: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -86,16 +87,16 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
             </ul>
           )}
           {ctx.canEdit && (
-            <form action={createDecision}>
+            <ActionForm action={createDecision} idempotent>
               <input type="hidden" name="projectId" value={ctx.project.id} />
               <input type="hidden" name="targetType" value="screen" />
               <input type="hidden" name="targetId" value={s.id} />
               <Button type="submit" variant="secondary">{sc.recordDecision}<ArrowRight aria-hidden className="size-4" /></Button>
-            </form>
+            </ActionForm>
           )}
         </section>
 
-        {ctx.canEdit && <DeleteScreenButton id={s.id} />}
+        {ctx.canEdit && <DeleteScreenButton id={s.id} projectId={ctx.project.id} />}
       </div>
     </EntityLayout>
   );
