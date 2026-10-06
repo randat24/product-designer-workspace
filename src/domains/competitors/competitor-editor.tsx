@@ -12,14 +12,15 @@ import { COMPETITOR_KINDS, type CompetitorFields } from "./schema";
 const f = t.competitors.fields;
 type TextKey = Exclude<keyof CompetitorFields, "name" | "url" | "kind">;
 
-export function CompetitorEditor({ id, initial, isOwn, canEdit, screenshots }: {
+export function CompetitorEditor({ id, initial, isOwn, canEdit, screenshots, version = null }: {
   id: string;
   initial: CompetitorFields;
   isOwn: boolean;
   canEdit: boolean;
+  version?: string | null;
   screenshots: React.ReactNode;
 }) {
-  const { value: c, update, status, error } = useAutosave(initial, (v) => saveCompetitor(id, v), canEdit);
+  const { value: c, update, status, error } = useAutosave(initial, (v, ver) => saveCompetitor(id, v, ver), canEdit, version);
 
   const text = (key: TextKey, hint?: string) => (
     <TextField id={key} label={f[key]} hint={hint} value={c[key] ?? ""} readOnly={!canEdit}

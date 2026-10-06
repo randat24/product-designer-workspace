@@ -28,8 +28,8 @@ function TitleInput({ id, label, hint, value, readOnly, error, onChange }: {
   );
 }
 
-export function InsightEditor({ id, initial, canEdit }: { id: string; initial: InsightFields; canEdit: boolean }) {
-  const { value: v, update, status, error } = useAutosave(initial, (x) => saveInsight(id, x), canEdit);
+export function InsightEditor({ id, initial, canEdit, version = null }: { id: string; initial: InsightFields; canEdit: boolean; version?: string | null }) {
+  const { value: v, update, status, error } = useAutosave(initial, (x, ver) => saveInsight(id, x, ver), canEdit, version);
   const f = s.insights.fields;
   return (
     <Section id="insight" title={s.insights.title.slice(0, -1)}>
@@ -44,8 +44,8 @@ export function InsightEditor({ id, initial, canEdit }: { id: string; initial: I
   );
 }
 
-export function PainPointEditor({ id, initial, canEdit }: { id: string; initial: PainPointFields; canEdit: boolean }) {
-  const { value: v, update, status, error } = useAutosave(initial, (x) => savePainPoint(id, x), canEdit);
+export function PainPointEditor({ id, initial, canEdit, version = null }: { id: string; initial: PainPointFields; canEdit: boolean; version?: string | null }) {
+  const { value: v, update, status, error } = useAutosave(initial, (x, ver) => savePainPoint(id, x, ver), canEdit, version);
   const f = s.painPoints.fields;
   return (
     <Section id="pain" title={f.title}>
@@ -62,8 +62,8 @@ export function PainPointEditor({ id, initial, canEdit }: { id: string; initial:
   );
 }
 
-export function OpportunityEditor({ id, initial, canEdit }: { id: string; initial: OpportunityFields; canEdit: boolean }) {
-  const { value: v, update, status, error } = useAutosave(initial, (x) => saveOpportunity(id, x), canEdit);
+export function OpportunityEditor({ id, initial, canEdit, version = null }: { id: string; initial: OpportunityFields; canEdit: boolean; version?: string | null }) {
+  const { value: v, update, status, error } = useAutosave(initial, (x, ver) => saveOpportunity(id, x, ver), canEdit, version);
   const f = s.opportunities.fields;
   return (
     <Section id="opportunity" title={f.title}>

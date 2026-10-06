@@ -11,13 +11,15 @@ import type { ParticipantFields } from "./schema";
 
 const f = t.research.participants.fields;
 
-export function ParticipantEditor({ id, initial, consentAt, canEdit }: {
+export function ParticipantEditor({ id, initial, consentAt, canEdit, version = null }: {
   id: string;
   initial: ParticipantFields;
   consentAt: string | null;
   canEdit: boolean;
+  /** The row's `updated_at`: saves fail instead of overwriting a newer edit from another tab. */
+  version?: string | null;
 }) {
-  const { value: p, update, status, error } = useAutosave(initial, (v) => saveParticipant(id, { ...v, consentAt }), canEdit);
+  const { value: p, update, status, error } = useAutosave(initial, (v, ver) => saveParticipant(id, { ...v, consentAt }, ver), canEdit, version);
   const [tagsText, setTagsText] = useState(initial.tags.join(", "));
 
   const input = (key: "role" | "display_name" | "segment_label" | "age_range" | "contact", label: string, hint?: string, max = 200) => (

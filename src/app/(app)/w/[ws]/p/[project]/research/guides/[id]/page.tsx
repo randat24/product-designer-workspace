@@ -26,7 +26,7 @@ export default async function GuidePage({ params }: { params: Promise<{ ws: stri
         <Link href={`${ctx.base}/research/participants`} className="text-meta font-semibold underline underline-offset-2">{t.research.guide.startInterview}</Link>
       </div>
       <PageHeader title={guide.title} lede={t.research.guide.lede} />
-      <GuideBuilder key={guide.id} projectId={ctx.project.id} guideId={guide.id} canEdit={ctx.canEdit}
+      <GuideBuilder key={guide.id} projectId={ctx.project.id} guideId={guide.id} canEdit={ctx.canEdit} version={guide.updated_at}
         meta={{ title: guide.title, intro: guide.intro, outro: guide.outro }} questions={guide.questions} />
     </div>
   );

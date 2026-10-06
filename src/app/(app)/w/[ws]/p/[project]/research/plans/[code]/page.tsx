@@ -27,7 +27,7 @@ export default async function PlanPage({ params }: { params: Promise<Params> }) 
     <div className="max-w-4xl">
       <BackLink href={`${ctx.base}/research`}>{t.research.plan.back}</BackLink>
       <PageHeader title={plan.title} eyebrow={<EntityChip type="research_plan" code={plan.code} title={plan.title} />} />
-      <PlanEditor key={plan.id} id={plan.id} canEdit={ctx.canEdit} initial={{
+      <PlanEditor key={plan.id} id={plan.id} canEdit={ctx.canEdit} version={plan.updated_at} initial={{
         title: plan.title, goal: plan.goal, questions, hypotheses_text: plan.hypotheses_text, audience: plan.audience,
         method: plan.method, participants_target: plan.participants_target, success_criteria: plan.success_criteria, status: plan.status,
       }} />

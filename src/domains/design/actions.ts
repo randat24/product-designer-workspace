@@ -4,14 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
-import { updateTracked } from "@/shared/lib/supabase/tracked-update";
+import { denied, invalid, type Failure } from "@/shared/lib/action-result";
+import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/uk";
 import { isHttpUrl, withScheme } from "@/shared/lib/url";
 import { decisionSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
 
 const refresh = () => revalidatePath("/w/[ws]/p/[project]", "layout");
-type Result = { ok: true; id?: string } | { ok: false; error: string; field?: string };
-const fail = (error: string = t.autosave.failed, field?: string): Result => ({ ok: false, error, field });
+type Result = { ok: true; id?: string; version?: string | null } | Failure;
 const uuid = z.uuid();
 
 async function projectBase(projectId: string) {
@@ -33,18 +33,15 @@ export async function createScreen(formData: FormData) {
   redirect(`${await projectBase(projectId.data)}/screens/${data.code}`);
 }
 
-export async function saveScreen(id: string, input: ScreenSpec): Promise<Result> {
+export async function saveScreen(id: string, input: ScreenSpec, version?: string | null): Promise<Result> {
   const parsed = screenSpecSchema.safeParse(input);
-  if (!uuid.safeParse(id).success) return fail();
+  if (!uuid.safeParse(id).success) return invalid();
   if (!parsed.success) {
     const field = String(parsed.error.issues[0]?.path[0] ?? "");
-    return fail(field === "figma_url" ? t.screens.invalidUrl : t.autosave.failed, field);
+    return invalid(field === "figma_url" ? t.screens.invalidUrl : undefined, field);
   }
   // The shell shows the screen's name (⌘K); spec text does not touch it.
-  const res = await updateTracked("screens", { column: "id", value: id }, parsed.data, "name");
-  if (res === "error") return fail();
-  if (res === "read-only") return fail(t.autosave.readOnly);
-  return { ok: true };
+  return trackedSave(await updateTracked("screens", { column: "id", value: id }, parsed.data, "name", undefined, version));
 }
 
 export async function deleteScreen(formData: FormData) {
@@ -67,11 +64,11 @@ const statePatch = z.object({
 
 export async function saveState(id: string, patch: z.input<typeof statePatch>): Promise<Result> {
   const p = statePatch.safeParse(patch);
-  if (!uuid.safeParse(id).success) return fail();
-  if (!p.success) return fail(t.screens.invalidUrl, "figma_url");
+  if (!uuid.safeParse(id).success) return invalid();
+  if (!p.success) return invalid(t.screens.invalidUrl, "figma_url");
   const supabase = await createClient();
   const { error } = await supabase.from("screen_states").update(p.data).eq("id", id);
-  if (error) return fail(t.autosave.readOnly);
+  if (error) return denied();
   if (p.data.status) refresh();
   return { ok: true };
 }
@@ -80,24 +77,24 @@ const stateKind = z.enum(["default", "loading", "empty", "error", "success", "di
 
 export async function addState(screenId: string, kind: string): Promise<Result> {
   const k = stateKind.safeParse(kind);
-  if (!uuid.safeParse(screenId).success || !k.success) return fail();
+  if (!uuid.safeParse(screenId).success || !k.success) return invalid();
   const supabase = await createClient();
   const { data: screen } = await supabase.from("screens").select("project_id").eq("id", screenId).maybeSingle();
-  if (!screen) return fail();
+  if (!screen) return invalid();
   const { data, error } = await supabase.from("screen_states")
     .insert({ project_id: screen.project_id, screen_id: screenId, kind: k.data, position: 100 }).select("id").single();
-  if (error) return fail(t.autosave.readOnly);
+  if (error) return denied();
   refresh();
   return { ok: true, id: data.id };
 }
 
 export async function deleteState(id: string): Promise<Result> {
-  if (!uuid.safeParse(id).success) return fail();
+  if (!uuid.safeParse(id).success) return invalid();
   const supabase = await createClient();
   // The standard five stay; mark them "Не потрібно" instead.
   const { error } = await supabase.from("screen_states").delete().eq("id", id)
     .not("kind", "in", "(default,loading,empty,error,success)");
-  if (error) return fail(t.autosave.readOnly);
+  if (error) return denied();
   refresh();
   return { ok: true };
 }
@@ -125,19 +122,16 @@ export async function createDecision(formData: FormData) {
   redirect(`${await projectBase(projectId.data)}/decisions/${data.code}`);
 }
 
-export async function saveDecision(id: string, input: DecisionFields): Promise<Result> {
+export async function saveDecision(id: string, input: DecisionFields, version?: string | null): Promise<Result> {
   const parsed = decisionSchema.safeParse(input);
-  if (!uuid.safeParse(id).success || !parsed.success) return fail(t.autosave.failed, String(parsed.error?.issues[0]?.path[0] ?? ""));
+  if (!uuid.safeParse(id).success || !parsed.success) return invalid(undefined, String(parsed.error?.issues[0]?.path[0] ?? ""));
   if (parsed.data.superseded_by_id) {
     // Checked up front: a missing decision would otherwise surface as a bare foreign-key error.
     const supabase = await createClient();
     const { data: target } = await supabase.from("design_decisions").select("id").eq("id", parsed.data.superseded_by_id).maybeSingle();
-    if (!target) return fail(t.autosave.failed, "superseded_by_id");
+    if (!target) return invalid(undefined, "superseded_by_id");
   }
-  const res = await updateTracked("design_decisions", { column: "id", value: id }, parsed.data, "title");
-  if (res === "error") return fail();
-  if (res === "read-only") return fail(t.autosave.readOnly);
-  return { ok: true };
+  return trackedSave(await updateTracked("design_decisions", { column: "id", value: id }, parsed.data, "title", undefined, version));
 }
 
 export async function deleteDecision(formData: FormData) {

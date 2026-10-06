@@ -33,7 +33,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
       <BackLink href={`${ctx.base}/insights`}>{t.synthesis.back(s.title)}</BackLink>
       <PageHeader title={i.title} eyebrow={<span className="flex items-center gap-2"><EntityChip type="insight" code={i.code} />{s.participants(st?.participants ?? 0)}</span>} />
       <div className="flex flex-col gap-8">
-        <InsightEditor key={i.id} id={i.id} canEdit={ctx.canEdit}
+        <InsightEditor key={i.id} id={i.id} canEdit={ctx.canEdit} version={i.updated_at}
           initial={{ title: i.title, statement: i.statement, confidence: i.confidence, status: i.status }} />
         {/* Cognitive bias (docs/UX_LAWS.md, UX-08): one voice is not a pattern yet. */}
         {st && st.sources > 0 && st.participants === 1 && (

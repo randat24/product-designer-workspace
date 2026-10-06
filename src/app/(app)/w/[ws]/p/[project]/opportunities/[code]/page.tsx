@@ -34,7 +34,7 @@ export default async function OpportunityPage({ params }: { params: Promise<Para
       <PageHeader title={o.title} eyebrow={<EntityChip type="opportunity" code={o.code} />}
         stat={{ value: st?.participants ?? 0, caption: s.participants }} />
       <div className="flex flex-col gap-8">
-        <OpportunityEditor key={o.id} id={o.id} canEdit={ctx.canEdit}
+        <OpportunityEditor key={o.id} id={o.id} canEdit={ctx.canEdit} version={o.updated_at}
           initial={{ title: o.title, description: o.description, hmw: o.hmw, impact: o.impact, effort: o.effort, status: o.status }} />
         <section aria-labelledby="evidence-h" className="flex flex-col gap-3">
           <h2 id="evidence-h" className="text-heading font-semibold">{t.synthesis.insights.evidence}</h2>

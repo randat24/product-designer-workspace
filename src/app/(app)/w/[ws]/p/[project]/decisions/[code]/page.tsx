@@ -66,7 +66,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
           )}
         </section>
 
-        <DecisionEditor key={d.id} id={d.id} canEdit={ctx.canEdit}
+        <DecisionEditor key={d.id} id={d.id} canEdit={ctx.canEdit} version={d.updated_at}
           others={all.filter((x) => x.id !== d.id).map((x) => ({ id: x.id, code: x.code, title: x.title }))}
           initial={{
             title: d.title, context: d.context, decision: d.decision, reason: d.reason,

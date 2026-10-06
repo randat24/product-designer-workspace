@@ -17,16 +17,17 @@ import type { GuideQuestion } from "./queries";
 const g = t.research.guide;
 
 /** Interview Builder: 8 sections, questions with probes and a "key" mark (docs/IA.md). */
-export function GuideBuilder({ projectId, guideId, meta, questions, canEdit }: {
+export function GuideBuilder({ projectId, guideId, meta, questions, canEdit, version = null }: {
   projectId: string;
   guideId: string;
   meta: GuideMeta;
   questions: GuideQuestion[];
   canEdit: boolean;
+  version?: string | null;
 }) {
   const router = useRouter();
   const { pending, run, error: actionError } = useAction();
-  const { value: m, update, status, error } = useAutosave(meta, (v) => saveGuideMeta(guideId, v), canEdit);
+  const { value: m, update, status, error } = useAutosave(meta, (v, ver) => saveGuideMeta(guideId, v, ver), canEdit, version);
 
   return (
     <div className="flex flex-col gap-8">

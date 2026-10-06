@@ -48,7 +48,7 @@ export type GuideQuestion = { id: string; section: string; position: number; tex
 export const getGuide = cache(async (projectId: string, guideId: string) => {
   const supabase = await createClient();
   const [guide, questions] = await Promise.all([
-    supabase.from("interview_guides").select("id, title, intro, outro, research_plan_id").eq("project_id", projectId).eq("id", guideId).maybeSingle(),
+    supabase.from("interview_guides").select("id, title, intro, outro, research_plan_id, updated_at").eq("project_id", projectId).eq("id", guideId).maybeSingle(),
     supabase.from("interview_questions").select("id, section, position, text, probes, is_key").eq("guide_id", guideId),
   ]);
   if (guide.error) throw guide.error;

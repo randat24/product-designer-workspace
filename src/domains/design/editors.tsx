@@ -92,8 +92,8 @@ function EventList({ items, readOnly, onChange }: { items: AnalyticsEvent[]; rea
 }
 
 /** Screen specification (docs/IA.md /screens/[code]), autosaved as a whole. */
-export function ScreenEditor({ id, initial, canEdit }: { id: string; initial: ScreenSpec; canEdit: boolean }) {
-  const { value: v, update, status, error } = useAutosave(initial, (x) => saveScreen(id, x), canEdit);
+export function ScreenEditor({ id, initial, canEdit, version = null }: { id: string; initial: ScreenSpec; canEdit: boolean; version?: string | null }) {
+  const { value: v, update, status, error } = useAutosave(initial, (x, ver) => saveScreen(id, x, ver), canEdit, version);
   const f = sc.fields;
   const ro = !canEdit;
   return (
@@ -146,10 +146,10 @@ export const DeleteScreenButton = ({ id }: { id: string }) => <ArmedDelete actio
 export const DeleteDecisionButton = ({ id }: { id: string }) => <ArmedDelete action={deleteDecision} id={id} label={dc.delete} confirm={dc.deleteConfirm} />;
 
 /** Decision Log entry (docs/IA.md /decisions/[code]), autosaved as a whole. */
-export function DecisionEditor({ id, initial, others, canEdit }: {
-  id: string; initial: DecisionFields; others: { id: string; code: string; title: string }[]; canEdit: boolean;
+export function DecisionEditor({ id, initial, others, canEdit, version = null }: {
+  id: string; initial: DecisionFields; others: { id: string; code: string; title: string }[]; canEdit: boolean; version?: string | null;
 }) {
-  const { value: v, update, status, error } = useAutosave(initial, (x) => saveDecision(id, x), canEdit);
+  const { value: v, update, status, error } = useAutosave(initial, (x, ver) => saveDecision(id, x, ver), canEdit, version);
   const f = dc.fields;
   const ro = !canEdit;
   const alts: Alternative[] = v.alternatives;

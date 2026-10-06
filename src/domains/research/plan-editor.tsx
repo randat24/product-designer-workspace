@@ -12,8 +12,8 @@ import { Button, IconButton } from "@/shared/ui/button";
 
 const f = t.research.plan.fields;
 
-export function PlanEditor({ id, initial, canEdit }: { id: string; initial: PlanFields; canEdit: boolean }) {
-  const { value: p, update, status, error } = useAutosave(initial, (v) => savePlan(id, v), canEdit);
+export function PlanEditor({ id, initial, canEdit, version = null }: { id: string; initial: PlanFields; canEdit: boolean; version?: string | null }) {
+  const { value: p, update, status, error } = useAutosave(initial, (v, ver) => savePlan(id, v, ver), canEdit, version);
   const text = (key: "goal" | "hypotheses_text" | "audience" | "success_criteria", label: string, hint?: string) => (
     <TextField id={key} label={label} hint={hint} value={p[key] ?? ""} readOnly={!canEdit} onChange={(v) => update({ [key]: v })} />
   );
