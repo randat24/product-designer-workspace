@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { isOffline, TimeoutError, withTimeout } from "@/shared/lib/network";
 import { t } from "@/shared/i18n/uk";
 
-type ActionResult = { ok: boolean; error?: string } | void | undefined;
+export type ActionResult = { ok: boolean; error?: string } | void | undefined;
 
 /** The message for a request that never got an answer: no connection, a server that took too long, or a crash. */
 export function failureMessage(e: unknown) {

@@ -116,3 +116,36 @@ test("project request: the brief is not reachable without a valid token", async 
   const bad = await request.post("/api/project-request/brief", { data: { token: "../etc/passwd" } });
   expect(bad.status()).toBe(400);
 });
+
+// axe does not check placeholder text: measure it (docs/HANDOFF_TRIAGE.md, F05). 4.5:1 is WCAG AA for body text.
+for (const colorScheme of ["light", "dark"] as const) {
+  test(`project request: placeholder text is readable (${colorScheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.goto("/uk/start-project");
+    await page.getByRole("button", { name: "Почати" }).click();
+    const field = page.getByPlaceholder("Наприклад: Stefa Books");
+    await expect(field).toBeVisible();
+    const ratio = await field.evaluate((el) => {
+      // Any CSS colour (rgb, oklab, with alpha) to sRGB through a canvas pixel.
+      const ctx = document.createElement("canvas").getContext("2d")!;
+      const rgba = (c: string) => {
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = c;
+        ctx.fillRect(0, 0, 1, 1);
+        const [r = 0, g = 0, b = 0, a = 255] = ctx.getImageData(0, 0, 1, 1).data;
+        return { r, g, b, a: a / 255 };
+      };
+      const lum = ({ r, g, b }: { r: number; g: number; b: number }) => {
+        const [R = 0, G = 0, B = 0] = [r, g, b].map((v) => v / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+      };
+      const bg = rgba(getComputedStyle(el).backgroundColor);
+      const ph = rgba(getComputedStyle(el, "::placeholder").color);
+      // A faded placeholder is seen blended over the field.
+      const seen = { r: ph.r * ph.a + bg.r * (1 - ph.a), g: ph.g * ph.a + bg.g * (1 - ph.a), b: ph.b * ph.a + bg.b * (1 - ph.a) };
+      const [hi, lo] = [lum(seen), lum(bg)].sort((x, y) => y - x) as [number, number];
+      return (hi + 0.05) / (lo + 0.05);
+    });
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+}

@@ -57,7 +57,7 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
           canEdit={ctx.canEdit} needsSources />
       </div>
 
-      {ctx.canEdit && <DeleteFlowButton id={flow.id} />}
+      {ctx.canEdit && <DeleteFlowButton id={flow.id} projectId={ctx.project.id} />}
     </div>
   );
 }

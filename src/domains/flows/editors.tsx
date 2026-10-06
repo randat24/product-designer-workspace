@@ -29,6 +29,6 @@ export function FlowMetaEditor({ id, initial, canEdit }: { id: string; initial: 
   );
 }
 
-export function DeleteFlowButton({ id }: { id: string }) {
-  return <ConfirmDelete action={deleteFlow} fields={{ id }} label={f.delete} confirm={f.deleteConfirm} />;
+export function DeleteFlowButton({ id, projectId }: { id: string; projectId: string }) {
+  return <ConfirmDelete action={deleteFlow} fields={{ id, projectId }} label={f.delete} confirm={f.deleteConfirm} />;
 }

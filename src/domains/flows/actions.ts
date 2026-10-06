@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
-import { denied, invalid, type Failure } from "@/shared/lib/action-result";
+import { denied, invalid, transient, type Failure } from "@/shared/lib/action-result";
+import { insertOnce, requestIdOf } from "@/shared/lib/supabase/insert-once";
 import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/uk";
 import { flowMetaSchema, type FlowMeta } from "./schema";
@@ -30,9 +31,9 @@ async function projectBase(projectId: string) {
 // ---------------------------------------------------------------- flows
 
 /** New flow with a Start node. From an opportunity it is traced as "opportunity addresses flow". */
-export async function createFlow(formData: FormData) {
+export async function createFlow(formData: FormData): Promise<Result> {
   const projectId = uuid.safeParse(formData.get("projectId"));
-  if (!projectId.success) return;
+  if (!projectId.success) return invalid();
   const opportunityId = uuid.safeParse(formData.get("opportunityId"));
   const name = z.string().trim().min(1).max(200).safeParse(formData.get("name"));
 
@@ -42,17 +43,22 @@ export async function createFlow(formData: FormData) {
     const { data } = await supabase.from("opportunities").select("title").eq("id", opportunityId.data).maybeSingle();
     title = data?.title ?? "";
   }
-  const { data: flow, error } = await supabase.from("user_flows")
-    .insert({ project_id: projectId.data, name: title || t.flows.add }).select("id, code").single();
-  if (error) return;
-  await supabase.from("flow_nodes").insert({
+  const id = requestIdOf(formData);
+  const flow = await insertOnce("user_flows", { project_id: projectId.data, name: title || t.flows.add }, id);
+  if (!flow) return denied();
+  // A repeated press finds the flow of the first one: its start step and link may already be there.
+  const { count } = await supabase.from("flow_nodes").select("id", { count: "exact", head: true }).eq("flow_id", flow.id);
+  const start = count ? null : (await supabase.from("flow_nodes").insert({
     project_id: projectId.data, flow_id: flow.id, kind: "start", label: t.flows.newLabel.start, pos_x: 0, pos_y: 0,
-  });
-  if (opportunityId.success) {
-    await supabase.from("trace_links").insert({
-      project_id: projectId.data, source_type: "opportunity", source_id: opportunityId.data,
-      target_type: "user_flow", target_id: flow.id, relation: "addresses",
-    });
+  })).error;
+  const linked = opportunityId.success ? (await supabase.from("trace_links").insert({
+    project_id: projectId.data, source_type: "opportunity", source_id: opportunityId.data,
+    target_type: "user_flow", target_id: flow.id, relation: "addresses",
+  })).error : null;
+  if (start || (linked && linked.code !== "23505")) {
+    // Half a flow (no start step, or "from an opportunity" without the link) is undone; the press can be repeated.
+    await supabase.from("user_flows").delete().eq("id", flow.id);
+    return transient();
   }
   refresh();
   redirect(`${await projectBase(projectId.data)}/flows/${flow.code}`);
@@ -73,14 +79,20 @@ export async function saveViewport(id: string, viewport: { x: number; y: number;
   return done(error);
 }
 
-export async function deleteFlow(formData: FormData) {
+export async function deleteFlow(formData: FormData): Promise<Result> {
   const id = uuid.safeParse(formData.get("id"));
-  if (!id.success) return;
+  const projectId = uuid.safeParse(formData.get("projectId")).data;
+  if (!id.success) return invalid();
   const supabase = await createClient();
-  const { data } = await supabase.from("user_flows").delete().eq("id", id.data).select("project_id").maybeSingle();
-  if (!data) return;
+  const { data, error } = await supabase.from("user_flows").delete().eq("id", id.data).select("project_id").maybeSingle();
+  if (error) return denied();
+  if (!data) {
+    // Nothing deleted: either it is already gone (an earlier press whose answer was lost) or this is read-only access.
+    const { data: still } = await supabase.from("user_flows").select("id").eq("id", id.data).maybeSingle();
+    if (still || !projectId) return denied();
+  }
   refresh();
-  redirect(`${await projectBase(data.project_id)}/flows`);
+  redirect(`${await projectBase(data?.project_id ?? projectId!)}/flows`);
 }
 
 // ---------------------------------------------------------------- nodes
@@ -155,8 +167,12 @@ export async function createScreenForNode(nodeId: string): Promise<Result & { na
   const name = node.label.trim() || t.flows.newLabel.screen;
   const { data: screen, error } = await supabase.from("screens").insert({ project_id: node.project_id, name }).select("id, code").single();
   if (error) return denied();
-  const linked = await supabase.from("flow_nodes").update({ screen_id: screen.id }).eq("id", nodeId);
-  if (linked.error) return denied();
+  const linked = await supabase.from("flow_nodes").update({ screen_id: screen.id }).eq("id", nodeId).select("id");
+  if (linked.error || !linked.data.length) {
+    // An unlinked screen would be left behind with nobody knowing it was made: remove it.
+    await supabase.from("screens").delete().eq("id", screen.id);
+    return denied();
+  }
   refresh();
   return { ok: true, id: screen.id, code: screen.code, name };
 }

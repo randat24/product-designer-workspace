@@ -2,8 +2,8 @@
 
 import { X } from "lucide-react";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
 import { cn } from "@/shared/lib/cn";
+import { ActionError, useAction, type ActionResult } from "@/shared/ui/use-action";
 
 /**
  * Two-step delete: the first press turns the button into «Точно удалить?», the second submits;
@@ -11,31 +11,33 @@ import { cn } from "@/shared/lib/cn";
  * misclick cannot lose data (UX-27). One component for every entity (docs/QUALITY_REVIEW.md D5).
  */
 export function ConfirmDelete({ action, fields, label, confirm }: {
-  action: (formData: FormData) => void | Promise<void>;
+  action: (formData: FormData) => Promise<ActionResult>;
   /** Hidden form fields, e.g. { id } or { type, id }. */
   fields: Record<string, string>;
   label: string;
   confirm: string;
 }) {
   const [armed, setArmed] = useState(false);
+  // A refused or failed delete says so next to the button (docs/HANDOFF_TRIAGE.md, F03).
+  const { pending, run, error } = useAction();
   return (
-    <form action={action} onSubmit={(e) => { if (!armed) { e.preventDefault(); setArmed(true); } }}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      if (!armed) { setArmed(true); return; }
+      const data = new FormData(e.currentTarget);
+      setArmed(false);
+      run(() => action(data));
+    }}>
       {Object.entries(fields).map(([name, value]) => <input key={name} type="hidden" name={name} value={value} />)}
-      <Submit armed={armed} onBlur={() => setArmed(false)}>{armed ? confirm : label}</Submit>
+      <button type="submit" onBlur={() => setArmed(false)} disabled={pending} aria-live="polite"
+        className={cn(
+          "inline-flex h-9 items-center rounded-control border-[1.5px] px-3.5 text-sm font-semibold disabled:opacity-50",
+          armed ? "border-danger bg-danger text-on-status" : "border-line text-danger hover:border-danger",
+        )}>
+        {armed ? confirm : label}
+      </button>
+      <ActionError error={error} className="mt-1.5 text-meta text-danger" />
     </form>
-  );
-}
-
-function Submit({ armed, onBlur, children }: { armed: boolean; onBlur: () => void; children: React.ReactNode }) {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" onBlur={onBlur} disabled={pending} aria-live="polite"
-      className={cn(
-        "inline-flex h-9 items-center rounded-control border-[1.5px] px-3.5 text-sm font-semibold disabled:opacity-50",
-        armed ? "border-danger bg-danger text-on-status" : "border-line text-danger hover:border-danger",
-      )}>
-      {children}
-    </button>
   );
 }
 

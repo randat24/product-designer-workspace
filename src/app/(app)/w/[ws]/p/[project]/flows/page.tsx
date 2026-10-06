@@ -12,6 +12,7 @@ import { Input } from "@/shared/ui/field";
 import { PageHeader } from "@/shared/ui/page-header";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
+import { ActionForm } from "@/shared/ui/action-form";
 
 export const metadata: Metadata = { title: t.flows.title };
 const f = t.flows;
@@ -27,11 +28,11 @@ export default async function FlowsPage({ params }: { params: Promise<{ ws: stri
       <div>
         <PageHeader title={f.title} lede={f.lede} />
         {ctx.canEdit && (
-          <form action={createFlow} className="flex max-w-xl flex-wrap gap-2">
+          <ActionForm action={createFlow} idempotent className="flex max-w-xl flex-wrap gap-2">
             <input type="hidden" name="projectId" value={ctx.project.id} />
             <Input name="name" aria-label={f.fields.name} required maxLength={200} placeholder={f.namePlaceholder} className="min-w-0 flex-1" />
             <Button type="submit">{f.add}</Button>
-          </form>
+          </ActionForm>
         )}
       </div>
 
