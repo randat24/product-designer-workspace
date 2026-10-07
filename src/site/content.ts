@@ -95,7 +95,7 @@ type Job = {
   military?: boolean;
 };
 
-type Dictionary = {
+export type Dictionary = {
   name: string;
   role: string;
   location: string;

@@ -544,3 +544,34 @@ test("requests: review a request and turn it into a project", async ({ page }, t
   await expect(page.getByText(/Зі слів клієнта \(REQ-/).first()).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test("site profile: the About text written in the tool shows on the site", async ({ page, context }, testInfo) => {
+  savesSharedRecord(testInfo);
+  test.skip(!process.env.NEXT_PUBLIC_SUPABASE_URL, "the site reads the profile from the database");
+  const errors = watchErrors(page);
+  await page.goto("/app");
+  await expect(page).toHaveURL(/\/w\/[^/]+$/);
+  await page.getByRole("link", { name: "Профіль сайту" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Профіль сайту" })).toBeVisible();
+  // The editor starts from what the site shows now.
+  await expect(page.locator("#uk-summary-text")).not.toHaveValue("");
+  await expectAccessible(page, testInfo);
+
+  const summary = `Опис з профілю ${Date.now()}`;
+  await page.locator("#uk-summary-text").fill(summary);
+  const fact = `років у вебі ${Date.now()}`;
+  await page.locator("#uk-facts-0-label").fill(fact);
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+
+  const site = await context.newPage();
+  await site.goto("/uk/about");
+  await expect(site.getByText(summary)).toBeVisible();
+  await expect(site.locator("dl dt", { hasText: fact })).toBeVisible();
+  // The English page keeps its own text.
+  await site.goto("/en/about");
+  await expect(site.getByText(summary)).toHaveCount(0);
+
+  await page.reload();
+  await expect(page.locator("#uk-summary-text")).toHaveValue(summary);
+  expect(errors).toEqual([]);
+});

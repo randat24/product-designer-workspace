@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Globe } from "lucide-react";
-import { getCurrentUser, listMyWorkspaces } from "@/domains/projects";
+import { getCurrentUser, getMyRole, listMyWorkspaces } from "@/domains/projects";
 import { countNewRequests } from "@/domains/requests/queries";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
@@ -28,15 +28,16 @@ export async function WorkspaceHeader({ current }: { current: string }) {
   );
 }
 
-/** «Проекты · Заявки» with the number of new requests. */
-export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: string; workspaceId: string; current: "projects" | "requests" }) {
-  const fresh = await countNewRequests(workspaceId);
+/** «Проекты · Заявки · Профіль сайту» with the number of new requests; the profile is the owner's only. */
+export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: string; workspaceId: string; current: "projects" | "requests" | "site" }) {
+  const [fresh, role] = await Promise.all([countNewRequests(workspaceId), getMyRole(workspaceId)]);
   const tabs = [
     { key: "projects", href: `/w/${wsSlug}`, label: t.requests.navProjects, badge: 0 },
     { key: "requests", href: `/w/${wsSlug}/requests`, label: t.requests.nav, badge: fresh },
-  ] as const;
+    ...(role === "owner" || current === "site" ? [{ key: "site", href: `/w/${wsSlug}/site`, label: t.siteProfile.nav, badge: 0 }] : []),
+  ];
   return (
-    <nav aria-label={t.requests.nav} className="flex gap-1.5">
+    <nav aria-label={t.requests.nav} className="flex flex-wrap gap-1.5">
       {tabs.map((tab) => (
         <Link key={tab.key} href={tab.href} aria-current={tab.key === current ? "page" : undefined}
           className={cn(
