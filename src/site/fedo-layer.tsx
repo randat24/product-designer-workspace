@@ -14,26 +14,28 @@ export function FedoCursor() {
   useEffect(() => {
     if (!matchMedia("(pointer: fine)").matches) return;
     const root = document.documentElement, cur = el.current!, text = lbl.current!;
-    root.classList.add("fedo-cursor");
     const typing = "input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), textarea, select, [contenteditable=true]";
+    // The system cursor goes only once ours is drawn; over text fields and outside the window it comes back.
+    const show = (on: boolean) => root.classList.toggle("fedo-cursor", on);
     const move = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
+      if (e.pointerType !== "mouse") { show(false); return; }
       cur.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
       const t = e.target as Element | null;
-      const field = t?.closest?.(typing);
-      cur.classList.toggle("is-in", !field);
+      const field = !!t?.closest?.(typing);
+      show(!field);
       const label = field ? "" : (t?.closest?.("[data-cursor]") as HTMLElement | null)?.dataset.cursor ?? "";
       if (label !== text.textContent) { text.textContent = label; cur.classList.toggle("has-label", !!label); }
     };
-    const out = (e: MouseEvent) => { if (!e.relatedTarget) cur.classList.remove("is-in"); };
+    const out = (e: MouseEvent) => { if (!e.relatedTarget) show(false); };
     const down = () => cur.classList.add("is-press");
     const up = () => cur.classList.remove("is-press");
     addEventListener("pointermove", move);
     document.addEventListener("mouseout", out);
+    addEventListener("blur", () => show(false));
     addEventListener("pointerdown", down);
     addEventListener("pointerup", up);
     return () => {
-      root.classList.remove("fedo-cursor");
+      show(false);
       removeEventListener("pointermove", move);
       document.removeEventListener("mouseout", out);
       removeEventListener("pointerdown", down);

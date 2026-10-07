@@ -374,13 +374,14 @@ body {
   .f-cut::before, .f-cut::after { display: none; }
 }
 
-/* ---------- the cursor of the mark (src/site/fedo-layer.tsx) ---------- */
-.fedo-cur { display: none; }
+/* ---------- the cursor of the mark (src/site/fedo-layer.tsx) ----------
+   The system cursor is hidden only while the mark's cursor is drawn (html.fedo-cursor is set on the first mouse
+   move and removed when the pointer leaves), so a failure never leaves the page without a cursor. */
+.fedo-cur { display: none; position: fixed; left: 0; top: 0; z-index: 300; pointer-events: none; }
 html.fedo-cursor, html.fedo-cursor * { cursor: none !important; }
-html.fedo-cursor :is(input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), textarea, select, [contenteditable=true]) { cursor: text !important; }
+html.fedo-cursor :is(input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), textarea, [contenteditable=true]) { cursor: text !important; }
 html.fedo-cursor select { cursor: pointer !important; }
-html.fedo-cursor .fedo-cur { display: block; position: fixed; left: 0; top: 0; z-index: 300; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
-.fedo-cur.is-in { opacity: 1; }
+html.fedo-cursor .fedo-cur { display: block; }
 .fedo-cur svg { display: block; width: 24px; height: 24px; margin: -1px 0 0 -1px; fill: var(--fg); stroke: var(--canvas); stroke-width: 6; transform-origin: 6% 6%; transition: transform 0.12s; }
 .fedo-cur.is-press svg { transform: scale(0.82); }
 .fedo-cur span { position: absolute; left: 20px; top: 22px; padding: 3px 9px; border-radius: 7px; background: var(--fg); color: var(--canvas); font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap; opacity: 0; transform: translateY(4px); transition: opacity 0.15s, transform 0.15s; }
