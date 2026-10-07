@@ -43,5 +43,5 @@ export default async function CasePage({ params }: { params: Params }) {
   const item = cases[index];
   if (!item) notFound();
   const next = cases.length > 1 ? cases[(index + 1) % cases.length]! : null;
-  return <CaseArticle item={item} locale={locale} next={next} />;
+  return <CaseArticle item={item} locale={locale} next={next} position={{ index: index + 1, total: cases.length }} />;
 }
