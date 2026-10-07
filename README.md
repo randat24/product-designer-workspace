@@ -23,6 +23,8 @@
 
 **Проверки.** `npm run lint` (ESLint: Next.js + доступность jsx-a11y), `npm test` (Vitest: схемы, нормализация ввода, прогресс этапов, справочники), `npm run e2e` (Playwright: сайт и инструмент на компьютере и телефоне, axe-проверка доступности; инструменту нужен тестовый пользователь `E2E_EMAIL` / `E2E_PASSWORD`), `npm run db:test` (pgTAP). В CI всё это запускается на каждый PR; e2e — на локальной Supabase внутри CI. План качества — [`docs/QUALITY_REVIEW.md`](docs/QUALITY_REVIEW.md).
 
+**Резервная копия.** Настройки проекта → «Завантажити проєкт (JSON)»; в списке проектов «Відновити проєкт з файлу» возвращает файл новым проектом рядом (все записи, связи и коды; кейс — черновиком; скриншоты не входят). Функция `restore_project` — миграция 023. Тема инструмента переключается в шапке и внизу колонки навигации, выбор общий с сайтом.
+
 **Законы UX.** Свод правил проекта по [lawsofux.com](https://lawsofux.com/) — [`docs/UX_LAWS.md`](docs/UX_LAWS.md) (8 сквозных принципов из статей сайта; 30 законов — определение, происхождение, ключевые выводы, правила для сайта и инструмента, частая ошибка, вопрос для проверки; как применять в процессе; чек-лист перед мержем); аудит и исправления — [`docs/UX_AUDIT.md`](docs/UX_AUDIT.md). В инструменте — справочник `/app/ux-laws` (ссылка внизу колонки навигации и в ⌘K) и наборы UX-оценки конкурентов «Законы UX», «Гештальт», «Память и внимание».
 
 **Production и SEO сайта.** Аудит и итог — [`docs/PRODUCTION_AUDIT.md`](docs/PRODUCTION_AUDIT.md); как устроено — [`docs/SEO.md`](docs/SEO.md), [`docs/ANALYTICS.md`](docs/ANALYTICS.md); выход на домен — [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md), [`docs/GA4_SETUP.md`](docs/GA4_SETUP.md), [`docs/SEARCH_CONSOLE_SETUP.md`](docs/SEARCH_CONSOLE_SETUP.md).

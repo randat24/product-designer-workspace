@@ -6,6 +6,7 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { slugify } from "@/shared/lib/slug";
 import { t } from "@/shared/i18n/uk";
 import { z } from "zod";
+import type { Json } from "@/types/database";
 import { createProjectSchema, updateProjectSchema } from "./schema";
 
 export type CreateProjectState = { error?: string; fieldErrors?: Partial<Record<"name", string>> } | undefined;
@@ -122,4 +123,42 @@ export async function createDemoProject(formData: FormData) {
   if (error) throw error;
   revalidatePath(`/w/${ws?.slug}`);
   redirect(`/w/${ws?.slug}/p/${slug}`);
+}
+
+export type RestoreProjectState = { error?: string } | undefined;
+
+/** Error codes of restore_project (migration 023) → what the person reads. */
+const RESTORE_ERRORS: Record<string, string> = {
+  "22023": t.workspace.restore.notExport,
+  "23503": t.workspace.restore.broken,
+  "42501": t.workspace.createFailed,
+};
+
+/** «Відновити з файлу»: a project export (settings → «Резервна копія») comes back as a new project. */
+export async function restoreProject(_prev: RestoreProjectState, formData: FormData): Promise<RestoreProjectState> {
+  const workspaceId = z.uuid().safeParse(formData.get("workspaceId"));
+  const file = formData.get("file");
+  if (!workspaceId.success || !(file instanceof File) || file.size === 0) return { error: t.workspace.restore.notExport };
+  if (file.size > 4_000_000) return { error: t.workspace.restore.tooBig };
+
+  let data: unknown;
+  try {
+    data = JSON.parse(await file.text());
+  } catch {
+    return { error: t.workspace.restore.notExport };
+  }
+  if (!data || typeof data !== "object" || (data as { format?: unknown }).format !== "pdw-project-export") {
+    return { error: t.workspace.restore.notExport };
+  }
+
+  const supabase = await createClient();
+  const { data: restored, error } = await supabase.rpc("restore_project", {
+    p_workspace: workspaceId.data,
+    p_export: data as Json,
+  });
+  if (error || !restored) return { error: RESTORE_ERRORS[error?.code ?? ""] ?? t.workspace.restore.failed };
+
+  const { data: ws } = await supabase.from("workspaces").select("slug").eq("id", workspaceId.data).single();
+  revalidatePath(`/w/${ws?.slug}`);
+  redirect(`/w/${ws?.slug}/p/${(restored as { slug: string }).slug}`);
 }

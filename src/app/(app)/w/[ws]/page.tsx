@@ -6,6 +6,7 @@ import { createDemoProject } from "@/domains/projects/actions";
 import { listCaseStudies } from "@/domains/cases";
 import { Button } from "@/shared/ui/button";
 import { t } from "@/shared/i18n/uk";
+import { RestoreProject } from "@/domains/projects/restore-project";
 import { NewProjectForm } from "./new-project-form";
 import { WorkspaceHeader, WorkspaceTabs } from "./workspace-header";
 import { FedoOutline } from "@/shared/ui/fedo-mark";
@@ -29,6 +30,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
         <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-hero border-[1.5px] border-fg bg-surface p-6 md:p-8">
           <h1 id="new-h" className="page-title">{t.workspace.newProject}</h1>
           <NewProjectForm workspaceId={workspace.id} autoFocus />
+          <RestoreProject workspaceId={workspace.id} />
         </section>
 
         <section aria-labelledby="projects-h" className="flex flex-col gap-4">
