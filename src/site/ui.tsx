@@ -157,13 +157,13 @@ export function CaseCover({
 const caseIndex = (n: number) => String(n).padStart(2, "0");
 
 /** The cover of a card: blurred for 18+ unless it is safe; on hover a scrim lifts the tags and «Open case». */
-function CardCover({ item, locale, label }: { item: Case; locale: Locale; label: string }) {
+function CardCover({ item, locale, label, large }: { item: Case; locale: Locale; label: string; large?: boolean }) {
   const d = dict(locale);
   const blurred = item.adult && !item.coverSafe;
   return (
     <div className="relative overflow-hidden rounded-[14px]">
       <div className={cn("transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none", blurred && "blur-xl")}>
-        <CaseCover item={item} label={label} />
+        <CaseCover item={item} label={label} large={large} />
       </div>
       {blurred && (
         <span aria-hidden className="absolute inset-0 grid place-items-center">
@@ -264,6 +264,56 @@ export function CaseCard({
         <CardTags tags={item.tags} className="mt-1 pointer-fine:hidden" />
         {item.process && <div className="mt-2"><ProcessStrip process={item.process} locale={locale} /></div>}
       </div>
+    </Link>
+  );
+}
+
+/**
+ * The opening of the home page: the first case as the page's headline, like a gallery's work of the day. The title
+ * in the largest type on the site beside its facts and how much of the work is documented, then a wide cover.
+ */
+export function HeroCase({ item, locale, label, total }: { item: Case; locale: Locale; label: string; total: number }) {
+  const d = dict(locale);
+  const facts = [
+    { label: d.cases.client, value: item.client },
+    { label: d.cases.year, value: item.year },
+    { label: d.cases.type, value: item.kind === "concept" ? d.project.concept : d.project.real },
+    { label: d.cases.role, value: item.role },
+  ].filter((f) => f.value);
+  return (
+    <Link
+      href={`/${locale}/cases/${item.slug}`}
+      data-kind={item.kind ?? "real"}
+      className="group flex flex-col gap-5"
+      {...trackAttrs("case_open", { case_slug: item.slug, location: "home" })}
+    >
+      <p className="flex items-center justify-between gap-2 font-label text-[12px] uppercase tracking-[0.04em]">
+        <span className="flex items-center gap-2"><span aria-hidden className="size-2 rounded-full bg-fg" />{d.cases.featured}</span>
+        <span className="text-fg-secondary">{caseIndex(1)} / {caseIndex(total)}</span>
+      </p>
+      <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] md:gap-12">
+        <div className="flex min-w-0 flex-col gap-4">
+          <CardBadges item={item} locale={locale} />
+          {/* The page's h1 names the site; each case title is the h2 of its own block. */}
+          <h2 className="font-display text-[clamp(48px,8vw,112px)] font-bold uppercase leading-[1.08] tracking-[0.01em] text-balance">{item.title}</h2>
+          <p className="max-w-[60ch] text-[clamp(17px,1.8vw,20px)] leading-[1.5] text-fg-secondary">{item.summary}</p>
+        </div>
+        <div className="flex min-w-0 flex-col gap-5">
+          <dl className="grid grid-cols-2 border-t border-fg">
+            {facts.map((f) => (
+              <div key={f.label} className="flex flex-col-reverse justify-end gap-0.5 border-b border-line py-2.5 pr-3">
+                <dd className="text-[14px] font-semibold">{f.value}</dd>
+                <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{f.label}</dt>
+              </div>
+            ))}
+          </dl>
+          {item.process && <ProcessStrip process={item.process} locale={locale} />}
+          <span className="flex items-center gap-2 text-[17px] font-semibold">
+            {d.cases.open}<span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none">→</span>
+          </span>
+        </div>
+      </div>
+      <CardCover item={item} locale={locale} label={label} large />
     </Link>
   );
 }

@@ -108,6 +108,8 @@ type Dictionary = {
     ctaCv: string;
     selected: string;
     all: string;
+    aboutMore: string;
+    portfolio: string;
   };
   cases: {
     title: string;
@@ -250,6 +252,8 @@ const uk: Dictionary = {
     ctaCv: "Резюме (PDF)",
     selected: "Вибрані роботи",
     all: "Усі роботи",
+    aboutMore: "Детальніше про мене",
+    portfolio: "Портфоліо",
   },
   cases: {
     title: "Роботи",
@@ -631,6 +635,8 @@ const en: Dictionary = {
     ctaCv: "CV (PDF, Ukrainian)",
     selected: "Selected work",
     all: "All work",
+    aboutMore: "More about me",
+    portfolio: "Portfolio",
   },
   cases: {
     title: "Work",
