@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return pageMetadata({ locale, path: "/about", title: d.seo.about.title, description: d.seo.about.description, type: "profile" });
 }
 
-const bigTitle = "font-display text-[clamp(40px,6vw,80px)] font-bold uppercase leading-[1.08] tracking-[0.01em]";
+const bigTitle = "t-section";
 // Research, structure, design, decisions: the workbook's entity colours (globals.css).
 const STEP_COLORS = ["var(--entity-research)", "var(--entity-structure)", "var(--entity-design)", "var(--entity-decision)"];
 
@@ -56,7 +56,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         <div className="flex flex-col gap-5">
           <p className="font-label text-[12px] uppercase tracking-[0.04em] text-fg-secondary">{d.about.eyebrow}</p>
           {/* The page title is the large word, not the name (the work is the headline of the site). */}
-          <h1 className="font-display text-[clamp(52px,10vw,144px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">{d.about.title}</h1>
+          <h1 className="t-page">{d.about.title}</h1>
           <p className="max-w-[62ch] text-[clamp(18px,2vw,21px)] leading-[1.5]">{d.about.summary}</p>
           <div className="flex flex-wrap gap-3">
             <PrimaryLink href={CONTACTS.cv[locale]} download icon={<FileDown aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "about" })}>
@@ -77,7 +77,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               // Label first in the markup (dt before dd), the number shown on top.
               <div key={f.label} className="flex flex-col-reverse justify-end gap-1">
                 <dt className="text-[14px] leading-[1.4] text-fg-secondary">{f.label}</dt>
-                <dd className="display-num text-[clamp(36px,5vw,52px)] leading-none">{f.value}</dd>
+                <dd className="display-num text-[clamp(30px,3.4vw,40px)] leading-none">{f.value}</dd>
               </div>
             ))}
           </dl>
