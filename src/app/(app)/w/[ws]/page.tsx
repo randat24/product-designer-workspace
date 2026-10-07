@@ -8,6 +8,7 @@ import { Button } from "@/shared/ui/button";
 import { t } from "@/shared/i18n/uk";
 import { NewProjectForm } from "./new-project-form";
 import { WorkspaceHeader, WorkspaceTabs } from "./workspace-header";
+import { FedoOutline } from "@/shared/ui/fedo-mark";
 
 export const metadata: Metadata = { title: t.workspace.projects };
 
@@ -34,6 +35,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
           <h2 id="projects-h" className="text-heading font-semibold">{t.workspace.projects}</h2>
           {projects.length === 0 ? (
             <div className="flex flex-col items-center gap-3 rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
+              <FedoOutline className="size-16" />
               <p>{t.workspace.empty}</p>
               <form action={createDemoProject}>
                 <input type="hidden" name="workspaceId" value={workspace.id} />

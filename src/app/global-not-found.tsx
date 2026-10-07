@@ -4,6 +4,7 @@ import "./fonts.css";
 import "./globals.css";
 import { dict, isLocale, type Locale } from "@/site/content";
 import { THEME_INIT_SCRIPT } from "@/site/theme-toggle";
+import { FedoMark, FedoOutline } from "@/shared/ui/fedo-mark";
 
 // The 404 page for the whole app (experimental.globalNotFound): with several root layouts
 // (site per locale, workspace) Next.js renders this instead of a segment not-found.tsx.
@@ -27,13 +28,19 @@ export default async function GlobalNotFound() {
         <div className="flex min-h-dvh flex-col">
           <header className="border-b border-line">
             <div className="mx-auto flex h-16 w-full max-w-[1120px] items-center px-4 sm:px-8">
-              <Link href={`/${locale}`} className="font-display text-[20px] font-bold uppercase leading-none">
-                {d.name}
+              <Link href={`/${locale}`} className="group flex items-center gap-2.5">
+                <FedoMark tap className="size-9" />
+                <span aria-hidden className="font-display text-[22px] font-semibold uppercase leading-none tracking-[0.08em]">FEDO</span>
+                <span className="sr-only">{d.name}</span>
               </Link>
             </div>
           </header>
           <main id="main" className="mx-auto flex w-full max-w-[1120px] flex-1 flex-col gap-6 px-4 py-24 sm:px-8">
-            <p className="display-num text-[clamp(64px,12vw,140px)] leading-none text-fg-secondary">404</p>
+            {/* The cursor of the mark missed the notch: there is nothing at this address. */}
+            <div className="flex items-end gap-6">
+              <FedoOutline miss className="size-[clamp(64px,9vw,110px)]" />
+              <p className="display-num text-[clamp(64px,12vw,140px)] leading-none text-fg-secondary">404</p>
+            </div>
             <h1 className="page-title">{d.ui.notFoundTitle}</h1>
             <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.ui.notFoundBody}</p>
             <nav className="flex flex-wrap gap-3" aria-label={d.ui.mainNav}>
@@ -69,6 +76,7 @@ function ToolNotFound() {
       </head>
       <body>
         <main className="mx-auto flex max-w-md flex-col gap-3 px-6 py-24">
+          <FedoOutline miss className="size-20" />
           <h1 className="text-title font-semibold">Сторінку не знайдено</h1>
           <p className="text-fg-secondary">Проєкту або простору не існує, або у вас немає до нього доступу.</p>
           <Link href="/app" className="text-accent hover:underline">До проєктів</Link>

@@ -30,22 +30,22 @@ export const getCaseForProject = cache(async (projectId: string) => {
     hasContent: hasContent(data.content),
     hasDraftContent: hasContent(data.draft),
     // jsonb comes back with its keys in a fixed order, so equal snapshots serialise equally. The published copy also
-    // carries `process` (counted on publish, never in the draft), which is not an edit.
-    // A copy published before the counts existed has none: publishing again adds them.
-    hasUnpublished: JSON.stringify(data.draft) !== JSON.stringify(withoutProcess(data.content)) || !hasProcess(data.content),
+    // carries `process` and `trace` (collected on publish, never in the draft), which are not edits.
+    // A copy published before they existed lacks them: publishing again adds them.
+    hasUnpublished: JSON.stringify(data.draft) !== JSON.stringify(withoutWorkbook(data.content)) || !hasWorkbook(data.content),
     adult: isAdult(data.draft),
     sample: isSample(data.draft),
     figma: figmaOf(data.draft),
   };
 });
 
-function hasProcess(content: unknown): boolean {
-  return !!content && typeof content === "object" && "process" in content;
+function hasWorkbook(content: unknown): boolean {
+  return !!content && typeof content === "object" && "process" in content && "trace" in content;
 }
 
-function withoutProcess(content: unknown): unknown {
+function withoutWorkbook(content: unknown): unknown {
   if (!content || typeof content !== "object" || Array.isArray(content)) return content;
-  const { process: _process, ...rest } = content as Record<string, unknown>;
+  const { process: _process, trace: _trace, ...rest } = content as Record<string, unknown>;
   return rest;
 }
 

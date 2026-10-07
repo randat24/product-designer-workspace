@@ -341,3 +341,65 @@ body {
 .f-notch::before, .f-notch::after { content: ""; position: absolute; width: var(--nr); height: var(--nr); pointer-events: none; background: radial-gradient(circle at 0 0, transparent calc(var(--nr) - 0.5px), var(--notch-bg, var(--canvas)) var(--nr)); }
 .f-notch::before { right: 0; bottom: 100%; }
 .f-notch::after { right: 100%; bottom: 0; }
+
+/* ---------- the canvas of cases (src/site/case-canvas.tsx) ---------- */
+.fedo-canvas { background-image: radial-gradient(var(--line) 1px, transparent 1.3px); background-size: 24px 24px; }
+.fedo-frame:hover, .fedo-frame:focus-visible, .fedo-frame.is-guided { outline: calc(2px / var(--s)) solid var(--entity-design); outline-offset: 0; }
+.fedo-handles i { position: absolute; width: calc(9px / var(--s)); height: calc(9px / var(--s)); background: var(--surface); border: calc(1.5px / var(--s)) solid var(--entity-design); transform: translate(-50%, -50%); opacity: 0; }
+.fedo-handles i:nth-child(1) { left: 0; top: 0; }
+.fedo-handles i:nth-child(2) { left: 100%; top: 0; }
+.fedo-handles i:nth-child(3) { left: 0; top: 100%; }
+.fedo-handles i:nth-child(4) { left: 100%; top: 100%; }
+.fedo-dim { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, calc(100% + 9px / var(--s))); padding: calc(4px / var(--s)) calc(7px / var(--s)); border-radius: calc(4px / var(--s)); background: var(--entity-design); color: var(--canvas); font: 500 calc(11px / var(--s)) / 1 var(--font-label); white-space: nowrap; opacity: 0; }
+.fedo-frame:hover :is(.fedo-handles i, .fedo-dim), .fedo-frame:focus-visible :is(.fedo-handles i, .fedo-dim), .fedo-frame.is-guided :is(.fedo-handles i, .fedo-dim) { opacity: 1; }
+.fedo-guide { transform: translate(var(--gx, -100px), var(--gy, -100px)); }
+.fedo-guide.is-walking { transition: transform 1.1s cubic-bezier(0.45, 0.05, 0.2, 1); }
+.fedo-say { opacity: 0; transform: translateY(4px); transition: opacity 0.2s, transform 0.2s; }
+.fedo-guide.is-saying .fedo-say { opacity: 1; transform: none; }
+
+/* The About page as the F: the bar (who), the stem (experience), the notch (facts and the way to write). */
+.f-grid { --R: 28px; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); grid-template-areas: "bar bar" "stem cut"; background: var(--fg); color: var(--canvas); border-radius: var(--R) var(--R) 0 var(--R); overflow: hidden; }
+.f-bar { grid-area: bar; }
+.f-stem { grid-area: stem; }
+.f-cut { grid-area: cut; position: relative; background: var(--canvas); color: var(--fg); border-top-left-radius: var(--R); }
+.f-cut::before, .f-cut::after { content: ""; position: absolute; width: var(--R); height: var(--R); pointer-events: none; background: radial-gradient(circle at 0 0, transparent calc(var(--R) - 0.5px), var(--canvas) var(--R)); }
+.f-cut::before { right: 0; bottom: 100%; }
+.f-cut::after { right: 100%; bottom: 0; }
+@media (max-width: 767px) {
+  .f-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bar" "stem" "cut"; background: none; color: inherit; border-radius: 0; overflow: visible; }
+  .f-bar, .f-stem { background: var(--fg); color: var(--canvas); }
+  .f-bar { border-radius: var(--R) var(--R) 0 0; }
+  .f-stem { border-radius: 0 0 var(--R) var(--R); }
+  .f-cut { border-radius: 0; }
+  .f-cut::before, .f-cut::after { display: none; }
+}
+
+/* ---------- the cursor of the mark (src/site/fedo-layer.tsx) ---------- */
+.fedo-cur { display: none; }
+html.fedo-cursor, html.fedo-cursor * { cursor: none !important; }
+html.fedo-cursor :is(input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), textarea, select, [contenteditable=true]) { cursor: text !important; }
+html.fedo-cursor select { cursor: pointer !important; }
+html.fedo-cursor .fedo-cur { display: block; position: fixed; left: 0; top: 0; z-index: 300; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+.fedo-cur.is-in { opacity: 1; }
+.fedo-cur svg { display: block; width: 24px; height: 24px; margin: -1px 0 0 -1px; fill: var(--fg); stroke: var(--canvas); stroke-width: 6; transform-origin: 6% 6%; transition: transform 0.12s; }
+.fedo-cur.is-press svg { transform: scale(0.82); }
+.fedo-cur span { position: absolute; left: 20px; top: 22px; padding: 3px 9px; border-radius: 7px; background: var(--fg); color: var(--canvas); font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap; opacity: 0; transform: translateY(4px); transition: opacity 0.15s, transform 0.15s; }
+.fedo-cur.has-label span { opacity: 1; transform: none; }
+
+/* ---------- the intro, once a session ---------- */
+.fedo-intro-layer { display: none; }
+html.fedo-intro .fedo-intro-layer { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; background: var(--fg); pointer-events: none; animation: fedo-fade 0.35s 1.95s forwards; }
+.fedo-intro-layer svg { width: min(44vmin, 280px); height: auto; overflow: visible; transform-origin: 62% 62%; animation: fedo-dive 0.7s 1.55s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+.fedo-intro-layer .i-f { fill: transparent; stroke: var(--canvas); stroke-width: 5; stroke-dasharray: 1; stroke-dashoffset: 1; animation: fedo-draw 0.75s cubic-bezier(0.6, 0, 0.3, 1) forwards, fedo-fill 0.3s 0.62s forwards; }
+.fedo-intro-layer .i-c { fill: var(--canvas); opacity: 0; transform-box: fill-box; transform-origin: 6% 6%; animation: fedo-fly 0.5s 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, fedo-click 0.24s 1.3s ease-in-out; }
+.fedo-intro-layer .i-r { fill: none; stroke: var(--canvas); stroke-width: 3; opacity: 0; transform-box: fill-box; transform-origin: center; animation: fedo-ripple 0.5s 1.36s ease-out; }
+@keyframes fedo-draw { to { stroke-dashoffset: 0; } }
+@keyframes fedo-fill { to { fill: var(--canvas); } }
+@keyframes fedo-fly { from { opacity: 0; transform: translate(150%, 150%); } to { opacity: 1; transform: none; } }
+@keyframes fedo-click { 50% { transform: scale(0.8); } }
+@keyframes fedo-ripple { from { opacity: 0.9; transform: scale(0.2); } to { opacity: 0; transform: scale(1.6); } }
+@keyframes fedo-dive { to { transform: scale(16); } }
+@keyframes fedo-fade { to { opacity: 0; visibility: hidden; } }
+.fedo-loading .fedo-tap { animation: fedo-tap 1.1s cubic-bezier(0.3, 0.7, 0.2, 1) infinite; }
+.fedo-miss { transform-box: fill-box; transform-origin: 6% 6%; transform: translate(30px, 28px) rotate(20deg); }
+@media (prefers-reduced-motion: reduce) { .fedo-loading .fedo-tap { animation: none; } }

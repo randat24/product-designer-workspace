@@ -28,3 +28,14 @@ export function CursorIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** The F as a dashed outline with its cursor: an empty place («nothing here yet»), or with `miss` a cursor that
+ *  missed the notch (a page that does not exist). */
+export function FedoOutline({ className, miss }: { className?: string; miss?: boolean }) {
+  return (
+    <svg viewBox="40 40 260 310" aria-hidden className={cn("fedo-outline shrink-0 overflow-visible", className)}>
+      <path d={FEDO_F} className="fill-none stroke-fg-secondary [stroke-dasharray:18_14] [stroke-width:8]" />
+      <path d={FEDO_CURSOR} className={cn("fill-fg", miss && "fedo-miss")} />
+    </svg>
+  );
+}
