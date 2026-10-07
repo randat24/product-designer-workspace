@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cn } from "@/shared/lib/cn";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { CONTACTS, dict, type Case, type Locale } from "@/site/content";
 import { trackAttrs } from "@/site/analytics/track";
@@ -11,17 +12,21 @@ import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl } from "@/site/seo";
 import { ContactMenu } from "@/site/contact-menu";
 import { AdultGate } from "@/site/adult-gate";
-import { AdultBadge, CaseCover, Eyebrow, KindBadge, PrimaryLink, SecondaryLink, container } from "@/site/ui";
+import { AdultBadge, CaseCover, KindBadge, PrimaryLink, ProcessStrip, SecondaryLink, container } from "@/site/ui";
 import { INTAKE } from "@/site/intake/content";
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
  * The case page body. The public page renders the published snapshot; the tool's preview renders the draft
  * with the same component, so what is checked there is what «Опублікувати» puts on the site.
  */
-export function CaseArticle({ item, locale, next, banner }: {
+export function CaseArticle({ item, locale, next, position, banner }: {
   item: Case;
   locale: Locale;
   next: Case | null;
+  /** 1-based place of the case among the published ones, shown as «02 / 04». */
+  position?: { index: number; total: number };
   /** Shown above the case instead of structured data: the draft preview. */
   banner?: React.ReactNode;
 }) {
@@ -46,24 +51,30 @@ export function CaseArticle({ item, locale, next, banner }: {
         )}
       />}
       <div className={`${container} flex flex-col gap-8`}>
-        <nav aria-label={d.ui.breadcrumbs}>
-          <ol className="flex flex-wrap items-center gap-1.5 text-[14px] font-semibold text-fg-secondary">
-            <li><Link href={`/${locale}`} className="hover:text-fg">{d.ui.home}</Link></li>
-            <li aria-hidden="true">/</li>
-            <li><Link href={`/${locale}/cases`} className="hover:text-fg">{d.cases.title}</Link></li>
-            <li aria-hidden="true">/</li>
-            <li aria-current="page" className="text-fg">{item.title}</li>
-          </ol>
-        </nav>
-        <header className="flex max-w-[820px] flex-col gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <nav aria-label={d.ui.breadcrumbs}>
+            <ol className="flex flex-wrap items-center gap-1.5 font-label text-[12px] uppercase tracking-[0.04em] text-fg-secondary">
+              <li><Link href={`/${locale}`} className="hover:text-fg">{d.ui.home}</Link></li>
+              <li aria-hidden="true">/</li>
+              <li><Link href={`/${locale}/cases`} className="hover:text-fg">{d.cases.title}</Link></li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="text-fg">{item.title}</li>
+            </ol>
+          </nav>
+          {position && (
+            <span className="font-label text-[12px] text-fg-secondary">{pad(position.index)} / {pad(position.total)}</span>
+          )}
+        </div>
+        {/* The case is the headline: its title is the largest type on the site. */}
+        <header className="flex flex-col gap-5">
           {(item.kind || item.adult) && (
             <div className="flex gap-2">
               {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />}
               {item.adult && <AdultBadge label={d.adult.badge} />}
             </div>
           )}
-          <h1 className="font-display text-[clamp(38px,6vw,72px)] font-bold uppercase leading-[1.1]">{item.title}</h1>
-          <p className="text-[clamp(17px,2vw,20px)] text-fg-secondary">{item.summary}</p>
+          <h1 className="font-display text-[clamp(52px,11vw,168px)] font-bold uppercase leading-[1.08] tracking-[0.01em] text-balance">{item.title}</h1>
+          <p className="max-w-[62ch] text-[clamp(18px,2vw,22px)] leading-[1.45]">{item.summary}</p>
           {item.product && (
             <>
               <ul className="flex flex-wrap gap-2">
@@ -75,22 +86,27 @@ export function CaseArticle({ item, locale, next, banner }: {
             </>
           )}
         </header>
-        <dl className={`grid grid-cols-2 gap-4 border-y border-line py-5 ${item.story ? "lg:grid-cols-6" : "sm:grid-cols-3"}`}>
+        <dl className={`grid grid-cols-2 border-y border-t-fg border-b-line ${item.story ? "lg:grid-cols-6" : "sm:grid-cols-3"}`}>
           {[
             [d.cases.client, item.client],
             [d.cases.role, item.role],
             [d.cases.year, item.year],
             ...(item.story?.meta.map((m) => [m.label, m.value]) ?? []),
           ].map(([k, v]) => (
-            <div key={k} className="flex flex-col gap-1">
-              <dt><Eyebrow>{k}</Eyebrow></dt>
+            <div key={k} className="flex flex-col-reverse justify-end gap-1 py-3.5 pr-4">
               <dd className="font-semibold">{v}</dd>
+              <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{k}</dt>
             </div>
           ))}
         </dl>
       </div>
       {item.coverSafe && (
         <div className={`${container} mt-8`}><CaseCover item={item} label={d.cases.placeholder} large /></div>
+      )}
+      {item.process && (
+        <section aria-label={d.process.title} className={`${container} mt-10`}>
+          <div className="rounded-[20px] border border-line bg-surface p-5 sm:p-7"><ProcessStrip process={item.process} locale={locale} full /></div>
+        </section>
       )}
       {gate(<>
       <div className={`${container} mt-8 flex flex-col gap-8`}>
@@ -176,37 +192,46 @@ export function CaseArticle({ item, locale, next, banner }: {
 
       </>)}
 
-      <div className={`${container} mt-20`}>
-      <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10 sm:flex-row sm:items-center sm:justify-between">
-        {next ? (
+      <div className={`${container} mt-20 flex flex-col gap-12`}>
+        {next && (
+          // The next case, large: the way out of a case is into the next piece of work.
           <Link
             href={`/${locale}/cases/${next.slug}`}
-            className="group flex flex-col gap-1"
+            className="group grid gap-6 border-t-[1.5px] border-fg pt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] md:items-end md:gap-10"
             {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}
           >
-            <Eyebrow>{d.cases.next}</Eyebrow>
-            <span className="font-display text-[28px] font-bold uppercase leading-[1.08]">
-              {next.title} <span aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-1.5 motion-reduce:transition-none">→</span>
-            </span>
+            <div className="flex min-w-0 flex-col gap-3">
+              <p className="font-label text-[12px] uppercase tracking-[0.04em] text-fg-secondary">
+                {d.cases.next}{position && ` · ${pad((position.index % position.total) + 1)} / ${pad(position.total)}`}
+              </p>
+              <span className="font-display text-[clamp(40px,7vw,96px)] font-bold uppercase leading-[1.08] tracking-[0.01em] text-balance">
+                {next.title} <span aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-2 motion-reduce:transition-none">→</span>
+              </span>
+            </div>
+            <div className={cn("overflow-hidden rounded-[14px]", next.adult && !next.coverSafe && "blur-xl")}>
+              <div className="transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none">
+                <CaseCover item={next} label={d.cases.placeholder} />
+              </div>
+            </div>
           </Link>
-        ) : (
-          <span />
         )}
-        <div className="flex flex-wrap gap-3">
-          <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "case" })}>
-            {INTAKE[locale].cta}
-          </PrimaryLink>
-          <ContactMenu
-            label={d.home.cta}
-            heading={d.ui.writeVia}
-            copyLabel={d.ui.copyEmail}
-            copiedLabel={d.ui.copied}
-            contacts={CONTACTS}
-            location="case"
-            variant="secondary"
-          />
+        <div className="flex flex-col gap-5 rounded-[20px] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <p className="max-w-[46ch] text-[17px] text-fg-secondary">{d.contact.lead}</p>
+          <div className="flex flex-wrap gap-3">
+            <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "case" })}>
+              {INTAKE[locale].cta}
+            </PrimaryLink>
+            <ContactMenu
+              label={d.home.cta}
+              heading={d.ui.writeVia}
+              copyLabel={d.ui.copyEmail}
+              copiedLabel={d.ui.copied}
+              contacts={CONTACTS}
+              location="case"
+              variant="secondary"
+            />
+          </div>
         </div>
-      </div>
       </div>
     </article>
   );

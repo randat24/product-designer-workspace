@@ -24,7 +24,7 @@ export function ProductStoryView({ story }: { story: ProductStory }) {
           {sections.map((s, i) => (
             <li key={s.id} className="shrink-0">
               <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-full px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-[var(--nw-tint)] aria-[current]:text-[var(--nw-ink)]">
-                <span className="display-num text-[11px]">{num(i)}</span>
+                <span className="font-label text-[11px]">{num(i)}</span>
                 {s.title}
               </a>
             </li>
@@ -34,7 +34,7 @@ export function ProductStoryView({ story }: { story: ProductStory }) {
       </nav>
 
       <div className="flex flex-col">
-        {sections.map((s, i) => <Section key={s.id} section={s} index={i} />)}
+        {sections.map((s, i) => <Section key={s.id} section={s} index={i} total={sections.length} />)}
       </div>
     </div>
   );
@@ -43,7 +43,7 @@ export function ProductStoryView({ story }: { story: ProductStory }) {
 /** Sections on a navy band: the ecosystem and the brand open a new chapter of the story. */
 const BAND = new Set<ProductSection["kind"]>(["ecosystem", "brand"]);
 
-function Section({ section: s, index }: { section: ProductSection; index: number }) {
+function Section({ section: s, index, total }: { section: ProductSection; index: number; total: number }) {
   const band = BAND.has(s.kind);
   return (
     <section id={s.id} aria-labelledby={`${s.id}-h`}
@@ -51,8 +51,8 @@ function Section({ section: s, index }: { section: ProductSection; index: number
       <div className={`${container} flex flex-col gap-10`}>
         <header className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end lg:gap-12">
           <div className="flex flex-col gap-3">
-            <span className={cn("display-num text-[14px]", band ? "text-white/70" : "text-[var(--nw-ink)]")}>{num(index)}</span>
-            <h2 id={`${s.id}-h`} className="font-display text-[clamp(30px,4.4vw,52px)] font-bold uppercase leading-[1.05]">{s.title}</h2>
+            <span className={cn("font-label text-[12px]", band ? "text-white/70" : "text-[var(--nw-ink)]")}>{num(index)} / {String(total).padStart(2, "0")}</span>
+            <h2 id={`${s.id}-h`} className="font-display text-[clamp(32px,4.6vw,56px)] font-bold uppercase leading-[1.08] text-balance">{s.title}</h2>
           </div>
           {s.lede && <p className={cn("max-w-[62ch] text-[18px] leading-[1.6]", band ? "text-white/85" : "text-fg-secondary")}>{s.lede}</p>}
         </header>
