@@ -13,6 +13,8 @@ export type CanvasCase = {
   /** Shown under the frame, Figma-style: «01 · Title». */
   label: string;
   cover?: { src: string; width: number; height: number; alt: string };
+  /** No cover: up to four screens from the case's gallery, side by side like phones on a board. */
+  screens?: { src: string; width: number; height: number }[];
   sticker: string;
   blurred: boolean;
   process?: CaseProcess;
@@ -85,7 +87,7 @@ export function CaseCanvas({ cases, labels }: { cases: CanvasCase[]; labels: Lab
       const s = Math.max(0.12, Math.min(w / r.w, h / r.h, max));
       go({ s, x: (w - r.w * s) / 2 - r.x * s, y: (h - r.h * s) / 2 - r.y * s }, anim);
     };
-    const fitAll = (anim: boolean) => { moved = false; fitRect({ x: 40, y: 20, w: W - 80, h: H - 20 }, anim); };
+    const fitAll = (anim: boolean) => { moved = false; fitRect({ x: 40, y: -30, w: W - 80, h: H + 30 }, anim); };
     const flyTo = (i: number) => {
       moved = true;
       const [x, y] = pos[i]!;
@@ -296,11 +298,19 @@ export function CaseCanvas({ cases, labels }: { cases: CanvasCase[]; labels: Lab
                   <p className="absolute bottom-full left-0 mb-[calc(7px/var(--s))] whitespace-nowrap font-label text-[calc(12px/var(--s))] leading-[1.2] text-fg-secondary">{c.label}</p>
                   <a href={c.href} data-frame={i} data-cursor={labels.open} aria-label={`${labels.open}: ${c.title}`} {...c.track}
                     className="fedo-frame relative block bg-surface shadow-[0_1px_0_var(--line),0_18px_40px_rgba(21,26,51,0.1)]"
-                    style={{ width: FW, height: FH, background: c.cover ? undefined : c.sticker }}>
+                    style={{ width: FW, height: FH, background: c.cover ? undefined : c.screens?.length ? "var(--subtle)" : c.sticker }}>
                     {c.cover ? (
                       // eslint-disable-next-line @next/next/no-img-element -- case cover with known size, drawn inside a scaled canvas
                       <img src={c.cover.src} alt="" width={c.cover.width} height={c.cover.height} draggable={false} decoding="async"
                         className={cn("pointer-events-none size-full select-none object-cover", c.blurred && "blur-xl")} />
+                    ) : c.screens?.length ? (
+                      <span className={cn("flex size-full items-center justify-center gap-2 px-1", c.blurred && "blur-xl")}>
+                        {c.screens.map((sc, k) => (
+                          // eslint-disable-next-line @next/next/no-img-element -- gallery screen with known size, drawn inside a scaled canvas
+                          <img key={k} src={sc.src} alt="" width={sc.width} height={sc.height} draggable={false} decoding="async"
+                            className="pointer-events-none h-[372px] w-auto min-w-0 select-none rounded-[16px] object-cover shadow-[0_0_0_1px_var(--line),0_8px_20px_rgba(21,26,51,0.1)]" />
+                        ))}
+                      </span>
                     ) : (
                       <span className="grid size-full place-items-center font-label text-[18px] text-on-sticky">{labels.placeholder}</span>
                     )}
