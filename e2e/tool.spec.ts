@@ -402,6 +402,12 @@ test("case publication: the site changes only on publish, and unpublishing takes
   await expect(page.getByText("На сайті остання версія.")).toBeVisible();
   await expect.poll(siteTitle, { timeout: 30_000 }).toBe(second);
 
+  // The card in the list names how much of the work the workbook holds (the demo project has flows and screens).
+  await site.goto("/uk/cases");
+  const card = site.locator(`main a[href="/uk/cases/${slug}"]`);
+  await expect(card).toContainText("Глибина процесу");
+  await expect(card.locator("dt", { hasText: "Екрани" })).toBeVisible();
+
   // 4. Unpublish: gone from the page, the list and the sitemap.
   await page.getByRole("button", { name: "Зняти з публікації" }).click();
   await page.getByRole("button", { name: /Точно зняти/ }).click();

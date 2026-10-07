@@ -19,6 +19,15 @@ describe("case snapshot check", () => {
     }
   });
 
+  it("reads the process counts kept beside the languages, and drops a missing, broken or empty one", () => {
+    const process = { competitors: 4, research: 1, observations: 8, insights: 3, pains: 2, opportunities: 3, flows: 1, screens: 5, decisions: 4 };
+    expect(snapshotToCase("x", { uk: { title: "T" }, process }, "en")?.process).toEqual(process);
+    expect(snapshotToCase("x", { uk: { title: "T" } }, "uk")?.process).toBeUndefined();
+    expect(snapshotToCase("x", { uk: { title: "T" }, process: { ...process, screens: -1 } }, "uk")?.process).toBeUndefined();
+    const zeros = Object.fromEntries(Object.keys(process).map((k) => [k, 0]));
+    expect(snapshotToCase("x", { uk: { title: "T" }, process: zeros }, "uk")?.process).toBeUndefined();
+  });
+
   it("falls back to Ukrainian when a translation is missing", () => {
     expect(snapshotToCase("x", { uk: { title: "Назва" } }, "en")?.title).toBe("Назва");
   });

@@ -29,13 +29,25 @@ export const getCaseForProject = cache(async (projectId: string) => {
     // What the site shows (`content`) and what the editor and settings change (`draft`).
     hasContent: hasContent(data.content),
     hasDraftContent: hasContent(data.draft),
-    // jsonb comes back with its keys in a fixed order, so equal snapshots serialise equally.
-    hasUnpublished: JSON.stringify(data.draft) !== JSON.stringify(data.content),
+    // jsonb comes back with its keys in a fixed order, so equal snapshots serialise equally. The published copy also
+    // carries `process` (counted on publish, never in the draft), which is not an edit.
+    // A copy published before the counts existed has none: publishing again adds them.
+    hasUnpublished: JSON.stringify(data.draft) !== JSON.stringify(withoutProcess(data.content)) || !hasProcess(data.content),
     adult: isAdult(data.draft),
     sample: isSample(data.draft),
     figma: figmaOf(data.draft),
   };
 });
+
+function hasProcess(content: unknown): boolean {
+  return !!content && typeof content === "object" && "process" in content;
+}
+
+function withoutProcess(content: unknown): unknown {
+  if (!content || typeof content !== "object" || Array.isArray(content)) return content;
+  const { process: _process, ...rest } = content as Record<string, unknown>;
+  return rest;
+}
 
 /** Made for an 18+ audience: the flag sits in every language of the snapshot (see setCaseStatus). */
 export function isAdult(content: unknown): boolean {

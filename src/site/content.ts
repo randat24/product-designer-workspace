@@ -1,6 +1,7 @@
 // Public site content (portfolio + CV) in Ukrainian and English.
 // Cases are placeholders for now; the CV part follows the resume in public/cv/.
 
+import type { CaseProcess, ProcessStage } from "./case-process";
 import type { ProductStory } from "./product-story";
 import type { AwardIcon } from "./award-icons";
 import type { CaseStory, StoryLabels } from "./case-story";
@@ -62,6 +63,8 @@ export type Case = {
   product?: ProductStory;
   /** Search title and description when they should differ from the case title and summary. */
   seo?: { title: string; description: string };
+  /** Records of each stage in the workbook, counted on publish (src/site/case-process.ts). */
+  process?: CaseProcess;
 };
 
 export type GalleryItem = {
@@ -123,6 +126,12 @@ type Dictionary = {
     filterAll: string;
     filterReal: string;
     filterConcept: string;
+  };
+  /** Records per stage from the workbook, on cards and case pages (src/site/case-process.ts). */
+  process: {
+    title: string;
+    note: string;
+    stages: Record<ProcessStage, string>;
   };
   about: {
     title: string;
@@ -258,6 +267,21 @@ const uk: Dictionary = {
     filterAll: "Усі",
     filterReal: "Реальні",
     filterConcept: "Концепти",
+  },
+  process: {
+    title: "Глибина процесу",
+    note: "Скільки записів кожного етапу є в робочому зошиті проєкту. Це обсяг задокументованої роботи, а не оцінка.",
+    stages: {
+      competitors: "Конкуренти",
+      research: "Дослідження",
+      observations: "Спостереження",
+      insights: "Інсайти",
+      pains: "Болі",
+      opportunities: "Можливості",
+      flows: "Флоу",
+      screens: "Екрани",
+      decisions: "Рішення",
+    },
   },
   about: {
     title: "Про мене",
@@ -624,6 +648,21 @@ const en: Dictionary = {
     filterAll: "All",
     filterReal: "Real",
     filterConcept: "Concepts",
+  },
+  process: {
+    title: "Process depth",
+    note: "How many records of each stage the project's workbook holds. It is the amount of documented work, not a score.",
+    stages: {
+      competitors: "Competitors",
+      research: "Research",
+      observations: "Observations",
+      insights: "Insights",
+      pains: "Pain points",
+      opportunities: "Opportunities",
+      flows: "Flows",
+      screens: "Screens",
+      decisions: "Decisions",
+    },
   },
   about: {
     title: "About",
