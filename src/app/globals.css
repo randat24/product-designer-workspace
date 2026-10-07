@@ -322,3 +322,22 @@ body {
 /* Case filter (src/site/case-filter.tsx): hide the cards of the other kind. */
 .case-filter[data-filter="real"] [data-kind="concept"],
 .case-filter[data-filter="concept"] [data-kind="real"] { display: none; }
+
+/* ---------- FEDO mark ---------- */
+.fedo-mark .fedo-box { fill: var(--fedo-box, var(--fg)); }
+.fedo-mark .fedo-sym { fill: var(--fedo-sym, var(--canvas)); }
+.fedo-tap { transform-box: fill-box; transform-origin: 8% 8%; }
+.group:hover .fedo-tap, .group:focus-visible .fedo-tap { animation: fedo-tap 0.6s cubic-bezier(0.3, 0.7, 0.2, 1); }
+@keyframes fedo-tap {
+  0% { transform: translate(14%, 14%); }
+  55% { transform: translate(0, 0) scale(0.84); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .group:hover .fedo-tap, .group:focus-visible .fedo-tap { animation: none; } }
+
+/* The notch of the F on a cover: the cover keeps the bar and the stem, the action sits in the cut-out corner.
+   --notch-bg is the colour behind the card, so the cut reads as part of the page. */
+.f-notch { --nr: var(--notch-r, 14px); position: absolute; right: 0; bottom: 0; z-index: 1; background: var(--notch-bg, var(--canvas)); border-top-left-radius: var(--nr); }
+.f-notch::before, .f-notch::after { content: ""; position: absolute; width: var(--nr); height: var(--nr); pointer-events: none; background: radial-gradient(circle at 0 0, transparent calc(var(--nr) - 0.5px), var(--notch-bg, var(--canvas)) var(--nr)); }
+.f-notch::before { right: 0; bottom: 100%; }
+.f-notch::after { right: 100%; bottom: 0; }
