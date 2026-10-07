@@ -127,7 +127,7 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
             className="flex flex-col justify-between gap-4 rounded-[4px] p-5 text-on-sticky shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
             style={{ background: STICKERS[i % STICKERS.length], transform: `rotate(${i % 2 ? 1 : -1}deg)` }}
           >
-            <p className="text-[17px] font-semibold leading-snug">«{q.text}»</p>
+            <p className="text-[17px] font-semibold leading-snug"><q>{q.text}</q></p>
             <p className="text-[13px] opacity-80">— {q.who}</p>
           </li>
         ))}
@@ -373,7 +373,7 @@ function Results({ data }: { data: NonNullable<CaseStory["results"]> }) {
       </ul>
       {data.quote && (
         <figure className="mt-8 rounded-[18px] bg-rail p-6 text-rail-fg sm:p-10">
-          <blockquote className="font-display text-[clamp(24px,3vw,36px)] font-bold uppercase leading-[1.1]">«{data.quote.text}»</blockquote>
+          <blockquote className="font-display text-[clamp(24px,3vw,36px)] font-bold uppercase leading-[1.1]"><q>{data.quote.text}</q></blockquote>
           <figcaption className="mt-4 text-[14px] opacity-70">— {data.quote.who}</figcaption>
         </figure>
       )}

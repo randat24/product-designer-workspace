@@ -46,9 +46,9 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             className={cn(
               "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[14px] border p-3 text-[#eceef7] transition-colors sm:w-auto",
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f2c46b]",
-              i === active ? "border-[#f2c46b] bg-white/[0.08]" : "border-white/10 hover:border-white/30 hover:bg-white/[0.04]",
+              i === active ? "border-[#f2c46b] shadow-[inset_0_0_0_1px_#f2c46b]" : "border-white/10 hover:border-white/30",
             )}
-            style={{ background: i === active ? undefined : AWARD_TILE }}>
+            style={{ background: AWARD_TILE }}>
             <span className="self-start text-[12px] font-semibold tabular-nums opacity-70">{num(i)}</span>
             <AwardSvg icon={a.icon} className="h-20 w-auto object-contain sm:h-24" />
             <span className="sr-only">{a.title}</span>

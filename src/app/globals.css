@@ -179,6 +179,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+/* On inverted surfaces (footer, the service block, the navigation rail, the About F) the ink ring would vanish
+   into the background: there it takes the surface's own text colour. */
+.bg-rail :focus-visible { outline-color: var(--rail-fg); }
+.f-bar :focus-visible, .f-stem :focus-visible { outline-color: var(--canvas); }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
 /* Page title: condensed display type, uppercase (the notebook's signature). */

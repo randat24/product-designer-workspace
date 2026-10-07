@@ -50,7 +50,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       p.insights && count(locale, p.insights, f.forms.insights),
       p.screens && count(locale, p.screens, f.forms.screens),
     ].filter(Boolean);
-    return chain && chain.length ? `${c.title}: ${chain.join(" → ")}` : [c.title, c.client, c.year].filter(Boolean).join(" · ");
+    return chain && chain.length ? `${c.title}: ${chain.join(" → ")}` : [c.title, c.client !== c.title && c.client, c.year].filter(Boolean).join(" · ");
   };
   const canvasCases: CanvasCase[] = shown.map((c, i) => ({
     slug: c.slug,
