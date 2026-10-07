@@ -58,6 +58,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     title: c.title,
     label: `${String(i + 1).padStart(2, "0")} · ${c.title}`,
     cover: c.cover ? { src: c.cover.src, width: c.cover.width, height: c.cover.height, alt: c.cover.alt } : undefined,
+    screens: c.cover ? undefined : c.gallery?.slice(0, 4).map((g) => ({ src: g.src, width: g.width, height: g.height })),
     sticker: c.sticker,
     blurred: !!c.adult && !c.coverSafe,
     process: c.process,
