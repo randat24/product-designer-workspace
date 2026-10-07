@@ -73,7 +73,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               {item.adult && <AdultBadge label={d.adult.badge} />}
             </div>
           )}
-          <h1 className="font-display text-[clamp(52px,11vw,168px)] font-bold uppercase leading-[1.08] tracking-[0.01em] text-balance">{item.title}</h1>
+          <h1 className="t-page">{item.title}</h1>
           <p className="max-w-[62ch] text-[clamp(18px,2vw,22px)] leading-[1.45]">{item.summary}</p>
           {item.product && (
             <>
@@ -204,7 +204,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               <p className="font-label text-[12px] uppercase tracking-[0.04em] text-fg-secondary">
                 {d.cases.next}{position && ` · ${pad((position.index % position.total) + 1)} / ${pad(position.total)}`}
               </p>
-              <span className="font-display text-[clamp(40px,7vw,96px)] font-bold uppercase leading-[1.08] tracking-[0.01em] text-balance">
+              <span className="t-section">
                 {next.title} <span aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-2 motion-reduce:transition-none">→</span>
               </span>
             </div>

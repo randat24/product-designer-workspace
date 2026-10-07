@@ -12,7 +12,7 @@ export function NotFoundView({ labels }: { labels: Record<Locale, NotFoundLabels
   return (
     <div className="mx-auto flex w-full max-w-[1120px] flex-col gap-6 px-4 py-24 sm:px-8">
       <title>{t.title}</title>
-      <p className="display-num text-[clamp(64px,12vw,140px)] leading-none text-fg-secondary">404</p>
+      <p className="display-num text-[clamp(56px,9vw,104px)] leading-none text-fg-secondary">404</p>
       <h1 className="page-title">{t.heading}</h1>
       <p className="max-w-[560px] text-[18px] text-fg-secondary">{t.body}</p>
       <nav className="flex flex-wrap gap-3" aria-label={t.nav}>

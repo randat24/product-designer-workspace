@@ -219,7 +219,7 @@ export function ProcessStrip({ process, locale, full }: { process: CaseProcess; 
           <div key={s.key} className="flex min-w-0 flex-col-reverse justify-end gap-0.5 border-t-[3px] pt-1.5"
             style={{ borderColor: process[s.key] === 0 ? "var(--line)" : s.color }}>
             <dt className="truncate font-label text-[10px] uppercase tracking-[0.02em] text-fg-secondary" title={p.stages[s.key]}>{p.stages[s.key]}</dt>
-            <dd className={cn("font-display font-bold leading-none tabular-nums", full ? "text-[clamp(26px,3vw,40px)]" : "text-[20px]")}>{process[s.key]}</dd>
+            <dd className={cn("font-display font-bold leading-none tabular-nums", full ? "text-[clamp(22px,2.2vw,30px)]" : "text-[20px]")}>{process[s.key]}</dd>
           </div>
         ))}
       </dl>
@@ -295,7 +295,7 @@ export function HeroCase({ item, locale, label, total }: { item: Case; locale: L
         <div className="flex min-w-0 flex-col gap-4">
           <CardBadges item={item} locale={locale} />
           {/* The page's h1 names the site; each case title is the h2 of its own block. */}
-          <h2 className="font-display text-[clamp(48px,8vw,112px)] font-bold uppercase leading-[1.08] tracking-[0.01em] text-balance">{item.title}</h2>
+          <h2 className="t-page">{item.title}</h2>
           <p className="max-w-[60ch] text-[clamp(17px,1.8vw,20px)] leading-[1.5] text-fg-secondary">{item.summary}</p>
         </div>
         <div className="flex min-w-0 flex-col gap-5">
@@ -354,7 +354,7 @@ export function FeaturedCase({
           <span className="text-fg-secondary">{caseIndex(1)} / {caseIndex(total)}</span>
         </p>
         <CardBadges item={item} locale={locale} />
-        <Title className="font-display text-[clamp(30px,3.6vw,44px)] font-bold uppercase leading-[1.08] text-balance">{item.title}</Title>
+        <Title className="font-display text-[clamp(24px,2.4vw,32px)] font-bold uppercase leading-[1.08] text-balance">{item.title}</Title>
         <p className="text-fg-secondary">{item.summary}</p>
         <dl className="grid grid-cols-2 border-t border-line">
           {facts.map((f) => (

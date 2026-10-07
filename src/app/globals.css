@@ -193,6 +193,21 @@ body {
 }
 .display-num { font-family: var(--font-display); font-weight: 700; }
 
+/* Site type scale for display headings, sized after editorial galleries such as Awwwards: the page title
+   leads, section titles stay a step below, chapters below that. Uppercase condensed; 1.08 keeps Cyrillic
+   capitals (Й, Ї, Д) off the next line. */
+.t-page, .t-section, .t-chapter {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+.t-page { font-size: clamp(36px, 4.6vw, 60px); }
+.t-section { font-size: clamp(28px, 3.2vw, 42px); }
+.t-chapter { font-size: clamp(24px, 2.6vw, 34px); }
+
 /* React Flow canvas (flows) in the notebook palette, light and dark. */
 .flow-canvas .react-flow {
   --xy-background-color: transparent;

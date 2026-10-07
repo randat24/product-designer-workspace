@@ -58,7 +58,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           location="home"
           hero
           heading={
-            <h2 id="work" className="font-display text-[clamp(40px,7vw,96px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">
+            <h2 id="work" className="t-section">
               {d.home.selected}
               <sup className="ml-2 align-top font-label text-[14px] font-normal tracking-normal text-fg-secondary">({String(Math.min(cases.length, 4)).padStart(2, "0")})</sup>
             </h2>
@@ -74,7 +74,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {/* Who is behind the work: after it, for those who got interested. */}
       <section className={`${container} grid gap-10 py-12 lg:grid-cols-[1fr_330px] lg:items-center`} aria-labelledby="about-me">
         <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10">
-          <h2 id="about-me" className="font-display text-[clamp(36px,5vw,64px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">{d.about.title}</h2>
+          <h2 id="about-me" className="t-section">{d.about.title}</h2>
           <p className="max-w-[640px] text-[clamp(17px,2vw,20px)] leading-[1.5] text-fg-secondary">
             <span className="text-fg">{d.home.hello}</span> {d.home.lead}
           </p>
@@ -151,7 +151,7 @@ function Contact({ locale }: { locale: Locale }) {
   return (
     <section id="contact" className={`${container} scroll-mt-24 py-16`}>
       <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10">
-        <h2 className="font-display text-[clamp(44px,8.5vw,112px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">{d.contact.title}</h2>
+        <h2 className="t-section">{d.contact.title}</h2>
         <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.contact.lead}</p>
         <div className="flex flex-wrap gap-3">
           <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "contact" })}>

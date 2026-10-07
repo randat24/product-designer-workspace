@@ -52,7 +52,7 @@ function Section({ section: s, index, total }: { section: ProductSection; index:
         <header className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end lg:gap-12">
           <div className="flex flex-col gap-3">
             <span className={cn("font-label text-[12px]", band ? "text-white/70" : "text-[var(--nw-ink)]")}>{num(index)} / {String(total).padStart(2, "0")}</span>
-            <h2 id={`${s.id}-h`} className="font-display text-[clamp(32px,4.6vw,56px)] font-bold uppercase leading-[1.08] text-balance">{s.title}</h2>
+            <h2 id={`${s.id}-h`} className="t-chapter">{s.title}</h2>
           </div>
           {s.lede && <p className={cn("max-w-[62ch] text-[18px] leading-[1.6]", band ? "text-white/85" : "text-fg-secondary")}>{s.lede}</p>}
         </header>
@@ -358,7 +358,7 @@ function Brand({ body, parts, formula, image }: { body: string[]; parts: { shape
           ))}
         </ul>
       </div>
-      <p className="text-center font-display text-[clamp(24px,3.6vw,44px)] font-bold uppercase leading-[1.1] text-white">{formula}</p>
+      <p className="text-center font-display text-[clamp(22px,2.6vw,32px)] font-bold uppercase leading-[1.08] text-white">{formula}</p>
       {image && <Figures images={[image]} dark />}
     </div>
   );
@@ -421,7 +421,7 @@ function Outcome({ body }: { body: string[] }) {
   return (
     <div className="flex flex-col gap-6 border-l-4 border-[var(--nw-blue)] pl-6 sm:pl-10">
       {body.map((p, i) => (
-        <p key={p} className={cn(i === 0 ? "font-display text-[clamp(22px,2.6vw,34px)] font-bold uppercase leading-[1.2]" : "max-w-[68ch] text-[18px] leading-[1.65] text-fg-secondary")}>{p}</p>
+        <p key={p} className={cn(i === 0 ? "font-display text-[clamp(20px,2.2vw,28px)] font-bold uppercase leading-[1.2]" : "max-w-[68ch] text-[18px] leading-[1.65] text-fg-secondary")}>{p}</p>
       ))}
     </div>
   );
