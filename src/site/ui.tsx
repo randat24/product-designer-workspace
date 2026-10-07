@@ -152,57 +152,145 @@ export function CaseCover({
   );
 }
 
+/** Two-digit position of a case in the list: 01, 02… */
+const caseIndex = (n: number) => String(n).padStart(2, "0");
+
+/** The cover of a card: blurred for 18+ unless it is safe; on hover a scrim lifts the tags and «Open case». */
+function CardCover({ item, locale, label }: { item: Case; locale: Locale; label: string }) {
+  const d = dict(locale);
+  const blurred = item.adult && !item.coverSafe;
+  return (
+    <div className="relative overflow-hidden rounded-[14px]">
+      <div className={cn("transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none", blurred && "blur-xl")}>
+        <CaseCover item={item} label={label} />
+      </div>
+      {blurred && (
+        <span aria-hidden className="absolute inset-0 grid place-items-center">
+          <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">{d.adult.badge}</span>
+        </span>
+      )}
+      {/* Pointer devices only: the same tags are listed under the card on touch screens. */}
+      <div aria-hidden className="absolute inset-0 hidden flex-col justify-end gap-3 bg-[#151a33]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
+        <ul className="flex flex-wrap gap-1.5">
+          {item.tags.map((tag) => <li key={tag} className="rounded-full border border-white/70 px-2.5 py-0.5 text-[12px]">{tag}</li>)}
+        </ul>
+        <span className="flex items-center justify-between font-display text-[22px] font-bold uppercase leading-[1.08]">
+          {d.cases.open}<span>→</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CardBadges({ item, locale }: { item: Case; locale: Locale }) {
+  const d = dict(locale);
+  return (
+    <span className="flex flex-wrap items-center gap-1.5">
+      {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />}
+      {item.adult && <AdultBadge label={d.adult.badge} />}
+    </span>
+  );
+}
+
+function CardTags({ tags, className }: { tags: string[]; className?: string }) {
+  return (
+    <ul className={cn("flex flex-wrap gap-1.5", className)}>
+      {tags.map((tag) => (
+        <li key={tag} className="rounded-full border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">{tag}</li>
+      ))}
+    </ul>
+  );
+}
+
+/** A case in the grid: cover, then its number, badges, title, client · year and the summary. */
 export function CaseCard({
   item,
   locale,
   label,
+  index,
   location = "cases",
 }: {
   item: Case;
   locale: Locale;
   label: string;
+  /** 1-based position in the list, shown as 02, 03… */
+  index: number;
   location?: "home" | "cases";
 }) {
-  const p = dict(locale).project;
   // Home: under the "Selected work" h2. Work page: directly under the page h1.
   const Title = location === "home" ? "h3" : "h2";
   return (
     <Link
       href={`/${locale}/cases/${item.slug}`}
+      data-kind={item.kind ?? "real"}
       className="group flex flex-col gap-4"
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
-      <div className="relative overflow-hidden rounded-[14px] transition-transform duration-200 group-hover:-translate-y-1">
-        {/* 18+: the cover is blurred on the card too (unless it is a safe one, like a logo); the case page asks for the visitor's age. */}
-        <div className={cn(item.adult && !item.coverSafe && "blur-xl")}><CaseCover item={item} label={label} /></div>
-        {item.adult && !item.coverSafe && (
-          <span aria-hidden className="absolute inset-0 grid place-items-center">
-            <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">
-              {dict(locale).adult.badge}
-            </span>
-          </span>
-        )}
-      </div>
+      <CardCover item={item} locale={locale} label={label} />
       <div className="flex flex-col gap-2">
-        <p className="flex flex-wrap items-center gap-2 text-[13px] text-fg-secondary">
-          {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? p.concept : p.real} />}
-          {item.adult && <AdultBadge label={dict(locale).adult.badge} />}
-          {item.client} · {item.year}
+        <p className="flex items-center justify-between gap-2">
+          <span className="font-label text-[12px] text-fg-secondary">{caseIndex(index)}</span>
+          <CardBadges item={item} locale={locale} />
         </p>
-        <Title className="font-display text-[24px] font-bold uppercase leading-[1.1] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">
-          {item.title}
-        </Title>
+        <Title className="font-display text-[26px] font-bold uppercase leading-[1.08]">{item.title}</Title>
+        <p className="text-[14px] text-fg-secondary">{item.client} · {item.year}</p>
         <p className="text-fg-secondary">{item.summary}</p>
-        <ul className="mt-1 flex flex-wrap gap-1.5">
-          {item.tags.map((tag) => (
-            <li
-              key={tag}
-              className="rounded-full border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary"
-            >
-              {tag}
-            </li>
+        <CardTags tags={item.tags} className="mt-1 pointer-fine:hidden" />
+      </div>
+    </Link>
+  );
+}
+
+/** The first case, shown large: cover beside its title, summary and facts. */
+export function FeaturedCase({
+  item,
+  locale,
+  label,
+  total,
+  location = "cases",
+}: {
+  item: Case;
+  locale: Locale;
+  label: string;
+  total: number;
+  location?: "home" | "cases";
+}) {
+  const d = dict(locale);
+  const Title = location === "home" ? "h3" : "h2";
+  const facts = [
+    { label: d.cases.client, value: item.client },
+    { label: d.cases.year, value: item.year },
+    { label: d.cases.type, value: item.kind === "concept" ? d.project.concept : d.project.real },
+    { label: d.cases.role, value: item.role },
+  ].filter((f) => f.value);
+  return (
+    <Link
+      href={`/${locale}/cases/${item.slug}`}
+      data-kind={item.kind ?? "real"}
+      className="group grid gap-6 rounded-[20px] border border-line bg-surface p-4 sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
+      {...trackAttrs("case_open", { case_slug: item.slug, location })}
+    >
+      <CardCover item={item} locale={locale} label={label} />
+      <div className="flex min-w-0 flex-col gap-4">
+        <p className="flex items-center justify-between gap-2 font-label text-[12px] uppercase tracking-[0.04em]">
+          <span className="flex items-center gap-2"><span aria-hidden className="size-2 rounded-full bg-fg" />{d.cases.featured}</span>
+          <span className="text-fg-secondary">{caseIndex(1)} / {caseIndex(total)}</span>
+        </p>
+        <CardBadges item={item} locale={locale} />
+        <Title className="font-display text-[clamp(30px,3.6vw,44px)] font-bold uppercase leading-[1.08] text-balance">{item.title}</Title>
+        <p className="text-fg-secondary">{item.summary}</p>
+        <dl className="grid grid-cols-2 border-t border-line">
+          {facts.map((f) => (
+            <div key={f.label} className="flex flex-col-reverse justify-end gap-0.5 border-b border-line py-2.5 pr-3">
+              <dd className="text-[14px] font-semibold">{f.value}</dd>
+              <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{f.label}</dt>
+            </div>
           ))}
-        </ul>
+        </dl>
+        <CardTags tags={item.tags} />
+        <span className="mt-auto flex items-center gap-2 font-semibold">
+          {d.cases.open}<span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none">→</span>
+        </span>
       </div>
     </Link>
   );

@@ -124,6 +124,8 @@
 
   --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+  /* Small metadata labels on the site (index numbers, years, captions); the tool keeps the system mono. */
+  --font-label: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --text-title: 20px;
   --text-title--line-height: 28px;
@@ -301,3 +303,7 @@ body {
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
 }
+
+/* Case filter (src/site/case-filter.tsx): hide the cards of the other kind. */
+.case-filter[data-filter="real"] [data-kind="concept"],
+.case-filter[data-filter="concept"] [data-kind="real"] { display: none; }

@@ -12,7 +12,8 @@ import { ArrowRight, FileText, Mail } from "lucide-react";
 import { ContactMenu } from "@/site/contact-menu";
 import { INTAKE } from "@/site/intake/content";
 import { LinkedInIcon, TelegramIcon } from "@/site/social-icons";
-import { CaseCard, Eyebrow, PrimaryLink, SecondaryLink, SectionTitle, container } from "@/site/ui";
+import { CaseList } from "@/site/case-list";
+import { Eyebrow, PrimaryLink, SecondaryLink, container } from "@/site/ui";
 
 export const revalidate = 60;
 
@@ -46,7 +47,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
             {d.home.available}
           </p>
-          <h1 className="font-display text-[clamp(44px,8vw,96px)] font-bold uppercase leading-[1.1] tracking-[0.01em]">
+          {/* The name is modest: the work below is the headline of the page. */}
+          <h1 className="font-display text-[clamp(34px,4.4vw,52px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">
             {d.name}
           </h1>
           <p className="max-w-[640px] text-[clamp(17px,2vw,20px)] leading-[1.5] text-fg-secondary">
@@ -68,7 +70,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </SecondaryLink>
           </div>
         </div>
-        <ul className="relative hidden h-[300px] lg:block" aria-hidden="true">
+        <ul className="relative hidden h-[300px] origin-right scale-[.8] lg:block" aria-hidden="true">
           {STICKERS.map((s, i) => (
             <li
               key={s.text}
@@ -86,19 +88,24 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </ul>
       </section>
 
-      {/* Selected work */}
-      <section className={`${container} flex flex-col gap-8 py-12`} aria-labelledby="work">
-        <div className="flex items-end justify-between gap-4">
-          <SectionTitle id="work">{d.home.selected}</SectionTitle>
-          <Link href={`/${locale}/cases`} className="hit shrink-0 text-[14px] font-semibold hover:underline">
-            {d.home.all} →
-          </Link>
-        </div>
-        <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
-          {cases.slice(0, 4).map((item) => (
-            <CaseCard key={item.slug} item={item} locale={locale} label={d.cases.placeholder} location="home" />
-          ))}
-        </div>
+      {/* Selected work: the largest type on the page */}
+      <section className={`${container} py-12`} aria-labelledby="work">
+        <CaseList
+          cases={cases.slice(0, 4)}
+          locale={locale}
+          location="home"
+          heading={
+            <h2 id="work" className="font-display text-[clamp(44px,8.5vw,112px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">
+              {d.home.selected}
+              <sup className="ml-2 align-top font-label text-[14px] font-normal tracking-normal text-fg-secondary">({String(Math.min(cases.length, 4)).padStart(2, "0")})</sup>
+            </h2>
+          }
+          extra={
+            <Link href={`/${locale}/cases`} className="hit ml-1 shrink-0 border-b-[1.5px] border-current text-[14px] font-semibold">
+              {d.home.all} →
+            </Link>
+          }
+        />
       </section>
 
       {/* Service */}
@@ -140,7 +147,7 @@ function Contact({ locale }: { locale: Locale }) {
   return (
     <section id="contact" className={`${container} scroll-mt-24 py-16`}>
       <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10">
-        <SectionTitle>{d.contact.title}</SectionTitle>
+        <h2 className="font-display text-[clamp(44px,8.5vw,112px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">{d.contact.title}</h2>
         <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.contact.lead}</p>
         <div className="flex flex-wrap gap-3">
           <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "contact" })}>

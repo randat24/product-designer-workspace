@@ -185,7 +185,9 @@ export function CaseArticle({ item, locale, next, banner }: {
             {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}
           >
             <Eyebrow>{d.cases.next}</Eyebrow>
-            <span className="font-display text-[28px] font-bold uppercase leading-[1.1] group-hover:underline">{next.title} →</span>
+            <span className="font-display text-[28px] font-bold uppercase leading-[1.08]">
+              {next.title} <span aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-1.5 motion-reduce:transition-none">→</span>
+            </span>
           </Link>
         ) : (
           <span />

@@ -115,6 +115,14 @@ type Dictionary = {
     role: string;
     client: string;
     year: string;
+    /** The first case on the home and work pages, shown large. */
+    featured: string;
+    open: string;
+    type: string;
+    filter: string;
+    filterAll: string;
+    filterReal: string;
+    filterConcept: string;
   };
   about: {
     title: string;
@@ -243,6 +251,13 @@ const uk: Dictionary = {
     role: "Роль",
     client: "Клієнт",
     year: "Рік",
+    featured: "Кейс у фокусі",
+    open: "Відкрити кейс",
+    type: "Тип",
+    filter: "Показати",
+    filterAll: "Усі",
+    filterReal: "Реальні",
+    filterConcept: "Концепти",
   },
   about: {
     title: "Про мене",
@@ -602,6 +617,13 @@ const en: Dictionary = {
     role: "Role",
     client: "Client",
     year: "Year",
+    featured: "Featured case",
+    open: "Open case",
+    type: "Type",
+    filter: "Show",
+    filterAll: "All",
+    filterReal: "Real",
+    filterConcept: "Concepts",
   },
   about: {
     title: "About",
