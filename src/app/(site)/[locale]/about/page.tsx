@@ -9,7 +9,7 @@ import { ArrowRight, FileDown } from "lucide-react";
 import { AwardsShowcase } from "@/site/awards-showcase";
 import { ContactMenu } from "@/site/contact-menu";
 import { INTAKE } from "@/site/intake/content";
-import { Eyebrow, PrimaryLink, SectionTitle, container } from "@/site/ui";
+import { Eyebrow, PrimaryLink, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 import { ExternalIcon } from "@/site/social-icons";
 
@@ -19,6 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const d = dict(locale);
   return pageMetadata({ locale, path: "/about", title: d.seo.about.title, description: d.seo.about.description, type: "profile" });
 }
+
+const bigTitle = "font-display text-[clamp(40px,6vw,80px)] font-bold uppercase leading-[1.08] tracking-[0.01em]";
+// Research, structure, design, decisions: the workbook's entity colours (globals.css).
+const STEP_COLORS = ["var(--entity-research)", "var(--entity-structure)", "var(--entity-design)", "var(--entity-decision)"];
 
 export default async function About({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -50,9 +54,10 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       {/* Intro: who I am as a designer, in facts */}
       <section className={`${container} grid gap-8 md:grid-cols-[1fr_260px]`}>
         <div className="flex flex-col gap-5">
-          <Eyebrow>{d.about.eyebrow}</Eyebrow>
-          <h1 className="page-title">{d.about.title}</h1>
-          <p className="max-w-[680px] text-[clamp(17px,2vw,20px)] leading-[1.55]">{d.about.summary}</p>
+          <p className="font-label text-[12px] uppercase tracking-[0.04em] text-fg-secondary">{d.about.eyebrow}</p>
+          {/* The page title is the large word, not the name (the work is the headline of the site). */}
+          <h1 className="font-display text-[clamp(52px,10vw,144px)] font-bold uppercase leading-[1.08] tracking-[0.01em]">{d.about.title}</h1>
+          <p className="max-w-[62ch] text-[clamp(18px,2vw,21px)] leading-[1.5]">{d.about.summary}</p>
           <div className="flex flex-wrap gap-3">
             <PrimaryLink href={CONTACTS.cv[locale]} download icon={<FileDown aria-hidden className="size-4" />} track={trackAttrs("resume_download", { location: "about" })}>
               {d.about.download}
@@ -67,7 +72,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               variant="secondary"
             />
           </div>
-          <dl className="mt-4 grid max-w-[680px] grid-cols-3 gap-4 border-t border-line pt-6">
+          <dl className="mt-4 grid max-w-[680px] grid-cols-3 gap-4 border-t border-fg pt-5">
             {d.about.facts.map((f) => (
               // Label first in the markup (dt before dd), the number shown on top.
               <div key={f.label} className="flex flex-col-reverse justify-end gap-1">
@@ -79,7 +84,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         </div>
         {/* Portrait placeholder; hidden on phones, where it would push the story a screen down. */}
         <div
-          className="hidden aspect-[4/5] items-end md:flex rounded-[14px] p-4 font-display text-[22px] font-bold uppercase leading-[1.1] text-on-sticky"
+          className="hidden aspect-[4/5] rotate-2 items-end rounded-[14px] p-4 font-display text-[22px] font-bold uppercase leading-[1.08] text-on-sticky shadow-[0_6px_16px_rgba(0,0,0,0.12)] md:flex"
           style={{ background: "var(--s5)" }}
           aria-hidden="true"
         >
@@ -89,16 +94,20 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
       {/* How I work: the process, step by step */}
       <section aria-labelledby="approach-h" className={`${container} mt-20 flex flex-col gap-6`}>
-        <div className="flex flex-col gap-3">
-          <SectionTitle id="approach-h">{d.about.approach}</SectionTitle>
-          <p className="max-w-[640px] text-[17px] leading-[1.55] text-fg-secondary">{d.about.approachLead}</p>
+        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
+          <h2 id="approach-h" className={bigTitle}>{d.about.approach}</h2>
+          <p className="max-w-[52ch] text-[17px] leading-[1.55] text-fg-secondary">{d.about.approachLead}</p>
         </div>
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {d.about.steps.map((step, i) => (
-            <li key={step.title} className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-5">
-              <span className="display-num text-[14px] text-fg-secondary" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="font-display text-[22px] font-bold uppercase leading-[1.1] tracking-[0.01em]">{step.title}</h3>
+            // Each step in the colour of the records it leaves in the workbook, as on the case pages.
+            <li key={step.title} className="flex flex-col gap-3 rounded-[14px] border border-line border-t-4 bg-surface p-5" style={{ borderTopColor: STEP_COLORS[i] }}>
+              <span className="font-label text-[12px] text-fg-secondary" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="font-display text-[22px] font-bold uppercase leading-[1.08] tracking-[0.01em]">{step.title}</h3>
               <p className="text-[15px] leading-[1.55] text-fg-secondary">{step.text}</p>
+              <p className="mt-auto border-t border-line pt-3 font-label text-[11px] uppercase leading-[1.5] tracking-[0.04em]">
+                <span className="text-fg-secondary">{d.about.inWorkbook}:</span> {step.tie}
+              </p>
             </li>
           ))}
         </ol>
@@ -112,24 +121,28 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       </section>
 
       {/* Design experience (the service is its own block below) */}
-      <section className={`${container} mt-20 flex flex-col gap-8`}>
-        <SectionTitle>{d.about.experience}</SectionTitle>
-        <ol className="flex flex-col">
-          {designJobs.map((job) => (
-            <li key={job.title + job.period} className="grid gap-3 border-t border-line py-6 md:grid-cols-[200px_1fr]">
-              <p className="tabular-nums text-[14px] font-semibold text-fg-secondary">{job.period}</p>
-              <div className="flex flex-col gap-2">
-                <h3 className="font-display text-[24px] font-bold uppercase leading-[1.1]">{job.title}</h3>
-                <p className="text-fg-secondary">{job.place}</p>
-                <ul className="mt-1 flex flex-col gap-1">
-                  {job.points.map((p) => (
-                    <li key={p} className="flex gap-2">
-                      <span className="text-fg-secondary" aria-hidden="true">—</span>
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+      <section aria-labelledby="experience-h" className={`${container} mt-20 flex flex-col gap-8`}>
+        <h2 id="experience-h" className={bigTitle}>{d.about.experience}</h2>
+        {/* An index of roles: each row opens to what was done there. */}
+        <ol className="flex flex-col border-t-[1.5px] border-fg">
+          {designJobs.map((job, i) => (
+            <li key={job.title + job.period} className="border-b border-line">
+              <details className="group" open={i === 0}>
+                <summary className="hit grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_24px] gap-x-4 gap-y-1 py-5 md:grid-cols-[180px_minmax(0,1fr)_minmax(0,1fr)_24px] md:items-baseline [&::-webkit-details-marker]:hidden">
+                  <span className="font-label text-[12px] text-fg-secondary">{job.period}</span>
+                  <h3 className="col-start-1 font-display text-[clamp(20px,2.2vw,26px)] font-bold uppercase leading-[1.08] md:col-start-2">{job.title}</h3>
+                  <span className="col-start-1 text-[15px] text-fg-secondary md:col-start-3">{job.place}</span>
+                  <span aria-hidden className="col-start-2 row-span-3 row-start-1 self-center text-[22px] leading-none transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none md:col-start-4 md:row-span-1">+</span>
+                </summary>
+                <div className="flex max-w-[calc(180px+72ch)] flex-col gap-3 pb-6 md:pl-[196px]">
+                  <ul className="flex flex-wrap gap-1.5">
+                    {job.points.map((p) => (
+                      <li key={p} className="rounded-full border border-line px-3 py-1 text-[13px]">{p}</li>
+                    ))}
+                  </ul>
+                  {job.details?.map((p) => <p key={p} className="text-fg-secondary">{p}</p>)}
+                </div>
+              </details>
             </li>
           ))}
         </ol>
@@ -218,24 +231,24 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
       {/* Closing call to action */}
       <section aria-labelledby="cta-h" className={`${container} mt-20`}>
-        <div className="flex flex-col gap-5 rounded-[18px] border-[1.5px] border-fg p-6 sm:p-10 md:flex-row md:items-end md:justify-between">
-          <div className="flex max-w-[560px] flex-col gap-3">
-            <h2 id="cta-h" className="font-display text-[clamp(28px,4vw,40px)] font-bold uppercase leading-[1.1] tracking-[0.01em]">{d.about.ctaTitle}</h2>
+        <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10 md:flex-row md:items-end md:justify-between">
+          <h2 id="cta-h" className={bigTitle}>{d.about.ctaTitle}</h2>
+          <div className="flex max-w-[460px] flex-col gap-4">
             <p className="text-[17px] leading-[1.55] text-fg-secondary">{d.about.ctaText}</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "about" })}>
-              {INTAKE[locale].cta}
-            </PrimaryLink>
-            <ContactMenu
-              label={d.home.cta}
-              heading={d.ui.writeVia}
-              copyLabel={d.ui.copyEmail}
-              copiedLabel={d.ui.copied}
-              contacts={CONTACTS}
-              location="about"
-              variant="secondary"
-            />
+            <div className="flex flex-wrap gap-3">
+              <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "about" })}>
+                {INTAKE[locale].cta}
+              </PrimaryLink>
+              <ContactMenu
+                label={d.home.cta}
+                heading={d.ui.writeVia}
+                copyLabel={d.ui.copyEmail}
+                copiedLabel={d.ui.copied}
+                contacts={CONTACTS}
+                location="about"
+                variant="secondary"
+              />
+            </div>
           </div>
         </div>
       </section>

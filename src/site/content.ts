@@ -152,7 +152,9 @@ type Dictionary = {
     facts: { value: string; label: string }[];
     approach: string;
     approachLead: string;
-    steps: { title: string; text: string }[];
+    /** `tie`: the records this step leaves in the workbook, so the process links to what the cases show. */
+    steps: { title: string; text: string; tie: string }[];
+    inWorkbook: string;
     ctaTitle: string;
     ctaText: string;
   };
@@ -313,20 +315,25 @@ const uk: Dictionary = {
       {
         title: "Дослідження",
         text: "Інтервʼю з користувачами, аналіз конкурентів, клікабельні прототипи. Рішення спираються на те, що люди роблять, а не на здогадки.",
+        tie: "Конкуренти · дослідження · спостереження",
       },
       {
         title: "Структура і сценарії",
         text: "Інформаційна архітектура й користувацькі шляхи від онбордингу до оплати, з усіма станами: завантаження, порожньо, помилка.",
+        tie: "Флоу · стани · крайні випадки",
       },
       {
         title: "Дизайн-система",
         text: "Токени, компоненти, адаптивні сітки й правила підтримки. Нові екрани збираються швидше, а інтерфейс лишається передбачуваним.",
+        tie: "Екрани зі станами",
       },
       {
         title: "Handoff і UI QA",
         text: "Специфікації, які розробка читає без питань, і перевірка реалізації перед релізом: що задумано, те й вийшло.",
+        tie: "Рішення з обґрунтуванням",
       },
     ],
+    inWorkbook: "У робочому зошиті",
     ctaTitle: "Працюймо разом",
     ctaText: "Відкритий до проєктної роботи або part-time, 20 годин на тиждень. Розкажіть про продукт — відповім протягом доби.",
   },
@@ -696,20 +703,25 @@ const en: Dictionary = {
       {
         title: "Research",
         text: "User interviews, competitor analysis, clickable prototypes. Decisions rest on what people do, not on guesses.",
+        tie: "Competitors · research · observations",
       },
       {
         title: "Structure and flows",
         text: "Information architecture and user journeys from onboarding to payment, with every state: loading, empty, error.",
+        tie: "Flows · states · edge cases",
       },
       {
         title: "Design system",
         text: "Tokens, components, responsive grids and upkeep rules. New screens come together faster and the interface stays predictable.",
+        tie: "Screens with their states",
       },
       {
         title: "Handoff and UI QA",
         text: "Specs developers read without questions, and a check of the build before release: what was designed is what ships.",
+        tie: "Decisions with their reasons",
       },
     ],
+    inWorkbook: "In the workbook",
     ctaTitle: "Let's work together",
     ctaText: "Open to project work or part-time, 20 hours a week. Tell me about your product and I'll reply within a day.",
   },
