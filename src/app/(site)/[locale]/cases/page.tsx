@@ -4,7 +4,8 @@ import { dict, isLocale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, graph, localeUrl, pageMetadata } from "@/site/seo";
-import { CaseCard, container } from "@/site/ui";
+import { CaseList } from "@/site/case-list";
+import { container } from "@/site/ui";
 
 export const revalidate = 60;
 
@@ -31,15 +32,16 @@ export default async function Cases({ params }: { params: Promise<{ locale: stri
           ]),
         )}
       />
-      <header className="flex max-w-[640px] flex-col gap-4">
-        <h1 className="page-title">{d.cases.title}</h1>
-        <p className="text-[18px] text-fg-secondary">{d.cases.lead}</p>
-      </header>
-      <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
-        {cases.map((item) => (
-          <CaseCard key={item.slug} item={item} locale={locale} label={d.cases.placeholder} />
-        ))}
-      </div>
+      <CaseList
+        cases={cases}
+        locale={locale}
+        heading={
+          <header className="flex max-w-[640px] flex-col gap-4">
+            <h1 className="page-title">{d.cases.title}</h1>
+            <p className="text-[18px] text-fg-secondary">{d.cases.lead}</p>
+          </header>
+        }
+      />
     </div>
   );
 }
