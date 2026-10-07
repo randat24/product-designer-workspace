@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
+import { CursorIcon } from "@/shared/ui/fedo-mark";
 import { trackAttrs } from "./analytics/track";
 import { PROCESS_STAGES, type CaseProcess } from "./case-process";
 import { dict, type Case, type Locale } from "./content";
@@ -156,12 +157,15 @@ export function CaseCover({
 /** Two-digit position of a case in the list: 01, 02… */
 const caseIndex = (n: number) => String(n).padStart(2, "0");
 
-/** The cover of a card: blurred for 18+ unless it is safe; on hover a scrim lifts the tags and «Open case». */
+/**
+ * The cover of a card, cut like the F of the FEDO mark: the cover keeps the bar and the stem, «Open case» with the
+ * mark's cursor sits in the notch. Blurred for 18+ unless it is safe; on hover a scrim lifts the tags.
+ */
 function CardCover({ item, locale, label, large }: { item: Case; locale: Locale; label: string; large?: boolean }) {
   const d = dict(locale);
   const blurred = item.adult && !item.coverSafe;
   return (
-    <div className="relative overflow-hidden rounded-[14px]">
+    <div className="relative overflow-hidden rounded-[14px] rounded-br-none">
       <div className={cn("transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none", blurred && "blur-xl")}>
         <CaseCover item={item} label={label} large={large} />
       </div>
@@ -171,14 +175,15 @@ function CardCover({ item, locale, label, large }: { item: Case; locale: Locale;
         </span>
       )}
       {/* Pointer devices only: the same tags are listed under the card on touch screens. */}
-      <div aria-hidden className="absolute inset-0 hidden flex-col justify-end gap-3 bg-[#151a33]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
+      <div aria-hidden className="absolute inset-0 hidden flex-col justify-start bg-[#151a33]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
         <ul className="flex flex-wrap gap-1.5">
           {item.tags.map((tag) => <li key={tag} className="rounded-full border border-white/70 px-2.5 py-0.5 text-[12px]">{tag}</li>)}
         </ul>
-        <span className="flex items-center justify-between font-display text-[22px] font-bold uppercase leading-[1.08]">
-          {d.cases.open}<span>→</span>
-        </span>
       </div>
+      <span aria-hidden className={cn("f-notch flex items-center gap-2 font-semibold", large ? "pl-5 pt-4 text-[17px]" : "pl-3.5 pt-3 text-[14px]")}>
+        <CursorIcon className={cn("transition-transform duration-200 group-hover:-translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none", large ? "size-5" : "size-4")} />
+        {d.cases.open}
+      </span>
     </div>
   );
 }
@@ -308,9 +313,6 @@ export function HeroCase({ item, locale, label, total }: { item: Case; locale: L
             ))}
           </dl>
           {item.process && <ProcessStrip process={item.process} locale={locale} />}
-          <span className="flex items-center gap-2 text-[17px] font-semibold">
-            {d.cases.open}<span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none">→</span>
-          </span>
         </div>
       </div>
       <CardCover item={item} locale={locale} label={label} large />
@@ -344,7 +346,7 @@ export function FeaturedCase({
     <Link
       href={`/${locale}/cases/${item.slug}`}
       data-kind={item.kind ?? "real"}
-      className="group grid gap-6 rounded-[20px] border border-line bg-surface p-4 sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
+      className="group grid gap-6 rounded-[20px] border border-line bg-surface p-4 [--notch-bg:var(--surface)] sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
       <CardCover item={item} locale={locale} label={label} />
@@ -366,9 +368,6 @@ export function FeaturedCase({
         </dl>
         <CardTags tags={item.tags} />
         {item.process && <ProcessStrip process={item.process} locale={locale} />}
-        <span className="mt-auto flex items-center gap-2 font-semibold">
-          {d.cases.open}<span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none">→</span>
-        </span>
       </div>
     </Link>
   );

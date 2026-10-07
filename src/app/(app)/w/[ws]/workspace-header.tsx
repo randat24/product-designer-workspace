@@ -5,6 +5,7 @@ import { countNewRequests } from "@/domains/requests/queries";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
 import { WorkspaceSwitcher } from "./workspace-switcher";
+import { FedoMark } from "@/shared/ui/fedo-mark";
 
 /** The workspace bar (brand, switcher, way back to the site, account) shared by the projects and requests pages. */
 export async function WorkspaceHeader({ current }: { current: string }) {
@@ -12,7 +13,7 @@ export async function WorkspaceHeader({ current }: { current: string }) {
   return (
     <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
       <span className="flex min-w-0 items-center gap-4">
-        <span className="font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
+        <span className="flex items-center gap-2.5"><FedoMark className="size-7 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" /><span className="font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span></span>
         <WorkspaceSwitcher current={current} workspaces={workspaces} />
       </span>
       <form action="/auth/signout" method="post" className="flex items-center gap-3 text-meta">

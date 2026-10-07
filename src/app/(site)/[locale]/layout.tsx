@@ -12,6 +12,7 @@ import { ConsentBanner } from "@/site/consent-banner";
 import { trackAttrs } from "@/site/analytics/track";
 import { BackToTop } from "@/site/back-to-top";
 import { LangSwitch } from "@/site/lang-switch";
+import { FedoMark } from "@/shared/ui/fedo-mark";
 import { Signature } from "@/site/signature";
 import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
@@ -93,8 +94,12 @@ export default async function SiteLayout({
         <div className="flex min-h-dvh flex-col">
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/85 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:gap-4`}>
-              <Link href={`/${locale}`} className="hit shrink-0 whitespace-nowrap font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[0.01em]">
-                {d.name}
+              {/* The FEDO mark (Fedorov): the cursor taps the F on hover. The name stays for screen readers and wide screens. */}
+              <Link href={`/${locale}`} className="hit group flex shrink-0 items-center gap-2.5 whitespace-nowrap">
+                <FedoMark className="size-9" tap />
+                <span className="font-display text-[22px] font-semibold uppercase leading-none tracking-[0.08em]" aria-hidden>FEDO</span>
+                <span className="sr-only">{d.name}</span>
+                <span aria-hidden className="hidden border-l border-line pl-2.5 text-[13px] text-fg-secondary xl:inline">{d.name}</span>
               </Link>
               <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
               <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "header" })}
@@ -118,8 +123,8 @@ export default async function SiteLayout({
             {children}
           </main>
 
-          <footer className="bg-rail text-rail-fg">
-            <div className={`${container} flex flex-col gap-8 py-10 sm:flex-row sm:items-end sm:justify-between`}>
+          <footer className="overflow-hidden bg-rail text-rail-fg">
+            <div className={`${container} relative flex flex-col gap-8 py-10 sm:flex-row sm:items-end sm:justify-between`}>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-end gap-3">
@@ -162,8 +167,10 @@ export default async function SiteLayout({
                   {CONTACTS.email}
                 </a>
               </div>
+              {/* The mark, large and cut by the bottom bar: inverted on the rail. */}
+              <FedoMark className="pointer-events-none hidden w-[clamp(150px,15vw,210px)] translate-y-[34%] [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)] md:block" />
             </div>
-            <div className={`${container} flex items-center justify-between gap-4 border-t border-current/15 py-4`}>
+            <div className={`${container} relative z-[1] flex items-center justify-between gap-4 border-t border-current/15 bg-rail py-4`}>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] opacity-60">
                 <span>© {year} · {d.footer.rights}</span>
                 {/* The private workspace: not for crawlers. */}

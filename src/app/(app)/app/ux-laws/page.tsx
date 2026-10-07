@@ -4,6 +4,7 @@ import { UX_LAW_GROUPS, UX_LAWS, uxLawUrl } from "@/domains/ux-laws";
 import { PageHeader } from "@/shared/ui/page-header";
 import { t } from "@/shared/i18n/uk";
 import { ArrowLeft } from "lucide-react";
+import { FedoMark } from "@/shared/ui/fedo-mark";
 
 const l = t.uxLaws;
 
@@ -14,7 +15,7 @@ export default function UxLawsPage() {
   return (
     <div className="min-h-screen">
       <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
-        <span className="min-w-0 truncate font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span>
+        <span className="flex min-w-0 items-center gap-2.5"><FedoMark className="size-7 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" /><span className="min-w-0 truncate font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span></span>
         <Link href="/app" className="inline-flex shrink-0 items-center gap-1 text-meta font-semibold opacity-80 hover:opacity-100 hover:underline"><ArrowLeft aria-hidden className="size-4" />{l.back}</Link>
       </header>
 
