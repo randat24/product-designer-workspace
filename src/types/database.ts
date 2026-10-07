@@ -30,6 +30,7 @@ type CaseStudyRow = {
   status: Database["public"]["Enums"]["case_status"]; position: number; content: Json; draft: Json;
   published_at: string | null; content_updated_at: string | null; created_at: string; updated_at: string;
 };
+type SiteProfileRow = { workspace_id: string; content: Json; updated_at: string; updated_by: string | null };
 type ClientRow = {
   id: string; workspace_id: string; name: string; email: string; company: string | null; role: string | null;
   phone: string | null; telegram: string | null; website: string | null;
@@ -278,6 +279,7 @@ export type Database = {
       flow_edges: { Row: FlowEdgeRow; Insert: Ins<FlowEdgeRow, "project_id" | "flow_id" | "source_node_id" | "target_node_id">; Update: Upd<FlowEdgeRow>; Relationships: [] };
       flow_edge_cases: { Row: FlowEdgeCaseRow; Insert: Ins<FlowEdgeCaseRow, "project_id" | "flow_id" | "kind">; Update: Upd<FlowEdgeCaseRow>; Relationships: [] };
       case_studies: { Row: CaseStudyRow; Insert: Ins<CaseStudyRow, "project_id" | "slug">; Update: Upd<CaseStudyRow>; Relationships: [] };
+      site_profile: { Row: SiteProfileRow; Insert: Ins<SiteProfileRow, "workspace_id">; Update: Upd<SiteProfileRow>; Relationships: [] };
       clients: { Row: ClientRow; Insert: never; Update: Upd<ClientRow>; Relationships: [] };
       project_requests: {
         Row: ProjectRequestRow; Insert: never; Update: Upd<ProjectRequestRow>;
@@ -318,6 +320,7 @@ export type Database = {
       };
       decision_stats: { Args: { p_project: string }; Returns: { decision_id: string; evidence: number; targets: number }[] };
       project_stage_counts: { Args: { p_project: string }; Returns: Json };
+      site_profile: { Args: Record<string, never>; Returns: Json };
       submit_project_request: {
         Args: { p_payload: Json; p_secret: string; p_ip_hash: string; p_idempotency_key: string };
         Returns: Json;

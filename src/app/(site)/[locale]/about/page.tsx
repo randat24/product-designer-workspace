@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CONTACTS, dict, isLocale } from "@/site/content";
+import { getSiteProfile } from "@/site/profile-source";
+import { applyProfile } from "@/site/site-profile";
 import { trackAttrs } from "@/site/analytics/track";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, graph, localeUrl, pageMetadata, personId, personLd } from "@/site/seo";
@@ -27,7 +29,8 @@ const STEP_COLORS = ["var(--entity-research)", "var(--entity-structure)", "var(-
 export default async function About({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const d = dict(locale);
+  // Summary, facts, experience, skills and the rest come from «Профіль сайту» in the tool when written there.
+  const d = applyProfile(dict(locale), await getSiteProfile(locale));
   // The service is told in its own block near the end; the experience list is the design career.
   const serviceJob = d.jobs.find((j) => j.military);
   const designJobs = d.jobs.filter((j) => !j.military);
@@ -73,9 +76,9 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             />
           </div>
           <dl className="mt-4 grid max-w-[680px] grid-cols-3 gap-4 border-t border-fg pt-5">
-            {d.about.facts.map((f) => (
+            {d.about.facts.map((f, i) => (
               // Label first in the markup (dt before dd), the number shown on top.
-              <div key={f.label} className="flex flex-col-reverse justify-end gap-1">
+              <div key={i} className="flex flex-col-reverse justify-end gap-1">
                 <dt className="text-[14px] leading-[1.4] text-fg-secondary">{f.label}</dt>
                 <dd className="display-num text-[clamp(30px,3.4vw,40px)] leading-none">{f.value}</dd>
               </div>
@@ -126,7 +129,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         {/* An index of roles: each row opens to what was done there. */}
         <ol className="flex flex-col border-t-[1.5px] border-fg">
           {designJobs.map((job, i) => (
-            <li key={job.title + job.period} className="border-b border-line">
+            <li key={`${i}`} className="border-b border-line">
               <details className="group" open={i === 0}>
                 <summary className="hit grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_24px] gap-x-4 gap-y-1 py-5 md:grid-cols-[180px_minmax(0,1fr)_minmax(0,1fr)_24px] md:items-baseline [&::-webkit-details-marker]:hidden">
                   <span className="font-label text-[12px] text-fg-secondary">{job.period}</span>
@@ -136,11 +139,11 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                 </summary>
                 <div className="flex max-w-[calc(180px+72ch)] flex-col gap-3 pb-6 md:pl-[196px]">
                   <ul className="flex flex-wrap gap-1.5">
-                    {job.points.map((p) => (
-                      <li key={p} className="rounded-full border border-line px-3 py-1 text-[13px]">{p}</li>
+                    {job.points.map((p, k) => (
+                      <li key={k} className="rounded-full border border-line px-3 py-1 text-[13px]">{p}</li>
                     ))}
                   </ul>
-                  {job.details?.map((p) => <p key={p} className="text-fg-secondary">{p}</p>)}
+                  {job.details?.map((p, k) => <p key={k} className="text-fg-secondary">{p}</p>)}
                 </div>
               </details>
             </li>
@@ -152,8 +155,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       <section className={`${container} mt-16 grid gap-10 md:grid-cols-2`}>
         <Block title={d.about.skills}>
           <dl className="flex flex-col gap-4">
-            {d.skills.map((s) => (
-              <div key={s.group}>
+            {d.skills.map((s, i) => (
+              <div key={i}>
                 <dt className="font-semibold">{s.group}</dt>
                 <dd className="text-fg-secondary">{s.items}</dd>
               </div>
@@ -162,8 +165,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         </Block>
         <Block title={d.about.availability}>
           <ul className="flex flex-col gap-2">
-            {d.availability.map((a) => (
-              <li key={a} className="flex gap-2">
+            {d.availability.map((a, i) => (
+              <li key={i} className="flex gap-2">
                 <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
                 {a}
               </li>
@@ -172,8 +175,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         </Block>
         <Block title={d.about.education}>
           <ul className="flex flex-col gap-3">
-            {d.education.map((e) => (
-              <li key={e.title} className="flex justify-between gap-4">
+            {d.education.map((e, i) => (
+              <li key={i} className="flex justify-between gap-4">
                 <div>
                   {e.certificate ? (
                     <a
@@ -199,8 +202,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         </Block>
         <Block title={d.about.languages}>
           <ul className="flex flex-col gap-2">
-            {d.languages.map((l) => (
-              <li key={l.name} className="flex justify-between gap-4">
+            {d.languages.map((l, i) => (
+              <li key={i} className="flex justify-between gap-4">
                 <span className="font-semibold">{l.name}</span>
                 <span className="text-fg-secondary">{l.level}</span>
               </li>
