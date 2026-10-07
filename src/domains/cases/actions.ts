@@ -9,6 +9,7 @@ import { t } from "@/shared/i18n/uk";
 import { denied, invalid, transient, type Failure } from "@/shared/lib/action-result";
 import { snapshotProblem } from "@/site/case-snapshot";
 import type { AutosaveResult } from "@/shared/ui/autosave";
+import { countProcess } from "./process";
 import { CASE_LOCALES, caseDraftSchema, mergeDraft, type CaseDraft, type CaseLocale } from "./schema";
 
 /** Creates a draft case for a project; the site address follows the project slug. */
@@ -78,12 +79,16 @@ type PublishResult = { ok: true } | Failure;
 export async function publishCase(caseId: string): Promise<PublishResult> {
   if (!z.uuid().safeParse(caseId).success) return invalid();
   const supabase = await createClient();
-  const { data: current, error: readError } = await supabase.from("case_studies").select("draft").eq("id", caseId).maybeSingle();
+  const { data: current, error: readError } = await supabase.from("case_studies").select("draft, project_id").eq("id", caseId).maybeSingle();
   if (readError) return transient();
   if (!current) return denied(t.caseEditor.readOnly);
   if (snapshotProblem(current.draft, "uk") || snapshotProblem(current.draft, "en")) return invalid(t.caseEditor.publishInvalid);
+  // The site shows how much of the work is documented in the workbook: counted now, kept with the snapshot.
+  const process = await countProcess(supabase, current.project_id);
+  if (!process) return transient();
+  const content = { ...(current.draft as Record<string, Json>), process } as Json;
   const { data, error } = await supabase.from("case_studies")
-    .update({ content: current.draft, status: "published", content_updated_at: new Date().toISOString() })
+    .update({ content, status: "published", content_updated_at: new Date().toISOString() })
     .eq("id", caseId).select("id");
   if (error) return transient();
   if (!data.length) return denied(t.caseEditor.readOnly);

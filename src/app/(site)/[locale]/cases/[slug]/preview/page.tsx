@@ -1,3 +1,4 @@
+import { countProcess } from "@/domains/cases/process";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -25,7 +26,9 @@ export default async function CasePreview({ params }: { params: Params }) {
   if (!data) notFound();
   const { data: project } = await supabase.from("projects").select("slug, workspaces(slug)").eq("id", data.project_id).maybeSingle();
   const editor = project?.workspaces ? `/w/${project.workspaces.slug}/p/${project.slug}/case` : "/app";
-  const item = snapshotToCase(data.slug, data.draft, locale);
+  // Counted live, as «Опублікувати» will count them.
+  const process = await countProcess(supabase, data.project_id);
+  const item = snapshotToCase(data.slug, { ...(data.draft as object), process }, locale);
 
   const banner = (
     <div role="note" className="mb-8 border-y-[1.5px] border-dashed border-fg bg-subtle">

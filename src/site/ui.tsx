@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
 import { trackAttrs } from "./analytics/track";
+import { PROCESS_STAGES, type CaseProcess } from "./case-process";
 import { dict, type Case, type Locale } from "./content";
 
 export const container = "mx-auto w-full max-w-[1120px] px-4 sm:px-8";
@@ -202,6 +203,31 @@ function CardTags({ tags, className }: { tags: string[]; className?: string }) {
   );
 }
 
+/**
+ * «Глибина процесу»: records of each stage in the workbook, every number named, with the stage's colour from the
+ * tool. Cards show five stages; the case page shows all nine with a note that it is not a score.
+ */
+export function ProcessStrip({ process, locale, full }: { process: CaseProcess; locale: Locale; full?: boolean }) {
+  const p = dict(locale).process;
+  const stages = PROCESS_STAGES.filter((s) => full || s.card);
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{p.title}</p>
+      <dl className={cn("grid gap-x-1.5 gap-y-3", full ? "grid-cols-3 sm:grid-cols-5 lg:grid-cols-9" : "grid-cols-5")}>
+        {stages.map((s) => (
+          // A stage with no records keeps readable text; only its colour bar turns grey.
+          <div key={s.key} className="flex min-w-0 flex-col-reverse justify-end gap-0.5 border-t-[3px] pt-1.5"
+            style={{ borderColor: process[s.key] === 0 ? "var(--line)" : s.color }}>
+            <dt className="truncate font-label text-[10px] uppercase tracking-[0.02em] text-fg-secondary" title={p.stages[s.key]}>{p.stages[s.key]}</dt>
+            <dd className={cn("font-display font-bold leading-none tabular-nums", full ? "text-[clamp(26px,3vw,40px)]" : "text-[20px]")}>{process[s.key]}</dd>
+          </div>
+        ))}
+      </dl>
+      {full && <p className="text-[13px] text-fg-secondary">{p.note}</p>}
+    </div>
+  );
+}
+
 /** A case in the grid: cover, then its number, badges, title, client · year and the summary. */
 export function CaseCard({
   item,
@@ -236,6 +262,7 @@ export function CaseCard({
         <p className="text-[14px] text-fg-secondary">{item.client} · {item.year}</p>
         <p className="text-fg-secondary">{item.summary}</p>
         <CardTags tags={item.tags} className="mt-1 pointer-fine:hidden" />
+        {item.process && <div className="mt-2"><ProcessStrip process={item.process} locale={locale} /></div>}
       </div>
     </Link>
   );
@@ -288,6 +315,7 @@ export function FeaturedCase({
           ))}
         </dl>
         <CardTags tags={item.tags} />
+        {item.process && <ProcessStrip process={item.process} locale={locale} />}
         <span className="mt-auto flex items-center gap-2 font-semibold">
           {d.cases.open}<span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none">→</span>
         </span>
