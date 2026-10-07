@@ -13,6 +13,8 @@ import { ContactMenu } from "@/site/contact-menu";
 import { INTAKE } from "@/site/intake/content";
 import { LinkedInIcon, TelegramIcon } from "@/site/social-icons";
 import { CaseList } from "@/site/case-list";
+import { CaseCanvas, type CanvasCase } from "@/site/case-canvas";
+import { count, plural } from "@/site/plural";
 import { Eyebrow, PrimaryLink, SecondaryLink, container } from "@/site/ui";
 
 export const revalidate = 60;
@@ -36,6 +38,45 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   if (!isLocale(locale)) notFound();
   const d = dict(locale);
   const cases = await getCases(locale);
+  const shown = cases.slice(0, 4);
+  const f = d.fedo;
+  const recordsOf = (c: (typeof cases)[number]) => (c.process ? Object.values(c.process).reduce((a, b) => a + b, 0) : 0);
+  const records = shown.reduce((a, c) => a + recordsOf(c), 0);
+  // What the FEDO cursor says at each frame: the chain from research to screens when the process is published.
+  const say = (c: (typeof cases)[number]) => {
+    const p = c.process;
+    const chain = p && [
+      p.observations && count(locale, p.observations, f.forms.observations),
+      p.insights && count(locale, p.insights, f.forms.insights),
+      p.screens && count(locale, p.screens, f.forms.screens),
+    ].filter(Boolean);
+    return chain && chain.length ? `${c.title}: ${chain.join(" → ")}` : [c.title, c.client, c.year].filter(Boolean).join(" · ");
+  };
+  const canvasCases: CanvasCase[] = shown.map((c, i) => ({
+    slug: c.slug,
+    href: `/${locale}/cases/${c.slug}`,
+    title: c.title,
+    label: `${String(i + 1).padStart(2, "0")} · ${c.title}`,
+    cover: c.cover ? { src: c.cover.src, width: c.cover.width, height: c.cover.height, alt: c.cover.alt } : undefined,
+    sticker: c.sticker,
+    blurred: !!c.adult && !c.coverSafe,
+    process: c.process,
+    say: say(c),
+    track: trackAttrs("case_open", { case_slug: c.slug, location: "home" }),
+  }));
+  const canvasLabels = {
+    ...f.canvas,
+    open: d.cases.open,
+    placeholder: d.cases.placeholder,
+    stages: d.process.stages,
+    records: Object.fromEntries(shown.map((c) => {
+      const n = recordsOf(c);
+      return [c.slug, { n, rest: f.canvas.inWorkbook.replace("{records}", plural(locale, n, f.forms.records)) }];
+    })),
+  };
+  const thesis = f.thesis
+    .replace("{cases}", count(locale, shown.length, f.forms.cases))
+    .replace("{records}", count(locale, records, f.forms.records));
 
   return (
     <>
@@ -52,13 +93,24 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             {d.home.available}
           </p>
         </div>
-        <CaseList
+        {/* Desktop: the work as frames on a canvas, with the records of the workbook beside each. Phones: cards. */}
+        <div className="hidden flex-col gap-6 md:flex">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 id="work" className="t-section max-w-[26ch]" data-spec="text">
+              {records > 0 ? thesis : d.home.selected}
+            </h2>
+            <Link href={`/${locale}/cases`} className="hit shrink-0 border-b-[1.5px] border-current text-[14px] font-semibold">{d.home.all} →</Link>
+          </div>
+          {canvasCases.length > 0 && <CaseCanvas cases={canvasCases} labels={canvasLabels} />}
+        </div>
+        <div className="md:hidden">
+          <CaseList
           cases={cases.slice(0, 4)}
           locale={locale}
           location="home"
           hero
           heading={
-            <h2 id="work" className="t-section">
+            <h2 className="t-section">
               {d.home.selected}
               <sup className="ml-2 align-top font-label text-[14px] font-normal tracking-normal text-fg-secondary">({String(Math.min(cases.length, 4)).padStart(2, "0")})</sup>
             </h2>
@@ -69,6 +121,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </Link>
           }
         />
+        </div>
       </section>
 
       {/* Who is behind the work: after it, for those who got interested. */}

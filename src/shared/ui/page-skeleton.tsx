@@ -1,4 +1,5 @@
 import { t } from "@/shared/i18n/uk";
+import { FedoMark } from "@/shared/ui/fedo-mark";
 
 /**
  * Doherty threshold (docs/UX_LAWS.md, UX-24): shown at once while a page loads, in the shape of
@@ -9,6 +10,8 @@ export function PageSkeleton({ rows = 6 }: { rows?: number }) {
   return (
     <div role="status" aria-live="polite" aria-busy="true">
       <span className="sr-only">{t.status.loading}</span>
+      {/* The mark's cursor keeps tapping the F while the page loads. */}
+      <FedoMark tap className="fedo-loading mb-6 size-9" />
       <div aria-hidden="true">
         <header className="mb-8 max-w-3xl">
           <div className={`${bar} mb-3 h-4 w-40`} />

@@ -12,7 +12,9 @@ import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, caseLd, graph, localeUrl } from "@/site/seo";
 import { ContactMenu } from "@/site/contact-menu";
 import { AdultGate } from "@/site/adult-gate";
-import { AdultBadge, CaseCover, KindBadge, PrimaryLink, ProcessStrip, SecondaryLink, container } from "@/site/ui";
+import { AdultBadge, KindBadge, NotchedCover, PrimaryLink, ProcessStrip, SecondaryLink, container } from "@/site/ui";
+import { CursorIcon } from "@/shared/ui/fedo-mark";
+import { TraceGraph } from "@/site/trace-graph";
 import { INTAKE } from "@/site/intake/content";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -35,6 +37,23 @@ export function CaseArticle({ item, locale, next, position, banner }: {
   const figma = item.figma ? figmaFileUrl(item.figma) : null;
   // 18+ cases: everything below the facts waits for the visitor's age confirmation. A product case is
   // diagrams and brand work only (no product imagery of the audience), so it is not hidden behind the gate.
+  // The cover keeps the bar and the stem of the F; its type and place in the list sit in the notch.
+  const cover = (
+    <NotchedCover item={item} label={d.cases.placeholder} large>
+      <dl className="grid gap-2.5 pr-1">
+        <div className="flex flex-col-reverse gap-0.5">
+          <dd className="text-[15px] font-semibold">{item.kind === "concept" ? d.project.concept : d.project.real}</dd>
+          <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{d.cases.type}</dt>
+        </div>
+        {position && (
+          <div className="flex flex-col-reverse gap-0.5">
+            <dd className="flex items-center gap-2 text-[15px] font-semibold"><CursorIcon className="size-4" />{pad(position.index)} / {pad(position.total)}</dd>
+            <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{d.cases.title}</dt>
+          </div>
+        )}
+      </dl>
+    </NotchedCover>
+  );
   const gate = (node: React.ReactNode) =>
     item.adult && !item.product ? <AdultGate labels={d.adult} backHref={`/${locale}/cases`}>{node}</AdultGate> : node;
 
@@ -101,7 +120,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
         </dl>
       </div>
       {item.coverSafe && (
-        <div className={`${container} mt-8`}><CaseCover item={item} label={d.cases.placeholder} large /></div>
+        <div className={`${container} mt-8`}>{cover}</div>
       )}
       {item.process && (
         <section aria-label={d.process.title} className={`${container} mt-10`}>
@@ -110,7 +129,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       )}
       {gate(<>
       <div className={`${container} mt-8 flex flex-col gap-8`}>
-        {!item.coverSafe && <CaseCover item={item} label={d.cases.placeholder} large />}
+        {!item.coverSafe && cover}
         {/* Live product, or a note that the pages can be browsed here (no site / a concept). */}
         {item.liveUrl ? (
           <div className="flex">
@@ -138,6 +157,16 @@ export function CaseArticle({ item, locale, next, position, banner }: {
         </ul>
         )}
       </div>
+      {item.trace && (
+        <section aria-labelledby="trace-h" className={`${container} mt-14 flex flex-col gap-4`}>
+          <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+            <h2 id="trace-h" className="t-section">{d.fedo.trace.title}</h2>
+            <p className="max-w-[58ch] text-fg-secondary">{d.fedo.trace.lead}</p>
+          </div>
+          <TraceGraph trace={item.trace} locale={locale}
+            labels={{ ...d.fedo.trace, stages: d.process.stages, forms: { records: d.fedo.forms.records, links: d.fedo.forms.links } }} />
+        </section>
+      )}
 
       {item.gallery && item.gallery.length > 0 && (
         <section id="pages" aria-labelledby="pages-h" className={`${container} mt-14 scroll-mt-24`}>
@@ -198,6 +227,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           <Link
             href={`/${locale}/cases/${next.slug}`}
             className="group grid gap-6 border-t-[1.5px] border-fg pt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] md:items-end md:gap-10"
+            data-cursor={d.cases.next}
             {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}
           >
             <div className="flex min-w-0 flex-col gap-3">
@@ -208,11 +238,11 @@ export function CaseArticle({ item, locale, next, position, banner }: {
                 {next.title} <span aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-2 motion-reduce:transition-none">→</span>
               </span>
             </div>
-            <div className={cn("overflow-hidden rounded-[14px]", next.adult && !next.coverSafe && "blur-xl")}>
-              <div className="transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none">
-                <CaseCover item={next} label={d.cases.placeholder} />
-              </div>
-            </div>
+            <NotchedCover item={next} label={d.cases.placeholder} className={cn(next.adult && !next.coverSafe && "[&_img]:blur-xl")}>
+              <span className="flex items-center gap-2 text-[14px] font-semibold">
+                <CursorIcon className="size-4 transition-transform duration-200 group-hover:-translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none" />{d.cases.open}
+              </span>
+            </NotchedCover>
           </Link>
         )}
         <div className="flex flex-col gap-5 rounded-[20px] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">

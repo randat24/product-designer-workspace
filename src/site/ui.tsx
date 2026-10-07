@@ -154,6 +154,18 @@ export function CaseCover({
   );
 }
 
+/** A large cover cut like the F: the notch holds `children` (the case's facts, «next case»). */
+export function NotchedCover({ item, label, large, children, className }: {
+  item: Case; label: string; large?: boolean; children: React.ReactNode; className?: string;
+}) {
+  return (
+    <div className={cn("relative overflow-hidden rounded-[14px] rounded-br-none", className)} data-spec="F-обкладинка">
+      <CaseCover item={item} label={label} large={large} />
+      <div className={cn("f-notch", large ? "[--notch-r:22px] pl-5 pt-4 sm:pl-6 sm:pt-5" : "pl-3.5 pt-3")}>{children}</div>
+    </div>
+  );
+}
+
 /** Two-digit position of a case in the list: 01, 02… */
 const caseIndex = (n: number) => String(n).padStart(2, "0");
 
@@ -255,6 +267,7 @@ export function CaseCard({
       href={`/${locale}/cases/${item.slug}`}
       data-kind={item.kind ?? "real"}
       className="group flex flex-col gap-4"
+      data-cursor={dict(locale).cases.open}
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
       <CardCover item={item} locale={locale} label={label} />
@@ -290,6 +303,7 @@ export function HeroCase({ item, locale, label, total }: { item: Case; locale: L
       href={`/${locale}/cases/${item.slug}`}
       data-kind={item.kind ?? "real"}
       className="group flex flex-col gap-5"
+      data-cursor={d.cases.open}
       {...trackAttrs("case_open", { case_slug: item.slug, location: "home" })}
     >
       <p className="flex items-center justify-between gap-2 font-label text-[12px] uppercase tracking-[0.04em]">
@@ -347,6 +361,7 @@ export function FeaturedCase({
       href={`/${locale}/cases/${item.slug}`}
       data-kind={item.kind ?? "real"}
       className="group grid gap-6 rounded-[20px] border border-line bg-surface p-4 [--notch-bg:var(--surface)] sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
+      data-cursor={dict(locale).cases.open}
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
       <CardCover item={item} locale={locale} label={label} />

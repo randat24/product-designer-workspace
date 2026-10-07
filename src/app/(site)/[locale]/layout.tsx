@@ -16,6 +16,7 @@ import { FedoMark } from "@/shared/ui/fedo-mark";
 import { Signature } from "@/site/signature";
 import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
+import { FedoCursor, FedoIntro, INTRO_SCRIPT, SpecsToggle } from "@/site/fedo-layer";
 import { container } from "@/site/ui";
 import { SiteNav } from "@/site/site-nav";
 import { INTAKE } from "@/site/intake/content";
@@ -83,6 +84,7 @@ export default async function SiteLayout({
       <head>
         {/* Before paint: a saved light/dark choice, so the page never flashes the other theme. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
       <body>
         <a
@@ -107,6 +109,7 @@ export default async function SiteLayout({
                 {INTAKE[locale].cta}
               </Link>
               <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
+                <SpecsToggle label={d.fedo.specs.button} hint={d.fedo.specs.hint} />
                 <ThemeToggle labelLight={d.ui.themeLight} labelDark={d.ui.themeDark} />
                 <LangSwitch current={locale} />
               </div>
@@ -181,6 +184,8 @@ export default async function SiteLayout({
           </footer>
         </div>
         <BackToTop label={d.ui.toTop} />
+        <FedoCursor />
+        <FedoIntro />
         <AnalyticsClickListener />
         <GoogleAnalytics />
         {gaId() && <ConsentBanner labels={d.privacy} privacyHref={`/${locale}/privacy`} />}

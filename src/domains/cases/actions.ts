@@ -10,6 +10,7 @@ import { denied, invalid, transient, type Failure } from "@/shared/lib/action-re
 import { snapshotProblem } from "@/site/case-snapshot";
 import type { AutosaveResult } from "@/shared/ui/autosave";
 import { countProcess } from "./process";
+import { collectTrace } from "./trace";
 import { CASE_LOCALES, caseDraftSchema, mergeDraft, type CaseDraft, type CaseLocale } from "./schema";
 
 /** Creates a draft case for a project; the site address follows the project slug. */
@@ -84,9 +85,10 @@ export async function publishCase(caseId: string): Promise<PublishResult> {
   if (!current) return denied(t.caseEditor.readOnly);
   if (snapshotProblem(current.draft, "uk") || snapshotProblem(current.draft, "en")) return invalid(t.caseEditor.publishInvalid);
   // The site shows how much of the work is documented in the workbook: counted now, kept with the snapshot.
-  const process = await countProcess(supabase, current.project_id);
-  if (!process) return transient();
-  const content = { ...(current.draft as Record<string, Json>), process } as Json;
+  // and the chain of records behind it («Слід рішень»).
+  const [process, trace] = await Promise.all([countProcess(supabase, current.project_id), collectTrace(supabase, current.project_id)]);
+  if (!process || !trace) return transient();
+  const content = { ...(current.draft as Record<string, Json>), process, trace } as Json;
   const { data, error } = await supabase.from("case_studies")
     .update({ content, status: "published", content_updated_at: new Date().toISOString() })
     .eq("id", caseId).select("id");

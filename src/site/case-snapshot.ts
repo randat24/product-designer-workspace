@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Case, Locale } from "./content";
 import { readProcess } from "./case-process";
+import { readTrace } from "./case-trace";
 
 /**
  * What the site needs from a case snapshot (`case_studies.content` or the draft), checked before it is
@@ -25,8 +26,8 @@ const localeSnapshot = z.object({
   seo: z.object({ title: z.string(), description: z.string() }).nullish(),
 }).passthrough();
 
-/** Both languages, plus `process` (language-independent counts from the workbook). */
-type Snapshot = Partial<Record<Locale, unknown>> & { process?: unknown };
+/** Both languages, plus `process` and `trace` (language-independent, from the workbook). */
+type Snapshot = Partial<Record<Locale, unknown>> & { process?: unknown; trace?: unknown };
 
 /** One language of a snapshot as a site case; the Ukrainian text stands in when a translation is missing. */
 export function snapshotToCase(slug: string, content: unknown, locale: Locale, updatedAt?: string): Case | null {
@@ -57,6 +58,7 @@ export function snapshotToCase(slug: string, content: unknown, locale: Locale, u
     product: (c.product ?? undefined) as Case["product"],
     seo: c.seo ?? undefined,
     process: readProcess(snapshot.process),
+    trace: readTrace(snapshot.trace),
     updatedAt,
   };
 }

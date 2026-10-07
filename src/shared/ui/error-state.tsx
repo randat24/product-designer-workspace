@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { useOnline } from "@/shared/ui/network";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
+import { FedoOutline } from "@/shared/ui/fedo-mark";
 
 /**
  * A page that failed to load (docs/UX_LAWS.md UX-27, UX-28): plain words, a retry that really refetches
@@ -59,6 +60,7 @@ export function ErrorState({ error, reset, back, className }: {
 export function NotFoundState({ back, className }: { back: { href: string; label: string }; className?: string }) {
   return (
     <div className={cn("flex max-w-xl flex-col gap-4", className)}>
+      <FedoOutline miss className="size-20" />
       <h1 className="page-title">{t.status.notFoundTitle}</h1>
       <p className="text-fg-secondary">{t.status.notFoundBody}</p>
       <Link href={back.href} className="inline-flex h-9 items-center self-start text-sm font-semibold underline underline-offset-4">

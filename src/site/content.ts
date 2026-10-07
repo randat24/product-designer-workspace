@@ -2,6 +2,8 @@
 // Cases are placeholders for now; the CV part follows the resume in public/cv/.
 
 import type { CaseProcess, ProcessStage } from "./case-process";
+import type { CaseTrace } from "./case-trace";
+import type { Forms } from "./plural";
 import type { ProductStory } from "./product-story";
 import type { AwardIcon } from "./award-icons";
 import type { CaseStory, StoryLabels } from "./case-story";
@@ -65,6 +67,8 @@ export type Case = {
   seo?: { title: string; description: string };
   /** Records of each stage in the workbook, counted on publish (src/site/case-process.ts). */
   process?: CaseProcess;
+  /** Records and links behind the case, collected on publish (src/site/case-trace.ts). */
+  trace?: CaseTrace;
 };
 
 export type GalleryItem = {
@@ -134,6 +138,22 @@ export type Dictionary = {
     title: string;
     note: string;
     stages: Record<ProcessStage, string>;
+  };
+  /** The FEDO layer: the canvas of cases, the guide cursor, the trace of decisions, the specs overlay. */
+  fedo: {
+    /** «{cases} і {records} процесу, які за ними стоять». */
+    thesis: string;
+    forms: { cases: Forms; records: Forms; links: Forms; observations: Forms; insights: Forms; screens: Forms };
+    canvas: {
+      page: string; layers: string; legend: string; note: string; hint: string; region: string;
+      zoomIn: string; zoomOut: string; fit: string; drag: string; show: string;
+      /** «{records} у зошиті». */
+      inWorkbook: string;
+      stickies: string;
+      noProcess: string;
+    };
+    trace: { title: string; lead: string; idle: string; basedOn: string; leadsTo: string; none: string; titlesNote: string };
+    specs: { button: string; hint: string };
   };
   about: {
     title: string;
@@ -288,6 +308,43 @@ const uk: Dictionary = {
       screens: "Екрани",
       decisions: "Рішення",
     },
+  },
+  fedo: {
+    thesis: "{cases} і {records} процесу, які за ними стоять",
+    forms: {
+      cases: ["кейс", "кейси", "кейсів"],
+      records: ["запис", "записи", "записів"],
+      links: ["звʼязок", "звʼязки", "звʼязків"],
+      observations: ["спостереження", "спостереження", "спостережень"],
+      insights: ["інсайт", "інсайти", "інсайтів"],
+      screens: ["екран", "екрани", "екранів"],
+    },
+    canvas: {
+      page: "Сторінка · Роботи",
+      layers: "Шари полотна",
+      legend: "Кольори етапів",
+      note: "Квадрати біля кейсу — записи в робочому зошиті: спостереження, інсайти, екрани, рішення.",
+      hint: "Тягніть полотно · Ctrl + колесо — масштаб",
+      region: "Полотно з кейсами. Стрілки рухають полотно, плюс і мінус змінюють масштаб, нуль показує все.",
+      zoomIn: "Збільшити",
+      zoomOut: "Зменшити",
+      fit: "Усе",
+      drag: "Тягніть",
+      show: "Показати",
+      inWorkbook: "{records} у зошиті",
+      stickies: "Кожен квадрат — запис у робочому зошиті",
+      noProcess: "Процес цього кейсу ще не записаний у зошиті.",
+    },
+    trace: {
+      title: "Слід рішень",
+      lead: "Записи й звʼязки з робочого зошита. Наведіть або натисніть на запис: видно, на що він спирається і до чого веде.",
+      idle: "{records} · {links}. Наведіть на запис, щоб побачити його ланцюжок.",
+      basedOn: "Спирається на",
+      leadsTo: "Веде до",
+      none: "—",
+      titlesNote: "",
+    },
+    specs: { button: "Розмітка", hint: "Показати сітку, шрифти й розміри (R)" },
   },
   about: {
     title: "Про мене",
@@ -676,6 +733,43 @@ const en: Dictionary = {
       screens: "Screens",
       decisions: "Decisions",
     },
+  },
+  fedo: {
+    thesis: "{cases} and {records} of process behind them",
+    forms: {
+      cases: ["case", "cases", "cases"],
+      records: ["record", "records", "records"],
+      links: ["link", "links", "links"],
+      observations: ["observation", "observations", "observations"],
+      insights: ["insight", "insights", "insights"],
+      screens: ["screen", "screens", "screens"],
+    },
+    canvas: {
+      page: "Page · Work",
+      layers: "Canvas layers",
+      legend: "Stage colours",
+      note: "Squares beside a case are records in the workbook: observations, insights, screens, decisions.",
+      hint: "Drag the canvas · Ctrl + wheel to zoom",
+      region: "Canvas of cases. Arrow keys move it, plus and minus zoom, zero shows everything.",
+      zoomIn: "Zoom in",
+      zoomOut: "Zoom out",
+      fit: "All",
+      drag: "Drag",
+      show: "Show",
+      inWorkbook: "{records} in the workbook",
+      stickies: "Each square is a record in the workbook",
+      noProcess: "The process of this case is not in the workbook yet.",
+    },
+    trace: {
+      title: "Decision trail",
+      lead: "Records and links from the workbook. Hover or tap a record to see what it rests on and what it leads to.",
+      idle: "{records} · {links}. Hover a record to see its chain.",
+      basedOn: "Rests on",
+      leadsTo: "Leads to",
+      none: "—",
+      titlesNote: "Record titles are kept as written in the workbook, in Ukrainian.",
+    },
+    specs: { button: "Specs", hint: "Show the grid, type and sizes (R)" },
   },
   about: {
     title: "About",
