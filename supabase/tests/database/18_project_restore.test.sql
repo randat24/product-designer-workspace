@@ -2,7 +2,7 @@
 -- counters continue; the file cannot reach other projects; only editors of the workspace can restore.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(11);
+select plan(13);
 
 create function pg_temp.login(uid uuid) returns void language sql as $$
   select set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated')::text, true);
@@ -113,6 +113,11 @@ select pg_temp.login('00000000-0000-0000-0000-00000000000b');
 select throws_ok(
   $$ select restore_project('10000000-0000-0000-0000-000000000001', (select file from src)) $$,
   '42501', null, 'a non-member cannot restore into someone else''s workspace');
+
+select ok(not has_function_privilege('anon', 'public.restore_project(uuid, jsonb)', 'execute'),
+  'a guest cannot call restore_project');
+select ok(not has_function_privilege('authenticated', 'public.restore_insert(text, jsonb)', 'execute'),
+  'the helpers are not callable directly');
 
 select * from finish();
 rollback;
