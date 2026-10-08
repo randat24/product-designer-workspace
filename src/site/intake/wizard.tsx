@@ -250,7 +250,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
     return (
       <div className="flex flex-col gap-8">
         <div className="flex max-w-[680px] flex-col gap-4">
-          <p className="font-display text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-secondary">{t.intro.eyebrow}</p>
+          <p className="font-label text-[12px] font-normal uppercase tracking-[0.075em] text-fg-secondary">{t.intro.eyebrow}</p>
           <h1 className="font-display text-[clamp(38px,6vw,64px)] font-bold uppercase leading-[1.1]">{t.intro.title}</h1>
           <p className="text-[clamp(17px,2vw,19px)] leading-[1.55] text-fg-secondary">{t.intro.lead}</p>
         </div>
@@ -263,7 +263,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
           ))}
         </ul>
         {draftFound ? (
-          <section aria-labelledby="draft-h" className="flex max-w-[680px] flex-col gap-4 rounded-[14px] border-[1.5px] border-fg bg-surface p-5 sm:p-6">
+          <section aria-labelledby="draft-h" className="flex max-w-[680px] flex-col gap-4 rounded-[12px] border border-control bg-surface p-5 sm:p-6">
             <h2 id="draft-h" className="font-display text-[22px] font-bold uppercase leading-[1.1]">{t.draft.title}</h2>
             <p className="text-[15px] text-fg-secondary">{t.draft.text}</p>
             <div className="flex flex-wrap gap-3">
@@ -338,7 +338,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
                 <LinkList step="existing" title={s.existing.links.label} hint={s.existing.links.hint} addLabel={s.existing.addLink}
                   kinds={EXISTING_LINK_KINDS} links={d.links} errors={errors} locale={locale}
                   onChange={(links) => set("existing", { links })} />
-                <p className="rounded-[10px] bg-subtle px-4 py-3 text-[14px] text-fg-secondary">{s.existing.noPasswords}</p>
+                <p className="rounded-[4px] bg-subtle px-4 py-3 text-[14px] text-fg-secondary">{s.existing.noPasswords}</p>
               </>
             )}
           </>
@@ -472,7 +472,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
             <LinkList step="materials" title={s.materials.links.label} hint={s.materials.links.hint} addLabel={s.materials.addLink}
               kinds={MATERIAL_LINK_KINDS} links={d.links} errors={errors} locale={locale}
               onChange={(links) => set("materials", { links })} />
-            <p className="rounded-[10px] bg-subtle px-4 py-3 text-[14px] text-fg-secondary">{s.materials.filesNote}</p>
+            <p className="rounded-[4px] bg-subtle px-4 py-3 text-[14px] text-fg-secondary">{s.materials.filesNote}</p>
           </>
         );
       }
@@ -511,7 +511,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
               value={d.has_deadline === undefined ? undefined : d.has_deadline ? "yes" : "no"}
               onChange={(v) => set("budget", { has_deadline: v === "yes" })} />
             {d.has_deadline && (
-              <div className="flex flex-col gap-4 rounded-[14px] border-[1.5px] border-line bg-surface p-4 sm:p-5">
+              <div className="flex flex-col gap-4 rounded-[12px] border border-line bg-surface p-4 sm:p-5">
                 <DateInput id={f("deadline_date")} {...b.deadlineDate} error={err("deadline_date")} locale={locale} className="max-w-[260px]"
                   value={d.deadline_date} onChange={(v) => set("budget", { deadline_date: v })} />
                 <TextField id={f("deadline_reason")} {...b.deadlineReason} optional={opt} error={err("deadline_reason")} maxLength={1000}
@@ -519,7 +519,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
                 <div className="flex flex-wrap gap-2">
                   {DEADLINE_REASONS.map((k) => (
                     <button key={k} type="button" onClick={() => set("budget", { deadline_reason: label("deadlineReasons", k, L) })}
-                      className="rounded-full border border-line px-3 py-1 text-[13px] font-semibold hover:border-fg">
+                      className="rounded-[4px] border border-line px-3 py-1 text-[13px] font-semibold hover:border-fg">
                       {label("deadlineReasons", k, L)}
                     </button>
                   ))}
@@ -584,7 +584,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
       </div>
 
       {errorList.length > 0 && (
-        <div ref={summary} tabIndex={-1} role="alert" className="rounded-[14px] border-[1.5px] border-danger bg-surface p-4 outline-none">
+        <div ref={summary} tabIndex={-1} role="alert" className="rounded-[12px] border border-danger bg-surface p-4 outline-none">
           <p className="font-semibold">{t.errors.summary}</p>
           <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-[15px]">
             {errorList.map((p) => (
@@ -611,14 +611,14 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         )}
 
         {step === REVIEW && (
-          <div className="flex flex-col gap-5 border-t-[1.5px] border-fg pt-6">
+          <div className="flex flex-col gap-5 border-t border-line pt-6">
             <Checkbox id="q-consent" checked={consent}
               onChange={(v) => { setConsent(v); if (v) setConsentError(false); }}
               error={consentError ? t.errors.consent : undefined}
               label={<>{t.review.consent} <Link href={privacyHref} target="_blank" className="font-semibold underline underline-offset-4">{t.review.consentLink}</Link></>} />
             {turnstileSiteKey && <Turnstile siteKey={turnstileSiteKey} locale={locale} onToken={setTurnstileToken} />}
             {failure && (
-              <p role="alert" className="rounded-[10px] border-[1.5px] border-danger bg-surface px-4 py-3 text-[15px] font-semibold text-danger">
+              <p role="alert" className="rounded-[4px] border border-danger bg-surface px-4 py-3 text-[15px] font-semibold text-danger">
                 {t.failed[failure]}
               </p>
             )}
@@ -677,7 +677,7 @@ function LinkList({ step, title, hint, addLabel, kinds, links, errors, locale, o
           <TextField id={fieldId(step, `links.${i}.url`)} label={t.linkUrl} type="url" inputMode="url" error={e(`links.${i}.url`)}
             value={l.url} onChange={(v) => onChange(links.map((x, j) => (j === i ? { ...x, url: v } : x)))} />
           <button type="button" onClick={() => onChange(links.filter((_, j) => j !== i))} aria-label={t.removeItem(i + 1)}
-            className={cn("hit mb-1.5 grid size-9 place-items-center rounded-[8px] text-fg-secondary hover:bg-subtle hover:text-fg", e(`links.${i}.url`) && "mb-8")}>
+            className={cn("hit mb-1.5 grid size-9 place-items-center rounded-[4px] text-fg-secondary hover:bg-subtle hover:text-fg", e(`links.${i}.url`) && "mb-8")}>
             ×
           </button>
         </div>
@@ -748,11 +748,11 @@ function Review({ locale, data, onEdit }: { locale: Locale; data: FormState; onE
       {sections.map((sec) => {
         const rows = sec.rows.filter(([, v]) => v);
         return (
-          <section key={sec.key} aria-labelledby={`rv-${sec.key}`} className="rounded-[14px] border-[1.5px] border-line bg-surface p-4 sm:p-5">
+          <section key={sec.key} aria-labelledby={`rv-${sec.key}`} className="rounded-[12px] border border-line bg-surface p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 id={`rv-${sec.key}`} className="font-display text-[19px] font-bold uppercase tracking-[0.01em]">{t.review.sections[sec.key]}</h2>
               <button type="button" onClick={() => onEdit(sec.step)} aria-label={`${t.review.edit}: ${t.review.sections[sec.key]}`}
-                className="hit rounded-[8px] px-2.5 py-1 text-[14px] font-semibold underline underline-offset-4 hover:bg-subtle">
+                className="hit rounded-[4px] px-2.5 py-1 text-[14px] font-semibold underline underline-offset-4 hover:bg-subtle">
                 {t.review.edit}
               </button>
             </div>
@@ -775,7 +775,7 @@ function Review({ locale, data, onEdit }: { locale: Locale; data: FormState; onE
 
 // ---------------------------------------------------------------------------------------------- buttons
 
-const btn = "inline-flex h-12 items-center justify-center gap-2 rounded-[10px] border-[1.5px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
+const btn = "inline-flex h-12 items-center justify-center gap-2 rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
 
 export function PrimaryButton({ children, icon, onClick, type = "button", busy }: {
   children: React.ReactNode; icon?: React.ReactNode; onClick?: () => void; type?: "button" | "submit"; busy?: boolean;

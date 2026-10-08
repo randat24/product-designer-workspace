@@ -82,7 +82,7 @@ export function DateField({
             "w-full text-fg placeholder:font-normal placeholder:text-fg-secondary focus:outline-none",
             size === "md"
               ? "h-9 rounded-control border border-transparent bg-subtle pr-10 pl-3 text-body font-medium hover:border-line focus:border-fg focus:bg-surface aria-[invalid=true]:border-danger"
-              : "h-12 rounded-[10px] border-[1.5px] border-line bg-surface pr-12 pl-3.5 text-[16px] transition-colors duration-[120ms] hover:border-fg-secondary focus:border-fg aria-[invalid=true]:border-danger",
+              : "h-12 rounded-[4px] border border-line bg-surface pr-12 pl-3.5 text-[16px] transition-colors duration-[120ms] hover:border-fg-secondary focus:border-fg aria-[invalid=true]:border-danger",
           )}
         />
         {!readOnly && (

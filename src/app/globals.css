@@ -1,28 +1,37 @@
 @import "tailwindcss";
 
-/* Tokens: docs/DESIGN-SYSTEM.md «Токены» — visual language of the "Designer's notebook" prototype.
-   Light by default, dark via system preference. */
+/* Tokens: SIGNAL 1.0 (docs/DESIGN-SYSTEM.md) — warm neutral ground, near-black type, one orange accent.
+   One system for the site and the tool. Light by default, dark via the system or the theme switch. */
 :root {
-  --canvas: #eef0f3;
-  --surface: #ffffff;
-  --subtle: #f5f6f8;
-  --line: #d6d9e0;
-  --fg: #151a33;
-  --fg-secondary: #5b6078;
-  --accent: #151a33;
-  --accent-hover: #2a3158;
-  --on-accent: #ffffff;
-  --danger: #ac3830;
-  --warning: #83590f;
-  --success: #256f49;
+  --canvas: #F3F1EB;
+  --surface: #FFFFFF;
+  --subtle: #E9E7E0;
+  --line: #D0D1C8;
+  /* Field and secondary-button borders: 3:1 against surface (WCAG 1.4.11); --line is decorative only. */
+  --control-border: #797C72;
+  --fg: #20221F;
+  --fg-secondary: #62645D;
+  /* The one orange: fills (buttons, the current step). Text on it is dark (6.1:1); white would be 2.8:1. */
+  --accent: #FF6B35;
+  --accent-hover: #FF8254;
+  --on-accent: #191B18;
+  /* Orange as text, small marks and the focus ring on the page background (5.5:1). */
+  --accent-text: #AF360B;
+  --focus: #AF360B;
+  --danger: #B12F26;
+  --danger-bg: #F9E7E4;
+  --warning: #775111;
+  --warning-bg: #F9EED2;
+  --success: #27603B;
+  --success-bg: #E7F0E6;
   /* Text on solid danger / warning / success fills (white in light, ink in dark: 4.5:1 in both). */
-  --on-status: #ffffff;
+  --on-status: #FFFFFF;
   /* Lucide chevron-down in fg-secondary: the select arrow. */
-  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235b6078' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2362645D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
-  /* Navigation rail: inverted ink */
-  --rail: #151a33;
-  --rail-fg: #eef0f3;
+  /* Inverse surface (footer, the service block, the tool's navigation rail): dark in both themes. */
+  --rail: #191B18;
+  --rail-fg: #F1F1E9;
 
   /* Sticky-note palette: participants, products in matrices */
   --s1: #f2a6ae;
@@ -42,26 +51,31 @@
   --entity-design: #3b5bdb;
   --entity-decision: #495057;
 }
-/* Dark: follows the system unless the visitor picked a theme (data-theme on <html>, set by the
-   site theme switch). The tool has no switch, so it always follows the system. */
+/* Dark: follows the system unless someone picked a theme (data-theme on <html>, set by the theme switch). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --canvas: #10132a;
-    --surface: #1a1e3a;
-    --subtle: #222747;
-    --line: #2e3356;
-    --fg: #eceef7;
-    --fg-secondary: #a0a5c0;
-    --accent: #eceef7;
-    --accent-hover: #ffffff;
-    --on-accent: #10132a;
-    --danger: #ff8a80;
-    --warning: #f2c46b;
-    --success: #5cc98f;
-    --on-status: #10132a;
-    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0a5c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    --rail: #eceef7;
-    --rail-fg: #10132a;
+    --canvas: #191B18;
+    --surface: #22251F;
+    --subtle: #2C3028;
+    --line: #3D4237;
+    --control-border: #818879;
+    --fg: #F1F1E9;
+    --fg-secondary: #B2B5AA;
+    --accent: #FF6B35;
+    --accent-hover: #FF8254;
+    --on-accent: #191B18;
+    --accent-text: #FF8B60;
+    --focus: #FF8B60;
+    --danger: #FFB1A5;
+    --danger-bg: #472B27;
+    --warning: #EDCD89;
+    --warning-bg: #433B25;
+    --success: #AAD8AA;
+    --success-bg: #273B2A;
+    --on-status: #191B18;
+    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    --rail: #22251F;
+    --rail-fg: #F1F1E9;
     --entity-research: #3bc9db;
     --entity-synthesis: #9775fa;
     --entity-problem: #ff8a4c;
@@ -72,22 +86,28 @@
   }
 }
 :root[data-theme="dark"] {
-  --canvas: #10132a;
-  --surface: #1a1e3a;
-  --subtle: #222747;
-  --line: #2e3356;
-  --fg: #eceef7;
-  --fg-secondary: #a0a5c0;
-  --accent: #eceef7;
-  --accent-hover: #ffffff;
-  --on-accent: #10132a;
-  --danger: #ff8a80;
-  --warning: #f2c46b;
-  --success: #5cc98f;
-  --on-status: #10132a;
-  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0a5c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  --rail: #eceef7;
-  --rail-fg: #10132a;
+  --canvas: #191B18;
+  --surface: #22251F;
+  --subtle: #2C3028;
+  --line: #3D4237;
+  --control-border: #818879;
+  --fg: #F1F1E9;
+  --fg-secondary: #B2B5AA;
+  --accent: #FF6B35;
+  --accent-hover: #FF8254;
+  --on-accent: #191B18;
+  --accent-text: #FF8B60;
+  --focus: #FF8B60;
+  --danger: #FFB1A5;
+  --danger-bg: #472B27;
+  --warning: #EDCD89;
+  --warning-bg: #433B25;
+  --success: #AAD8AA;
+  --success-bg: #273B2A;
+  --on-status: #191B18;
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --rail: #22251F;
+  --rail-fg: #F1F1E9;
   --entity-research: #3bc9db;
   --entity-synthesis: #9775fa;
   --entity-problem: #ff8a4c;
@@ -106,6 +126,11 @@
   --color-fg-secondary: var(--fg-secondary);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-control: var(--control-border);
+  --color-danger-bg: var(--danger-bg);
+  --color-warning-bg: var(--warning-bg);
+  --color-success-bg: var(--success-bg);
   --color-on-accent: var(--on-accent);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
@@ -123,7 +148,8 @@
   --color-entity-decision: var(--entity-decision);
 
   --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+  /* SIGNAL has one family: display type is Manrope at a large size and medium weight, not a condensed face. */
+  --font-display: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   /* Small metadata labels on the site (index numbers, years, captions); the tool keeps the system mono. */
   --font-label: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
@@ -140,7 +166,7 @@
   --text-meta--line-height: 1.55;
   --text-body: 15px;
   --text-body--line-height: 1.55;
-  /* Display scale (Oswald numbers and short display headings): stage numbers, stats, big percentages. */
+  /* Display scale (Manrope numbers and short display headings): stage numbers, stats, big percentages. */
   --text-display-xs: 22px;
   --text-display-xs--line-height: 1;
   --text-display-sm: 26px;
@@ -151,10 +177,10 @@
   --text-display-lg--line-height: 1;
 
   /* Radius scale (D2): chips · controls (buttons, fields) · panels · hero panels. */
-  --radius-chip: 6px;
-  --radius-control: 10px;
-  --radius-panel: 14px;
-  --radius-hero: 18px;
+  --radius-chip: 4px;
+  --radius-control: 4px;
+  --radius-panel: 8px;
+  --radius-hero: 12px;
 }
 
 html { color-scheme: light dark; }
@@ -178,39 +204,32 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
-:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+::selection { background: var(--accent); color: var(--on-accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 /* On inverted surfaces (footer, the service block, the navigation rail, the About F) the ink ring would vanish
    into the background: there it takes the surface's own text colour. */
 .bg-rail :focus-visible { outline-color: var(--rail-fg); }
 .f-bar :focus-visible, .f-stem :focus-visible { outline-color: var(--canvas); }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
-/* Page title: condensed display type, uppercase (the notebook's signature). */
-.page-title {
+/* Display type (SIGNAL): Manrope Medium, large, sentence case, tight tracking. Character comes from scale, not
+   capitals or a heavy face. Short labels (eyebrows, mono metadata) keep their capitals. */
+.page-title, .t-page, .t-section, .t-chapter {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(30px, 4vw, 48px);
-  /* 1.08, not tighter: capital Й, Ї and the tail of Д touch the next line below ~1.05 (Cyrillic caps). */
+  font-weight: 500;
+  text-transform: none;
   line-height: 1.08;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-}
-.display-num { font-family: var(--font-display); font-weight: 700; }
-
-/* Site type scale for display headings, sized after editorial galleries such as Awwwards: the page title
-   leads, section titles stay a step below, chapters below that. Uppercase condensed; 1.08 keeps Cyrillic
-   capitals (Й, Ї, Д) off the next line. */
-.t-page, .t-section, .t-chapter {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 1.08;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
-.t-page { font-size: clamp(36px, 4.6vw, 60px); }
-.t-section { font-size: clamp(28px, 3.2vw, 42px); }
-.t-chapter { font-size: clamp(24px, 2.6vw, 34px); }
+.page-title { font-size: clamp(30px, 3.6vw, 44px); letter-spacing: -0.04em; }
+.display-num { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.03em; }
+.t-page { font-size: clamp(40px, 5.4vw, 76px); letter-spacing: -0.05em; line-height: 1.04; }
+.t-section { font-size: clamp(32px, 4vw, 56px); letter-spacing: -0.045em; line-height: 1.06; }
+.t-chapter { font-size: clamp(26px, 2.8vw, 40px); }
+/* Older markup sets uppercase on display headings; SIGNAL headings are sentence case. Unlayered, so it wins. */
+:is(h1, h2, h3, h4).font-display, .font-display.uppercase { text-transform: none; letter-spacing: -0.035em; }
+.font-display .font-sans { letter-spacing: normal; }
 
 /* React Flow canvas (flows) in the notebook palette, light and dark. */
 .flow-canvas .react-flow {

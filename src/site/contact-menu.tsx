@@ -49,7 +49,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
     <div ref={root} className="relative">
       <button type="button" aria-expanded={open} aria-controls={id} onClick={() => { if (!open) track("contact_menu_open", { location }); setOpen(!open); }}
         className={cn(
-          "inline-flex h-11 items-center justify-center gap-2 rounded-[10px] border-[1.5px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]",
+          "inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms]",
           variant === "primary" ? "border-accent bg-accent text-on-accent hover:bg-accent-hover" : "border-fg text-fg hover:bg-subtle",
         )}>
         {label}
@@ -57,7 +57,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
         <ChevronDown aria-hidden className={cn("-mr-1 size-4 transition-transform duration-[120ms]", open && "rotate-180")} />
       </button>
       <div id={id} hidden={!open}
-        className="absolute top-full left-0 z-30 mt-2 w-[min(300px,calc(100vw-32px))] rounded-[14px] border border-line bg-surface p-2 text-fg shadow-xl">
+        className="absolute top-full left-0 z-30 mt-2 w-[min(300px,calc(100vw-32px))] rounded-[12px] border border-line bg-surface p-2 text-fg shadow-xl">
         <p className="px-2.5 pt-1 pb-2 text-[12px] font-semibold text-fg-secondary">{heading}</p>
         <ul className="flex flex-col">
           {items.map(({ key, href, label: text, Icon, event }, i) => (
@@ -65,7 +65,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
               <a href={href} data-first={i === 0 ? "" : undefined}
                 {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer me" } : {})}
                 onClick={() => { track(event, { location }); setOpen(false); }}
-                className="flex min-h-11 min-w-0 flex-1 items-center gap-3 rounded-[10px] px-2.5 text-[15px] font-semibold hover:bg-subtle">
+                className="flex min-h-11 min-w-0 flex-1 items-center gap-3 rounded-[4px] px-2.5 text-[15px] font-semibold hover:bg-subtle">
                 <Icon aria-hidden className="size-5 shrink-0 text-fg-secondary" />
                 <span className="truncate">{text}</span>
               </a>
@@ -76,7 +76,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
                     setCopied(true); track("contact_email_click", { location, cta: "copy_email" });
                     setTimeout(() => setCopied(false), 1600);
                   }}
-                  className="grid size-11 shrink-0 place-items-center rounded-[10px] text-fg-secondary hover:bg-subtle hover:text-fg">
+                  className="grid size-11 shrink-0 place-items-center rounded-[4px] text-fg-secondary hover:bg-subtle hover:text-fg">
                   {copied ? <Check aria-hidden className="size-4 text-success" /> : <Copy aria-hidden className="size-4" />}
                 </button>
               )}

@@ -98,7 +98,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
             <>
               <ul className="flex flex-wrap gap-2">
                 {item.product.disciplines.map((x) => (
-                  <li key={x} className="rounded-full border border-line px-3.5 py-1.5 text-[14px] font-semibold">{x}</li>
+                  <li key={x} className="rounded-[4px] border border-line px-3.5 py-1.5 text-[14px] font-semibold">{x}</li>
                 ))}
               </ul>
               {item.product.note && <p className="text-[14px] text-fg-secondary">{item.product.note}</p>}
@@ -124,7 +124,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       )}
       {item.process && (
         <section aria-label={d.process.title} className={`${container} mt-10`}>
-          <div className="rounded-[20px] border border-line bg-surface p-5 sm:p-7"><ProcessStrip process={item.process} locale={locale} full /></div>
+          <div className="rounded-[12px] border border-line bg-surface p-5 sm:p-7"><ProcessStrip process={item.process} locale={locale} full /></div>
         </section>
       )}
       {gate(<>
@@ -144,12 +144,12 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           </p>
         ) : null}
         {item.story && item.sample && (
-          <p className="rounded-[10px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-secondary">{d.story.sample}</p>
+          <p className="rounded-[4px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-secondary">{d.story.sample}</p>
         )}
         {!item.story && item.metrics.length > 0 && (
         <ul className="grid gap-4 sm:grid-cols-3">
           {item.metrics.map((m) => (
-            <li key={m.label} className="rounded-[14px] border border-line bg-surface p-5">
+            <li key={m.label} className="rounded-[12px] border border-line bg-surface p-5">
               <p className="display-num text-[44px] leading-none">{m.value}</p>
               <p className="mt-2 text-[14px] text-fg-secondary">{m.label}</p>
             </li>
@@ -201,7 +201,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               <p className="whitespace-pre-line text-[18px] leading-[1.65]">{s.body}</p>
               {/* Sample cases keep a dashed slot where a picture will go; real sections bring their own. */}
               {item.sample && !s.image && i % 2 === 1 && (
-                <div className="flex aspect-[16/9] items-center justify-center rounded-[14px] border-[1.5px] border-dashed border-line bg-subtle text-[14px] text-fg-secondary">
+                <div className="flex aspect-[16/9] items-center justify-center rounded-[12px] border border-dashed border-line bg-subtle text-[14px] text-fg-secondary">
                   {d.cases.placeholder}
                 </div>
               )}
@@ -210,7 +210,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               <figure className="flex flex-col gap-2 md:col-span-2">
                 {/* eslint-disable-next-line @next/next/no-img-element -- static case images with known size */}
                 <img src={s.image.src} alt={s.image.alt} width={s.image.width} height={s.image.height} loading="lazy" decoding="async"
-                  className="h-auto w-full rounded-[14px] border border-line" />
+                  className="h-auto w-full rounded-[12px] border border-line" />
                 {s.image.caption && <figcaption className="text-[14px] text-fg-secondary">{s.image.caption}</figcaption>}
               </figure>
             )}
@@ -226,7 +226,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           // The next case, large: the way out of a case is into the next piece of work.
           <Link
             href={`/${locale}/cases/${next.slug}`}
-            className="group grid gap-6 border-t-[1.5px] border-fg pt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] md:items-end md:gap-10"
+            className="group grid gap-6 border-t border-line pt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] md:items-end md:gap-10"
             data-cursor={d.cases.next}
             {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}
           >
@@ -245,7 +245,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
             </NotchedCover>
           </Link>
         )}
-        <div className="flex flex-col gap-5 rounded-[20px] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="flex flex-col gap-5 rounded-[12px] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <p className="max-w-[46ch] text-[17px] text-fg-secondary">{d.contact.lead}</p>
           <div className="flex flex-wrap gap-3">
             <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "case" })}>

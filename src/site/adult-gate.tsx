@@ -36,7 +36,7 @@ export function AdultGate({ labels, backHref, children }: {
       </div>
       <div className="absolute inset-0 flex items-start justify-center px-4 pt-10 sm:pt-16">
         <section aria-labelledby="adult-h"
-          className="flex w-full max-w-[520px] flex-col items-start gap-4 rounded-[18px] border-[1.5px] border-fg bg-surface p-6 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)] sm:p-8">
+          className="flex w-full max-w-[520px] flex-col items-start gap-4 rounded-[12px] border border-control bg-surface p-6 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)] sm:p-8">
           <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">
             {labels.badge}
           </span>
@@ -58,4 +58,4 @@ export function AdultGate({ labels, backHref, children }: {
   );
 }
 
-const BTN = "inline-flex h-11 items-center justify-center gap-2 rounded-[10px] border-[1.5px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
+const BTN = "inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms]";

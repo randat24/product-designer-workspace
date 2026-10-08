@@ -43,7 +43,7 @@ export function CaseFilter({
                 aria-pressed={filter === f}
                 onClick={() => setFilter(f)}
                 className={cn(
-                  "hit inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-[13px] font-semibold transition-colors duration-[120ms]",
+                  "hit inline-flex h-9 items-center gap-1.5 rounded-[4px] border px-3.5 text-[13px] font-semibold transition-colors duration-[120ms]",
                   filter === f ? "border-fg bg-fg text-canvas" : "border-line bg-surface text-fg hover:border-fg",
                 )}
               >

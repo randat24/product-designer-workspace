@@ -1,8 +1,8 @@
 // Award icons: vector traces (public/awards/*.svg) of the stylised medal artwork —
-// one light tone on transparent, shown on a dark tile in both themes.
+// one light tone on transparent, shown on a dark tile (SIGNAL inverse surface) in both themes.
 
 /** Tile colour behind the icons. */
-export const AWARD_TILE = "#1d2447";
+export const AWARD_TILE = "#22251F";
 
 export const AWARD_ICONS = [
   "defence-of-ukraine",

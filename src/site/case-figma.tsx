@@ -22,8 +22,8 @@ export function CaseFigma({ url, poster, labels, caseSlug }: {
   const fileName = decodeURIComponent(new URL(url).pathname.split("/")[3] ?? "").replace(/-/g, " ") || "Figma";
 
   return (
-    <div className="overflow-hidden rounded-[14px] border-[1.5px] border-fg bg-surface">
-      <div className="flex items-center gap-3 border-b-[1.5px] border-fg px-4 py-2.5">
+    <div className="overflow-hidden rounded-[12px] border border-control bg-surface">
+      <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
         <span aria-hidden className="flex gap-1.5">
           <i className="size-2.5 rounded-full bg-line" />
           <i className="size-2.5 rounded-full bg-line" />
@@ -63,7 +63,7 @@ export function CaseFigma({ url, poster, labels, caseSlug }: {
                   track("case_figma_load", { case_slug: caseSlug });
                 }}
                 className={cn(
-                  "inline-flex h-11 items-center gap-2 rounded-[10px] border-[1.5px] border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent",
+                  "inline-flex h-11 items-center gap-2 rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent",
                   "transition-colors duration-[120ms] hover:bg-accent-hover",
                 )}
               >

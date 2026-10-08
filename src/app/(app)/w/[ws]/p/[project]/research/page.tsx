@@ -18,7 +18,7 @@ export const metadata: Metadata = { title: t.research.title };
 
 const dateFmt = new Intl.DateTimeFormat("uk", { day: "numeric", month: "short" });
 const card = "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg";
-const empty = "rounded-panel border-[1.5px] border-dashed border-line p-6 text-center text-fg-secondary";
+const empty = "rounded-panel border border-dashed border-line p-6 text-center text-fg-secondary";
 
 export default async function ResearchPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
   const { ws, project: slug } = await params;
@@ -66,10 +66,10 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
                     <span className="text-caption font-semibold text-fg-secondary">{p.code}</span>
                   </span>
                   <span className="flex flex-wrap gap-1.5">
-                    <span className="rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
+                    <span className="rounded-[4px] bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
                       {RESEARCH_STATUSES.find((s) => s.value === p.status)?.label}
                     </span>
-                    <span className="rounded-full border border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary">
+                    <span className="rounded-[4px] border border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary">
                       {RESEARCH_METHODS.find((m) => m.value === p.method)?.label}
                     </span>
                   </span>

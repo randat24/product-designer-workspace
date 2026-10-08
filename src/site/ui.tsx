@@ -17,7 +17,7 @@ export function Eyebrow({
   return (
     <p
       className={cn(
-        "font-display text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-secondary",
+        "font-label text-[12px] font-normal uppercase tracking-[0.075em] text-fg-secondary",
         className,
       )}
     >
@@ -79,11 +79,11 @@ function LinkButton({ href, children: label, icon, download, track, className }:
 }
 
 export function PrimaryLink(props: LinkButtonProps) {
-  return <LinkButton {...props} className={cn(linkBtn, "border border-[var(--sg-accent-text)] bg-accent text-on-accent hover:bg-accent-hover")} />;
+  return <LinkButton {...props} className={cn(linkBtn, "border border-accent-text bg-accent text-on-accent hover:bg-accent-hover")} />;
 }
 
 export function SecondaryLink(props: LinkButtonProps) {
-  return <LinkButton {...props} className={cn(linkBtn, "border border-[var(--sg-control-border)] text-fg hover:bg-subtle")} />;
+  return <LinkButton {...props} className={cn(linkBtn, "border border-control text-fg hover:bg-subtle")} />;
 }
 
 /** Cover in a sticky-note colour: the case's real screen when it has one, otherwise an abstract placeholder. */
@@ -99,7 +99,7 @@ export function CaseCover({
   if (item.cover) {
     return (
       <div
-        className={cn("relative overflow-hidden rounded-[14px]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
+        className={cn("relative overflow-hidden rounded-[12px]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
         style={{ background: item.sticker }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known */}
@@ -110,7 +110,7 @@ export function CaseCover({
           height={item.cover.height}
           loading={large ? "eager" : "lazy"}
           decoding="async"
-          className="absolute left-[8%] top-[12%] w-[92%] rounded-[10px] border-2 border-black/15 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)]"
+          className="absolute left-[8%] top-[12%] w-[92%] rounded-[4px] border-2 border-black/15 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)]"
         />
       </div>
     );
@@ -118,7 +118,7 @@ export function CaseCover({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[14px] text-on-sticky",
+        "relative overflow-hidden rounded-[12px] text-on-sticky",
         large ? "aspect-[16/8]" : "aspect-[4/3]",
       )}
       style={{ background: item.sticker }}
@@ -126,28 +126,28 @@ export function CaseCover({
       aria-label={`${item.title} — ${label}`}
     >
       {/* phone-ish frame */}
-      <div className="absolute bottom-[-18%] left-[8%] h-[88%] w-[34%] rotate-[-4deg] rounded-[18px] border-2 border-current/25 bg-white/35 p-[3%]">
+      <div className="absolute bottom-[-18%] left-[8%] h-[88%] w-[34%] rotate-[-4deg] rounded-[12px] border-2 border-current/25 bg-white/35 p-[3%]">
         <div className="h-[8%] w-1/2 rounded-full bg-current/20" />
-        <div className="mt-[10%] h-[28%] rounded-[10px] bg-current/15" />
+        <div className="mt-[10%] h-[28%] rounded-[4px] bg-current/15" />
         <div className="mt-[8%] h-[5%] w-4/5 rounded-full bg-current/20" />
         <div className="mt-[5%] h-[5%] w-3/5 rounded-full bg-current/15" />
-        <div className="mt-[10%] h-[10%] rounded-[8px] bg-current/30" />
+        <div className="mt-[10%] h-[10%] rounded-[4px] bg-current/30" />
       </div>
       {/* desktop-ish frame */}
-      <div className="absolute right-[-6%] top-[14%] h-[70%] w-[58%] rotate-[3deg] rounded-[12px] border-2 border-current/25 bg-white/35 p-[2.5%]">
+      <div className="absolute right-[-6%] top-[14%] h-[70%] w-[58%] rotate-[3deg] rounded-[8px] border-2 border-current/25 bg-white/35 p-[2.5%]">
         <div className="flex gap-[3%]">
           <div className="h-[10px] w-[10px] rounded-full bg-current/25" />
           <div className="h-[10px] w-[10px] rounded-full bg-current/25" />
           <div className="h-[10px] w-[10px] rounded-full bg-current/25" />
         </div>
         <div className="mt-[6%] grid grid-cols-3 gap-[4%]">
-          <div className="aspect-square rounded-[8px] bg-current/15" />
-          <div className="aspect-square rounded-[8px] bg-current/20" />
-          <div className="aspect-square rounded-[8px] bg-current/15" />
+          <div className="aspect-square rounded-[4px] bg-current/15" />
+          <div className="aspect-square rounded-[4px] bg-current/20" />
+          <div className="aspect-square rounded-[4px] bg-current/15" />
         </div>
         <div className="mt-[6%] h-[8%] w-2/3 rounded-full bg-current/20" />
       </div>
-      <span className="absolute left-3 top-3 rounded-full bg-white/60 px-2.5 py-1 text-[12px] font-semibold">
+      <span className="absolute left-3 top-3 rounded-[4px] bg-white/60 px-2.5 py-1 text-[12px] font-semibold">
         {label}
       </span>
     </div>
@@ -159,7 +159,7 @@ export function NotchedCover({ item, label, large, children, className }: {
   item: Case; label: string; large?: boolean; children: React.ReactNode; className?: string;
 }) {
   return (
-    <div className={cn("relative overflow-hidden rounded-[14px] rounded-br-none", className)} data-spec="F-обкладинка">
+    <div className={cn("relative overflow-hidden rounded-[12px] rounded-br-none", className)} data-spec="F-обкладинка">
       <CaseCover item={item} label={label} large={large} />
       <div className={cn("f-notch", large ? "[--notch-r:22px] pl-5 pt-4 sm:pl-6 sm:pt-5" : "pl-3.5 pt-3")}>{children}</div>
     </div>
@@ -177,7 +177,7 @@ function CardCover({ item, locale, label, large }: { item: Case; locale: Locale;
   const d = dict(locale);
   const blurred = item.adult && !item.coverSafe;
   return (
-    <div className="relative overflow-hidden rounded-[14px] rounded-br-none">
+    <div className="relative overflow-hidden rounded-[12px] rounded-br-none">
       <div className={cn("transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none", blurred && "blur-xl")}>
         <CaseCover item={item} label={label} large={large} />
       </div>
@@ -189,7 +189,7 @@ function CardCover({ item, locale, label, large }: { item: Case; locale: Locale;
       {/* Pointer devices only: the same tags are listed under the card on touch screens. */}
       <div aria-hidden className="absolute inset-0 hidden flex-col justify-start bg-[#191B18]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
         <ul className="flex flex-wrap gap-1.5">
-          {item.tags.map((tag) => <li key={tag} className="rounded-full border border-white/70 px-2.5 py-0.5 text-[12px]">{tag}</li>)}
+          {item.tags.map((tag) => <li key={tag} className="rounded-[4px] border border-white/70 px-2.5 py-0.5 text-[12px]">{tag}</li>)}
         </ul>
       </div>
       <span aria-hidden className={cn("f-notch flex items-center gap-2 font-semibold", large ? "pl-5 pt-4 text-[17px]" : "pl-3.5 pt-3 text-[14px]")}>
@@ -214,7 +214,7 @@ function CardTags({ tags, className }: { tags: string[]; className?: string }) {
   return (
     <ul className={cn("flex flex-wrap gap-1.5", className)}>
       {tags.map((tag) => (
-        <li key={tag} className="rounded-full border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">{tag}</li>
+        <li key={tag} className="rounded-[4px] border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">{tag}</li>
       ))}
     </ul>
   );
@@ -318,7 +318,7 @@ export function HeroCase({ item, locale, label, total }: { item: Case; locale: L
           <p className="max-w-[60ch] text-[clamp(17px,1.8vw,20px)] leading-[1.5] text-fg-secondary">{item.summary}</p>
         </div>
         <div className="flex min-w-0 flex-col gap-5">
-          <dl className="grid grid-cols-2 border-t border-fg">
+          <dl className="grid grid-cols-2 border-t border-line">
             {facts.map((f) => (
               <div key={f.label} className="flex flex-col-reverse justify-end gap-0.5 border-b border-line py-2.5 pr-3">
                 <dd className="text-[14px] font-semibold">{f.value}</dd>
@@ -360,7 +360,7 @@ export function FeaturedCase({
     <Link
       href={`/${locale}/cases/${item.slug}`}
       data-kind={item.kind ?? "real"}
-      className="group grid gap-6 rounded-[20px] border border-line bg-surface p-4 [--notch-bg:var(--surface)] sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
+      className="group grid gap-6 rounded-[12px] border border-line bg-surface p-4 [--notch-bg:var(--surface)] sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
       data-cursor={dict(locale).cases.open}
       {...trackAttrs("case_open", { case_slug: item.slug, location })}
     >
@@ -391,7 +391,7 @@ export function FeaturedCase({
 /** 18+ marker on case cards and pages. */
 export function AdultBadge({ label }: { label: string }) {
   return (
-    <span className="rounded-full border-[1.5px] border-danger px-2 py-0.5 text-[11px] font-bold tracking-[0.06em] text-danger">
+    <span className="rounded-[4px] border border-danger px-2 py-0.5 text-[11px] font-bold tracking-[0.06em] text-danger">
       {label}
     </span>
   );
@@ -402,7 +402,7 @@ export function KindBadge({ kind, label }: { kind: "real" | "concept"; label: st
   return (
     <span
       className={cn(
-        "rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.06em]",
+        "rounded-[4px] px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.06em]",
         kind === "concept" ? "border border-dashed border-fg-secondary text-fg-secondary" : "bg-fg text-canvas",
       )}
     >

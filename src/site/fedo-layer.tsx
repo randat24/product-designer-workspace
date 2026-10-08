@@ -100,7 +100,7 @@ export function SpecsToggle({ label, hint }: { label: string; hint: string }) {
   return (
     <>
       <button type="button" onClick={() => setOn((v) => !v)} aria-pressed={on} title={hint} data-cursor={hint}
-        className="hit hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border-[1.5px] border-line text-fg transition-colors hover:border-fg aria-pressed:border-fg aria-pressed:bg-fg aria-pressed:text-canvas sm:flex">
+        className="hit hidden h-9 w-9 shrink-0 items-center justify-center rounded-[4px] border border-line text-fg transition-colors hover:border-fg aria-pressed:border-fg aria-pressed:bg-fg aria-pressed:text-canvas sm:flex">
         <svg viewBox="0 0 24 24" aria-hidden className="size-4 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]"><path d="M3 17 17 3l4 4L7 21z" /><path d="m7 13 2 2M10 10l2 2M13 7l2 2" /></svg>
         <span className="sr-only">{label}</span>
       </button>

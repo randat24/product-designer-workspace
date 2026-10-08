@@ -38,7 +38,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
           {[{ value: undefined, label: t.competitors.all }, ...COMPETITOR_KINDS].map((k) => (
             <Link key={k.label} href={k.value ? `?kind=${k.value}` : "?"} aria-current={kind === k.value ? "true" : undefined}
               className={cn(
-                "rounded-full border-[1.5px] px-3 py-0.5 text-meta font-semibold",
+                "rounded-[4px] border px-3 py-0.5 text-meta font-semibold",
                 kind === k.value ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg",
               )}>
               {k.label}
@@ -63,7 +63,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
       </div>
 
       {shown.length === 0 ? (
-        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
+        <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">
           {others.length === 0 ? t.competitors.empty : t.competitors.emptyFiltered}
         </p>
       ) : (
@@ -73,7 +73,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
               <Link href={`${base}/competitors/${c.code}`}
                 className={cn(
                   "flex h-full flex-col gap-3 overflow-hidden rounded-panel border border-line bg-surface transition-colors duration-[120ms] hover:border-fg",
-                  c.is_own_product && "border-[1.5px] border-fg",
+                  c.is_own_product && "border border-control",
                 )}>
                 {covers.get(c.id) && (
                   // eslint-disable-next-line @next/next/no-img-element -- signed Storage URL
@@ -85,11 +85,11 @@ export default async function CompetitorsPage({ params, searchParams }: {
                     <span className="text-caption font-semibold text-fg-secondary tabular-nums">{c.code}</span>
                   </div>
                   <span className="flex flex-wrap gap-1.5">
-                    <span className="rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
+                    <span className="rounded-[4px] bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
                       {c.is_own_product ? t.competitors.ownBadge : COMPETITOR_KINDS.find((k) => k.value === c.kind)?.label}
                     </span>
                     {c.origin === "client" && (
-                      <span className="rounded-full border border-warning px-2.5 py-0.5 text-caption font-semibold text-warning">{t.requests.clientOrigin}</span>
+                      <span className="rounded-[4px] border border-warning px-2.5 py-0.5 text-caption font-semibold text-warning">{t.requests.clientOrigin}</span>
                     )}
                     {c.url && <span className="truncate text-caption text-fg-secondary">{c.url.replace(/^https?:\/\/(www\.)?/, "")}</span>}
                   </span>

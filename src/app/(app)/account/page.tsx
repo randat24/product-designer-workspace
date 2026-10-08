@@ -17,7 +17,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <BackLink href="/app" className="mb-0">{t.auth.back}</BackLink>
       <PageHeader title={t.auth.account} />
       <p className="text-fg-secondary">{user?.email}</p>
-      {reset && <p role="status" className="rounded-panel border-[1.5px] border-fg bg-surface p-4 text-body font-semibold">{t.auth.resetBanner}</p>}
+      {reset && <p role="status" className="rounded-panel border border-control bg-surface p-4 text-body font-semibold">{t.auth.resetBanner}</p>}
       <section aria-labelledby="pw-h" className="flex flex-col gap-3 rounded-panel border border-line bg-surface p-5">
         <h2 id="pw-h" className="text-heading font-semibold">{t.auth.changePassword}</h2>
         <PasswordForm autoFocus={reset} />

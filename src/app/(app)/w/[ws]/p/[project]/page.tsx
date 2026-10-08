@@ -259,7 +259,7 @@ function StageIcon({ state }: { state: StageState }) {
   const label = { done: t.project.stageDone, active: t.project.stageActive, todo: t.project.stageTodo, soon: t.project.stageTodo }[state];
   return (
     <span role="img" aria-label={label}
-      className={cn("ml-auto", state === "done" ? "text-success" : state === "active" ? "text-accent" : "text-fg-secondary")}>
+      className={cn("ml-auto", state === "done" ? "text-success" : state === "active" ? "text-accent-text" : "text-fg-secondary")}>
       {state === "done" ? <CircleCheck className="size-4" /> : state === "active" ? <CircleDot className="size-4" /> : <Circle className="size-4" />}
     </span>
   );

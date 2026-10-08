@@ -25,7 +25,7 @@ export default function UxLawsPage() {
         <nav aria-label={l.groups} className="-mt-4 flex flex-wrap gap-2">
           {UX_LAW_GROUPS.map((g) => (
             <a key={g.id} href={`#${g.id}`}
-              className="rounded-full border-[1.5px] border-line px-3.5 py-1.5 text-meta font-semibold hover:border-fg">
+              className="rounded-[4px] border border-line px-3.5 py-1.5 text-meta font-semibold hover:border-fg">
               {g.title} <span className="text-fg-secondary tabular-nums">{UX_LAWS.filter((x) => x.group === g.id).length}</span>
             </a>
           ))}

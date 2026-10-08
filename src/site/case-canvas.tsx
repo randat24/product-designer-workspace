@@ -260,14 +260,14 @@ export function CaseCanvas({ cases, labels }: { cases: CanvasCase[]; labels: Lab
   }, [cases, labels.stickies, pos, blockW, W, H, router]);
 
   return (
-    <div className="grid h-[clamp(480px,68vh,720px)] overflow-hidden rounded-[20px] border border-line bg-surface lg:grid-cols-[220px_minmax(0,1fr)]" data-spec="Полотно">
+    <div className="grid h-[clamp(480px,68vh,720px)] overflow-hidden rounded-[12px] border border-line bg-surface lg:grid-cols-[220px_minmax(0,1fr)]" data-spec="Полотно">
       <aside aria-label={labels.layers} className="hidden min-w-0 flex-col gap-3 border-r border-line px-2.5 py-3.5 lg:flex" data-controls>
         <p className="px-2 font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{labels.page}</p>
         <ul className="grid gap-0.5">
           {cases.map((c, i) => (
             <li key={c.slug}>
               <button type="button" data-fly={i} data-cursor={labels.show}
-                className="grid w-full grid-cols-[14px_minmax(0,1fr)_auto] items-center gap-2 rounded-[8px] px-2 py-1.5 text-left text-[13px] font-semibold hover:bg-subtle">
+                className="grid w-full grid-cols-[14px_minmax(0,1fr)_auto] items-center gap-2 rounded-[4px] px-2 py-1.5 text-left text-[13px] font-semibold hover:bg-subtle">
                 <svg viewBox="0 0 16 16" aria-hidden className="size-3.5 fill-none stroke-fg-secondary stroke-[1.6]"><path d="M4 1v14M12 1v14M1 4h14M1 12h14" /></svg>
                 <span className="truncate">{c.title}</span>
                 {c.process && <span className="font-label text-[11px] font-normal text-fg-secondary">{labels.records[c.slug]?.n}</span>}
@@ -308,7 +308,7 @@ export function CaseCanvas({ cases, labels }: { cases: CanvasCase[]; labels: Lab
                         {c.screens.map((sc, k) => (
                           // eslint-disable-next-line @next/next/no-img-element -- gallery screen with known size, drawn inside a scaled canvas
                           <img key={k} src={sc.src} alt="" width={sc.width} height={sc.height} draggable={false} decoding="async"
-                            className="pointer-events-none h-[372px] w-auto min-w-0 select-none rounded-[16px] object-cover shadow-[0_0_0_1px_var(--line),0_8px_20px_rgba(21,26,51,0.1)]" />
+                            className="pointer-events-none h-[372px] w-auto min-w-0 select-none rounded-[12px] object-cover shadow-[0_0_0_1px_var(--line),0_8px_20px_rgba(21,26,51,0.1)]" />
                         ))}
                       </span>
                     ) : (
@@ -354,18 +354,18 @@ export function CaseCanvas({ cases, labels }: { cases: CanvasCase[]; labels: Lab
         </div>
 
         <div data-guide hidden aria-hidden className="fedo-guide pointer-events-none absolute left-0 top-0 z-[3]">
-          <svg viewBox="192 192 96 96" className="size-6 -translate-x-px -translate-y-px fill-[#f6a94f] stroke-[#1b1b2a] stroke-[5]"><path d={FEDO_CURSOR} /></svg>
-          <span className="absolute left-[18px] top-5 rounded-[6px] bg-[#f6a94f] px-2 font-label text-[11px] font-semibold leading-[1.6] tracking-[0.06em] text-[#1b1b2a]">FEDO</span>
+          <svg viewBox="192 192 96 96" className="size-6 -translate-x-px -translate-y-px fill-[#FF6B35] stroke-[#191B18] stroke-[5]"><path d={FEDO_CURSOR} /></svg>
+          <span className="absolute left-[18px] top-5 rounded-[4px] bg-[#FF6B35] px-2 font-label text-[11px] font-semibold leading-[1.6] tracking-[0.06em] text-[#191B18]">FEDO</span>
           <span data-say className="fedo-say absolute left-[18px] top-[46px] w-max max-w-[250px] rounded-[4px_12px_12px_12px] border border-line bg-surface px-3 py-2 text-[13px] font-semibold leading-[1.4] shadow-[0_8px_20px_rgba(21,26,51,0.12)]" />
         </div>
 
-        <div data-controls className="absolute bottom-3 left-3 flex items-center gap-0.5 rounded-[10px] border border-line bg-surface p-[3px]">
-          <button type="button" data-z="out" aria-label={labels.zoomOut} className="h-[30px] min-w-[30px] rounded-[7px] px-2 font-bold hover:bg-subtle">−</button>
+        <div data-controls className="absolute bottom-3 left-3 flex items-center gap-0.5 rounded-[4px] border border-line bg-surface p-[3px]">
+          <button type="button" data-z="out" aria-label={labels.zoomOut} className="h-[30px] min-w-[30px] rounded-[4px] px-2 font-bold hover:bg-subtle">−</button>
           <output data-zoom className="min-w-11 text-center font-label text-[12px]">40%</output>
-          <button type="button" data-z="in" aria-label={labels.zoomIn} className="h-[30px] min-w-[30px] rounded-[7px] px-2 font-bold hover:bg-subtle">+</button>
-          <button type="button" data-z="fit" className="h-[30px] rounded-[7px] px-2 text-[13px] font-bold hover:bg-subtle">{labels.fit}</button>
+          <button type="button" data-z="in" aria-label={labels.zoomIn} className="h-[30px] min-w-[30px] rounded-[4px] px-2 font-bold hover:bg-subtle">+</button>
+          <button type="button" data-z="fit" className="h-[30px] rounded-[4px] px-2 text-[13px] font-bold hover:bg-subtle">{labels.fit}</button>
         </div>
-        <p className="absolute right-3 top-3 rounded-[8px] border border-line bg-surface px-2.5 py-1 font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{labels.hint}</p>
+        <p className="absolute right-3 top-3 rounded-[4px] border border-line bg-surface px-2.5 py-1 font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{labels.hint}</p>
       </div>
     </div>
   );

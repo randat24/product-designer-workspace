@@ -10,7 +10,7 @@ import { cn } from "@/shared/lib/cn";
 import { DateField } from "@/shared/ui/date-field";
 
 const control =
-  "w-full rounded-[10px] border-[1.5px] bg-surface px-3.5 text-[16px] text-fg placeholder:text-fg-secondary transition-colors duration-[120ms] focus:border-fg";
+  "w-full rounded-[4px] border bg-surface px-3.5 text-[16px] text-fg placeholder:text-fg-secondary transition-colors duration-[120ms] focus:border-fg";
 const ok = "border-line hover:border-fg-secondary";
 const bad = "border-danger";
 
@@ -137,12 +137,12 @@ export function ChoiceGroup({ id, legend, hint, error, optional, options, value,
               />
               <span
                 className={cn(
-                  "flex min-h-11 items-center gap-2 rounded-[10px] border-[1.5px] px-3.5 py-2 text-[15px] font-semibold transition-colors duration-[120ms]",
+                  "flex min-h-11 items-center gap-2 rounded-[4px] border px-3.5 py-2 text-[15px] font-semibold transition-colors duration-[120ms]",
                   "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg",
                   on ? "border-fg bg-fg text-canvas" : cn("bg-surface hover:border-fg-secondary", error ? "border-danger" : "border-line"),
                 )}
               >
-                <span aria-hidden className={cn("grid size-4 shrink-0 place-items-center border-[1.5px] border-current", multiple ? "rounded-[4px]" : "rounded-full")}>
+                <span aria-hidden className={cn("grid size-4 shrink-0 place-items-center border border-current", multiple ? "rounded-[4px]" : "rounded-full")}>
                   {on && <span className={cn("size-2 bg-current", multiple ? "rounded-[1px]" : "rounded-full")} />}
                 </span>
                 {o.label}
@@ -205,11 +205,11 @@ export function ItemCard({ title, removeLabel, onRemove, children }: {
 }) {
   const hid = useId();
   return (
-    <section aria-labelledby={hid} className="flex flex-col gap-4 rounded-[14px] border-[1.5px] border-line bg-surface p-4 sm:p-5">
+    <section aria-labelledby={hid} className="flex flex-col gap-4 rounded-[12px] border border-line bg-surface p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h3 id={hid} className="font-display text-[17px] font-bold uppercase tracking-[0.01em]">{title}</h3>
         <button type="button" onClick={onRemove} aria-label={removeLabel}
-          className="hit grid size-9 place-items-center rounded-[8px] text-fg-secondary hover:bg-subtle hover:text-fg">
+          className="hit grid size-9 place-items-center rounded-[4px] text-fg-secondary hover:bg-subtle hover:text-fg">
           <X aria-hidden className="size-4" />
         </button>
       </div>
@@ -221,7 +221,7 @@ export function ItemCard({ title, removeLabel, onRemove, children }: {
 export function AddButton({ onClick, children, disabled }: { onClick: () => void; children: React.ReactNode; disabled?: boolean }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled}
-      className="inline-flex h-11 w-fit items-center gap-2 rounded-[10px] border-[1.5px] border-dashed border-fg-secondary px-4 text-[15px] font-semibold hover:border-fg hover:bg-subtle disabled:opacity-50">
+      className="inline-flex h-11 w-fit items-center gap-2 rounded-[4px] border border-dashed border-fg-secondary px-4 text-[15px] font-semibold hover:border-fg hover:bg-subtle disabled:opacity-50">
       <Plus aria-hidden className="size-4" />
       {children}
     </button>

@@ -74,7 +74,7 @@ export function Screenshots({ projectId, entityId, items, canEdit, entityType = 
           </>
         )}
       </div>
-      <div className={cn("rounded-panel border border-line bg-surface p-5", dragging && "border-[1.5px] border-dashed border-fg")}>
+      <div className={cn("rounded-panel border border-line bg-surface p-5", dragging && "border border-dashed border-fg")}>
         {items.length === 0 ? (
           <p className="text-center text-fg-secondary">
             {emptyText} {canEdit && t.competitors.uploadHint}

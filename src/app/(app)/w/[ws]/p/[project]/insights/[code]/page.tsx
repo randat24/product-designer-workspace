@@ -37,7 +37,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
           initial={{ title: i.title, statement: i.statement, confidence: i.confidence, status: i.status }} />
         {/* Cognitive bias (docs/UX_LAWS.md, UX-08): one voice is not a pattern yet. */}
         {st && st.sources > 0 && st.participants === 1 && (
-          <p role="note" className="max-w-[62ch] rounded-panel border-[1.5px] border-dashed border-warning px-4 py-3 text-sm">
+          <p role="note" className="max-w-[62ch] rounded-panel border border-dashed border-warning px-4 py-3 text-sm">
             <span className="inline-flex items-center gap-1 font-semibold text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{s.singleSource}.</span> {s.singleSourceHint}
           </p>
         )}

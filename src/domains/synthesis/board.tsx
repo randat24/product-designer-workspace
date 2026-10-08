@@ -70,7 +70,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
               }}
               className={cn(
                 "flex w-[290px] shrink-0 flex-col gap-2.5 rounded-panel border bg-surface/60 p-3 transition-colors duration-[120ms]",
-                over === key ? "border-[1.5px] border-dashed border-fg bg-subtle" : "border-line",
+                over === key ? "border border-dashed border-fg bg-subtle" : "border-line",
                 !p && "bg-transparent",
               )}>
               <ColumnHeader pattern={p} count={list.length} canEdit={canEdit}
@@ -79,7 +79,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
               {!p && canEdit && <AddObservation projectId={projectId} participants={participants} onAdded={() => router.refresh()} />}
 
               <ul className="flex min-h-16 flex-col gap-2">
-                {list.length === 0 && <li className="rounded-control border-[1.5px] border-dashed border-line p-4 text-center text-meta text-fg-secondary">{b.empty}</li>}
+                {list.length === 0 && <li className="rounded-control border border-dashed border-line p-4 text-center text-meta text-fg-secondary">{b.empty}</li>}
                 {list.map((c) => (
                   <Card key={c.id} card={c} base={base} canEdit={canEdit} patterns={patterns}
                     onDragStart={() => setDragging(c.id)} onDragEnd={() => { setDragging(null); setOver(null); }}
@@ -91,7 +91,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
         })}
 
         {canEdit && (
-          <form className="flex w-[260px] shrink-0 flex-col gap-2 rounded-panel border-[1.5px] border-dashed border-line p-3"
+          <form className="flex w-[260px] shrink-0 flex-col gap-2 rounded-panel border border-dashed border-line p-3"
             onSubmit={(e) => {
               e.preventDefault();
               columnsAction.run(() => createPattern(projectId, newPattern), () => setNewPattern(""));

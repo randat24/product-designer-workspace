@@ -7,8 +7,8 @@ import { AWARD_TILE, AwardSvg } from "./award-icons";
 import type { Award } from "./content";
 
 const ISSUER_ICON = { state: Landmark, city: Building2, brigade: Anchor } as const;
-/** Gold accent under the award title (the notebook's warning tone on dark). */
-const AWARD_GOLD = "#f2c46b";
+/** SIGNAL orange under the award title and on the chosen medal (6.9:1 on the dark tile). */
+const AWARD_ACCENT = "#FF6B35";
 
 const num = (i: number) => String(i + 1).padStart(2, "0");
 
@@ -44,9 +44,9 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === active} tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)} onKeyDown={onKey}
             className={cn(
-              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[14px] border p-3 text-[#eceef7] transition-colors sm:w-auto",
-              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f2c46b]",
-              i === active ? "border-[#f2c46b] shadow-[inset_0_0_0_1px_#f2c46b]" : "border-white/10 hover:border-white/30",
+              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[12px] border p-3 text-[#F1F1E9] transition-colors sm:w-auto",
+              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B35]",
+              i === active ? "border-[#FF6B35] shadow-[inset_0_0_0_1px_#FF6B35]" : "border-white/10 hover:border-white/30",
             )}
             style={{ background: AWARD_TILE }}>
             <span className="self-start text-[12px] font-semibold tabular-nums opacity-70">{num(i)}</span>
@@ -59,7 +59,7 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
         const Issuer = ISSUER_ICON[a.issuerKind];
         return (
           <section key={a.icon} id={`${id}-panel-${i}`} role="tabpanel" aria-labelledby={`${id}-tab-${i}`} hidden={i !== active}
-            className="grid gap-6 rounded-[18px] border border-white/10 p-6 text-[#eceef7] sm:p-8 md:grid-cols-[minmax(220px,300px)_1fr] md:items-center md:gap-10"
+            className="grid gap-6 rounded-[12px] border border-white/10 p-6 text-[#F1F1E9] sm:p-8 md:grid-cols-[minmax(220px,300px)_1fr] md:items-center md:gap-10"
             style={{ background: AWARD_TILE }}>
             <div className="relative mx-auto flex h-64 w-52 items-center justify-center sm:h-80 sm:w-64">
               <span aria-hidden className="absolute aspect-square h-52 rounded-full bg-white/[0.04] sm:h-64" />
@@ -68,13 +68,13 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap items-center gap-3 text-[14px]">
                 <span className="font-semibold tabular-nums opacity-70">{num(i)} / {String(awards.length).padStart(2, "0")}</span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 opacity-85">
+                <span className="inline-flex items-center gap-2 rounded-[4px] border border-white/15 px-3 py-1 opacity-85">
                   <Issuer aria-hidden className="size-4" strokeWidth={1.5} />
                   {a.issuer}
                 </span>
               </div>
               <h4 className="text-[24px] font-semibold leading-snug sm:text-[28px]">{a.title}</h4>
-              <span aria-hidden className="h-[3px] w-12 rounded-full" style={{ background: AWARD_GOLD }} />
+              <span aria-hidden className="h-[3px] w-12 rounded-full" style={{ background: AWARD_ACCENT }} />
               <p className="max-w-[62ch] text-[15px] leading-[1.65] opacity-80 sm:text-[16px]">{a.description}</p>
             </div>
           </section>

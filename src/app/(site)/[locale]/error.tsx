@@ -32,7 +32,7 @@ export default function SiteError({ reset }: { error: Error & { digest?: string 
       <p role="alert" className="max-w-[560px] text-[18px] text-fg-secondary">{t.body}</p>
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={reset}
-          className="inline-flex h-11 items-center rounded-[10px] border-[1.5px] border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover">
+          className="inline-flex h-11 items-center rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover">
           {t.retry}
         </button>
         <Link href={`/${locale}/about`} className="inline-flex h-11 items-center px-2 text-[15px] font-semibold underline underline-offset-4">

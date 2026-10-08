@@ -45,7 +45,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
       <PageHeader title={d.title} eyebrow={<EntityChip type="design_decision" code={d.code} />}
         stat={{ value: evidenceCount, caption: dc.evidence.toLowerCase() }} />
       {replacement && (
-        <p role="status" className="mb-6 rounded-panel border-[1.5px] border-dashed border-line px-4 py-2.5 text-meta">
+        <p role="status" className="mb-6 rounded-panel border border-dashed border-line px-4 py-2.5 text-meta">
           <Link href={`${ctx.base}/decisions/${replacement.code}`} className="font-semibold underline underline-offset-2">
             {dc.supersededBanner(replacement.code)}
           </Link>
@@ -92,7 +92,7 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
           <h3 className="mt-2 text-caption font-bold tracking-wide text-fg-secondary uppercase">{dc.voices}</h3>
           <EvidenceList type="design_decision" id={d.id} base={ctx.base} empty={direct.size ? dc.voicesEmpty : dc.evidenceEmpty} />
           {ctx.canEdit && suggestions.length > 0 && (
-            <div className="flex flex-col gap-2 rounded-panel border-[1.5px] border-dashed border-line p-4">
+            <div className="flex flex-col gap-2 rounded-panel border border-dashed border-line p-4">
               <h3 className="font-bold">{dc.suggestions}</h3>
               <p className="text-caption text-fg-secondary">{dc.suggestionsHint}</p>
               <ul className="flex flex-col gap-1.5">

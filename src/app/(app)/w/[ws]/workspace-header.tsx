@@ -45,12 +45,12 @@ export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: 
       {tabs.map((tab) => (
         <Link key={tab.key} href={tab.href} aria-current={tab.key === current ? "page" : undefined}
           className={cn(
-            "inline-flex items-center gap-2 rounded-full border-[1.5px] px-4 py-1.5 text-sm font-semibold",
+            "inline-flex items-center gap-2 rounded-[4px] border px-4 py-1.5 text-sm font-semibold",
             tab.key === current ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg hover:text-fg",
           )}>
           {tab.label}
           {tab.badge > 0 && (
-            <span className="rounded-full bg-accent-hover px-1.5 text-[12px] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
+            <span className="rounded-[4px] bg-accent-hover px-1.5 text-[12px] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
               {tab.badge}
             </span>
           )}

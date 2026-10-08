@@ -18,7 +18,7 @@ export default async function SectionPlaceholder({ params }: { params: Promise<{
   return (
     <div className="flex max-w-3xl flex-col gap-4">
       <PageHeader title={item.label} />
-      <div className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center">
+      <div className="rounded-panel border border-dashed border-line p-7 text-center">
         <p className="font-bold">{t.project.sectionSoonTitle(item.label)}</p>
         <p className="mt-1 text-fg-secondary">{t.project.sectionSoonBody(item.phase)}</p>
       </div>

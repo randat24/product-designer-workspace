@@ -34,7 +34,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
       </div>
 
       {items.length === 0 ? (
-        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
+        <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
         <>
           <section aria-labelledby="opp-matrix-h" className="flex flex-col gap-3">
@@ -59,7 +59,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
                         const quickWin = imp === "high" && eff === "low";
                         return (
                           <td key={eff} className={cn("h-28 rounded-panel border p-2 align-top",
-                            quickWin ? "border-[1.5px] border-success bg-success/5" : "border-line bg-surface")}>
+                            quickWin ? "border border-success bg-success/5" : "border-line bg-surface")}>
                             <ul className="flex flex-col gap-1.5">
                               {cell.map((o) => (
                                 <li key={o.id}>

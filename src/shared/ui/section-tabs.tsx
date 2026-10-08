@@ -12,7 +12,7 @@ export function SectionTabs({ label, tabs, current }: {
       {tabs.map((tab) => (
         <Link key={tab.key} href={tab.href} aria-current={tab.key === current ? "page" : undefined}
           className={cn(
-            "rounded-full border-[1.5px] px-3.5 py-1 text-sm font-semibold",
+            "rounded-[4px] border px-3.5 py-1 text-sm font-semibold",
             tab.key === current ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg hover:text-fg",
           )}>
           {tab.label}

@@ -16,7 +16,7 @@ import { ActionForm } from "@/shared/ui/action-form";
 
 export const metadata: Metadata = { title: t.screens.title };
 const sc = t.screens;
-const STATE_DOT: Record<string, string> = { designed: "bg-success", n_a: "bg-fg-secondary/40", missing: "border-[1.5px] border-warning bg-transparent" };
+const STATE_DOT: Record<string, string> = { designed: "bg-success", n_a: "bg-fg-secondary/40", missing: "border border-warning bg-transparent" };
 
 export default async function ScreensPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
   const { ws, project: slug } = await params;
@@ -40,7 +40,7 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
       <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
       {screens.length === 0 ? (
-        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>
+        <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>
       ) : (
         <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[720px] text-left text-sm">

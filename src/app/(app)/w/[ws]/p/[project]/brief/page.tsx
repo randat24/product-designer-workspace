@@ -24,7 +24,7 @@ export default async function BriefPage({ params }: { params: Promise<{ ws: stri
       <PageHeader title={t.brief.title} lede={t.brief.lede}
         progress={{ value: (progress.filled / progress.total) * 100, caption: t.project.briefProgress(progress.filled, progress.total) }} />
       {source && (
-        <p className="mb-6 rounded-control border-[1.5px] border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+        <p className="mb-6 rounded-control border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
           {t.requests.briefBanner(source.code)}{" "}
           <Link href={`/w/${ws}/requests/${source.code}`} className="font-semibold underline underline-offset-2">{t.requests.openRequest}</Link>
         </p>

@@ -91,7 +91,7 @@ export default async function SiteLayout({
       <body className="signal">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-[8px] focus:bg-fg focus:px-4 focus:py-2 focus:text-canvas"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-[4px] focus:bg-fg focus:px-4 focus:py-2 focus:text-canvas"
         >
           {d.ui.skip}
         </a>
@@ -107,7 +107,7 @@ export default async function SiteLayout({
               </Link>
               <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
               <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "header" })}
-                className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-[4px] border border-[var(--sg-accent-text)] bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:ml-auto md:inline-flex lg:ml-0">
+                className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-[4px] border border-accent-text bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:ml-auto md:inline-flex lg:ml-0">
                 {INTAKE[locale].cta}
               </Link>
               <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
@@ -157,7 +157,7 @@ export default async function SiteLayout({
                         title={label}
                         {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer me" } : {})}
                         {...trackAttrs(event, { location: "footer" })}
-                        className="flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-current/25 transition-colors hover:border-current hover:bg-current/10"
+                        className="flex h-11 w-11 items-center justify-center rounded-[4px] border border-current/25 transition-colors hover:border-current hover:bg-current/10"
                       >
                         <Icon className="h-5 w-5" />
                       </a>

@@ -21,7 +21,7 @@ export function TextField({ id, label, hint, badge, value, readOnly, onChange }:
       <span className="flex flex-wrap items-center gap-2">
         <label htmlFor={id} className="text-meta font-semibold text-fg-secondary">{label}</label>
         {badge && (
-          <span id={`${id}-badge`} className="rounded-full border border-warning px-2 py-px text-caption font-semibold text-warning">{badge}</span>
+          <span id={`${id}-badge`} className="rounded-[4px] border border-warning px-2 py-px text-caption font-semibold text-warning">{badge}</span>
         )}
       </span>
       <Textarea id={id} value={value} readOnly={readOnly} maxLength={5000} rows={2} placeholder={hint}

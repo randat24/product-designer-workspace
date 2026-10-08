@@ -23,7 +23,7 @@ export function ConsentBanner({ labels, privacyHref }: { labels: Labels; privacy
 
   return (
     <section aria-label={labels.more}
-      className="fixed inset-x-4 bottom-4 z-40 flex flex-col gap-4 rounded-[14px] border-[1.5px] border-fg bg-surface p-5 shadow-[0_18px_48px_-16px_rgba(0,0,0,.35)] sm:right-auto sm:max-w-[420px]">
+      className="fixed inset-x-4 bottom-4 z-40 flex flex-col gap-4 rounded-[12px] border border-control bg-surface p-5 shadow-[0_18px_48px_-16px_rgba(0,0,0,.35)] sm:right-auto sm:max-w-[420px]">
       <p className="text-[15px] leading-[1.5]">
         {labels.bannerText}{" "}
         <Link href={privacyHref} className="font-semibold underline underline-offset-4">{labels.more}</Link>
@@ -40,7 +40,7 @@ export function ConsentBanner({ labels, privacyHref }: { labels: Labels; privacy
   );
 }
 
-const BTN = "inline-flex h-11 flex-1 items-center justify-center rounded-[10px] border-[1.5px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
+const BTN = "inline-flex h-11 flex-1 items-center justify-center rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
 
 /** «Змінити вибір» on the privacy page: shows the current state and brings the banner back. */
 export function ConsentControls({ labels }: { labels: { manage: string; stateGranted: string; stateDenied: string; stateUnset: string } }) {
@@ -57,7 +57,7 @@ export function ConsentControls({ labels }: { labels: { manage: string; stateGra
         {state === undefined ? " " : state === "granted" ? labels.stateGranted : state === "denied" ? labels.stateDenied : labels.stateUnset}
       </p>
       <button type="button" onClick={() => setConsent(null)}
-        className="inline-flex h-11 items-center justify-center rounded-[10px] border-[1.5px] border-fg px-5 text-[15px] font-semibold transition-colors duration-[120ms] hover:bg-subtle">
+        className="inline-flex h-11 items-center justify-center rounded-[4px] border border-control px-5 text-[15px] font-semibold transition-colors duration-[120ms] hover:bg-subtle">
         {labels.manage}
       </button>
     </div>
