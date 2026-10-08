@@ -227,7 +227,7 @@
 .signal .sg-project-meta :is(h2, h3) { font-size: 22px; letter-spacing: -.035em; font-weight: 600; line-height: 1.3; margin-bottom: 8px; }
 .signal .sg-project-meta :is(h2, h3) a { text-decoration: none; }
 .signal .sg-project-meta :is(h2, h3) a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.signal .sg-project-meta p { color: var(--sg-fg-secondary); font-size: 14px; max-width: 62ch; }
+.signal .sg-project-meta > div > p { color: var(--sg-fg-secondary); font-size: 14px; max-width: 62ch; }
 .signal .sg-project-number { flex-shrink: 0; font: 12px/1.8 var(--sg-font-mono); color: var(--sg-fg-secondary); white-space: nowrap; }
 
 /* ---------- about, process, contact ---------- */

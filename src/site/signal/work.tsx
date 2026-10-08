@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
 import { trackAttrs } from "@/site/analytics/track";
 import { dict, type Case, type Locale } from "@/site/content";
-import { CaseCover } from "@/site/ui";
+import { CaseCover, ProcessStrip } from "@/site/ui";
 import { WorkFilter } from "./work-filter";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -69,9 +69,11 @@ function ProjectCard({ item, index, locale, location, variant }: {
         {blurred && <span className="sg-adult">{d.adult.badge}</span>}
       </Link>
       <div className="sg-project-meta">
-        <div>
+        <div className="min-w-0">
           <Title><Link href={href} {...track}>{item.title} <span aria-hidden>↗</span></Link></Title>
           <p>{item.summary}</p>
+          {/* How much of the work the workbook holds, for cases published from the tool. */}
+          {item.process && <div className="mt-5 max-w-[420px]"><ProcessStrip process={item.process} locale={locale} /></div>}
         </div>
         <span className="sg-project-number">
           {item.adult && <span className="mr-2 text-danger">{d.adult.badge}</span>}
