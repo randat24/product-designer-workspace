@@ -1,27 +1,16 @@
 "use client";
 
+import { THEME_INIT_SCRIPT, toggleTheme } from "@/shared/ui/theme-switch";
 import { track } from "./analytics/track";
 
-/** Inline, runs before paint: applies a saved theme so there is no flash of the other one. */
-export const THEME_INIT_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+export { THEME_INIT_SCRIPT };
 
 /**
  * Light / dark switch. Until the visitor picks one, the site follows the system setting.
  * Which icon shows is decided by CSS (globals.css), so server and client render the same markup.
  */
 export function ThemeToggle({ labelLight, labelDark }: { labelLight: string; labelDark: string }) {
-  const toggle = () => {
-    const root = document.documentElement;
-    const current = root.dataset.theme ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem("theme", next);
-    } catch {
-      // private mode: the choice lasts until reload
-    }
-    track("theme_switch", { theme: next });
-  };
+  const toggle = () => track("theme_switch", { theme: toggleTheme() });
   return (
     <button
       type="button"

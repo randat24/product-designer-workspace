@@ -26,7 +26,8 @@ const config: NextConfig = {
     "/w/**": ["./src/domains/requests/pdf/fonts/**"],
   },
   // globalNotFound: one 404 page (app/global-not-found.tsx) for the several root layouts.
-  experimental: { serverActions: { bodySizeLimit: "2mb" }, globalNotFound: true },
+  // 4 MB: a project backup restored from its JSON file (Vercel accepts up to 4.5 MB per request).
+  experimental: { serverActions: { bodySizeLimit: "4mb" }, globalNotFound: true },
   // A case renamed after it went live keeps its old address working.
   async redirects() {
     return [

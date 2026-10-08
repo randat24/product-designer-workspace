@@ -328,6 +328,70 @@ test("project backup: settings download the whole project as JSON", async ({ pag
   expect(data.tables.project_counters).toBeUndefined();
 });
 
+test("project restore: the downloaded backup comes back as a new project with its data", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
+  test.setTimeout(90_000); // download, a refused file, the restore itself and the clean-up
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/settings`);
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("link", { name: "Завантажити проєкт (JSON)" }).click(),
+  ]);
+  const file = (await download.path())!;
+  const wsPath = base.replace(/\/p\/[^/]+$/, "");
+
+  // Not a backup: explained at the button, nothing is created.
+  await page.goto(wsPath);
+  const restore = page.getByLabel("Відновити проєкт з файлу");
+  // Picking a file submits at once; before hydration the change is not handled yet, so pick again until it is.
+  await expect(async () => {
+    await restore.setInputFiles({ name: "notes.json", mimeType: "application/json", buffer: Buffer.from('{"brief": {}}') });
+    await expect(page.getByRole("status").filter({ hasText: "Це не резервна копія проєкту" })).toBeVisible({ timeout: 2_000 });
+  }).toPass();
+
+  await restore.setInputFiles(file);
+  await expect(page).toHaveURL(/\/p\/restaurant-app-\d+$/, { timeout: 30_000 });
+  await ready(page);
+  const copy = new URL(page.url()).pathname;
+  try {
+    // The copy has the original's insights under the same codes, and the next one continues the numbering.
+    await page.goto(`${copy}/insights`);
+    await expect(page.getByText("INS-001").first()).toBeVisible();
+  } finally {
+    // Leave the workspace as it was: other tests open the demo by its slug.
+    await page.goto(`${copy}/settings`);
+    await page.getByLabel(/Щоб підтвердити, введіть назву проєкту/).fill("Restaurant App");
+    await page.getByRole("button", { name: "Видалити проєкт" }).click();
+    await expect(page).toHaveURL(new RegExp(`${wsPath}$`));
+  }
+});
+
+test("theme: the tool switches light and dark and remembers it", async ({ page }) => {
+  await openDemoProject(page);
+  await page.emulateMedia({ colorScheme: "light" });
+  const nav = page.getByRole("navigation", { name: "Розділи проєкту" });
+  const toDark = nav.getByRole("button", { name: "Темна тема" });
+  test.skip(!(await toDark.isVisible()), "the switch sits in the rail foot on wide screens");
+  await toDark.click();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("dark");
+  await page.reload();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("dark");
+  await nav.getByRole("button", { name: "Світла тема" }).click();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("light");
+});
+
+test("phone: text fields are 16 px, so iOS does not zoom in on input", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "phone", "phone only");
+  const base = await openDemoProject(page);
+  await page.goto(`${base}/brief`);
+  await ready(page);
+  await expect(page.locator("main textarea, main input[type=text]").first()).toBeVisible();
+  const sizes = await page.locator("main input:not([type=checkbox]):not([type=hidden]), main textarea, main select")
+    .evaluateAll((els) => els.filter((e) => (e as HTMLElement).offsetParent).map((e) => parseFloat(getComputedStyle(e).fontSize)));
+  expect(sizes.length).toBeGreaterThan(0);
+  expect(Math.min(...sizes)).toBeGreaterThanOrEqual(16);
+});
+
 // A 4×2 PNG: enough for the browser to read its size before uploading.
 const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAIAAADwyuo0AAAAEklEQVR4nGNUidzCAANMDEgAABxWATVTVbcvAAAAAElFTkSuQmCC", "base64");
 

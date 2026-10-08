@@ -310,6 +310,7 @@ export type Database = {
       };
       create_demo_project: { Args: { p_workspace: string }; Returns: string };
       open_demo_project: { Args: { p_workspace: string }; Returns: string };
+      restore_project: { Args: { p_workspace: string; p_export: Json }; Returns: Json };
       synthesis_stats: {
         Args: { p_project: string };
         Returns: { entity_type: string; entity_id: string; source_count: number; participant_count: number }[];

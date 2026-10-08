@@ -9,6 +9,7 @@ import { CommandPalette, type CommandItem } from "@/shared/ui/command-palette";
 import { t } from "@/shared/i18n/uk";
 import { NAV_ICONS } from "@/shared/nav-icons";
 import { BookOpen, Check, ChevronLeft, Globe, Settings } from "lucide-react";
+import { ThemeSwitch } from "@/shared/ui/theme-switch";
 
 /** Dark navigation rail from the notebook prototype: groups, items, a progress ring for shipped stages. */
 export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, loadEntities, progress }: {
@@ -105,6 +106,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
           <Link href="/uk" className={FOOT_LINK}>
             <Globe aria-hidden className="size-4 shrink-0" />{t.auth.toSite}
           </Link>
+          <ThemeSwitch labelLight={t.app.themeLight} labelDark={t.app.themeDark} showLabel className={cn(FOOT_LINK, "text-left")} />
         </div>
       </div>
     </nav>

@@ -6,6 +6,7 @@ import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
 import { WorkspaceSwitcher } from "./workspace-switcher";
 import { FedoMark } from "@/shared/ui/fedo-mark";
+import { ThemeSwitch } from "@/shared/ui/theme-switch";
 
 /** The workspace bar (brand, switcher, way back to the site, account) shared by the projects and requests pages. */
 export async function WorkspaceHeader({ current }: { current: string }) {
@@ -22,6 +23,8 @@ export async function WorkspaceHeader({ current }: { current: string }) {
           <Globe aria-hidden className="size-4 shrink-0" />
           <span className="sr-only sm:not-sr-only">{t.auth.toSite}</span>
         </Link>
+        <ThemeSwitch labelLight={t.app.themeLight} labelDark={t.app.themeDark}
+          className="hit size-8 justify-center rounded-full opacity-80 hover:bg-rail-fg/10 hover:opacity-100" />
         <Link href="/account" className="hidden opacity-70 hover:opacity-100 hover:underline sm:inline">{user?.email}</Link>
         <button className="rounded-control border border-rail-fg/30 px-2.5 py-1 hover:border-rail-fg/70">{t.auth.signOut}</button>
       </form>

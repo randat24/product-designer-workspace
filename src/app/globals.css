@@ -179,6 +179,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+/* On inverted surfaces (footer, the service block, the navigation rail, the About F) the ink ring would vanish
+   into the background: there it takes the surface's own text colour. */
+.bg-rail :focus-visible { outline-color: var(--rail-fg); }
+.f-bar :focus-visible, .f-stem :focus-visible { outline-color: var(--canvas); }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
 /* Page title: condensed display type, uppercase (the notebook's signature). */
@@ -357,6 +361,12 @@ body {
 .fedo-say { opacity: 0; transform: translateY(4px); transition: opacity 0.2s, transform 0.2s; }
 .fedo-guide.is-saying .fedo-say { opacity: 1; transform: none; }
 
+/* iOS Safari zooms the page into any field with text under 16 px and leaves it zoomed (docs/HANDOFF_TRIAGE.md U01).
+   On phones every text field is 16 px; tablets and desktops keep the tool scale (body 15, meta 13). */
+@media (max-width: 767px) {
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="color"], [type="button"], [type="submit"]),
+  textarea, select { font-size: 16px; }
+}
 /* The About page as the F: the bar (who), the stem (experience), the notch (facts and the way to write). */
 .f-grid { --R: 28px; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); grid-template-areas: "bar bar" "stem cut"; background: var(--fg); color: var(--canvas); border-radius: var(--R) var(--R) 0 var(--R); overflow: hidden; }
 .f-bar { grid-area: bar; }
