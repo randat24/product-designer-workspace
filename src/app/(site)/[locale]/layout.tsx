@@ -137,7 +137,6 @@ export default async function SiteLayout({
               <Link href={`/${locale}/privacy`} className="hit hover:text-fg">{d.footer.privacy}</Link>
               {/* The private workspace: not for crawlers. */}
               <Link href="/app" rel="nofollow" prefetch={false} className="hit hover:text-fg">{d.footer.login}</Link>
-              <a href="#main" className="hit hover:text-fg">{s.top} ↑</a>
             </div>
           </footer>
         </div>

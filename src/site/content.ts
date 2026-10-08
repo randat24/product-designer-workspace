@@ -186,7 +186,7 @@ export type Dictionary = {
   awards: Award[];
   story: StoryLabels;
   contact: { title: string; lead: string; write: string };
-  footer: { rights: string; login: string; top: string; certificate: string; privacy: string };
+  footer: { rights: string; login: string; certificate: string; privacy: string };
   /** Analytics consent banner and the privacy page. */
   privacy: {
     title: string;
@@ -577,7 +577,7 @@ const uk: Dictionary = {
     lead: "Розкажіть коротко про продукт і терміни — відповім протягом доби.",
     write: "Написати на пошту",
   },
-  footer: { rights: "Усі права захищено", login: "Вхід", top: "Вгору", certificate: "Відкрити сертифікат", privacy: "Конфіденційність" },
+  footer: { rights: "Усі права захищено", login: "Вхід", certificate: "Відкрити сертифікат", privacy: "Конфіденційність" },
   privacy: {
     title: "Конфіденційність",
     lede: "Що цей сайт дізнається про відвідувачів і навіщо. Коротко: лише знеособлену статистику, без імен, пошти й реклами.",
@@ -1001,7 +1001,7 @@ const en: Dictionary = {
     lead: "Tell me briefly about the product and the timeline — I'll reply within a day.",
     write: "Email me",
   },
-  footer: { rights: "All rights reserved", login: "Sign in", top: "Back to top", certificate: "Open certificate", privacy: "Privacy" },
+  footer: { rights: "All rights reserved", login: "Sign in", certificate: "Open certificate", privacy: "Privacy" },
   privacy: {
     title: "Privacy",
     lede: "What this site learns about visitors and why. In short: anonymous statistics only — no names, no email, no ads.",
