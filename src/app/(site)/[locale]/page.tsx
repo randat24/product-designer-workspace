@@ -15,6 +15,7 @@ import { LinkedInIcon, TelegramIcon } from "@/site/social-icons";
 import { CaseList } from "@/site/case-list";
 import { CaseCanvas, type CanvasCase } from "@/site/case-canvas";
 import { count, plural } from "@/site/plural";
+import { SignalHero, WORK_ANCHOR } from "@/site/signal/hero";
 import { Eyebrow, PrimaryLink, SecondaryLink, container } from "@/site/ui";
 
 export const revalidate = 60;
@@ -82,16 +83,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       <JsonLd data={graph(websiteLd(locale), personLd(locale))} />
-      {/* The work opens the page: a one-line introduction, then the first case large, then the rest. */}
-      <section className={`${container} flex flex-col gap-10 pb-12 pt-8 sm:pt-10`} aria-labelledby="work">
+      {/* SIGNAL: the hero says who and what in one line, then the work: the first case large, then the rest. */}
+      <SignalHero locale={locale} />
+      <section id={WORK_ANCHOR} className={`${container} flex scroll-mt-24 flex-col gap-10 pb-12 pt-8 sm:pt-10`} aria-labelledby="work">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-          {/* The name is already in the header; the page says what it is. */}
-          <h1 className="font-label text-[13px] font-medium uppercase tracking-[0.06em]">
-            <span className="sr-only">{d.name}. </span>{d.home.portfolio} <span className="text-fg-secondary">· {d.role}</span>
-          </h1>
-          <p className="inline-flex w-fit items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 text-[13px] font-semibold">
-            <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
-            {d.home.available}
+          {/* The page's h1 is in the hero; this line names the section. */}
+          <p className="font-label text-[13px] font-medium uppercase tracking-[0.06em]">
+            {d.home.portfolio} <span className="text-fg-secondary">· {d.role}</span>
           </p>
         </div>
         {/* Desktop: the work as frames on a canvas, with the records of the workbook beside each. Phones: cards. */}

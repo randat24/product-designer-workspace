@@ -44,7 +44,7 @@ export function SectionTitle({
 }
 
 const linkBtn =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-[10px] px-5 text-[15px] font-semibold transition-colors duration-[120ms]";
+  "inline-flex min-h-12 items-center justify-center gap-3 rounded-[4px] px-[22px] py-3 text-[15px] font-semibold leading-[1.4] transition-colors duration-[120ms]";
 
 type LinkButtonProps = {
   href: string;
@@ -79,11 +79,11 @@ function LinkButton({ href, children: label, icon, download, track, className }:
 }
 
 export function PrimaryLink(props: LinkButtonProps) {
-  return <LinkButton {...props} className={cn(linkBtn, "border-[1.5px] border-accent bg-accent text-on-accent hover:bg-accent-hover")} />;
+  return <LinkButton {...props} className={cn(linkBtn, "border border-[var(--sg-accent-text)] bg-accent text-on-accent hover:bg-accent-hover")} />;
 }
 
 export function SecondaryLink(props: LinkButtonProps) {
-  return <LinkButton {...props} className={cn(linkBtn, "border-[1.5px] border-fg text-fg hover:bg-subtle")} />;
+  return <LinkButton {...props} className={cn(linkBtn, "border border-[var(--sg-control-border)] text-fg hover:bg-subtle")} />;
 }
 
 /** Cover in a sticky-note colour: the case's real screen when it has one, otherwise an abstract placeholder. */
@@ -187,7 +187,7 @@ function CardCover({ item, locale, label, large }: { item: Case; locale: Locale;
         </span>
       )}
       {/* Pointer devices only: the same tags are listed under the card on touch screens. */}
-      <div aria-hidden className="absolute inset-0 hidden flex-col justify-start bg-[#151a33]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
+      <div aria-hidden className="absolute inset-0 hidden flex-col justify-start bg-[#191B18]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
         <ul className="flex flex-wrap gap-1.5">
           {item.tags.map((tag) => <li key={tag} className="rounded-full border border-white/70 px-2.5 py-0.5 text-[12px]">{tag}</li>)}
         </ul>
