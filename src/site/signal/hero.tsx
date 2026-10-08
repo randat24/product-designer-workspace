@@ -42,7 +42,7 @@ export function SignalHero({ locale }: { locale: Locale }) {
   const h = HERO[locale];
   const [first, second, last] = h.title;
   return (
-    <>
+    <div className="sg-first-screen">
       <section className={`${container} sg-hero`} aria-labelledby="hero-heading">
         <div className="sg-hero-copy">
           <p className="sg-availability">{d.home.available}</p>
@@ -60,14 +60,16 @@ export function SignalHero({ locale }: { locale: Locale }) {
             </a>
           </div>
         </div>
-        <HeroArt>
-          <span className="sg-art-label sg-art-label--top">{h.artTop.toUpperCase()}</span>
-          <span className="sg-art-label sg-art-label--bottom">{h.artBottom.toUpperCase()}</span>
-          <div className="sg-art-caption">
-            <strong>{h.captionTitle}</strong>
-            <span>{h.captionText}</span>
-          </div>
-        </HeroArt>
+        <div className="sg-hero-stage">
+          <HeroArt>
+            <span className="sg-art-label sg-art-label--top">{h.artTop.toUpperCase()}</span>
+            <span className="sg-art-label sg-art-label--bottom">{h.artBottom.toUpperCase()}</span>
+            <div className="sg-art-caption">
+              <strong>{h.captionTitle}</strong>
+              <span>{h.captionText}</span>
+            </div>
+          </HeroArt>
+        </div>
       </section>
       <div className={container}>
         <div className="sg-hero-bottom">
@@ -76,6 +78,6 @@ export function SignalHero({ locale }: { locale: Locale }) {
           <a href={`#${WORK_ANCHOR}`}>{h.next}</a>
         </div>
       </div>
-    </>
+    </div>
   );
 }
