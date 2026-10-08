@@ -8,12 +8,12 @@ const TONE: Record<Enums<"request_status">, string> = {
   qualified: "bg-success/15 text-success",
   accepted: "bg-success text-on-status",
   declined: "bg-subtle text-fg-secondary",
-  converted: "border border-fg text-fg",
+  converted: "border border-control text-fg",
 };
 
 export function StatusBadge({ status }: { status: Enums<"request_status"> }) {
   return (
-    <span className={cn("inline-flex h-6 items-center rounded-full px-2.5 text-[12px] font-semibold whitespace-nowrap", TONE[status])}>
+    <span className={cn("inline-flex h-6 items-center rounded-[4px] px-2.5 text-[12px] font-semibold whitespace-nowrap", TONE[status])}>
       {t.requests.status[status]}
     </span>
   );

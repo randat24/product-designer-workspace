@@ -32,7 +32,7 @@ export default async function CasePreview({ params }: { params: Params }) {
   const item = snapshotToCase(data.slug, { ...(data.draft as object), process, trace }, locale);
 
   const banner = (
-    <div role="note" className="mb-8 border-y-[1.5px] border-dashed border-fg bg-subtle">
+    <div role="note" className="mb-8 border-y border-dashed border-fg bg-subtle">
       <p className="mx-auto flex w-full max-w-[1120px] flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-3 text-[15px] sm:px-8">
         <span className="font-semibold">{t.caseEditor.previewBanner}</span>
         <Link href={editor} className="font-semibold underline underline-offset-4">{t.caseEditor.backToEditor}</Link>

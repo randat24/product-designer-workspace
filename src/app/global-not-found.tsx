@@ -46,13 +46,13 @@ export default async function GlobalNotFound() {
             <nav className="flex flex-wrap gap-3" aria-label={d.ui.mainNav}>
               <Link
                 href={`/${locale}`}
-                className="inline-flex h-11 items-center rounded-[10px] border-[1.5px] border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover"
+                className="inline-flex h-11 items-center rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover"
               >
                 {d.ui.notFoundHome}
               </Link>
               <Link
                 href={`/${locale}/cases`}
-                className="inline-flex h-11 items-center rounded-[10px] border-[1.5px] border-fg px-5 text-[15px] font-semibold text-fg hover:bg-subtle"
+                className="inline-flex h-11 items-center rounded-[4px] border border-control px-5 text-[15px] font-semibold text-fg hover:bg-subtle"
               >
                 {d.ui.notFoundWork}
               </Link>
@@ -79,7 +79,7 @@ function ToolNotFound() {
           <FedoOutline miss className="size-20" />
           <h1 className="text-title font-semibold">Сторінку не знайдено</h1>
           <p className="text-fg-secondary">Проєкту або простору не існує, або у вас немає до нього доступу.</p>
-          <Link href="/app" className="text-accent hover:underline">До проєктів</Link>
+          <Link href="/app" className="text-accent-text hover:underline">До проєктів</Link>
         </main>
       </body>
     </html>

@@ -109,7 +109,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
               size="sm" className="mr-1 max-w-36 font-semibold text-fg-secondary">
               {GUIDE_SECTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
             </Select>
-            <label className="mr-1 flex cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] border-line px-2.5 py-1 text-caption font-semibold has-[:checked]:border-fg has-[:checked]:bg-fg has-[:checked]:text-canvas">
+            <label className="mr-1 flex cursor-pointer items-center gap-1.5 rounded-[4px] border border-line px-2.5 py-1 text-caption font-semibold has-[:checked]:border-fg has-[:checked]:bg-fg has-[:checked]:text-canvas">
               <input type="checkbox" className="sr-only" checked={value.is_key} onChange={(e) => update({ is_key: e.target.checked })} />
               {g.isKey}
             </label>
@@ -118,7 +118,7 @@ function QuestionRow({ q, canEdit, first, last, onMove, onDelete, onSectionSaved
             <IconButton size="sm" tone="danger" onClick={onDelete} label={`${g.remove}: ${value.text}`}><X className="size-4" /></IconButton>
           </div>
         )}
-        {!canEdit && value.is_key && <span className="shrink-0 rounded-full bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">{g.isKey}</span>}
+        {!canEdit && value.is_key && <span className="shrink-0 rounded-[4px] bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">{g.isKey}</span>}
       </div>
       {(status === "error" || status === "offline") && <p role="alert" className="text-meta text-danger">{autosaveLabel(status, error?.message)}</p>}
       {(value.probes.length > 0 || canEdit) && (

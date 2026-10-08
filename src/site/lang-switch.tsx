@@ -13,7 +13,7 @@ export function LangSwitch({ current }: { current: Locale }) {
   const pathname = usePathname() ?? `/${current}`;
   const rest = pathname.replace(/^\/(uk|en)(?=\/|$)/, "");
   return (
-    <div className="flex rounded-full border-[1.5px] border-fg p-0.5 text-[12px] font-bold uppercase">
+    <div className="flex rounded-[4px] border border-control p-0.5 text-[12px] font-bold uppercase">
       {LOCALES.map((l) => (
         <Link
           key={l}
@@ -24,7 +24,7 @@ export function LangSwitch({ current }: { current: Locale }) {
           aria-current={l === current ? "true" : undefined}
           onClick={() => l !== current && track("language_switch", { from: current, to: l })}
           className={cn(
-            "hit rounded-full px-2.5 py-1 transition-colors",
+            "hit rounded-[4px] px-2.5 py-1 transition-colors",
             l === current
               ? "bg-fg text-canvas"
               : "text-fg-secondary hover:text-fg",

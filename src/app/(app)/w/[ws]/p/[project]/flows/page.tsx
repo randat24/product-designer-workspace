@@ -39,7 +39,7 @@ export default async function FlowsPage({ params }: { params: Promise<{ ws: stri
       <RemindersPanel base={ctx.base} initial={reminders} canEdit={ctx.canEdit} compact />
 
       {flows.length === 0 ? (
-        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{f.empty}</p>
+        <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{f.empty}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {flows.map((fl) => (

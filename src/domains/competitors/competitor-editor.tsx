@@ -54,7 +54,7 @@ export function CompetitorEditor({ id, initial, isOwn, canEdit, screenshots, ver
                 <button key={k.value} type="button" aria-pressed={c.kind === k.value} disabled={!canEdit}
                   onClick={() => update({ kind: k.value })}
                   className={cn(
-                    "rounded-full border-[1.5px] px-3 py-1 text-meta font-semibold disabled:cursor-default",
+                    "rounded-[4px] border px-3 py-1 text-meta font-semibold disabled:cursor-default",
                     c.kind === k.value ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg",
                   )}>
                   {k.label}

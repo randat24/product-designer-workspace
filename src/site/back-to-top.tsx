@@ -40,7 +40,7 @@ export function BackToTop({ label }: { label: string }) {
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
       }}
       className={cn(
-        "fixed right-4 bottom-4 z-30 grid size-14 place-items-center rounded-full bg-rail text-rail-fg shadow-lg transition-[opacity,transform] duration-200 sm:right-6 sm:bottom-6",
+        "fixed right-4 bottom-4 z-30 grid size-12 place-items-center rounded-[4px] bg-rail text-rail-fg shadow-lg transition-[opacity,transform] duration-200 sm:right-6 sm:bottom-6",
         visible ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0",
       )}>
       <svg aria-hidden viewBox="0 0 56 56" className="absolute inset-0 size-full -rotate-90">

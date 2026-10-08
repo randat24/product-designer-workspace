@@ -113,7 +113,7 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
     features.reduce((s, f) => s + ({ yes: 1, partial: 0.5, no: 0, unknown: 0 } as const)[cellValue(f.id, p)], 0);
 
   if (products.length === 0) {
-    return <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{m.noCompetitors}</p>;
+    return <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{m.noCompetitors}</p>;
   }
 
   return (

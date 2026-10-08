@@ -78,7 +78,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
 
   return (
     <div className="flex flex-col gap-4">
-      <p aria-live="polite" className="min-h-[4.5em] rounded-[12px] bg-subtle px-4 py-3 text-[14px] leading-[1.5]">
+      <p aria-live="polite" className="min-h-[4.5em] rounded-[8px] bg-subtle px-4 py-3 text-[14px] leading-[1.5]">
         {active && chain ? (
           <>
             <b className="font-label font-medium">{active}</b>{titles.get(active) ? ` · ${titles.get(active)}` : ""}<br />
@@ -91,7 +91,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
             .replace("{links}", count(locale, trace.links.length, labels.forms.links))
         )}
       </p>
-      <div className="overflow-x-auto rounded-[18px] border border-line bg-surface" data-spec="Слід рішень">
+      <div className="overflow-x-auto rounded-[12px] border border-line bg-surface" data-spec="Слід рішень">
         <div
           ref={box}
           className="relative grid min-w-[max(100%,1080px)] gap-[26px] p-[18px]"
@@ -125,7 +125,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
                   onBlur={() => setHover(null)}
                   onClick={() => setPinned((p) => (p === n.code ? null : n.code))}
                   className={cn(
-                    "relative grid gap-0.5 rounded-[8px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[12.5px] leading-[1.3] transition-opacity duration-150 hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
+                    "relative grid gap-0.5 rounded-[4px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[12.5px] leading-[1.3] transition-opacity duration-150 hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
                     lit && !lit.has(n.code) && "opacity-30",
                     active === n.code && "ring-2 ring-fg",
                   )}

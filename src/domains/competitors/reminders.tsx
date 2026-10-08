@@ -45,7 +45,7 @@ export function RemindersPanel({ base, initial, canEdit, compact = false }: {
   );
 
   return (
-    <section aria-labelledby="reminders-h" className="flex flex-col gap-2 rounded-panel border-[1.5px] border-danger/40 bg-surface p-4">
+    <section aria-labelledby="reminders-h" className="flex flex-col gap-2 rounded-panel border border-danger/40 bg-surface p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="reminders-h" className="text-heading font-semibold">{r.title}</h2>
         <span className={cn("text-caption font-semibold", open.length ? "text-danger" : "text-success")}>

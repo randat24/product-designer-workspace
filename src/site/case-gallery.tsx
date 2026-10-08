@@ -52,7 +52,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
               className="group flex w-full flex-col gap-2 text-left"
               aria-label={`${counter(labels.open, i + 1, total)}: ${it.alt}`}
             >
-              <span className="block overflow-hidden rounded-[12px] border border-line bg-surface transition-transform duration-200 group-hover:-translate-y-1">
+              <span className="block overflow-hidden rounded-[8px] border border-line bg-surface transition-transform duration-200 group-hover:-translate-y-1">
                 {/* eslint-disable-next-line @next/next/no-img-element -- project pages of any origin, sizes known */}
                 <img src={it.src} alt="" width={it.width} height={it.height} loading="lazy" decoding="async" className="h-auto w-full" />
               </span>
@@ -74,7 +74,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
         <div className="flex h-full flex-col items-center justify-center gap-4 p-4 text-white" onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}>
           <div className="flex w-full max-w-5xl items-center justify-between gap-4 text-[14px]">
             <span aria-live="polite">{counter(labels.open, index + 1, total)}{item.caption ? ` · ${item.caption}` : ""}</span>
-            <button type="button" onClick={() => dialog.current?.close()} className="rounded-full border border-white/40 px-4 py-1.5 font-semibold hover:bg-white/10">
+            <button type="button" onClick={() => dialog.current?.close()} className="rounded-[4px] border border-white/40 px-4 py-1.5 font-semibold hover:bg-white/10">
               {labels.close} ✕
             </button>
           </div>
@@ -87,7 +87,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
                 alt={item.alt}
                 width={item.width}
                 height={item.height}
-                className={cn("max-h-full w-auto rounded-[10px] object-contain", item.device === "mobile" ? "max-w-[420px]" : "max-w-full")}
+                className={cn("max-h-full w-auto rounded-[4px] object-contain", item.device === "mobile" ? "max-w-[420px]" : "max-w-full")}
               />
             </div>
             <NavButton label={labels.next} onClick={() => go(1)} hidden={total < 2}>›</NavButton>

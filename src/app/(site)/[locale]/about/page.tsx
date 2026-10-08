@@ -81,7 +81,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                     <div className="flex max-w-[72ch] flex-col gap-3 pb-5">
                       <ul className="flex flex-wrap gap-1.5">
                         {job.points.map((p, k) => (
-                          <li key={k} className="rounded-full border border-canvas/30 px-3 py-1 text-[13px]">{p}</li>
+                          <li key={k} className="rounded-[4px] border border-canvas/30 px-3 py-1 text-[13px]">{p}</li>
                         ))}
                       </ul>
                       {job.details?.map((p, k) => <p key={k} className="opacity-80">{p}</p>)}
@@ -129,7 +129,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {d.about.steps.map((step, i) => (
             // Each step in the colour of the records it leaves in the workbook, as on the case pages.
-            <li key={step.title} className="flex flex-col gap-3 rounded-[14px] border border-line border-t-4 bg-surface p-5" style={{ borderTopColor: STEP_COLORS[i] }}>
+            <li key={step.title} className="flex flex-col gap-3 rounded-[12px] border border-line border-t-4 bg-surface p-5" style={{ borderTopColor: STEP_COLORS[i] }}>
               <span className="font-label text-[12px] text-fg-secondary" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="font-display text-[22px] font-bold uppercase leading-[1.08] tracking-[0.01em]">{step.title}</h3>
               <p className="text-[15px] leading-[1.55] text-fg-secondary">{step.text}</p>
@@ -211,7 +211,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
       {/* Service and awards: after the design story */}
       <section id="service" className={`${container} mt-20 scroll-mt-24`}>
-        <div className="flex flex-col gap-8 rounded-[18px] bg-rail p-6 text-rail-fg sm:p-10">
+        <div className="flex flex-col gap-8 rounded-[12px] bg-rail p-6 text-rail-fg sm:p-10">
           <div className="grid gap-6 md:grid-cols-[220px_1fr]">
             <div className="flex flex-col gap-2">
               {serviceJob && <Eyebrow className="text-rail-fg opacity-70">{serviceJob.period}</Eyebrow>}
@@ -231,7 +231,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
       {/* Closing call to action */}
       <section aria-labelledby="cta-h" className={`${container} mt-20`}>
-        <div className="flex flex-col gap-6 border-t-[1.5px] border-fg pt-10 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between">
           <h2 id="cta-h" className={bigTitle}>{d.about.ctaTitle}</h2>
           <div className="flex max-w-[460px] flex-col gap-4">
             <p className="text-[17px] leading-[1.55] text-fg-secondary">{d.about.ctaText}</p>
@@ -258,7 +258,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
 function Block({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("flex flex-col gap-4 border-t-[1.5px] border-fg pt-5", className)}>
+    <div className={cn("flex flex-col gap-4 border-t border-line pt-5", className)}>
       <h2 className="font-display text-[22px] font-bold uppercase leading-[1.1]">{title}</h2>
       {children}
     </div>

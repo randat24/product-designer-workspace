@@ -32,7 +32,7 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
         <ol className={`${container} flex gap-1 overflow-x-auto py-2.5 text-[13px] font-semibold`}>
           {sections.map((s, i) => (
             <li key={s.id} className="shrink-0">
-              <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-full px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-subtle aria-[current]:text-fg">
+              <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-subtle aria-[current]:text-fg">
                 <span className="display-num text-[11px]">{String(i + 1).padStart(2, "0")}</span>
                 {s.title}
               </a>
@@ -73,7 +73,7 @@ function Overview({ story, labels }: { story: CaseStory; labels: StoryLabels }) 
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       {items.map((it) => (
-        <div key={it.title} className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-5" style={{ borderTop: `4px solid ${it.color}` }}>
+        <div key={it.title} className="flex flex-col gap-3 rounded-[12px] border border-line bg-surface p-5" style={{ borderTop: `4px solid ${it.color}` }}>
           <p className="font-display text-[18px] font-bold uppercase leading-[1.1]">{it.title}</p>
           <p className="leading-[1.6]">{it.text}</p>
         </div>
@@ -89,7 +89,7 @@ function Process({ story }: { story: CaseStory }) {
       {story.process.map((p, i) => (
         <li
           key={p.stage}
-          className="flex items-center gap-5 rounded-[12px] border border-line bg-surface px-5 py-4"
+          className="flex items-center gap-5 rounded-[8px] border border-line bg-surface px-5 py-4"
           style={{ background: tint(STAGE_COLOR[p.stage], 8) }}
         >
           <span className="flex w-[84px] shrink-0 flex-col gap-1">
@@ -139,7 +139,7 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
 function Code({ code, color }: { code: string; color: string }) {
   return (
     // Text: the entity colour mixed 60/40 with the text colour — darker in light, lighter in dark, >= 4.5:1.
-    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[6px] px-1.5 py-0.5 text-[12px]"
+    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[4px] px-1.5 py-0.5 text-[12px]"
       style={{ color: `color-mix(in srgb, ${color} 60%, var(--fg))`, background: tint(color, 14) }}>
       {code}
     </span>
@@ -151,7 +151,7 @@ function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
   return (
     <ul className="grid gap-4 lg:grid-cols-3">
       {data.map((ins) => (
-        <li key={ins.code} className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-5">
+        <li key={ins.code} className="flex flex-col gap-3 rounded-[12px] border border-line bg-surface p-5">
           <Code code={ins.code} color={color} />
           <p className="font-display text-[22px] font-bold uppercase leading-[1.1]">{ins.title}</p>
           <p className="leading-[1.6] text-fg-secondary">{ins.body}</p>
@@ -177,7 +177,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
       <Intro>{data.intro}</Intro>
       {/* Scrolls sideways on a phone: focusable so the keyboard can scroll it too (WCAG 2.1.1). */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-      <div tabIndex={0} role="region" aria-label={labels.competitors} className="overflow-x-auto rounded-[14px] border border-line bg-surface">
+      <div tabIndex={0} role="region" aria-label={labels.competitors} className="overflow-x-auto rounded-[12px] border border-line bg-surface">
         <table className="w-full min-w-[560px] border-collapse text-[14px]">
           <thead>
             <tr>
@@ -198,7 +198,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
                 {r.marks.map((m, i) => (
                   <td key={i} className={cn("p-1.5", i === 0 && "bg-subtle")}>
                     <span
-                      className="flex h-9 items-center justify-center rounded-[8px] text-[12px] font-bold"
+                      className="flex h-9 items-center justify-center rounded-[4px] text-[12px] font-bold"
                       style={{ background: MARK_STYLE[m].bg, color: MARK_STYLE[m].fg }}
                     >
                       {labels.marks[m]}
@@ -242,14 +242,14 @@ function Flow({ data, labels }: { data: NonNullable<CaseStory["flow"]>; labels: 
           <li key={s.label} className="flex flex-col items-center gap-2 lg:flex-row">
             <span
               className={cn(
-                "w-full border-[1.5px] px-4 py-3 text-center text-[14px] font-semibold lg:w-auto",
-                s.kind === "start" || s.kind === "end" ? "rounded-full" : "rounded-[10px]",
+                "w-full border px-4 py-3 text-center text-[14px] font-semibold lg:w-auto",
+                s.kind === "start" || s.kind === "end" ? "rounded-full" : "rounded-[4px]",
                 s.kind === "action" && "border-dashed",
               )}
               style={{
                 borderColor: color,
                 background: s.kind === "screen" ? tint(color, 12) : s.kind === "end" ? color : "transparent",
-                color: s.kind === "end" ? "var(--on-accent)" : undefined,
+                color: s.kind === "end" ? "var(--on-status)" : undefined,
               }}
             >
               {s.label}
@@ -263,7 +263,7 @@ function Flow({ data, labels }: { data: NonNullable<CaseStory["flow"]>; labels: 
           </li>
         ))}
       </ol>
-      <div className="mt-8 rounded-[14px] border border-dashed border-line p-5">
+      <div className="mt-8 rounded-[12px] border border-dashed border-line p-5">
         <p className="mb-3 font-display text-[18px] font-bold uppercase leading-[1.1]">{labels.edgeCases}</p>
         <ul className="flex flex-col gap-2">
           {data.edgeCases.map((e) => (
@@ -289,21 +289,21 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
           <li key={sc.title} className="flex flex-col gap-3">
             {/* Phone mock-up placeholder until real screens are published */}
             <div className="mx-auto w-full max-w-[240px] rounded-[30px] border-[6px] border-fg bg-surface p-2 shadow-[0_12px_30px_rgba(0,0,0,0.15)]">
-              <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[20px] p-3 text-on-sticky" style={{ background: sticker }}>
+              <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[12px] p-3 text-on-sticky" style={{ background: sticker }}>
                 <div className="mx-auto h-1.5 w-12 rounded-full bg-current/25" />
                 <div className="mt-2 h-4 w-2/3 rounded-full bg-current/30" />
-                <div className="h-20 rounded-[12px] bg-white/50" />
+                <div className="h-20 rounded-[8px] bg-white/50" />
                 <div className="h-3 w-4/5 rounded-full bg-current/20" />
                 <div className="h-3 w-3/5 rounded-full bg-current/15" />
-                <div className="h-14 rounded-[12px] bg-white/40" />
-                <div className="mt-auto h-9 rounded-[10px] bg-current/80" />
+                <div className="h-14 rounded-[8px] bg-white/40" />
+                <div className="mt-auto h-9 rounded-[4px] bg-current/80" />
               </div>
             </div>
             <p className="font-display text-[22px] font-bold uppercase leading-[1.1]">{sc.title}</p>
             <p className="text-fg-secondary">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-full border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">
+                <li key={st} className="rounded-[4px] border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">
                   {st}
                 </li>
               ))}
@@ -320,7 +320,7 @@ function Decisions({ data, labels }: { data: NonNullable<CaseStory["decisions"]>
   return (
     <ul className="flex flex-col gap-4">
       {data.map((dec) => (
-        <li key={dec.code} className="grid gap-5 rounded-[14px] border border-line bg-surface p-5 lg:grid-cols-[1.2fr_1fr]">
+        <li key={dec.code} className="grid gap-5 rounded-[12px] border border-line bg-surface p-5 lg:grid-cols-[1.2fr_1fr]">
           <div className="flex flex-col gap-3">
             <Code code={dec.code} color={color} />
             <p className="font-display text-[24px] font-bold uppercase leading-[1.1]">{dec.title}</p>
@@ -363,7 +363,7 @@ function Results({ data }: { data: NonNullable<CaseStory["results"]> }) {
       <Intro>{data.intro}</Intro>
       <ul className="grid gap-4 sm:grid-cols-3">
         {data.metrics.map((m) => (
-          <li key={m.label} className="rounded-[14px] border border-line bg-surface p-5">
+          <li key={m.label} className="rounded-[12px] border border-line bg-surface p-5">
             <p className="display-num text-[48px] leading-none" style={{ color: "var(--success)" }}>
               {m.value}
             </p>
@@ -372,7 +372,7 @@ function Results({ data }: { data: NonNullable<CaseStory["results"]> }) {
         ))}
       </ul>
       {data.quote && (
-        <figure className="mt-8 rounded-[18px] bg-rail p-6 text-rail-fg sm:p-10">
+        <figure className="mt-8 rounded-[12px] bg-rail p-6 text-rail-fg sm:p-10">
           <blockquote className="font-display text-[clamp(24px,3vw,36px)] font-bold uppercase leading-[1.1]"><q>{data.quote.text}</q></blockquote>
           <figcaption className="mt-4 text-[14px] opacity-70">— {data.quote.who}</figcaption>
         </figure>

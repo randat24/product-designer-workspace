@@ -26,7 +26,7 @@ export default async function MatrixPage({ params }: { params: Promise<{ ws: str
       <PageHeader title={t.competitors.title} lede={t.competitors.matrix.lede} />
       <CompetitorTabs base={ctx.base} current="matrix" />
       {!hasOwn && ctx.canEdit && competitors.length > 0 && (
-        <form action={createCompetitor} className="mb-4 flex flex-wrap items-center gap-3 rounded-panel border-[1.5px] border-dashed border-line px-4 py-2.5 text-meta">
+        <form action={createCompetitor} className="mb-4 flex flex-wrap items-center gap-3 rounded-panel border border-dashed border-line px-4 py-2.5 text-meta">
           <input type="hidden" name="projectId" value={ctx.project.id} />
           <input type="hidden" name="own" value="1" />
           <span>{t.competitors.matrix.noOwn}</span>

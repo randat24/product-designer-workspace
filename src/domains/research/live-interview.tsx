@@ -126,7 +126,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
               {step.q.probes.length > 0 && (
                 <ul className="flex flex-wrap gap-2">
                   {step.q.probes.map((p) => (
-                    <li key={p} className="rounded-full border-[1.5px] border-line px-3 py-1 text-sm font-semibold text-fg-secondary"><CornerDownRight aria-hidden className="mr-1 inline size-4 align-[-3px]" />{p}</li>
+                    <li key={p} className="rounded-[4px] border border-line px-3 py-1 text-sm font-semibold text-fg-secondary"><CornerDownRight aria-hidden className="mr-1 inline size-4 align-[-3px]" />{p}</li>
                   ))}
                 </ul>
               )}
@@ -173,7 +173,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
 
       <footer className="flex items-center justify-between gap-3 border-t border-line bg-surface px-4 py-3 sm:px-6">
         <button type="button" onClick={() => setI((x) => Math.max(x - 1, 0))} disabled={i === 0}
-          className="inline-flex h-12 min-w-28 items-center justify-center gap-1.5 rounded-panel border-[1.5px] border-fg px-5 text-base font-bold disabled:opacity-30">
+          className="inline-flex h-12 min-w-28 items-center justify-center gap-1.5 rounded-panel border border-control px-5 text-base font-bold disabled:opacity-30">
           <ArrowLeft aria-hidden className="size-5" />{lv.prev}
         </button>
         <p className="hidden text-caption text-fg-secondary md:block">{lv.shortcuts}</p>

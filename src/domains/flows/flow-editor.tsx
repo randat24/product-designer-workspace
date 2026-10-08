@@ -55,7 +55,7 @@ const toEdge = (e: FlowEdge): LinkEdge => styleEdge({
 
 // ---------------------------------------------------------------- nodes
 
-const handleClass = "!size-2.5 !border-[1.5px] !border-surface !bg-fg-secondary";
+const handleClass = "!size-2.5 !border !border-surface !bg-fg-secondary";
 
 function StepNodeView({ data, selected }: NodeProps<StepNode>) {
   const k = nodeKind(data.kind);
@@ -72,7 +72,7 @@ function StepNodeView({ data, selected }: NodeProps<StepNode>) {
   if (k.shape === "diamond") {
     return (
       <div className="relative grid size-[132px] place-items-center">
-        <div aria-hidden className={cn("absolute inset-[18px] rotate-45 rounded-control border-[1.5px] bg-surface", ring)} style={{ borderColor: k.color }} />
+        <div aria-hidden className={cn("absolute inset-[18px] rotate-45 rounded-control border bg-surface", ring)} style={{ borderColor: k.color }} />
         <span className="relative max-w-[88px] text-center text-caption leading-tight font-bold">{label}</span>
         {handles}
       </div>
@@ -80,7 +80,7 @@ function StepNodeView({ data, selected }: NodeProps<StepNode>) {
   }
   if (k.shape === "pill") {
     return (
-      <div className={cn("flex min-w-[150px] max-w-[220px] items-center gap-2 rounded-full border-[1.5px] bg-surface px-4 py-2", ring)}
+      <div className={cn("flex min-w-[150px] max-w-[220px] items-center gap-2 rounded-full border bg-surface px-4 py-2", ring)}
         style={{ borderColor: k.color }}>
         <span aria-hidden className="size-2.5 shrink-0 rounded-full" style={{ background: k.color }} />
         <span className="text-meta leading-tight font-bold">{label}</span>

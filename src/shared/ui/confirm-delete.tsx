@@ -31,7 +31,7 @@ export function ConfirmDelete({ action, fields, label, confirm }: {
       {Object.entries(fields).map(([name, value]) => <input key={name} type="hidden" name={name} value={value} />)}
       <button type="submit" onBlur={() => setArmed(false)} disabled={pending} aria-live="polite"
         className={cn(
-          "inline-flex h-9 items-center rounded-control border-[1.5px] px-3.5 text-sm font-semibold disabled:opacity-50",
+          "inline-flex h-9 items-center rounded-control border px-3.5 text-sm font-semibold disabled:opacity-50",
           armed ? "border-danger bg-danger text-on-status" : "border-line text-danger hover:border-danger",
         )}>
         {armed ? confirm : label}

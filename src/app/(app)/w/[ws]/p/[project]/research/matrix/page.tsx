@@ -32,7 +32,7 @@ export default async function ResearchMatrixPage({ params, searchParams }: {
           <span className="mr-1 text-meta font-semibold text-fg-secondary">{t.research.matrix.guide}:</span>
           {guides.map((g) => (
             <Link key={g.id} href={`?guide=${g.id}`} aria-current={g.id === guide?.id ? "true" : undefined}
-              className={cn("rounded-full border-[1.5px] px-3 py-0.5 text-meta font-semibold",
+              className={cn("rounded-[4px] border px-3 py-0.5 text-meta font-semibold",
                 g.id === guide?.id ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg")}>
               {g.title}
             </Link>
@@ -40,7 +40,7 @@ export default async function ResearchMatrixPage({ params, searchParams }: {
         </nav>
       )}
       {!matrix ? (
-        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{t.research.matrix.noGuides}</p>
+        <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{t.research.matrix.noGuides}</p>
       ) : (
         <ResearchMatrix key={matrix.guide.id + matrix.interviews.length} projectId={ctx.project.id} guideId={matrix.guide.id} base={ctx.base}
           canEdit={ctx.canEdit} questions={matrix.guide.questions} cells={matrix.cells}

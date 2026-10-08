@@ -111,8 +111,8 @@ export function ProductEditor({ idPrefix, projectId, value, contentsLabel, readO
         <button type="button" onBlur={() => setArmed(false)}
           onClick={() => { if (!armed) return setArmed(true); setArmed(false); onChange(null); }}
           className={armed
-            ? "inline-flex h-9 items-center self-start rounded-control border-[1.5px] border-danger bg-danger px-3.5 text-sm font-semibold text-on-status"
-            : "inline-flex h-9 items-center self-start rounded-control border-[1.5px] border-line px-3.5 text-sm font-semibold text-danger hover:border-danger"}>
+            ? "inline-flex h-9 items-center self-start rounded-control border border-danger bg-danger px-3.5 text-sm font-semibold text-on-status"
+            : "inline-flex h-9 items-center self-start rounded-control border border-line px-3.5 text-sm font-semibold text-danger hover:border-danger"}>
           {armed ? p.removeConfirm : p.remove}
         </button>
       )}

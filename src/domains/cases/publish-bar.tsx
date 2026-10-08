@@ -50,8 +50,8 @@ export function PublishBar({ caseId, slug, published, hasUnpublished, canEdit }:
               act(() => unpublishCase(caseId), c.unpublishedNow);
             }}
             className={armed
-              ? "inline-flex h-9 items-center rounded-control border-[1.5px] border-danger bg-danger px-3.5 font-semibold text-on-status"
-              : "inline-flex h-9 items-center rounded-control border-[1.5px] border-line px-3.5 font-semibold text-danger hover:border-danger"}>
+              ? "inline-flex h-9 items-center rounded-control border border-danger bg-danger px-3.5 font-semibold text-on-status"
+              : "inline-flex h-9 items-center rounded-control border border-line px-3.5 font-semibold text-danger hover:border-danger"}>
             {armed ? c.unpublishConfirm : c.unpublish}
           </button>
         )}

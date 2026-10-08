@@ -12,11 +12,11 @@ const SIZES: Record<Size, string> = {
   sm: "h-8 px-3 text-meta",
 };
 const VARIANTS: Record<Variant, string> = {
-  primary: "border-[1.5px] border-accent bg-accent text-on-accent hover:bg-accent-hover",
-  secondary: "border-[1.5px] border-fg bg-transparent text-fg hover:bg-subtle",
+  primary: "border border-accent-text bg-accent text-on-accent hover:bg-accent-hover",
+  secondary: "border border-control bg-transparent text-fg hover:bg-subtle",
   ghost: "hover:bg-subtle text-fg-secondary hover:text-fg",
   // Removal that is safe to do in one step (easy to redo); otherwise ConfirmDelete / ConfirmIconButton.
-  danger: "border-[1.5px] border-line bg-transparent text-danger hover:border-danger",
+  danger: "border border-line bg-transparent text-danger hover:border-danger",
 };
 
 /**

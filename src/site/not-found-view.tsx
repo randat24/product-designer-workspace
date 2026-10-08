@@ -23,13 +23,13 @@ export function NotFoundView({ labels }: { labels: Record<Locale, NotFoundLabels
       <nav className="flex flex-wrap gap-3" aria-label={t.nav}>
         <Link
           href={`/${locale}`}
-          className="inline-flex h-11 items-center rounded-[10px] border-[1.5px] border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover"
+          className="inline-flex h-11 items-center rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover"
         >
           {t.home}
         </Link>
         <Link
           href={`/${locale}/cases`}
-          className="inline-flex h-11 items-center rounded-[10px] border-[1.5px] border-fg px-5 text-[15px] font-semibold text-fg hover:bg-subtle"
+          className="inline-flex h-11 items-center rounded-[4px] border border-control px-5 text-[15px] font-semibold text-fg hover:bg-subtle"
         >
           {t.work}
         </Link>

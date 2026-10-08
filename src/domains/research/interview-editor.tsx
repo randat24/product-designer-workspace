@@ -91,7 +91,7 @@ export function InterviewEditor({ projectId, base, interviewId, meta, questions,
                       <li key={q.id} className="flex flex-col gap-2 rounded-panel border border-line bg-surface p-4">
                         <p className="font-bold">
                           {q.text}
-                          {q.is_key && <span className="ml-2 rounded-full bg-fg px-2 py-0.5 align-middle text-caption font-semibold text-canvas">{iv.key}</span>}
+                          {q.is_key && <span className="ml-2 rounded-[4px] bg-fg px-2 py-0.5 align-middle text-caption font-semibold text-canvas">{iv.key}</span>}
                         </p>
                         {q.probes.length > 0 && (
                           <p className="text-meta text-fg-secondary">{iv.probes}: {q.probes.join(" · ")}</p>

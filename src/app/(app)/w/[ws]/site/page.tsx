@@ -40,7 +40,7 @@ export default async function SiteProfilePage({ params }: { params: Promise<{ ws
           </Link>
         </div>
         {!isOwner ? (
-          <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.ownerOnly}</p>
+          <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{s.ownerOnly}</p>
         ) : (
           <>
             {!isSite && <p role="note" className="max-w-prose rounded-panel border border-warning p-4 text-meta">{s.notSite}</p>}

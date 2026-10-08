@@ -27,7 +27,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(18px,4vw,56px)] py-10">
         <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="projects" />
-        <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-hero border-[1.5px] border-fg bg-surface p-6 md:p-8">
+        <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-hero border border-control bg-surface p-6 md:p-8">
           <h1 id="new-h" className="page-title">{t.workspace.newProject}</h1>
           <NewProjectForm workspaceId={workspace.id} autoFocus />
           <RestoreProject workspaceId={workspace.id} />
@@ -36,7 +36,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
         <section aria-labelledby="projects-h" className="flex flex-col gap-4">
           <h2 id="projects-h" className="text-heading font-semibold">{t.workspace.projects}</h2>
           {projects.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">
+            <div className="flex flex-col items-center gap-3 rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">
               <FedoOutline className="size-16" />
               <p>{t.workspace.empty}</p>
               <form action={createDemoProject}>
@@ -84,11 +84,11 @@ function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: Pr
             {/* The case badge sits over the card, not inside its link: a published case opens the site. */}
             {c && c.status === "published" ? (
               <a href={`/uk/cases/${c.slug}`} target="_blank" rel="noreferrer"
-                className="absolute top-4 right-4 rounded-full bg-success px-2.5 py-1 text-caption font-semibold text-on-status hover:opacity-85">
+                className="absolute top-4 right-4 rounded-[4px] bg-success px-2.5 py-1 text-caption font-semibold text-on-status hover:opacity-85">
                 {t.cases.badge.published}
               </a>
             ) : c ? (
-              <span className={`absolute top-4 right-4 rounded-full border px-2.5 py-1 text-caption font-semibold ${
+              <span className={`absolute top-4 right-4 rounded-[4px] border px-2.5 py-1 text-caption font-semibold ${
                 c.status === "review" ? "border-warning text-warning" : "border-line text-fg-secondary"}`}>
                 {t.cases.badge[c.status]}
               </span>

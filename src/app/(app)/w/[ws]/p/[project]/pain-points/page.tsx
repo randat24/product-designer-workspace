@@ -36,7 +36,7 @@ export default async function PainPointsPage({ params }: { params: Promise<{ ws:
         </form>
       )}
       {sorted.length === 0 ? (
-        <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
+        <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
         <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
           <table className="w-full min-w-[640px] border-collapse text-sm">
@@ -51,7 +51,7 @@ export default async function PainPointsPage({ params }: { params: Promise<{ ws:
                   <td className="px-4 py-3 font-semibold tabular-nums"><Link href={`${ctx.base}/pain-points/${p.code}`} className="hover:underline">{p.code}</Link></td>
                   <td className="px-4 py-3"><Link href={`${ctx.base}/pain-points/${p.code}`} className="font-bold">{p.title}</Link></td>
                   <td className="px-4 py-3">
-                    <span className={cn("rounded-full px-2.5 py-0.5 text-caption font-bold", SEV_CLASS[p.severity])}>{labelOf(SEVERITIES, p.severity)}</span>
+                    <span className={cn("rounded-[4px] px-2.5 py-0.5 text-caption font-bold", SEV_CLASS[p.severity])}>{labelOf(SEVERITIES, p.severity)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-2">

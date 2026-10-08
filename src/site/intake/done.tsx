@@ -68,7 +68,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
     }
   };
 
-  const btn = "inline-flex h-12 items-center justify-center gap-2 rounded-[10px] border-[1.5px] px-5 text-[15px] font-semibold transition-colors duration-[120ms] disabled:cursor-progress disabled:opacity-80";
+  const btn = "inline-flex h-12 items-center justify-center gap-2 rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms] disabled:cursor-progress disabled:opacity-80";
 
   return (
     <div className="flex flex-col gap-8">
@@ -81,7 +81,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
         {done.duplicate && <p className="text-[15px] text-fg-secondary">{t.duplicate}</p>}
       </div>
 
-      <dl className="grid max-w-[680px] gap-4 rounded-[14px] border-[1.5px] border-fg bg-surface p-5 sm:grid-cols-3 sm:p-6">
+      <dl className="grid max-w-[680px] gap-4 rounded-[12px] border border-control bg-surface p-5 sm:grid-cols-3 sm:p-6">
         {[[t.code, done.code], [t.date, date], [t.project, done.projectName ?? t.noName]].map(([k, v]) => (
           <div key={k} className="flex flex-col gap-1">
             <dt className="text-[13px] font-semibold uppercase tracking-[0.08em] text-fg-secondary">{k}</dt>
@@ -109,7 +109,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
         {failed && <p role="alert" className="text-[15px] font-semibold text-danger">{INTAKE[locale].failed.server}</p>}
       </div>
 
-      <section aria-labelledby="next-h" className="flex max-w-[680px] flex-col gap-4 border-t-[1.5px] border-fg pt-6">
+      <section aria-labelledby="next-h" className="flex max-w-[680px] flex-col gap-4 border-t border-line pt-6">
         <h2 id="next-h" className="font-display text-[24px] font-bold uppercase leading-[1.1]">{t.nextTitle}</h2>
         <ol className="flex flex-col gap-3">
           {t.next.map((s, i) => (

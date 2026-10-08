@@ -34,7 +34,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
   const { pending, run, error } = useAction();
 
   if (questions.length === 0) {
-    return <p className="rounded-panel border-[1.5px] border-dashed border-line p-7 text-center text-fg-secondary">{mx.noQuestions}</p>;
+    return <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{mx.noQuestions}</p>;
   }
 
   return (
