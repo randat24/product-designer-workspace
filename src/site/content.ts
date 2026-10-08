@@ -279,7 +279,7 @@ const uk: Dictionary = {
   },
   cases: {
     title: "Роботи",
-    lead: "Кейси — від дослідження до передачі в розробку. Тексти поки що приклади, справжні кейси зʼявляться незабаром.",
+    lead: "Кейси — від дослідження до передачі в розробку.",
     placeholder: "Зображення зʼявиться згодом",
     back: "Усі роботи",
     next: "Наступний кейс",
@@ -349,7 +349,7 @@ const uk: Dictionary = {
   about: {
     title: "Про мене",
     summary:
-      "7 років у вебі та продуктових командах. Працюю системно: дослідження → дизайн-система → чистий handoff. Найкраще даюся там, де замість набору макетів потрібен передбачуваний інтерфейс, який команда може розвивати без мене.",
+      "7 років у вебі та продуктових командах. Працюю системно: дослідження → дизайн-система → чистий handoff. Найкраще проявляю себе там, де замість набору макетів потрібен передбачуваний інтерфейс, який команда може розвивати без мене.",
     experience: "Досвід",
     serviceTitle: "Служба",
     serviceText:
@@ -430,7 +430,7 @@ const uk: Dictionary = {
     {
       period: "03.2020 — 01.2022",
       title: "UX Designer → Product Designer",
-      place: "Subscription Media Platform (NDA) · дистанційно",
+      place: "Subscription Media Platform (NDA) · дистанційно (паралельно)",
       points: [
         "Онбординг, пейвол і підписки, каталог, профілі",
         "Дизайн-система з нуля",
@@ -477,7 +477,7 @@ const uk: Dictionary = {
   ],
   education: [
     {
-      title: "UX|UI designer",
+      title: "UX/UI designer",
       place: "Skvot · сертифікат",
       year: "2025",
       certificate: "https://lms.skvot.io/certificate/973ec20a3270e9c547625ad0c1c4400f",
@@ -704,7 +704,7 @@ const en: Dictionary = {
   },
   cases: {
     title: "Work",
-    lead: "Case studies — from research to handoff. The copy is a sample for now; real case studies are coming soon.",
+    lead: "Case studies — from research to handoff.",
     placeholder: "Image coming soon",
     back: "All work",
     next: "Next case",
@@ -855,7 +855,7 @@ const en: Dictionary = {
     {
       period: "03.2020 — 01.2022",
       title: "UX Designer → Product Designer",
-      place: "Subscription Media Platform (NDA) · remote",
+      place: "Subscription Media Platform (NDA) · remote (part-time)",
       points: [
         "Onboarding, paywall and subscriptions, catalog, profiles",
         "Design system from scratch",
@@ -902,7 +902,7 @@ const en: Dictionary = {
   ],
   education: [
     {
-      title: "UX|UI designer",
+      title: "UX/UI designer",
       place: "Skvot · certificate",
       year: "2025",
       certificate: "https://lms.skvot.io/certificate/973ec20a3270e9c547625ad0c1c4400f",
