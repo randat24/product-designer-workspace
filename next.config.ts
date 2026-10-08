@@ -36,6 +36,10 @@ const config: NextConfig = {
       { source: "/w/:ws/p/subscription-platform/:path*", destination: "/w/:ws/p/neural-webcam/:path*", permanent: true },
     ];
   },
+  // Case prototypes are static pages in public/prototypes; /prototypes/volta serves volta.html.
+  async rewrites() {
+    return [{ source: "/prototypes/:name([a-z0-9-]+)", destination: "/prototypes/:name.html" }];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: SECURITY_HEADERS },

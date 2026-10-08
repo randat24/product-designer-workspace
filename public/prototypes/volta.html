@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Volta — prototype</title>
+<meta name="description" content="Clickable prototype of Volta, an electricity cost monitor for a small business. Sample data.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Volta · direction 1c «Signal»: sharp light UI, 4px radius, three colours carry meaning.
+   Blue = measured data and actions. Orange = stale data. Red = over the usual / anomaly.
+   Estimated values are never a colour: they are hatched, dashed and prefixed with «≈». */
+:root {
+  --bg: #FFFFFF;
+  --surface: #F3F5F7;
+  --ink: #101213;
+  --ink-2: #5B6168;
+  --ink-3: #8A9097;
+  --line: #E4E6E9;
+  --blue: #3C3AE1;
+  --blue-soft: #EEF0FF;
+  --orange: #D87706;
+  --orange-text: #A65A00;
+  --orange-soft: #FEF3E2;
+  --red: #DC2626;
+  --red-soft: #FDECEC;
+  --page: #E9E8E4;
+  --r: 4px;
+  --sans: "Archivo", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+.mono { font-family: var(--mono); }
+.num { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* ---------------------------------------------------------------- page chrome */
+.stage { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 360px) auto; justify-content: center; align-items: start; gap: 56px; padding: 48px 32px; }
+.side { position: sticky; top: 48px; display: flex; flex-direction: column; gap: 28px; }
+.back { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; color: var(--ink-2); }
+.back:hover { color: var(--ink); }
+.side h1 { font-size: 40px; font-weight: 800; letter-spacing: -.02em; line-height: 1; margin: 0 0 12px; }
+.side p { margin: 0; color: var(--ink-2); max-width: 34ch; }
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 10px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.seg { display: inline-flex; border: 1px solid #CFCFCA; border-radius: var(--r); background: #F4F3EF; padding: 2px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 6px 10px; border-radius: 3px; font-size: 13px; font-weight: 500; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; cursor: pointer; }
+.toggle input { margin: 2px 0 0; accent-color: var(--ink); width: 15px; height: 15px; }
+.toggle small { display: block; color: var(--ink-2); font-size: 12px; }
+.legend { display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--ink-2); }
+.legend div { display: flex; gap: 10px; align-items: center; }
+.sample { font-family: var(--mono); font-size: 11px; color: var(--ink-2); border-top: 1px solid #D6D5D0; padding-top: 14px; }
+
+/* ---------------------------------------------------------------- phone */
+.phone { width: 390px; height: 800px; background: var(--bg); border-radius: 36px; border: 10px solid #101213; box-shadow: 0 30px 60px -30px rgba(16,18,19,.45); overflow: hidden; position: relative; display: flex; flex-direction: column; }
+.status { height: 36px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.screen { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.screen::-webkit-scrollbar { display: none; }
+.tabs { flex: none; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--bg); padding: 6px 4px 14px; }
+.tabs button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; font-size: 11px; font-weight: 600; color: var(--ink-3); }
+.tabs button svg { width: 20px; height: 20px; }
+.tabs button[aria-current="page"] { color: var(--blue); }
+
+/* ---------------------------------------------------------------- app */
+.bar { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px 10px; gap: 8px; }
+.bar h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+.icon-btn { width: 36px; height: 36px; border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); display: grid; place-items: center; }
+.icon-btn svg { width: 18px; height: 18px; }
+.locs { display: flex; gap: 6px; padding: 0 16px 12px; overflow-x: auto; scrollbar-width: none; }
+.locs button { border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); padding: 6px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.locs button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.pad { padding: 0 16px; }
+.section { padding: 18px 16px; border-top: 1px solid var(--line); }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; }
+.big { font-size: 44px; font-weight: 800; letter-spacing: -.03em; line-height: 1; margin: 0; }
+.mid { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.sub { color: var(--ink-2); margin: 6px 0 0; font-size: 13px; }
+.row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .03em; padding: 2px 6px; border-radius: var(--r); white-space: nowrap; line-height: 1.5; }
+.chip.measured { background: var(--blue-soft); color: var(--blue); }
+.chip.estimate { background: var(--bg); color: var(--ink-2); border: 1px dashed #A9AEB4; padding: 1px 5px; }
+.chip.stale { background: var(--orange-soft); color: var(--orange-text); }
+.chip.over { background: var(--red-soft); color: var(--red); }
+.chip.neutral { background: var(--surface); color: var(--ink-2); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; display: inline-block; }
+.card { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; background: var(--bg); }
+.card.alert { border-color: var(--red); border-left-width: 4px; text-align: left; width: 100%; display: block; }
+.card.alert:hover { background: #FFF8F8; }
+.card.warn { border-color: var(--orange); background: var(--orange-soft); }
+.card.info { background: var(--surface); border-color: var(--surface); }
+.card h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+.card p { margin: 0; color: var(--ink-2); font-size: 13px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: var(--r); border: 1px solid var(--ink); background: var(--ink); color: #fff; padding: 10px 14px; font-weight: 600; font-size: 14px; }
+.btn.blue { background: var(--blue); border-color: var(--blue); }
+.btn.ghost { background: var(--bg); color: var(--ink); border-color: var(--line); }
+.btn.block { width: 100%; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.link { border: 0; background: none; padding: 0; color: var(--blue); font-weight: 600; font-size: 13px; }
+.list { display: flex; flex-direction: column; }
+.item { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.item:first-child { border-top: 0; }
+.item .name { font-weight: 600; }
+.item .val { text-align: right; font-weight: 600; }
+.item .meta { color: var(--ink-2); font-size: 12px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.track { grid-column: 1 / -1; height: 8px; background: var(--surface); border-radius: 2px; overflow: hidden; }
+.fill { height: 100%; background: var(--blue); border-radius: 2px; }
+.fill.est { background: repeating-linear-gradient(135deg, var(--blue) 0 3px, #B9B8F4 3px 6px); }
+.fill.stale { background: var(--orange); }
+.fill.stale.est { background: repeating-linear-gradient(135deg, var(--orange) 0 3px, #F2C98F 3px 6px); }
+.muted { color: var(--ink-3); }
+.back-row { display: flex; align-items: center; gap: 8px; padding: 6px 16px 10px; }
+.back-row button { border: 0; background: none; padding: 6px 0; display: flex; gap: 6px; align-items: center; font-weight: 600; color: var(--blue); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 24px 1fr; gap: 10px; }
+.steps li::before { content: counter(s); font-family: var(--mono); font-size: 11px; width: 22px; height: 22px; border: 1px solid var(--line); border-radius: var(--r); display: grid; place-items: center; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: 13px; }
+.kv dt { color: var(--ink-2); }
+.kv dd { margin: 0; text-align: right; font-weight: 600; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { font-family: var(--mono); font-weight: 400; font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); text-align: right; padding: 6px 4px; border-bottom: 1px solid var(--ink); }
+th:first-child, td:first-child { text-align: left; }
+td { padding: 7px 4px; border-bottom: 1px solid var(--line); text-align: right; }
+tfoot td { font-weight: 700; border-bottom: 0; border-top: 1px solid var(--ink); }
+input[type="range"] { width: 100%; accent-color: var(--blue); }
+select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: var(--r); padding: 7px 8px; background: var(--bg); }
+.progress { height: 6px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+.progress span { display: block; height: 100%; background: var(--ink); }
+.choice { display: flex; flex-direction: column; gap: 8px; }
+.choice button { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); padding: 12px; }
+.choice button[aria-pressed="true"] { border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
+.choice b { display: block; font-size: 14px; }
+.choice span { color: var(--ink-2); font-size: 12px; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 84px; background: var(--ink); color: #fff; padding: 12px 14px; border-radius: var(--r); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
+.toast.on { opacity: 1; transform: none; }
+.spin { width: 16px; height: 16px; border: 2px solid var(--blue-soft); border-top-color: var(--blue); border-radius: 50%; animation: spin 1s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } .toast { transition: none; } }
+
+/* ---------------------------------------------------------------- small screens: the prototype is the page */
+@media (max-width: 860px) {
+  .stage { display: flex; flex-direction: column-reverse; padding: 0; gap: 0; }
+  .phone { width: 100%; height: 100svh; border: 0; border-radius: 0; box-shadow: none; }
+  .status { display: none; }
+  .side { position: static; padding: 28px 16px 40px; background: var(--page); }
+  .side h1 { font-size: 30px; }
+  .toast { bottom: 76px; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <aside class="side" aria-label="About this prototype">
+    <a class="back" href="/uk/cases/volta" id="back">← Volta case</a>
+    <div>
+      <p class="eyebrow">Prototype · direction 1c Signal</p>
+      <h1>Volta</h1>
+      <p>An electricity cost monitor for the owner of a bakery-café with two locations. It answers three questions in order: how much will I spend this month, where is the leak, what exactly to do.</p>
+    </div>
+    <div class="group">
+      <p class="eyebrow">Who is looking</p>
+      <div class="seg" role="group" aria-label="Role">
+        <button type="button" data-role="owner" aria-pressed="true">Owner</button>
+        <button type="button" data-role="manager" aria-pressed="false">Location manager</button>
+        <button type="button" data-role="accountant" aria-pressed="false">Accountant</button>
+      </div>
+    </div>
+    <div class="group">
+      <p class="eyebrow">Try a state</p>
+      <label class="toggle"><input type="checkbox" data-flag="offline"><span>Podil meter offline<small>Data age is shown instead of pretending it is fresh.</small></span></label>
+      <label class="toggle"><input type="checkbox" data-flag="newLoc"><span>Podil opened 7 days ago<small>Not enough history for a forecast.</small></span></label>
+      <label class="toggle"><input type="checkbox" data-flag="noTariff"><span>No tariff set for Podil<small>Usage is known, money cannot be calculated.</small></span></label>
+    </div>
+    <div class="group">
+      <p class="eyebrow">How data quality reads</p>
+      <div class="legend">
+        <div><span class="chip measured"><span class="dot"></span>Measured</span>own meter, fresh</div>
+        <div><span class="chip estimate">≈ Estimate</span>split from a shared meter</div>
+        <div><span class="chip stale"><span class="dot"></span>Stale</span>older than one hour</div>
+        <div><span class="chip over">+40%</span>more than usual</div>
+      </div>
+    </div>
+    <p class="sample">Sample data · Today is Thu, Oct 8, 14:15. Tariffs are illustrative.</p>
+  </aside>
+
+  <div class="phone" id="phone">
+    <div class="status" aria-hidden="true"><span>14:15</span><span>●●● 5G</span></div>
+    <main class="screen" id="screen" tabindex="-1"></main>
+    <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ------------------------------------------------------------------ sample data
+  const TODAY = 8, DAYS = 31, NOW = "14:15";
+  const LOCS = {
+    soborna: { name: "Soborna St.", short: "Soborna" },
+    podil: { name: "Podil", short: "Podil" },
+  };
+  // Equipment cost so far this month, ₴. est: true = split from a shared meter.
+  const EQUIP = {
+    soborna: [
+      { id: "oven-s", name: "Deck oven", cost: 2610, kwh: 412, est: false, usual: 0 },
+      { id: "fridge-s", name: "Walk-in fridge", cost: 1420, kwh: 224, est: false, usual: 40, event: true },
+      { id: "hvac-s", name: "Lighting & ventilation", cost: 1450, kwh: 229, est: true, conf: "medium", usual: 0 },
+      { id: "espresso-s", name: "Espresso machine", cost: 890, kwh: 141, est: true, conf: "high", usual: 0 },
+      { id: "proofer-s", name: "Proofer", cost: 610, kwh: 96, est: true, conf: "low", usual: 0 },
+    ],
+    podil: [
+      { id: "oven-p", name: "Convection oven", cost: 1980, kwh: 313, est: false, usual: 0 },
+      { id: "hvac-p", name: "Lighting & ventilation", cost: 960, kwh: 152, est: true, conf: "medium", usual: 0 },
+      { id: "fridge-p", name: "Fridges", cost: 940, kwh: 148, est: false, usual: 0 },
+      { id: "espresso-p", name: "Espresso machine", cost: 760, kwh: 120, est: true, conf: "high", usual: 0 },
+      { id: "dish-p", name: "Dishwasher", cost: 520, kwh: 82, est: true, conf: "low", usual: 0 },
+    ],
+  };
+  // Daily cost per location, Oct 1–8 (day 8 is partial, to 14:15).
+  const DAILY = {
+    soborna: [812, 845, 870, 905, 921, 890, 948, 789],
+    podil: [655, 640, 672, 690, 661, 702, 688, 452],
+  };
+  const PODIL_OFFLINE_AT = "11:40";
+  const PODIL_OFFLINE_SPENT = 4920; // what Podil had reached when the meter last reported
+  const TARIFF = { day: 8.20, night: 4.10, peak: 12.30 };
+  const FRIDGE_KWH = [37, 38, 36, 39, 38, 37, 38, 52, 54, 53, 55, 54, 53, 51]; // Sep 25 – Oct 8
+  const FRIDGE_DAYS = ["25", "26", "27", "28", "29", "30", "1", "2", "3", "4", "5", "6", "7", "8"];
+
+  // ------------------------------------------------------------------ state
+  const state = {
+    role: "owner",
+    tab: "overview",
+    sub: null,          // "event" | "meters" | "pair"
+    loc: "all",
+    flags: { offline: false, newLoc: false, noTariff: false },
+    event: "open",      // "open" | "confirmed" | "dismissed"
+    shiftHours: 3,
+    pair: { step: 1, type: null, code: "" },
+    period: "oct",
+  };
+
+  const $ = (s, el = document) => el.querySelector(s);
+  const screen = $("#screen"), tabs = $("#tabs");
+  const uah = (n) => "₴ " + Math.round(n).toLocaleString("en-US").replace(/,/g, " ");
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const sum = (a) => a.reduce((x, y) => x + y, 0);
+
+  const podilPriced = () => !state.flags.noTariff;
+  const podilForecast = () => !state.flags.newLoc;
+  const visibleLocs = () => state.role === "manager" ? ["soborna"] : state.loc === "all" ? ["soborna", "podil"] : [state.loc];
+  const spent = (loc) => loc === "podil" && state.flags.offline ? PODIL_OFFLINE_SPENT : sum(DAILY[loc]);
+  const stale = (loc) => loc === "podil" && state.flags.offline;
+
+  // Forecast to Oct 31 as a range: the pace of the last 7 full days, ±4% for the weather and weekends.
+  function forecast(loc) {
+    const full = DAILY[loc].slice(0, 7);
+    const pace = sum(full) / full.length;
+    const remaining = (DAYS - TODAY) + (1 - 0.6); // today counts as 60% done at 14:15
+    const mid = sum(DAILY[loc]) + pace * remaining;
+    return [Math.round(mid * 0.96 / 100) * 100, Math.round(mid * 1.04 / 100) * 100];
+  }
+  const USUAL = { soborna: 26100, podil: 20200 }; // average of Jul–Sep
+
+  // ------------------------------------------------------------------ icons
+  const I = {
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+    split: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h6"/></svg>',
+    tariff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>',
+    report: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h10l4 4v14H5z"/><path d="M9 12h6M9 16h6"/></svg>',
+    meter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M12 12l3-2"/><circle cx="12" cy="16" r="1.5"/></svg>',
+    back: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>',
+    lock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  };
+
+  // ------------------------------------------------------------------ pieces
+  const chip = {
+    measured: () => '<span class="chip measured"><span class="dot"></span>Measured</span>',
+    estimate: (conf) => `<span class="chip estimate">≈ Estimate${conf ? " · " + conf : ""}</span>`,
+    stale: (at) => `<span class="chip stale"><span class="dot"></span>As of ${at}</span>`,
+    fresh: () => `<span class="chip neutral">Updated ${NOW}</span>`,
+  };
+
+  function locSwitch() {
+    if (state.role === "manager") return `<div class="locs"><span class="chip neutral">Your location · Soborna St.</span></div>`;
+    const opts = [["all", "Both"], ["soborna", "Soborna St."], ["podil", "Podil"]];
+    return `<div class="locs" role="group" aria-label="Location">${opts.map(([k, l]) =>
+      `<button type="button" data-loc="${k}" aria-pressed="${state.loc === k}">${l}</button>`).join("")}</div>`;
+  }
+
+  function header(title, right = "") {
+    return `<div class="bar"><h2>${title}</h2>${right}</div>`;
+  }
+  const meterBtn = () => `<button type="button" class="icon-btn" data-go="meters" aria-label="Meters">${I.meter}</button>`;
+
+  // Month chart: spent days solid, today partial, the rest of the month as the forecast band.
+  function monthChart(locs) {
+    const priced = locs.filter((l) => l !== "podil" || podilPriced());
+    const W = 342, H = 120, gap = 2, bw = (W - gap * (DAYS - 1)) / DAYS;
+    const daily = (i) => sum(priced.map((l) => stale(l) && i === TODAY - 1 ? DAILY[l][i] - (sum(DAILY[l]) - PODIL_OFFLINE_SPENT) : DAILY[l][i]));
+    const canForecast = priced.every((l) => l !== "podil" || podilForecast()) && priced.length;
+    const pace = sum(priced.map((l) => sum(DAILY[l].slice(0, 7)) / 7));
+    const max = Math.max(pace * 1.15, ...Array.from({ length: TODAY }, (_, i) => daily(i))) || 1;
+    let bars = "";
+    for (let i = 0; i < DAYS; i++) {
+      const x = i * (bw + gap);
+      if (i < TODAY) {
+        const v = daily(i), h = (v / max) * (H - 18);
+        const isStale = priced.some(stale) && i === TODAY - 1;
+        const fill = isStale ? "var(--orange)" : "var(--blue)";
+        bars += `<rect x="${x.toFixed(1)}" y="${(H - 16 - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="1" fill="${fill}" opacity="${i === TODAY - 1 ? 0.55 : 1}"/>`;
+      } else if (canForecast) {
+        const h = (pace / max) * (H - 18);
+        bars += `<rect x="${(x + .5).toFixed(1)}" y="${(H - 16 - h).toFixed(1)}" width="${(bw - 1).toFixed(1)}" height="${h.toFixed(1)}" rx="1" fill="none" stroke="#B9BDC3" stroke-dasharray="2 2"/>`;
+      }
+    }
+    const ticks = [1, 8, 15, 22, 31].map((d) => {
+      const x = (d - 1) * (bw + gap) + bw / 2;
+      const anchor = d === 1 ? "start" : d === DAYS ? "end" : "middle";
+      const tx = d === 1 ? 0 : d === DAYS ? W : x;
+      return `<text x="${tx.toFixed(1)}" y="${H - 2}" text-anchor="${anchor}" font-family="JetBrains Mono" font-size="9" fill="${d === TODAY ? "#101213" : "#8A9097"}">${d === TODAY ? "Today" : "Oct " + d}</text>`;
+    }).join("");
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Daily cost in October: eight days spent, the rest of the month forecast">${bars}${ticks}</svg>`;
+  }
+
+  // ------------------------------------------------------------------ screens
+  function overview() {
+    const locs = visibleLocs();
+    const priced = locs.filter((l) => l !== "podil" || podilPriced());
+    const unpriced = locs.filter((l) => !priced.includes(l));
+    const total = sum(priced.map(spent));
+    const anyStale = locs.some(stale);
+    const fc = priced.filter((l) => l !== "podil" || podilForecast());
+    const noFc = priced.filter((l) => !fc.includes(l));
+    const lo = sum(fc.map((l) => forecast(l)[0])), hi = sum(fc.map((l) => forecast(l)[1]));
+    const usual = sum(fc.map((l) => USUAL[l]));
+    const overBy = Math.round(((lo + hi) / 2 / usual - 1) * 100);
+    const showEvent = locs.includes("soborna") && state.event === "open";
+
+    let fcBlock;
+    if (!priced.length) {
+      fcBlock = `<div class="card warn"><h3>Set a tariff to see money</h3><p>Podil used 815 kWh this month. Without the tariff we can't turn it into hryvnias.</p><p style="margin-top:10px"><button type="button" class="link" data-tab="tariffs">Add tariff →</button></p></div>`;
+    } else if (!fc.length) {
+      fcBlock = `<div class="card info"><h3>Forecast from Oct 15</h3><p>We need 14 days of data to forecast. Podil has 7.</p><div class="progress" aria-label="7 of 14 days collected"><span style="width:50%"></span></div></div>`;
+    } else {
+      fcBlock = `
+        <p class="label"><span>Forecast to Oct 31</span><span>${overBy > 0 ? `<span class="chip over">+${overBy}% vs usual</span>` : `<span class="chip neutral">Usual</span>`}</span></p>
+        <p class="mid num">${uah(lo)} – ${uah(hi).replace("₴ ", "")}</p>
+        <p class="sub">Usual month ${uah(usual)}. Range, because the second half of the month is weather and weekends.${noFc.length ? " Podil is not included: 7 of 14 days collected." : ""}</p>`;
+    }
+
+    return `
+      ${header("This month", meterBtn())}
+      ${locSwitch()}
+      <section class="pad" style="padding-bottom:18px" aria-label="Spent so far">
+        <p class="label"><span>Spent Oct 1–8</span>${anyStale ? chip.stale(PODIL_OFFLINE_AT) : chip.fresh()}</p>
+        <p class="big num" ${anyStale ? 'style="color:var(--ink-2)"' : ""}>${priced.length ? uah(total) : "815 kWh"}</p>
+        ${unpriced.length && priced.length ? `<p class="sub">+ Podil, not priced yet: <button type="button" class="link" data-tab="tariffs">add tariff</button></p>` : ""}
+        ${anyStale ? `<p class="sub" style="color:var(--orange-text)">Podil meter has not reported since ${PODIL_OFFLINE_AT}. Its numbers stop there; nothing is guessed.</p>` : ""}
+        <div style="margin-top:14px">${priced.length ? monthChart(locs) : ""}</div>
+      </section>
+      <section class="section" aria-label="Forecast">${fcBlock}</section>
+      ${showEvent ? `
+      <section class="section" aria-label="Main issue">
+        <p class="label"><span>Main issue</span><span>1 of 1</span></p>
+        <button type="button" class="card alert" data-go="event">
+          <span class="chip over" style="margin-bottom:8px">+40% since Oct 3</span>
+          <h3>Walk-in fridge at Soborna uses more than usual</h3>
+          <p>Extra so far ${uah(410)}. Around ${uah(1600)} more by the end of the month if nothing changes.</p>
+          <p style="margin-top:10px;color:var(--blue);font-weight:600">What to check →</p>
+        </button>
+      </section>` : `
+      <section class="section" aria-label="Main issue">
+        <p class="label"><span>Main issue</span></p>
+        <div class="card info"><h3>Nothing unusual</h3><p>${state.event === "confirmed" ? "The fridge issue is marked as being fixed. We'll tell you when usage is back to normal." : state.event === "dismissed" ? "You dismissed the fridge alert. We'll use October as the new normal for it." : "Every meter is within its usual range."}</p></div>
+      </section>`}
+      ${state.role === "owner" && fc.length ? `
+      <section class="section" aria-label="Suggestion">
+        <p class="label"><span>One thing to do</span></p>
+        <div class="card"><h3>Bake the first batch at night</h3><p>Starting the deck oven before 07:00 moves it to the night rate. About ${uah(saving(state.shiftHours))} a month.</p><p style="margin-top:10px"><button type="button" class="link" data-tab="tariffs">See how it's calculated →</button></p></div>
+      </section>` : ""}
+      <div style="height:20px"></div>`;
+  }
+
+  function breakdown() {
+    const locs = visibleLocs();
+    const rows = locs.flatMap((l) => EQUIP[l].map((e) => ({ ...e, loc: l })));
+    const allMax = Math.max(...rows.map((r) => r.cost));
+    const block = (l) => {
+      const items = EQUIP[l];
+      const isStale = stale(l), priced = l !== "podil" || podilPriced();
+      const shareEst = sum(items.filter((e) => e.est).map((e) => e.cost)) / sum(items.map((e) => e.cost));
+      return `
+        <section class="section" aria-label="${LOCS[l].name}">
+          <p class="label"><span>${LOCS[l].name}</span>${isStale ? chip.stale(PODIL_OFFLINE_AT) : chip.fresh()}</p>
+          <p class="sub" style="margin:0 0 6px">${Math.round(shareEst * 100)}% of this location is estimated: those appliances share a meter, so we split by rated power and hours.</p>
+          <div class="list">${items.map((e) => {
+            const val = priced ? (e.est ? "≈ " : "") + uah(e.cost) : e.kwh + " kWh";
+            const w = Math.max(4, (e.cost / allMax) * 100);
+            return `<div class="item">
+              <span class="name">${esc(e.name)}</span>
+              <span class="val num" ${isStale ? 'style="color:var(--ink-2)"' : ""}>${val}</span>
+              <span class="meta">${e.est ? chip.estimate(e.conf + " confidence") : chip.measured()}${e.usual ? `<span class="chip over">+${e.usual}% since Oct 3</span>` : ""}${priced ? `<span class="num">${e.kwh} kWh</span>` : ""}</span>
+              ${e.event && state.event === "open" ? `<button type="button" class="link" data-go="event" style="justify-self:end">Why →</button>` : "<span></span>"}
+              <div class="track"><div class="fill ${e.est ? "est" : ""} ${isStale ? "stale" : ""}" style="width:${w}%"></div></div>
+            </div>`;
+          }).join("")}</div>
+        </section>`;
+    };
+    return `${header("Where it goes", meterBtn())}${locSwitch()}
+      <p class="pad sub" style="margin:0 0 14px">Oct 1–8 · sorted by cost</p>
+      ${locs.map(block).join("")}<div style="height:20px"></div>`;
+  }
+
+  function eventScreen() {
+    const W = 342, H = 140, n = FRIDGE_KWH.length, bw = W / n - 4, max = 70;
+    const base = 38, by = H - 18 - (base / max) * (H - 26);
+    const bars = FRIDGE_KWH.map((v, i) => {
+      const h = (v / max) * (H - 26), x = i * (W / n) + 2;
+      return `<rect x="${x.toFixed(1)}" y="${(H - 18 - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="1" fill="${i >= 8 ? "var(--red)" : "var(--blue)"}"/>
+        <text x="${(x + bw / 2).toFixed(1)}" y="${H - 4}" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#8A9097">${FRIDGE_DAYS[i]}</text>`;
+    }).join("");
+    const chart = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Fridge usage per day: about 38 kWh until Oct 2, about 53 kWh from Oct 3">${bars}
+      <line x1="0" x2="${W}" y1="${by.toFixed(1)}" y2="${by.toFixed(1)}" stroke="#101213" stroke-dasharray="3 3"/>
+      <text x="0" y="${(by - 6).toFixed(1)}" font-family="JetBrains Mono" font-size="9" fill="#101213">usual 38 kWh/day</text></svg>`;
+    const done = state.event !== "open";
+    return `
+      <div class="back-row"><button type="button" data-back>${I.back}Back</button></div>
+      <div class="pad">
+        <span class="chip over">+40% since Oct 3</span> ${chip.measured()}
+        <h2 style="font-size:24px;line-height:1.15;margin:10px 0 6px;font-weight:700">Walk-in fridge at Soborna uses more than usual</h2>
+        <p class="sub" style="margin:0">Own meter, so this is measured, not estimated.</p>
+      </div>
+      <section class="section" style="margin-top:16px">
+        <p class="label"><span>kWh per day</span><span>Sep 25 – Oct 8</span></p>
+        ${chart}
+      </section>
+      <section class="section">
+        <dl class="kv">
+          <dt>Started</dt><dd>Sat, Oct 3, around 06:00</dd>
+          <dt>Extra so far</dt><dd class="num">${uah(410)}</dd>
+          <dt>By Oct 31 if nothing changes</dt><dd class="num">≈ ${uah(1600)}</dd>
+          <dt>Pattern</dt><dd>Runs at night too</dd>
+        </dl>
+      </section>
+      <section class="section">
+        <p class="label"><span>What to check, quickest first</span></p>
+        <ol class="steps">
+          <li><span><b>Door seal.</b> Close the door on a sheet of paper; if it slides out easily, the seal leaks.</span></li>
+          <li><span><b>Thermostat.</b> It should be 2–4 °C. A delivery on Oct 3 may have changed it.</span></li>
+          <li><span><b>Condenser coil.</b> Dust on the coil behind the unit makes it run longer. Cleaning takes 15 minutes.</span></li>
+        </ol>
+      </section>
+      <section class="section">
+        ${done ? `<div class="card info"><h3>${state.event === "confirmed" ? "Marked as being fixed" : "Dismissed"}</h3><p>${state.event === "confirmed" ? "We'll compare the next three days with the usual and tell you if it's back to normal." : "We'll treat the new level as normal for this fridge and stop alerting about it."}</p><p style="margin-top:10px"><button type="button" class="link" data-event="open">Undo</button></p></div>` : `
+        <div style="display:grid;gap:8px">
+          <button type="button" class="btn blue block" data-event="confirmed">I found it, fixing it</button>
+          <button type="button" class="btn ghost block" data-event="dismissed">This is expected (new equipment, more stock)</button>
+        </div>`}
+      </section><div style="height:20px"></div>`;
+  }
+
+  function saving(h) { return h * 10 * 26 * (TARIFF.day - TARIFF.night); }
+
+  function tariffs() {
+    const locs = state.role === "manager" ? ["soborna"] : ["soborna", "podil"];
+    const zoneRow = (l) => {
+      if (l === "podil" && !podilPriced()) return `
+        <div class="card warn" style="margin-top:8px"><h3>Podil · tariff not set</h3><p>Usage is collected; money will appear as soon as the tariff is in. It's on the electricity bill, under «Tariff».</p>
+        <p style="margin-top:10px"><button type="button" class="btn" data-settariff>Add tariff from the bill</button></p></div>`;
+      return `
+        <div class="item"><span class="name">${LOCS[l].name}</span><span class="val muted" style="font-weight:400">3 zones</span>
+          <span class="meta mono num" style="grid-column:1/-1">Night 23–07 ₴ ${TARIFF.night.toFixed(2)} · Day ₴ ${TARIFF.day.toFixed(2)} · Peak 08–11, 20–22 ₴ ${TARIFF.peak.toFixed(2)}</span></div>`;
+    };
+    const s = saving(state.shiftHours);
+    return `${header("Tariffs", meterBtn())}
+      <section class="section" style="border-top:0;padding-top:4px">
+        <p class="label"><span>Current tariffs, per kWh</span></p>
+        <div class="list">${locs.map(zoneRow).join("")}</div>
+      </section>
+      ${state.role !== "owner" ? "" : `
+      <section class="section" aria-label="Scenario">
+        <p class="label"><span>Scenario · Soborna</span></p>
+        <h3 style="margin:0 0 6px;font-size:18px">Bake the first batch at night</h3>
+        <p class="sub" style="margin:0 0 14px">Start the deck oven earlier, so its first hours fall in the night zone.</p>
+        <label for="shift" class="row" style="font-size:13px;font-weight:600"><span>Hours moved to before 07:00</span><span class="num">${state.shiftHours} h</span></label>
+        <input id="shift" type="range" min="0" max="4" step="1" value="${state.shiftHours}">
+        <div style="margin-top:14px" class="card">
+          <p class="label" style="margin-bottom:4px"><span>Saving per month</span>${chip.estimate()}</p>
+          <p class="mid num">${s ? "≈ " + uah(s) : "—"}</p>
+          <p class="sub">${s ? `About ${Math.round(s / 26100 * 100)}% of the usual Soborna bill.` : "Move at least one hour to see the effect."}</p>
+        </div>
+        <p class="label" style="margin-top:16px"><span>Calculated on these assumptions</span></p>
+        <ul style="margin:0;padding-left:18px;color:var(--ink-2);font-size:13px;display:grid;gap:4px">
+          <li>The oven draws about 10 kW while baking (measured average, Oct 1–7).</li>
+          <li>26 baking days a month.</li>
+          <li>Moved hours cost the night rate instead of the day rate: ₴ ${TARIFF.day.toFixed(2)} → ₴ ${TARIFF.night.toFixed(2)}.</li>
+          <li>Not included: staff night shift costs, a different proofing time.</li>
+        </ul>
+      </section>`}<div style="height:20px"></div>`;
+  }
+
+  function report() {
+    if (state.role === "manager") return `${header("Report")}
+      <section class="section" style="border-top:0">
+        <div class="card info" style="text-align:center;padding:28px 18px">
+          <div style="display:grid;place-items:center;margin-bottom:10px;color:var(--ink-2)">${I.lock}</div>
+          <h3>The company report is for the owner and the accountant</h3>
+          <p>You can see your location's usage in «This month» and «Where it goes». Ask the owner if you need costs for both locations.</p>
+        </div>
+      </section>`;
+    const rows = [];
+    const days = state.period === "oct" ? TODAY : 30;
+    for (let i = 0; i < days; i++) {
+      const s = state.period === "oct" ? DAILY.soborna[i] : 820 + ((i * 37) % 90);
+      const pRaw = state.period === "oct" ? DAILY.podil[i] : 640 + ((i * 53) % 80);
+      const pStale = state.period === "oct" && state.flags.offline && i === TODAY - 1;
+      const p = pStale ? DAILY.podil[i] - (sum(DAILY.podil) - PODIL_OFFLINE_SPENT) : pRaw;
+      rows.push({ d: (state.period === "oct" ? "Oct " : "Sep ") + (i + 1), s, p, pStale, partial: state.period === "oct" && i === TODAY - 1 });
+    }
+    const pp = podilPriced();
+    const ts = sum(rows.map((r) => r.s)), tp = sum(rows.map((r) => r.p));
+    return `${header("Report", `<button type="button" class="btn ghost" data-export style="padding:7px 10px;font-size:13px">Export CSV</button>`)}
+      <div class="pad row" style="margin-bottom:12px;align-items:center">
+        <label class="sr" for="period">Period</label>
+        <select id="period"><option value="oct" ${state.period === "oct" ? "selected" : ""}>October 2026 (to date)</option><option value="sep" ${state.period === "sep" ? "selected" : ""}>September 2026</option></select>
+        <span class="chip neutral">VAT incl.</span>
+      </div>
+      <div class="pad">
+        <table>
+          <thead><tr><th>Day</th><th>Soborna, ₴</th><th>Podil, ₴</th><th>Total, ₴</th></tr></thead>
+          <tbody>${rows.map((r) => `<tr><td class="mono">${r.d}${r.partial ? "*" : ""}</td><td class="num">${uah(r.s).slice(2)}</td><td class="num" ${r.pStale ? 'style="color:var(--orange-text)"' : ""}>${pp ? uah(r.p).slice(2) : "—"}</td><td class="num">${uah(r.s + (pp ? r.p : 0)).slice(2)}</td></tr>`).join("")}</tbody>
+          <tfoot><tr><td>Total</td><td class="num">${uah(ts).slice(2)}</td><td class="num">${pp ? uah(tp).slice(2) : "—"}</td><td class="num">${uah(ts + (pp ? tp : 0)).slice(2)}</td></tr></tfoot>
+        </table>
+        ${state.period === "oct" ? `<p class="sub">* to ${NOW}.${state.flags.offline ? ` Podil to ${PODIL_OFFLINE_AT}, meter offline.` : ""}${pp ? "" : " Podil has no tariff yet."} Estimated appliances are split inside each location; totals per location are measured.</p>` : ""}
+      </div><div style="height:20px"></div>`;
+  }
+
+  function meters() {
+    const m = [
+      { loc: "soborna", name: "Main meter", kind: "Utility smart meter", ok: true },
+      { loc: "soborna", name: "Deck oven", kind: "Shelly Pro 3EM", ok: true },
+      { loc: "soborna", name: "Walk-in fridge", kind: "Shelly Plus 1PM", ok: true },
+      { loc: "podil", name: "Main meter", kind: "Utility smart meter", ok: !state.flags.offline },
+      { loc: "podil", name: "Convection oven", kind: "Shelly Pro 3EM", ok: true },
+    ].filter((x) => state.role !== "manager" || x.loc === "soborna");
+    return `<div class="back-row"><button type="button" data-back>${I.back}Back</button></div>
+      ${header("Meters")}
+      <section class="section" style="border-top:0;padding-top:0"><div class="list">${m.map((x) => `
+        <div class="item"><span class="name">${LOCS[x.loc].short} · ${x.name}</span><span>${x.ok ? chip.fresh() : chip.stale(PODIL_OFFLINE_AT)}</span>
+          <span class="meta" style="grid-column:1/-1">${x.kind}${x.ok ? " · every 15 min" : " · no data for 2 h 35 min. Check that the router at Podil is on."}</span></div>`).join("")}</div>
+        <button type="button" class="btn block" data-go="pair" style="margin-top:14px">Add a meter</button>
+      </section>`;
+  }
+
+  function pair() {
+    const p = state.pair;
+    const head = `<div class="back-row"><button type="button" data-back>${I.back}${p.step > 1 && p.step < 4 ? "Back" : "Close"}</button><span class="mono muted" style="margin-left:auto;font-size:11px">STEP ${Math.min(p.step, 3)} OF 3</span></div>`;
+    if (p.step === 1) return `${head}<div class="pad">
+      <h2 style="font-size:24px;margin:4px 0 6px">What are you connecting?</h2>
+      <p class="sub" style="margin:0 0 16px">Look at the label on the device. Not sure? Take a photo of it, we'll tell you.</p>
+      <div class="choice">
+        ${[["shelly", "Shelly or another Wi-Fi meter", "Sits in the panel, measures one appliance or a line"], ["utility", "Utility smart meter", "The main meter from your electricity company"], ["other", "Something else", "We'll check if it's supported"]].map(([k, t, d]) =>
+          `<button type="button" data-ptype="${k}" aria-pressed="${p.type === k}"><b>${t}</b><span>${d}</span></button>`).join("")}
+      </div>
+      <button type="button" class="btn blue block" data-pnext style="margin-top:16px" ${p.type ? "" : "disabled"}>Continue</button></div>`;
+    if (p.step === 2) return `${head}<div class="pad">
+      <h2 style="font-size:24px;margin:4px 0 6px">Enter the device code</h2>
+      <p class="sub" style="margin:0 0 16px">${p.type === "utility" ? "It's the 8-digit account number on your bill." : "It's on the sticker: 6 characters after «ID»."}</p>
+      <label class="label" for="pcode"><span>Code</span></label>
+      <input id="pcode" value="${esc(p.code)}" inputmode="text" autocomplete="off" maxlength="12" style="width:100%;font:500 20px var(--mono);letter-spacing:.1em;padding:10px;border:1px solid var(--line);border-radius:var(--r)">
+      <p class="sub">Which location? <b>${state.role === "manager" || state.loc !== "podil" ? "Soborna St." : "Podil"}</b></p>
+      <button type="button" class="btn blue block" data-pnext style="margin-top:16px" ${p.code.trim().length >= 6 ? "" : "disabled"}>Connect</button></div>`;
+    if (p.step === 3) return `${head}<div class="pad">
+      <h2 style="font-size:24px;margin:4px 0 6px">Connected. Waiting for the first reading</h2>
+      <p class="sub" style="margin:0 0 16px">Meters report every 15 minutes, so the first number can take up to 15 minutes. You don't need to keep this screen open.</p>
+      <div class="card" style="display:flex;gap:12px;align-items:center"><span class="spin" aria-hidden="true"></span><span><b>Waiting for data</b><br><span class="muted" style="font-size:12px">Connected at ${NOW}</span></span></div>
+      <ul style="margin:16px 0 0;padding-left:18px;color:var(--ink-2);font-size:13px;display:grid;gap:4px">
+        <li>The first useful number appears after one reading.</li>
+        <li>Comparisons with the usual appear after 7 days, a forecast after 14.</li>
+      </ul>
+      <button type="button" class="btn ghost block" data-pnext style="margin-top:16px">Simulate the first reading</button></div>`;
+    return `${head}<div class="pad">
+      <h2 style="font-size:24px;margin:4px 0 6px">First reading is in</h2>
+      <p class="sub" style="margin:0 0 16px">0.8 kWh in the last 15 minutes, about ${uah(7)}. It now counts as measured, so its share stops being an estimate.</p>
+      <div class="card" style="display:flex;gap:10px;align-items:center">${chip.measured()}<span>Every 15 min</span></div>
+      <button type="button" class="btn block" data-back style="margin-top:16px">Done</button></div>`;
+  }
+
+  // ------------------------------------------------------------------ render
+  const TABS = [["overview", "This month", I.home], ["breakdown", "Where it goes", I.split], ["tariffs", "Tariffs", I.tariff], ["report", "Report", I.report]];
+
+  function render(focus) {
+    const map = { overview, breakdown, tariffs, report };
+    const subs = { event: eventScreen, meters, pair };
+    screen.innerHTML = state.sub ? subs[state.sub]() : map[state.tab]();
+    tabs.innerHTML = TABS.map(([k, l, ic]) => `<button type="button" data-tab="${k}" ${!state.sub && state.tab === k ? 'aria-current="page"' : ""}>${ic}<span>${l}</span></button>`).join("");
+    document.querySelectorAll("[data-role]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.role === state.role)));
+    if (focus) { screen.scrollTop = 0; screen.focus({ preventScroll: true }); }
+  }
+
+  function toast(msg) {
+    const t = $("#toast");
+    t.textContent = msg; t.classList.add("on");
+    clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600);
+  }
+
+  function exportCsv() {
+    const lines = [["Day", "Soborna UAH", "Podil UAH"]];
+    for (let i = 0; i < TODAY; i++) lines.push([`2026-10-0${i + 1}`, DAILY.soborna[i], podilPriced() ? DAILY.podil[i] : ""]);
+    const blob = new Blob([lines.map((l) => l.join(",")).join("\n")], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "volta-october-2026.csv"; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    toast("volta-october-2026.csv downloaded");
+  }
+
+  document.addEventListener("click", (ev) => {
+    const t = ev.target.closest("button");
+    if (!t) return;
+    const d = t.dataset;
+    if (d.tab) { state.tab = d.tab; state.sub = null; render(true); }
+    else if (d.go) { if (d.go === "pair") state.pair = { step: 1, type: null, code: "" }; state.sub = d.go; render(true); }
+    else if ("back" in d) {
+      if (state.sub === "pair" && state.pair.step > 1 && state.pair.step < 4) { state.pair.step--; render(true); }
+      else { state.sub = state.sub === "pair" ? "meters" : null; render(true); }
+    }
+    else if (d.loc) { state.loc = d.loc; render(); }
+    else if (d.role) {
+      state.role = d.role; state.sub = null;
+      if (d.role === "accountant") state.tab = "report";
+      else if (state.tab === "report" && d.role === "owner") state.tab = "overview";
+      if (d.role === "manager") state.loc = "soborna"; else state.loc = "all";
+      render(true);
+    }
+    else if (d.event) { state.event = d.event; render(); if (d.event !== "open") toast(d.event === "confirmed" ? "Marked as being fixed" : "Alert dismissed"); }
+    else if (d.ptype) { state.pair.type = d.ptype; render(); }
+    else if ("pnext" in d) { state.pair.step++; render(true); }
+    else if ("export" in d) exportCsv();
+    else if ("settariff" in d) { state.flags.noTariff = false; $('[data-flag="noTariff"]').checked = false; render(); toast("Tariff for Podil added"); }
+  });
+
+  document.addEventListener("input", (ev) => {
+    const t = ev.target;
+    if (t.id === "shift") { state.shiftHours = Number(t.value); render(); $("#shift").focus(); }
+    else if (t.id === "pcode") {
+      state.pair.code = t.value;
+      const btn = $("[data-pnext]"); if (btn) btn.disabled = t.value.trim().length < 6;
+    }
+  });
+  document.addEventListener("change", (ev) => {
+    const t = ev.target;
+    if (t.dataset.flag) { state.flags[t.dataset.flag] = t.checked; render(); }
+    else if (t.id === "period") { state.period = t.value; render(); }
+  });
+
+  // The case page links here from the Ukrainian or English version; send «back» to the same language.
+  if (document.referrer.includes("/en/cases/")) $("#back").href = "/en/cases/volta";
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -47,6 +47,8 @@ export type Case = {
   kind?: "real" | "concept";
   /** Live product, if it is public; without it visitors browse the pages below. */
   liveUrl?: string;
+  /** Clickable prototype on this site (a page under /prototypes/), opened from the case page. */
+  prototype?: string;
   /** Pages of the project to browse when there is no live site (or it is a concept). */
   gallery?: GalleryItem[];
   /** Placeholder content: shown on the site but kept out of search results and the sitemap. */
@@ -243,6 +245,7 @@ export type Dictionary = {
     concept: string;
     sample: string;
     live: string;
+    prototype: string;
     noLive: string;
     conceptNote: string;
     pages: string;
@@ -669,6 +672,7 @@ const uk: Dictionary = {
     concept: "Концепт",
     sample: "Приклад",
     live: "Відкрити сайт проєкту",
+    prototype: "Відкрити прототип",
     noLive: "Живого сайту немає — сторінки проєкту можна переглянути нижче.",
     conceptNote: "Це дизайн-концепт: продукт не запускався, сторінки проєкту можна переглянути нижче.",
     pages: "Сторінки проєкту",
@@ -1093,6 +1097,7 @@ const en: Dictionary = {
     concept: "Concept",
     sample: "Sample",
     live: "Open the live site",
+    prototype: "Open the prototype",
     noLive: "There is no live site — browse the project pages below.",
     conceptNote: "This is a design concept: the product was not launched, browse the project pages below.",
     pages: "Project pages",
