@@ -193,22 +193,36 @@
 }
 
 /* ---------- home hero ---------- */
+/* The first screen — the hero and the strip under it — fills the window under the sticky header at any size, so the
+   strip («Next — work ↓») is always in view before the first scroll. The drawing takes the height that is left
+   (.sg-hero-stage is a size container); the header heights follow its rows in src/app/(site)/[locale]/layout.tsx. */
+.signal { --sg-header-h: 109px; }
+@media (min-width: 640px) { .signal { --sg-header-h: 125px; } }
+@media (min-width: 1024px) { .signal { --sg-header-h: 81px; } }
+.signal .sg-first-screen { display: flex; flex-direction: column; min-height: calc(100svh - var(--sg-header-h)); }
+.signal .sg-first-screen > .sg-hero { flex: 1 1 auto; }
 .signal .sg-hero {
   display: grid; grid-template-columns: 1.04fr 1fr; align-items: center; gap: 16px;
-  min-height: min(700px, calc(100dvh - 64px)); padding-block: 48px 56px;
+  padding-block: clamp(20px, 6svh, 48px) clamp(16px, 5svh, 56px);
 }
+.signal .sg-hero-stage {
+  align-self: stretch; min-width: 0; min-height: 0; container-type: size;
+  display: grid; place-items: center;
+}
+.signal .sg-hero-stage .sg-hero-art { width: min(100cqw, 100cqh - 24px); }
+@container (max-height: 140px) { .signal .sg-hero-stage .sg-hero-art { display: none; } }
 /* The drawing turns a little (hero motion): clip it to the section so it never widens the page. */
 .signal .sg-hero { overflow-x: clip; }
 .signal .sg-hero-copy { position: relative; z-index: 1; min-width: 0; }
 .signal .sg-availability { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--sg-fg-secondary); }
 .signal .sg-availability::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sg-success); flex-shrink: 0; }
 .signal .sg-hero h1 {
-  font-weight: 500; font-size: clamp(54px, 6.8vw, 104px); line-height: 1; letter-spacing: -0.07em;
-  margin: 28px 0 30px; text-wrap: balance;
+  font-weight: 500; font-size: clamp(54px, min(6.8vw, 11svh), 104px); line-height: 1; letter-spacing: -0.07em;
+  margin: clamp(16px, 3svh, 28px) 0 clamp(16px, 3.3svh, 30px); text-wrap: balance;
 }
 .signal .sg-hero h1 em { font-style: normal; color: var(--sg-accent-text); }
 .signal .sg-hero-intro { font-size: 17px; line-height: 1.7; color: var(--sg-fg-secondary); max-width: 400px; }
-.signal .sg-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
+.signal .sg-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: clamp(20px, 3.5svh, 32px); }
 .signal .sg-hero-art {
   position: relative; aspect-ratio: 1; min-width: 0;
   background-image: radial-gradient(var(--sg-border) .7px, transparent .7px); background-size: 22px 22px;
@@ -268,26 +282,25 @@
 .signal .sg-art-caption strong { font-size: 14px; font-weight: 500; }
 .signal .sg-art-caption span { color: var(--sg-fg-secondary); }
 .signal .sg-hero-bottom {
-  display: flex; justify-content: space-between; gap: 20px; padding-block: 20px;
+  display: flex; justify-content: space-between; gap: 20px; padding-block: clamp(12px, 2.5svh, 20px);
   border-top: 1px solid var(--sg-border); color: var(--sg-fg-secondary);
   font: 12px/1.6 var(--sg-font-mono); letter-spacing: .02em; text-transform: uppercase;
 }
 .signal .sg-hero-bottom a { text-decoration: none; }
 .signal .sg-hero-bottom a:hover { color: var(--sg-fg); }
-@media (max-width: 1100px) { .signal .sg-hero { min-height: 0; } }
 @media (max-width: 800px) {
-  .signal .sg-hero { padding-block: 40px 40px; }
   .signal .sg-hero h1 { font-size: clamp(48px, 7.4vw, 58px); }
   .signal .sg-hero-intro { font-size: 15px; }
-  .signal .sg-hero-art { margin-left: -24px; width: calc(100% + 24px); }
   .signal .sg-art-caption { bottom: 0; }
   .signal .sg-hero-bottom .sg-hero-coordinate { display: none; }
 }
 @media (max-width: 640px) {
-  .signal .sg-hero { grid-template-columns: minmax(0, 1fr); padding-top: 32px; gap: 40px; }
+  .signal .sg-hero { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 24px; }
   .signal .sg-hero h1 { font-size: clamp(48px, 13.4vw, 76px); margin-block: 22px; }
   .signal .sg-hero-actions { margin-top: 26px; gap: 8px; }
-  .signal .sg-hero-art { width: min(100% - 32px, 360px); margin: 0 auto; }
+  .signal .sg-hero-stage .sg-hero-art { width: min(100cqw - 32px, 360px, 100cqh - 16px); }
+  /* A small circle keeps the drawing only: the labels and the caption would cover it. */
+  @container (max-height: 300px) { .signal .sg-hero-stage :is(.sg-art-label, .sg-art-caption) { display: none; } }
   .signal .sg-art-label { font-size: 11px; }
   .signal .sg-art-label--top { top: -8px; right: 0; }
   .signal .sg-art-label--bottom { bottom: 8px; left: 0; }
