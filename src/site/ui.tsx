@@ -26,13 +26,15 @@ type LinkButtonProps = {
   /** A 16 px Lucide icon after the label (buttons always carry one: docs/DESIGN-SYSTEM.md, Иконография). */
   icon?: React.ReactNode;
   download?: boolean;
+  /** A plain link: the target is a static page, not a route of this app (client navigation would not find it). */
+  native?: boolean;
   /** Analytics data attributes, from trackAttrs(). */
   track?: Record<string, string>;
 };
 
-function LinkButton({ href, children: label, icon, download, track, className }: LinkButtonProps & { className: string }) {
+function LinkButton({ href, children: label, icon, download, native, track, className }: LinkButtonProps & { className: string }) {
   const children = <>{label}{icon}</>;
-  if (href.startsWith("/") && !download)
+  if (href.startsWith("/") && !download && !native)
     return (
       <Link href={href} className={className} {...track}>
         {children}

@@ -11,6 +11,7 @@ export type AnalyticsEvent =
   | "case_open"
   | "case_next"
   | "case_live_open"
+  | "case_prototype_open"
   | "case_gallery_open"
   | "case_figma_load"
   | "case_figma_open"

@@ -115,6 +115,14 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       {gate(<>
       <div className={`${container} flex flex-col gap-6`}>
         {!item.coverSafe && cover}
+        {/* A clickable prototype hosted on this site; only a /prototypes/ page, since the snapshot is data from the tool. */}
+        {item.prototype?.startsWith("/prototypes/") && (
+          <div className="flex">
+            <PrimaryLink native href={item.prototype} icon={<ArrowUpRight aria-hidden className="size-4" />} track={trackAttrs("case_prototype_open", { case_slug: item.slug, location: "case" })}>
+              {d.project.prototype}
+            </PrimaryLink>
+          </div>
+        )}
         {/* Live product, or a note that the pages can be browsed here (no site / a concept). */}
         {item.liveUrl ? (
           <div className="flex">

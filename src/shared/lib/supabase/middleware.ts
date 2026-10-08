@@ -5,7 +5,7 @@ import { env } from "@/shared/lib/env";
 
 // Route map (see docs/SEO.md):
 // - public site: /uk/**, /en/** — no Supabase call at all (fast TTFB, cacheable);
-// - public files and metadata routes: robots.txt, sitemap.xml, icons, /og, /cv, /awards, /api/project-request;
+// - public files and metadata routes: robots.txt, sitemap.xml, icons, /og, /cv, /awards, /prototypes, /api/project-request;
 // - private workspace: /app, /w/**, /account — session required, else → /login;
 // - auth: /login, /auth/** — session refreshed, a signed-in user is sent from /login to /app;
 // - "/" picks the language; any other path is a localized 404 (never a redirect to /login).
@@ -15,7 +15,8 @@ const PRIVATE_PREFIXES = ["/app", "/w", "/account"];
 const AUTH_PREFIXES = ["/login", "/auth"];
 const PUBLIC_FILES = ["/robots.txt", "/sitemap.xml", "/favicon.ico", "/icon.svg", "/apple-icon.png", "/manifest.webmanifest"];
 // /api/project-request: the client's copy of a project brief, gated by a one-time token, not by a session.
-const PUBLIC_PREFIXES = ["/og", "/cv", "/awards", "/api/project-request"];
+// /prototypes: static clickable prototypes linked from case pages (public/prototypes/*.html).
+const PUBLIC_PREFIXES = ["/og", "/cv", "/awards", "/prototypes", "/api/project-request"];
 
 const matches = (path: string, prefix: string) => path === prefix || path.startsWith(prefix + "/");
 
