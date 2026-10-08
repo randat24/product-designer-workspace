@@ -131,7 +131,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         </ol>
         <Link
           href={`/${locale}/cases`}
-          className="hit w-fit text-[15px] font-semibold underline underline-offset-4"
+          className="sg-link w-fit"
           {...trackAttrs("portfolio_cta_click", { cta: "cases", location: "about" })}
         >
           {d.ui.seeWork} →

@@ -3,6 +3,7 @@
 import { ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/shared/lib/cn";
+import { button as buttonClass } from "./signal/ui";
 
 /**
  * Floating «Вгору» (SIGNAL): a plain square with an arrow, bottom right, shown after the first screen. How much of
@@ -44,7 +45,7 @@ export function BackToTop({ label }: { label: string }) {
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
       }}
       className={cn(
-        "fixed right-4 bottom-4 z-30 grid size-12 place-items-center overflow-hidden rounded-[4px] border border-control bg-surface text-fg transition-[opacity,transform,background-color] duration-200 hover:bg-subtle sm:right-6 sm:bottom-6",
+        buttonClass({ variant: "secondary", icon: true }, "fixed right-4 bottom-4 z-30 overflow-hidden bg-surface transition-[opacity,transform,background-color] duration-200 hover:bg-subtle sm:right-6 sm:bottom-6"),
         visible ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0",
       )}>
       <ArrowUp aria-hidden className="size-5" strokeWidth={1.75} />

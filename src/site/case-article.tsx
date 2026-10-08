@@ -15,6 +15,7 @@ import { CaseCover, PrimaryLink, ProcessStrip, SecondaryLink, container } from "
 import { TraceGraph } from "@/site/trace-graph";
 import { INTAKE } from "@/site/intake/content";
 import { signalCopy } from "@/site/signal/home-content";
+import { button } from "@/site/signal/ui";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -207,7 +208,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               </p>
               <h2 id="case-next-title">{next.title}</h2>
             </div>
-            <Link href={`/${locale}/cases/${next.slug}`} className="sg-button sg-button--primary"
+            <Link href={`/${locale}/cases/${next.slug}`} className={button({ variant: "primary" })}
               {...trackAttrs("case_next", { case_slug: item.slug, next_slug: next.slug })}>
               {d.cases.open}<ArrowUpRight aria-hidden className="size-4" />
             </Link>

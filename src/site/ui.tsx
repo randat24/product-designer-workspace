@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
 import { PROCESS_STAGES, type CaseProcess } from "./case-process";
 import { dict, type Case, type Locale } from "./content";
+import { button } from "./signal/ui";
 
 export const container = "mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12";
 
@@ -13,19 +14,11 @@ export function Eyebrow({
   className?: string;
 }) {
   return (
-    <p
-      className={cn(
-        "font-label text-[12px] font-normal uppercase tracking-[0.075em] text-fg-secondary",
-        className,
-      )}
-    >
+    <p className={cn("sg-eyebrow text-fg-secondary", className)}>
       {children}
     </p>
   );
 }
-
-const linkBtn =
-  "inline-flex min-h-12 items-center justify-center gap-3 rounded-[4px] px-[22px] py-3 text-[15px] font-semibold leading-[1.4] transition-colors duration-[120ms]";
 
 type LinkButtonProps = {
   href: string;
@@ -60,11 +53,11 @@ function LinkButton({ href, children: label, icon, download, track, className }:
 }
 
 export function PrimaryLink(props: LinkButtonProps) {
-  return <LinkButton {...props} className={cn(linkBtn, "border border-accent-text bg-accent text-on-accent hover:bg-accent-hover")} />;
+  return <LinkButton {...props} className={button({ variant: "primary" })} />;
 }
 
 export function SecondaryLink(props: LinkButtonProps) {
-  return <LinkButton {...props} className={cn(linkBtn, "border border-control text-fg hover:bg-subtle")} />;
+  return <LinkButton {...props} className={button({ variant: "secondary" })} />;
 }
 
 /** Cover in a sticky-note colour: the case's real screen when it has one, otherwise an abstract placeholder. */
@@ -80,7 +73,7 @@ export function CaseCover({
   if (item.cover) {
     return (
       <div
-        className={cn("relative overflow-hidden rounded-[12px]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
+        className={cn("relative overflow-hidden rounded-[4px]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
         style={{ background: item.sticker }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known */}
@@ -99,7 +92,7 @@ export function CaseCover({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[12px] text-on-sticky",
+        "relative overflow-hidden rounded-[4px] text-on-sticky",
         large ? "aspect-[16/8]" : "aspect-[4/3]",
       )}
       style={{ background: item.sticker }}

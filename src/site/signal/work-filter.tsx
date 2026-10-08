@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { sg } from "./ui";
 
 type Filter = "all" | "real" | "concept";
 
@@ -23,8 +24,8 @@ export function WorkFilter({ heading, counts, labels, children }: {
         {both && (
           <div role="group" aria-label={labels.group} className="sg-work-filters">
             {(["all", "real", "concept"] as const).map((f) => (
-              <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)}>
-                {labels[f]} <span className="font-label text-[11px] opacity-70">{counts[f]}</span>
+              <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)} className={sg.chip}>
+                {labels[f]} <span className={sg.chipCount}>{counts[f]}</span>
               </button>
             ))}
           </div>

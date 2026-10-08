@@ -4,6 +4,7 @@ import { Eye } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/shared/lib/cn";
+import { button, sg } from "./signal/ui";
 
 const KEY = "adult-ok";
 
@@ -36,26 +37,24 @@ export function AdultGate({ labels, backHref, children }: {
       </div>
       <div className="absolute inset-0 flex items-start justify-center px-4 pt-10 sm:pt-16">
         <section aria-labelledby="adult-h"
-          className="flex w-full max-w-[520px] flex-col items-start gap-4 rounded-[12px] border border-control bg-surface p-6 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)] sm:p-8">
-          <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">
+          className={cn(sg.panel, "flex w-full max-w-[520px] flex-col items-start gap-4 p-6 shadow-[var(--sg-shadow-float)] sm:p-8")}>
+          <span className="grid size-14 place-items-center rounded-[4px] border border-danger text-[20px] font-semibold tracking-[-0.02em] text-danger">
             {labels.badge}
           </span>
-          <h2 id="adult-h" className="font-display text-[clamp(24px,3vw,30px)] font-bold uppercase leading-[1.1] tracking-[0.01em]">
+          <h2 id="adult-h" className="text-[clamp(24px,3vw,30px)] font-medium leading-[1.1] tracking-[-0.035em]">
             {labels.title}
           </h2>
           <p className="text-[16px] leading-[1.55] text-fg-secondary">{labels.body}</p>
           <div className="flex flex-wrap gap-3">
             <button type="button" onClick={confirm}
-              className={cn(BTN, "border-accent bg-accent text-on-accent hover:bg-accent-hover")}>
+              className={button({ variant: "primary" })}>
               <Eye aria-hidden className="size-4" />
               {labels.confirm}
             </button>
-            <Link href={backHref} className={cn(BTN, "border-fg text-fg hover:bg-subtle")}>{labels.back}</Link>
+            <Link href={backHref} className={button({ variant: "secondary" })}>{labels.back}</Link>
           </div>
         </section>
       </div>
     </div>
   );
 }
-
-const BTN = "inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms]";

@@ -1,4 +1,5 @@
 import { ArrowDownRight } from "lucide-react";
+import { button } from "./ui";
 import { dict, type Locale } from "@/site/content";
 import { container } from "@/site/ui";
 import { HeroArt } from "./hero-art";
@@ -51,10 +52,10 @@ export function SignalHero({ locale }: { locale: Locale }) {
           </h1>
           <p className="sg-hero-intro">{h.intro}</p>
           <div className="sg-hero-actions">
-            <a href={`#${WORK_ANCHOR}`} className="sg-button sg-button--primary">
+            <a href={`#${WORK_ANCHOR}`} className={button({ variant: "primary" })}>
               {h.work}<ArrowDownRight aria-hidden className="size-4" />
             </a>
-            <a href={`#${APPROACH_ANCHOR}`} className="sg-button sg-button--ghost">
+            <a href={`#${APPROACH_ANCHOR}`} className={button({ variant: "ghost" })}>
               {h.approach}<ArrowDownRight aria-hidden className="size-4" />
             </a>
           </div>

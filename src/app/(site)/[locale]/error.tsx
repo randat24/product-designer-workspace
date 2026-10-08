@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { button } from "@/site/signal/ui";
 
 // A site page that could not be built right now, most often because the cases could not be read from the
 // database (src/site/cases-source.ts, docs/HANDOFF_TRIAGE.md F04). Already built pages keep their last good
@@ -28,14 +29,14 @@ export default function SiteError({ reset }: { error: Error & { digest?: string 
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
       <title>{t.title}</title>
       <meta name="robots" content="noindex" />
-      <h1 className="page-title">{t.title}</h1>
+      <h1 className="t-page">{t.title}</h1>
       <p role="alert" className="max-w-[560px] text-[18px] text-fg-secondary">{t.body}</p>
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={reset}
-          className="inline-flex h-11 items-center rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover">
+          className={button({ variant: "primary" })}>
           {t.retry}
         </button>
-        <Link href={`/${locale}/about`} className="inline-flex h-11 items-center px-2 text-[15px] font-semibold underline underline-offset-4">
+        <Link href={`/${locale}/about`} className={button({ variant: "ghost" })}>
           {t.about}
         </Link>
       </div>

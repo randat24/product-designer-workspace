@@ -50,7 +50,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           />
           {cases.length > shown.length && (
             <p className="mt-10">
-              <Link href={`/${locale}/cases`} className="hit border-b border-current text-[14px] font-semibold">{d.home.all} →</Link>
+              <Link href={`/${locale}/cases`} className="sg-link">{d.home.all} →</Link>
             </p>
           )}
         </div>

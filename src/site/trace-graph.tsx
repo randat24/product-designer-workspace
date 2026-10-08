@@ -91,7 +91,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
             .replace("{links}", count(locale, trace.links.length, labels.forms.links))
         )}
       </p>
-      <div className="overflow-x-auto rounded-[12px] border border-line bg-surface" data-spec="Слід рішень">
+      <div className="sg-panel overflow-x-auto" data-spec="Слід рішень">
         <div
           ref={box}
           className="relative grid min-w-[max(100%,1080px)] gap-[26px] p-[18px]"

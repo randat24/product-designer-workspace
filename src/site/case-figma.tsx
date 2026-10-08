@@ -3,8 +3,8 @@
 import { ArrowUpRight, Play } from "lucide-react";
 import { useState } from "react";
 import { figmaEmbedUrl } from "@/shared/lib/figma";
-import { cn } from "@/shared/lib/cn";
 import { track } from "./analytics/track";
+import { button } from "./signal/ui";
 
 type Labels = { figmaLoad: string; figmaOpen: string; figmaFrame: string };
 
@@ -22,7 +22,7 @@ export function CaseFigma({ url, poster, labels, caseSlug }: {
   const fileName = decodeURIComponent(new URL(url).pathname.split("/")[3] ?? "").replace(/-/g, " ") || "Figma";
 
   return (
-    <div className="overflow-hidden rounded-[12px] border border-control bg-surface">
+    <div className="sg-panel overflow-hidden">
       <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
         <span aria-hidden className="flex gap-1.5">
           <i className="size-2.5 rounded-full bg-line" />
@@ -35,7 +35,7 @@ export function CaseFigma({ url, poster, labels, caseSlug }: {
           target="_blank"
           rel="noreferrer"
           onClick={() => track("case_figma_open", { case_slug: caseSlug, location: "case" })}
-          className="hit inline-flex shrink-0 items-center gap-1.5 text-[14px] font-semibold underline-offset-4 hover:underline"
+          className="sg-link shrink-0"
         >
           {labels.figmaOpen}
           <ArrowUpRight aria-hidden className="size-4" />
@@ -62,10 +62,7 @@ export function CaseFigma({ url, poster, labels, caseSlug }: {
                   setLoaded(true);
                   track("case_figma_load", { case_slug: caseSlug });
                 }}
-                className={cn(
-                  "inline-flex h-11 items-center gap-2 rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent",
-                  "transition-colors duration-[120ms] hover:bg-accent-hover",
-                )}
+                className={button({ variant: "primary" })}
               >
                 <Play aria-hidden className="size-4" />
                 {labels.figmaLoad}

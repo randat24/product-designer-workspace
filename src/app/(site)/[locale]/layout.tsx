@@ -16,6 +16,7 @@ import { BackToTop } from "@/site/back-to-top";
 import { LangSwitch } from "@/site/lang-switch";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
 import { container } from "@/site/ui";
+import { BrandMark } from "@/site/brand";
 import { SiteNav } from "@/site/site-nav";
 import { signalCopy } from "@/site/signal/home-content";
 
@@ -97,7 +98,7 @@ export default async function SiteLayout({
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:h-20 sm:gap-4`}>
               <Link href={`/${locale}`} className="hit flex shrink-0 items-center gap-3.5 whitespace-nowrap" aria-label={d.name}>
-                <span aria-hidden className="grid size-9 place-items-center border border-fg pr-[3px] text-[18px] font-medium tracking-[-0.12em] sm:size-10 sm:text-[20px]">hf.</span>
+                <BrandMark />
                 <span aria-hidden className="flex flex-col text-[14px] font-semibold leading-[1.35]">
                   {d.name}
                   <small className="mt-0.5 hidden font-label text-[10px] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
