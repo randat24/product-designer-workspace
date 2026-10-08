@@ -2,9 +2,12 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import "./fonts.css";
 import "./globals.css";
+import "@/site/signal/signal.css";
 import { dict, isLocale, type Locale } from "@/site/content";
 import { THEME_INIT_SCRIPT } from "@/site/theme-toggle";
-import { FedoMark, FedoOutline } from "@/shared/ui/fedo-mark";
+import { FedoOutline } from "@/shared/ui/fedo-mark";
+import { BrandMark } from "@/site/brand";
+import { button } from "@/site/signal/ui";
 
 // The 404 page for the whole app (experimental.globalNotFound): with several root layouts
 // (site per locale, workspace) Next.js renders this instead of a segment not-found.tsx.
@@ -24,39 +27,34 @@ export default async function GlobalNotFound() {
         <title>{`${d.seo.notFound.title} | ${d.name}`}</title>
         <meta name="description" content={d.seo.notFound.description} />
       </head>
-      <body>
+      <body className="signal">
         <div className="flex min-h-dvh flex-col">
           <header className="border-b border-line">
-            <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-5 sm:px-8 lg:px-12">
-              <Link href={`/${locale}`} className="group flex items-center gap-2.5">
-                <FedoMark tap className="size-9" />
-                <span aria-hidden className="font-display text-[22px] font-semibold uppercase leading-none tracking-[0.08em]">FEDO</span>
-                <span className="sr-only">{d.name}</span>
+            <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-5 sm:h-20 sm:px-8 lg:px-12">
+              <Link href={`/${locale}`} className="flex items-center gap-3.5" aria-label={d.name}>
+                <BrandMark />
+                <span aria-hidden className="text-[14px] font-semibold">{d.name}</span>
               </Link>
             </div>
           </header>
           <main id="main" className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
-            {/* The cursor of the mark missed the notch: there is nothing at this address. */}
-            <div className="flex items-end gap-6">
-              <FedoOutline miss className="size-[clamp(64px,9vw,110px)]" />
-              <p className="display-num text-[clamp(64px,12vw,140px)] leading-none text-fg-secondary">404</p>
-            </div>
-            <h1 className="page-title">{d.ui.notFoundTitle}</h1>
+            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">404 /</span>{d.seo.notFound.title}</p>
+            <h1 className="t-page">{d.ui.notFoundTitle}</h1>
             <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.ui.notFoundBody}</p>
             <nav className="flex flex-wrap gap-3" aria-label={d.ui.mainNav}>
               <Link
                 href={`/${locale}`}
-                className="inline-flex h-11 items-center rounded-[4px] border border-accent bg-accent px-5 text-[15px] font-semibold text-on-accent hover:bg-accent-hover"
+                className={button({ variant: "primary" })}
               >
                 {d.ui.notFoundHome}
               </Link>
               <Link
                 href={`/${locale}/cases`}
-                className="inline-flex h-11 items-center rounded-[4px] border border-control px-5 text-[15px] font-semibold text-fg hover:bg-subtle"
+                className={button({ variant: "secondary" })}
               >
                 {d.ui.notFoundWork}
               </Link>
-              <Link href={`/${locale}/about`} className="inline-flex h-11 items-center px-2 text-[15px] font-semibold underline underline-offset-4">
+              <Link href={`/${locale}/about`} className={button({ variant: "ghost" })}>
                 {d.nav.about}
               </Link>
             </nav>

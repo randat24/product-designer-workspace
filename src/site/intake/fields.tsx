@@ -8,11 +8,8 @@ import { Plus, X } from "lucide-react";
 import { useId } from "react";
 import { cn } from "@/shared/lib/cn";
 import { DateField } from "@/shared/ui/date-field";
+import { button, sg } from "../signal/ui";
 
-const control =
-  "w-full rounded-[4px] border bg-surface px-3.5 text-[16px] text-fg placeholder:text-fg-secondary transition-colors duration-[120ms] focus:border-fg";
-const ok = "border-line hover:border-fg-secondary";
-const bad = "border-danger";
 
 export function FieldShell({ id, label, hint, error, optional, children, className }: {
   id: string;
@@ -24,14 +21,14 @@ export function FieldShell({ id, label, hint, error, optional, children, classNa
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="text-[15px] font-semibold">
+    <div className={cn(sg.field, className)}>
+      <label htmlFor={id} className={sg.label}>
         {label}
         {optional && <span className="ml-1.5 font-normal text-fg-secondary">({optional})</span>}
       </label>
-      {hint && <p id={`${id}-hint`} className="text-[14px] leading-snug text-fg-secondary">{hint}</p>}
+      {hint && <p id={`${id}-hint`} className={sg.hint}>{hint}</p>}
       {children}
-      {error && <p id={`${id}-error`} className="text-[14px] font-semibold text-danger">{error}</p>}
+      {error && <p id={`${id}-error`} className={cn(sg.error, "font-semibold")}>{error}</p>}
     </div>
   );
 }
@@ -60,7 +57,7 @@ export function TextField({ id, label, hint, error, optional, value, onChange, t
         maxLength={maxLength}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
-        className={cn(control, "h-12", error ? bad : ok)}
+        className={sg.input}
       />
     </FieldShell>
   );
@@ -95,7 +92,7 @@ export function TextArea({ id, label, hint, error, optional, value, onChange, ro
         maxLength={maxLength}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
-        className={cn(control, "min-h-[96px] resize-y py-3 leading-[1.5]", error ? bad : ok)}
+        className={cn(sg.input, "min-h-[96px] resize-y leading-[1.5]")}
       />
     </FieldShell>
   );
@@ -114,16 +111,16 @@ export function ChoiceGroup({ id, legend, hint, error, optional, options, value,
   const selected = Array.isArray(value) ? value : value ? [value] : [];
   return (
     <fieldset id={id} tabIndex={-1} aria-describedby={describedBy(id, hint, error)} className="flex flex-col gap-2 outline-none">
-      <legend className="mb-1.5 text-[15px] font-semibold">
+      <legend className={cn(sg.label, "mb-1.5")}>
         {legend}
         {optional && <span className="ml-1.5 font-normal text-fg-secondary">({optional})</span>}
       </legend>
-      {hint && <p id={`${id}-hint`} className="-mt-1 mb-1 text-[14px] leading-snug text-fg-secondary">{hint}</p>}
+      {hint && <p id={`${id}-hint`} className={cn(sg.hint, "-mt-1 mb-1")}>{hint}</p>}
       <div className={cn(columns ? "grid gap-2 sm:grid-cols-2" : "flex flex-wrap gap-2")}>
         {options.map((o) => {
           const on = selected.includes(o.value);
           return (
-            <label key={o.value} className="relative">
+            <label key={o.value} className={cn(sg.chip, "relative text-[14px]", error && !on && "border-danger")}>
               <input
                 type={multiple ? "checkbox" : "radio"}
                 name={id}
@@ -133,25 +130,17 @@ export function ChoiceGroup({ id, legend, hint, error, optional, options, value,
                   if (!multiple) return onChange(o.value);
                   onChange(on ? selected.filter((v) => v !== o.value) : [...selected, o.value]);
                 }}
-                className="peer absolute inset-0 size-full cursor-pointer opacity-0"
+                className="absolute inset-0 size-full cursor-pointer opacity-0"
               />
-              <span
-                className={cn(
-                  "flex min-h-11 items-center gap-2 rounded-[4px] border px-3.5 py-2 text-[15px] font-semibold transition-colors duration-[120ms]",
-                  "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg",
-                  on ? "border-fg bg-fg text-canvas" : cn("bg-surface hover:border-fg-secondary", error ? "border-danger" : "border-line"),
-                )}
-              >
-                <span aria-hidden className={cn("grid size-4 shrink-0 place-items-center border border-current", multiple ? "rounded-[4px]" : "rounded-full")}>
-                  {on && <span className={cn("size-2 bg-current", multiple ? "rounded-[1px]" : "rounded-full")} />}
-                </span>
-                {o.label}
+              <span aria-hidden className={cn("grid size-4 shrink-0 place-items-center border border-current", multiple ? "rounded-[2px]" : "rounded-full")}>
+                {on && <span className={cn("size-2 bg-current", multiple ? "rounded-[1px]" : "rounded-full")} />}
               </span>
+              {o.label}
             </label>
           );
         })}
       </div>
-      {error && <p id={`${id}-error`} className="text-[14px] font-semibold text-danger">{error}</p>}
+      {error && <p id={`${id}-error`} className={cn(sg.error, "font-semibold")}>{error}</p>}
     </fieldset>
   );
 }
@@ -169,12 +158,12 @@ export function Checkbox({ id, label, hint, checked, onChange, error }: {
           onChange={(e) => onChange(e.target.checked)}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy(id, hint, error)}
-          className="mt-0.5 size-5 shrink-0 cursor-pointer accent-[var(--fg)]"
+          className="mt-0.5 size-5 shrink-0 cursor-pointer accent-[var(--accent-text)]"
         />
         <span>{label}</span>
       </label>
-      {hint && <p id={`${id}-hint`} className="pl-8 text-[14px] text-fg-secondary">{hint}</p>}
-      {error && <p id={`${id}-error`} className="pl-8 text-[14px] font-semibold text-danger">{error}</p>}
+      {hint && <p id={`${id}-hint`} className={cn(sg.hint, "pl-8")}>{hint}</p>}
+      {error && <p id={`${id}-error`} className={cn(sg.error, "pl-8 font-semibold")}>{error}</p>}
     </div>
   );
 }
@@ -191,7 +180,7 @@ export function Select({ id, label, value, onChange, options, error, className }
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, undefined, error)}
-        className={cn(control, "h-12 cursor-pointer", error ? bad : ok)}
+        className={cn(sg.input, "cursor-pointer")}
       >
         {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
@@ -205,11 +194,11 @@ export function ItemCard({ title, removeLabel, onRemove, children }: {
 }) {
   const hid = useId();
   return (
-    <section aria-labelledby={hid} className="flex flex-col gap-4 rounded-[12px] border border-line bg-surface p-4 sm:p-5">
+    <section aria-labelledby={hid} className={cn(sg.panel, "flex flex-col gap-4 p-4 sm:p-5")}>
       <div className="flex items-center justify-between gap-3">
-        <h3 id={hid} className="font-display text-[17px] font-bold uppercase tracking-[0.01em]">{title}</h3>
+        <h3 id={hid} className="text-[17px] font-semibold tracking-[-0.02em]">{title}</h3>
         <button type="button" onClick={onRemove} aria-label={removeLabel}
-          className="hit grid size-9 place-items-center rounded-[4px] text-fg-secondary hover:bg-subtle hover:text-fg">
+          className={button({ variant: "ghost", size: "sm", icon: true }, "text-fg-secondary hover:text-fg")}>
           <X aria-hidden className="size-4" />
         </button>
       </div>
@@ -221,9 +210,9 @@ export function ItemCard({ title, removeLabel, onRemove, children }: {
 export function AddButton({ onClick, children, disabled }: { onClick: () => void; children: React.ReactNode; disabled?: boolean }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled}
-      className="inline-flex h-11 w-fit items-center gap-2 rounded-[4px] border border-dashed border-fg-secondary px-4 text-[15px] font-semibold hover:border-fg hover:bg-subtle disabled:opacity-50">
-      <Plus aria-hidden className="size-4" />
+      className={button({ variant: "dashed" }, "w-fit")}>
       {children}
+      <Plus aria-hidden className="size-4" />
     </button>
   );
 }

@@ -3,7 +3,7 @@
 import { CheckCircle2, FileDown, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/shared/lib/cn";
+import { button, sg } from "../signal/ui";
 import { track } from "../analytics/track";
 import type { Locale } from "../content";
 import { INTAKE } from "./content";
@@ -68,23 +68,22 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
     }
   };
 
-  const btn = "inline-flex h-12 items-center justify-center gap-2 rounded-[4px] border px-5 text-[15px] font-semibold transition-colors duration-[120ms] disabled:cursor-progress disabled:opacity-80";
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex max-w-[680px] flex-col gap-4">
         <CheckCircle2 aria-hidden className="size-12 text-success" />
-        <h1 ref={heading} tabIndex={-1} className="font-display text-[clamp(34px,6vw,56px)] font-bold uppercase leading-[1.1] outline-none">
+        <h1 ref={heading} tabIndex={-1} className="t-page outline-none">
           {t.title}
         </h1>
         <p className="text-[18px] leading-[1.55] text-fg-secondary">{t.lead}</p>
         {done.duplicate && <p className="text-[15px] text-fg-secondary">{t.duplicate}</p>}
       </div>
 
-      <dl className="grid max-w-[680px] gap-4 rounded-[12px] border border-control bg-surface p-5 sm:grid-cols-3 sm:p-6">
+      <dl className="sg-panel grid max-w-[680px] gap-4 p-5 sm:grid-cols-3 sm:p-6">
         {[[t.code, done.code], [t.date, date], [t.project, done.projectName ?? t.noName]].map(([k, v]) => (
           <div key={k} className="flex flex-col gap-1">
-            <dt className="text-[13px] font-semibold uppercase tracking-[0.08em] text-fg-secondary">{k}</dt>
+            <dt className="sg-eyebrow text-fg-secondary">{k}</dt>
             <dd className="text-[17px] font-semibold">{v}</dd>
           </div>
         ))}
@@ -93,13 +92,13 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-3">
           <button type="button" onClick={download} disabled={busy !== null} aria-busy={busy === "download" || undefined}
-            className={cn(btn, "border-accent bg-accent text-on-accent hover:bg-accent-hover")}>
+            className={button({ variant: "primary" })}>
             {t.download}
             <FileDown aria-hidden className="size-4" />
           </button>
           {canShare && (
             <button type="button" onClick={share} disabled={busy !== null} aria-busy={busy === "share" || undefined}
-              className={cn(btn, "border-fg text-fg hover:bg-subtle")}>
+              className={button({ variant: "secondary" })}>
               {t.share}
               <Share2 aria-hidden className="size-4" />
             </button>
@@ -110,20 +109,20 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
       </div>
 
       <section aria-labelledby="next-h" className="flex max-w-[680px] flex-col gap-4 border-t border-line pt-6">
-        <h2 id="next-h" className="font-display text-[24px] font-bold uppercase leading-[1.1]">{t.nextTitle}</h2>
+        <h2 id="next-h" className="text-[21px] font-semibold tracking-[-0.02em]">{t.nextTitle}</h2>
         <ol className="flex flex-col gap-3">
           {t.next.map((s, i) => (
             <li key={s} className="flex gap-3 text-[16px] leading-snug">
-              <span className="display-num grid size-7 shrink-0 place-items-center rounded-full bg-subtle text-[13px]">{i + 1}</span>
+              <span className="w-7 shrink-0 pt-0.5 font-label text-[12px] text-accent-text">{String(i + 1).padStart(2, "0")}</span>
               <span className="pt-0.5">{s}</span>
             </li>
           ))}
         </ol>
       </section>
 
-      <div className="flex flex-wrap gap-4 text-[15px] font-semibold">
-        <Link href={`/${locale}`} className="underline underline-offset-4">{t.home}</Link>
-        <button type="button" onClick={onNew} className="underline underline-offset-4">{INTAKE[locale].intro.start} ↺</button>
+      <div className="flex flex-wrap gap-6">
+        <Link href={`/${locale}`} className={sg.link}>{t.home}</Link>
+        <button type="button" onClick={onNew} className={sg.link}>{INTAKE[locale].intro.start} ↺</button>
       </div>
     </div>
   );

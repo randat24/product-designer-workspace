@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { button } from "./ui";
 import { ArrowUpRight } from "lucide-react";
 import { trackAttrs } from "@/site/analytics/track";
 import { CONTACTS, type Locale } from "@/site/content";
@@ -30,7 +31,7 @@ export function SignalAbout({ locale }: { locale: Locale }) {
           ))}
         </dl>
         <div className="mt-8">
-          <Link href={`/${locale}/about`} className="sg-button sg-button--secondary">
+          <Link href={`/${locale}/about`} className={button({ variant: "secondary" })}>
             {a.more}<ArrowUpRight aria-hidden className="size-4" />
           </Link>
         </div>

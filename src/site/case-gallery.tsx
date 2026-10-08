@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/shared/lib/cn";
 import { track } from "./analytics/track";
+import { button } from "./signal/ui";
 import type { GalleryItem } from "./content";
 
 type Labels = { pages: string; pagesLead: string; open: string; close: string; prev: string; next: string };
@@ -74,12 +76,12 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
         <div className="flex h-full flex-col items-center justify-center gap-4 p-4 text-white" onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}>
           <div className="flex w-full max-w-5xl items-center justify-between gap-4 text-[14px]">
             <span aria-live="polite">{counter(labels.open, index + 1, total)}{item.caption ? ` · ${item.caption}` : ""}</span>
-            <button type="button" onClick={() => dialog.current?.close()} className="rounded-[4px] border border-white/40 px-4 py-1.5 font-semibold hover:bg-white/10">
+            <button type="button" onClick={() => dialog.current?.close()} className={button({ variant: "on-dark", size: "sm" })}>
               {labels.close} ✕
             </button>
           </div>
           <div className="flex min-h-0 w-full max-w-5xl flex-1 items-center gap-3">
-            <NavButton label={labels.prev} onClick={() => go(-1)} hidden={total < 2}>‹</NavButton>
+            <NavButton label={labels.prev} onClick={() => go(-1)} hidden={total < 2}><ChevronLeft aria-hidden className="size-6" strokeWidth={1.75} /></NavButton>
             <div className="flex h-full min-w-0 flex-1 items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element -- full-size project page */}
               <img
@@ -90,7 +92,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
                 className={cn("max-h-full w-auto rounded-[4px] object-contain", item.device === "mobile" ? "max-w-[420px]" : "max-w-full")}
               />
             </div>
-            <NavButton label={labels.next} onClick={() => go(1)} hidden={total < 2}>›</NavButton>
+            <NavButton label={labels.next} onClick={() => go(1)} hidden={total < 2}><ChevronRight aria-hidden className="size-6" strokeWidth={1.75} /></NavButton>
           </div>
         </div>
       </dialog>
@@ -105,7 +107,7 @@ function NavButton({ label, onClick, hidden, children }: { label: string; onClic
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/40 text-[28px] leading-none hover:bg-white/10"
+      className={button({ variant: "on-dark", icon: true })}
     >
       {children}
     </button>
