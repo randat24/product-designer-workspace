@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/lib/cn";
 import type { GalleryItem } from "./content";
-import { CaseContentsSpy } from "./case-contents-spy";
+import { CaseContents } from "./case-contents";
 import type { BrandShape, ProductSection, ProductStory, TrustIcon } from "./product-story";
 import { container } from "./ui";
 
@@ -18,46 +18,26 @@ const num = (i: number) => String(i + 1).padStart(2, "0");
 export function ProductStoryView({ story }: { story: ProductStory }) {
   const sections = story.sections.filter((s) => s.kind !== "screens" || s.items.length > 0);
   return (
-    <div className="nw">
-      <nav id="case-contents" aria-label={story.contents} className="z-10 border-y border-line bg-canvas/90 backdrop-blur lg:sticky lg:top-16">
-        <ol className={`${container} flex gap-1 overflow-x-auto py-2.5 text-[13px] font-semibold`}>
-          {sections.map((s, i) => (
-            <li key={s.id} className="shrink-0">
-              <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-[var(--nw-tint)] aria-[current]:text-[var(--nw-ink)]">
-                <span className="font-label text-[11px]">{num(i)}</span>
-                {s.title}
-              </a>
-            </li>
-          ))}
-        </ol>
-        <CaseContentsSpy ids={sections.map((s) => s.id)} navId="case-contents" />
-      </nav>
-
-      <div className="flex flex-col">
+    <div className={`nw ${container} sg-case-body`}>
+      <CaseContents label={story.contents} sections={sections} />
+      <div className="min-w-0">
         {sections.map((s, i) => <Section key={s.id} section={s} index={i} total={sections.length} />)}
       </div>
     </div>
   );
 }
 
-/** Sections on a navy band: the ecosystem and the brand open a new chapter of the story. */
+/** Sections on a dark panel: the ecosystem and the brand open a new chapter of the story. */
 const BAND = new Set<ProductSection["kind"]>(["ecosystem", "brand"]);
 
 function Section({ section: s, index, total }: { section: ProductSection; index: number; total: number }) {
   const band = BAND.has(s.kind);
   return (
-    <section id={s.id} aria-labelledby={`${s.id}-h`}
-      className={cn("scroll-mt-32 py-16 sm:py-20", band ? "nw-band" : index % 2 === 1 && "bg-[var(--nw-wash)]")}>
-      <div className={`${container} flex flex-col gap-10`}>
-        <header className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end lg:gap-12">
-          <div className="flex flex-col gap-3">
-            <span className={cn("font-label text-[12px]", band ? "text-white/70" : "text-[var(--nw-ink)]")}>{num(index)} / {String(total).padStart(2, "0")}</span>
-            <h2 id={`${s.id}-h`} className="t-chapter">{s.title}</h2>
-          </div>
-          {s.lede && <p className={cn("max-w-[62ch] text-[18px] leading-[1.6]", band ? "text-white/85" : "text-fg-secondary")}>{s.lede}</p>}
-        </header>
-        <Body section={s} />
-      </div>
+    <section id={s.id} aria-labelledby={`${s.id}-h`} className="sg-chapter">
+      <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{num(index)} /</span>{String(total).padStart(2, "0")}</p>
+      <h2 id={`${s.id}-h`}>{s.title}</h2>
+      {s.lede && <p className="sg-case-secondary">{s.lede}</p>}
+      <div className={cn("mt-8", band && "nw-band rounded-[8px] p-6 sm:p-10")}><Body section={s} /></div>
     </section>
   );
 }
@@ -97,7 +77,7 @@ function Chips({ items, large }: { items: string[]; large?: boolean }) {
   return (
     <ul className="flex flex-wrap gap-2.5">
       {items.map((it) => (
-        <li key={it} className={cn("rounded-full border border-[var(--nw-line)] bg-surface font-semibold text-fg",
+        <li key={it} className={cn("rounded-[4px] border border-line bg-surface font-medium text-fg",
           large ? "px-5 py-2.5 text-[16px] sm:text-[18px]" : "px-3.5 py-1.5 text-[14px]")}>{it}</li>
       ))}
     </ul>
@@ -108,10 +88,10 @@ function Overview({ body, facts }: { body: string[]; facts: { label: string; val
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
       <Paragraphs body={body} className="text-[clamp(18px,1.6vw,21px)]" />
-      <dl className="flex flex-col divide-y divide-line self-start rounded-[12px] border border-line bg-surface">
+      <dl className="flex flex-col divide-y divide-line self-start rounded-[8px] border border-line bg-surface">
         {facts.map((f) => (
           <div key={f.label} className="flex flex-col gap-1 px-6 py-4">
-            <dt className="text-[13px] font-semibold uppercase tracking-wide text-fg-secondary">{f.label}</dt>
+            <dt className="font-label text-[11px] uppercase tracking-[0.08em] text-fg-secondary">{f.label}</dt>
             <dd className="font-semibold leading-snug">{f.value}</dd>
           </div>
         ))}
@@ -126,10 +106,10 @@ function Challenge({ body, behaviors }: { body: string[]; behaviors: { who: stri
       <Paragraphs body={body} />
       <ul className="flex flex-col gap-3">
         {behaviors.map((b, i) => (
-          <li key={b.who} className="nw-rise grid grid-cols-[auto_1fr] items-baseline gap-x-5 rounded-[12px] border border-line bg-surface p-6">
+          <li key={b.who} className="nw-rise grid grid-cols-[auto_1fr] items-baseline gap-x-5 rounded-[8px] border border-line bg-surface p-6">
             <span className="display-num text-[28px] leading-none text-[var(--nw-ink)]">{num(i)}</span>
             <div className="flex flex-col gap-1">
-              <p className="font-display text-[20px] font-bold uppercase leading-[1.1]">{b.who}</p>
+              <p className="text-[20px] font-semibold tracking-[-0.02em] leading-[1.1]">{b.who}</p>
               <p className="text-fg-secondary">{b.goal}</p>
             </div>
           </li>
@@ -154,14 +134,14 @@ function Ecosystem({ center, nodes }: { center: string; nodes: string[] }) {
           {points.map((p) => (
             <line key={`l-${p.label}`} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="var(--nw-glow)" strokeOpacity="0.35" className="nw-draw" pathLength={1} />
           ))}
-          <circle cx={cx} cy={cy} r="92" fill="var(--nw-blue)" />
+          <circle cx={cx} cy={cy} r="92" fill="var(--nw-glow)" />
           <circle cx={cx} cy={cy} r="112" fill="none" stroke="var(--nw-glow)" strokeOpacity="0.35" />
-          <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize="22" fontWeight="700" className="font-display uppercase">{center}</text>
+          <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle" fill="#191B18" fontSize="21" fontWeight="600">{center}</text>
           {points.map((p) => {
             const width = p.label.length * 9.2 + 36;
             return (
               <g key={p.label}>
-                <rect x={p.x - width / 2} y={p.y - 19} width={width} height="38" rx="19" fill="#0E1C40" stroke="var(--nw-glow)" strokeOpacity="0.55" />
+                <rect x={p.x - width / 2} y={p.y - 19} width={width} height="38" rx="4" fill="var(--nw-node)" stroke="var(--nw-glow)" strokeOpacity="0.55" />
                 <text x={p.x} y={p.y + 1} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize="16" fontWeight="600">{p.label}</text>
               </g>
             );
@@ -169,7 +149,7 @@ function Ecosystem({ center, nodes }: { center: string; nodes: string[] }) {
         </svg>
       </figure>
       <div className="flex flex-col items-center gap-6 md:hidden">
-        <p className="grid size-36 place-items-center rounded-[4px] bg-[var(--nw-blue)] px-4 text-center font-display text-[18px] font-bold uppercase leading-tight text-white">{center}</p>
+        <p className="grid size-36 place-items-center rounded-[4px] bg-accent px-4 text-center text-on-accent text-[18px] font-semibold tracking-[-0.02em] leading-tight">{center}</p>
         <ul className="flex flex-wrap justify-center gap-2">
           {nodes.map((n) => <li key={n} className="rounded-[4px] border border-white/30 px-3.5 py-1.5 text-[14px] font-semibold text-white">{n}</li>)}
         </ul>
@@ -182,13 +162,13 @@ function Roles({ items }: { items: { name: string; summary: string; can: string[
   return (
     <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {items.map((r, i) => (
-        <li key={r.name} className="nw-rise relative flex flex-col gap-4 rounded-[12px] border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-200 hover:border-[var(--nw-blue)] hover:shadow-[0_12px_32px_-18px_var(--nw-blue)]">
+        <li key={r.name} className="nw-rise relative flex flex-col gap-4 rounded-[8px] border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-200 hover:border-[var(--nw-blue)] hover:shadow-[0_12px_32px_-18px_var(--nw-blue)]">
           <div className="flex items-center justify-between">
             <span className="display-num text-[14px] text-[var(--nw-ink)]">{num(i)}</span>
             {i < items.length - 1 && <ArrowRight aria-hidden className="hidden size-5 text-[var(--nw-ink)] xl:block" />}
           </div>
           <div className="flex flex-col gap-2">
-            <h3 className="font-display text-[24px] font-bold uppercase leading-[1.05]">{r.name}</h3>
+            <h3 className="text-[24px] font-semibold tracking-[-0.02em] leading-[1.05]">{r.name}</h3>
             <p className="text-fg-secondary">{r.summary}</p>
           </div>
           <ul className="mt-auto flex flex-col gap-1.5 border-t border-line pt-4 text-[15px]">
@@ -206,9 +186,9 @@ function Ia({ groups }: { groups: { title: string; items: string[] }[] }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {groups.map((g, i) => (
-        <section key={g.title} aria-label={g.title} className="nw-rise overflow-hidden rounded-[12px] border border-line bg-surface">
+        <section key={g.title} aria-label={g.title} className="nw-rise overflow-hidden rounded-[8px] border border-line bg-surface">
           <header className="flex items-baseline justify-between gap-3 bg-[var(--nw-blue)] px-5 py-3.5 text-white">
-            <h3 className="font-display text-[18px] font-bold uppercase tracking-wide">{g.title}</h3>
+            <h3 className="text-[18px] font-semibold tracking-[-0.02em]">{g.title}</h3>
             <span className="display-num text-[12px] opacity-80">{num(i)}</span>
           </header>
           <ul className="flex flex-col divide-y divide-line px-5 text-[15px]">
@@ -224,10 +204,10 @@ function Flows({ items }: { items: { title: string; steps: string[] }[] }) {
   return (
     <ol className="flex flex-col gap-5">
       {items.map((f, i) => (
-        <li key={f.title} className="nw-rise grid gap-4 rounded-[12px] border border-line bg-surface p-5 sm:p-6 lg:grid-cols-[220px_1fr] lg:items-center">
+        <li key={f.title} className="nw-rise grid gap-4 rounded-[8px] border border-line bg-surface p-5 sm:p-6 lg:grid-cols-[220px_1fr] lg:items-center">
           <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
             <span className="display-num text-[13px] text-[var(--nw-ink)]">FLOW {num(i)}</span>
-            <h3 className="font-display text-[20px] font-bold uppercase leading-[1.1]">{f.title}</h3>
+            <h3 className="text-[20px] font-semibold tracking-[-0.02em] leading-[1.1]">{f.title}</h3>
           </div>
           <ol className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             {f.steps.map((step, j) => (
@@ -255,10 +235,10 @@ function Flows({ items }: { items: { title: string; steps: string[] }[] }) {
 function Monetization({ chain, actions, models }: { chain: string[]; actions: string[]; models: { title: string; body: string }[] }) {
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-      <figure className="nw-rise flex flex-col items-center gap-3 rounded-[12px] bg-[var(--nw-tint)] p-6 sm:p-8">
+      <figure className="nw-rise flex flex-col items-center gap-3 rounded-[8px] bg-[var(--nw-tint)] p-6 sm:p-8">
         {chain.map((c, i) => (
           <div key={c} className="flex w-full flex-col items-center gap-3">
-            <p className={cn("w-full max-w-[320px] rounded-[12px] px-5 py-3.5 text-center font-display text-[20px] font-bold uppercase",
+            <p className={cn("w-full max-w-[320px] rounded-[8px] px-5 py-3.5 text-center text-[20px] font-semibold tracking-[-0.02em]",
               i === chain.length - 1 ? "bg-[var(--nw-blue)] text-white" : "border border-[var(--nw-line)] bg-surface")}>{c}</p>
             <ArrowDown aria-hidden className="size-5 text-[var(--nw-ink)]" />
           </div>
@@ -271,7 +251,7 @@ function Monetization({ chain, actions, models }: { chain: string[]; actions: st
       </figure>
       <ul className="grid gap-3 sm:grid-cols-2">
         {models.map((m) => (
-          <li key={m.title} className="nw-rise flex flex-col gap-1.5 rounded-[12px] border border-line bg-surface p-5">
+          <li key={m.title} className="nw-rise flex flex-col gap-1.5 rounded-[8px] border border-line bg-surface p-5">
             <p className="font-semibold">{m.title}</p>
             <p className="text-[15px] leading-[1.55] text-fg-secondary">{m.body}</p>
           </li>
@@ -285,10 +265,10 @@ function Principles({ items }: { items: { title: string; body: string }[] }) {
   return (
     <ol className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((p, i) => (
-        <li key={p.title} className="nw-rise flex min-h-[220px] flex-col justify-between gap-6 rounded-[12px] border border-line bg-surface p-6">
+        <li key={p.title} className="nw-rise flex min-h-[220px] flex-col justify-between gap-6 rounded-[8px] border border-line bg-surface p-6">
           <span className="display-num text-[44px] leading-none text-[var(--nw-ink)]">{num(i)}</span>
           <div className="flex flex-col gap-2">
-            <h3 className="font-display text-[24px] font-bold uppercase leading-[1.05]">{p.title}</h3>
+            <h3 className="text-[24px] font-semibold tracking-[-0.02em] leading-[1.05]">{p.title}</h3>
             <p className="text-fg-secondary">{p.body}</p>
           </div>
         </li>
@@ -318,8 +298,8 @@ function System({ body, groups }: { body: string[]; groups: { title: string; ite
       <Paragraphs body={body} className="text-[clamp(18px,1.6vw,21px)]" />
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {groups.map((g) => (
-          <li key={g.title} className="nw-rise flex flex-col gap-3 rounded-[12px] border border-line bg-surface p-5">
-            <p className="font-display text-[18px] font-bold uppercase leading-[1.1] text-[var(--nw-ink)]">{g.title}</p>
+          <li key={g.title} className="nw-rise flex flex-col gap-3 rounded-[8px] border border-line bg-surface p-5">
+            <p className="text-[18px] font-semibold tracking-[-0.02em] leading-[1.1] text-[var(--nw-ink)]">{g.title}</p>
             <ul className="flex flex-col gap-1.5 text-[15px] text-fg-secondary">
               {g.items.map((it) => <li key={it}>{it}</li>)}
             </ul>
@@ -348,17 +328,17 @@ function Brand({ body, parts, formula, image }: { body: string[]; parts: { shape
         <Paragraphs body={body} className="text-white/90" />
         <ul className="flex flex-col gap-3">
           {parts.map((p) => (
-            <li key={p.shape} className="nw-rise grid grid-cols-[auto_1fr] items-center gap-5 rounded-[12px] border border-white/15 bg-white/[0.04] p-5">
+            <li key={p.shape} className="nw-rise grid grid-cols-[auto_1fr] items-center gap-5 rounded-[8px] border border-white/15 bg-white/[0.04] p-5">
               <span className="text-[var(--nw-glow)]"><Glyph shape={p.shape} /></span>
               <div className="flex flex-col gap-1">
-                <p className="font-display text-[20px] font-bold uppercase">{p.title}</p>
+                <p className="text-[20px] font-semibold tracking-[-0.02em]">{p.title}</p>
                 <p className="text-white/80">{p.meaning}</p>
               </div>
             </li>
           ))}
         </ul>
       </div>
-      <p className="text-center font-display text-[clamp(22px,2.6vw,32px)] font-bold uppercase leading-[1.08] text-white">{formula}</p>
+      <p className="text-center text-[clamp(22px,2.6vw,32px)] font-medium leading-[1.15] tracking-[-0.03em] text-white">{formula}</p>
       {image && <Figures images={[image]} dark />}
     </div>
   );
@@ -370,7 +350,7 @@ function Timeline({ steps }: { steps: { title: string; body: string }[] }) {
       {steps.map((s, i) => (
         <li key={s.title} className="nw-rise flex flex-col gap-3 border-t-2 border-[var(--nw-blue)] pt-4">
           <span className="display-num text-[14px] text-[var(--nw-ink)]">{num(i)}</span>
-          <h3 className="font-display text-[20px] font-bold uppercase leading-[1.1]">{s.title}</h3>
+          <h3 className="text-[20px] font-semibold tracking-[-0.02em] leading-[1.1]">{s.title}</h3>
           <p className="text-[15px] leading-[1.6] text-fg-secondary">{s.body}</p>
         </li>
       ))}
@@ -385,7 +365,7 @@ function Figures({ images, dark }: { images: GalleryItem[]; dark?: boolean }) {
         <figure key={im.src} className={cn("flex flex-col gap-2", images.length > 2 && i === 0 && "lg:col-span-2")}>
           {/* eslint-disable-next-line @next/next/no-img-element -- static case images with known size */}
           <img src={im.src} alt={im.alt} width={im.width} height={im.height} loading="lazy" decoding="async"
-            className={cn("h-auto w-full rounded-[12px] border", dark ? "border-white/15" : "border-line")} />
+            className={cn("h-auto w-full rounded-[8px] border", dark ? "border-white/15" : "border-line")} />
           {im.caption && <figcaption className={cn("text-[14px]", dark ? "text-white/70" : "text-fg-secondary")}>{im.caption}</figcaption>}
         </figure>
       ))}
@@ -404,7 +384,7 @@ function Trust({ items }: { items: { icon: TrustIcon; title: string; body: strin
       {items.map((t) => {
         const Icon = TRUST_ICONS[t.icon];
         return (
-          <li key={t.title} className="nw-rise flex flex-col gap-3 rounded-[12px] border border-line bg-surface p-5">
+          <li key={t.title} className="nw-rise flex flex-col gap-3 rounded-[8px] border border-line bg-surface p-5">
             <span className="grid size-11 place-items-center rounded-[8px] bg-[var(--nw-tint)] text-[var(--nw-ink)]">
               <Icon aria-hidden className="size-5" strokeWidth={1.75} />
             </span>
@@ -419,9 +399,9 @@ function Trust({ items }: { items: { icon: TrustIcon; title: string; body: strin
 
 function Outcome({ body }: { body: string[] }) {
   return (
-    <div className="flex flex-col gap-6 border-l-4 border-[var(--nw-blue)] pl-6 sm:pl-10">
+    <div className="flex flex-col gap-6 border-l-[3px] border-accent-text pl-6 sm:pl-10">
       {body.map((p, i) => (
-        <p key={p} className={cn(i === 0 ? "font-display text-[clamp(20px,2.2vw,28px)] font-bold uppercase leading-[1.2]" : "max-w-[68ch] text-[18px] leading-[1.65] text-fg-secondary")}>{p}</p>
+        <p key={p} className={cn(i === 0 ? "text-[clamp(20px,2.2vw,28px)] font-semibold tracking-[-0.02em] leading-[1.2]" : "max-w-[68ch] text-[18px] leading-[1.65] text-fg-secondary")}>{p}</p>
       ))}
     </div>
   );

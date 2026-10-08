@@ -14,14 +14,10 @@ import { ConsentBanner } from "@/site/consent-banner";
 import { trackAttrs } from "@/site/analytics/track";
 import { BackToTop } from "@/site/back-to-top";
 import { LangSwitch } from "@/site/lang-switch";
-import { FedoMark } from "@/shared/ui/fedo-mark";
-import { Signature } from "@/site/signature";
-import { DribbbleIcon, LinkedInIcon, MailIcon, TelegramIcon } from "@/site/social-icons";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
-import { FedoCursor, FedoIntro, INTRO_SCRIPT, SpecsToggle } from "@/site/fedo-layer";
 import { container } from "@/site/ui";
 import { SiteNav } from "@/site/site-nav";
-import { INTAKE } from "@/site/intake/content";
+import { signalCopy } from "@/site/signal/home-content";
 
 // Root layout of the public site: <html lang> follows the locale. The private workspace has its
 // own root (app/_root/tool-root.tsx). Only /uk and /en exist: any other first segment matches no
@@ -60,10 +56,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 const SOCIAL = [
-  { key: "email", href: `mailto:${CONTACTS.email}`, label: CONTACTS.email, Icon: MailIcon, event: "contact_email_click" },
-  { key: "telegram", href: CONTACTS.telegram, label: "Telegram", Icon: TelegramIcon, event: "telegram_click" },
-  { key: "linkedin", href: CONTACTS.linkedin, label: "LinkedIn", Icon: LinkedInIcon, event: "linkedin_click" },
-  { key: "dribbble", href: CONTACTS.dribbble, label: "Dribbble", Icon: DribbbleIcon, event: "dribbble_click" },
+  { key: "email", href: `mailto:${CONTACTS.email}`, label: "Email", event: "contact_email_click" },
+  { key: "telegram", href: CONTACTS.telegram, label: "Telegram", event: "telegram_click" },
+  { key: "linkedin", href: CONTACTS.linkedin, label: "LinkedIn", event: "linkedin_click" },
+  { key: "dribbble", href: CONTACTS.dribbble, label: "Dribbble", event: "dribbble_click" },
 ] as const;
 
 export default async function SiteLayout({
@@ -79,6 +75,7 @@ export default async function SiteLayout({
   // root layout would drop the page to the bare error shell.
   const locale: Locale = isLocale(raw) ? raw : "uk";
   const d = dict(locale);
+  const s = signalCopy(locale);
   const year = new Date().getFullYear();
   
   return (
@@ -86,7 +83,6 @@ export default async function SiteLayout({
       <head>
         {/* Before paint: a saved light/dark choice, so the page never flashes the other theme. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
       <body className="signal">
         <a
@@ -96,31 +92,26 @@ export default async function SiteLayout({
           {d.ui.skip}
         </a>
         <div className="flex min-h-dvh flex-col">
-          <header className="sticky top-0 z-20 border-b border-line bg-canvas/85 backdrop-blur">
-            <div className={`${container} flex h-16 items-center gap-3 sm:gap-4`}>
-              {/* The FEDO mark (Fedorov): the cursor taps the F on hover. The name stays for screen readers and wide screens. */}
-              <Link href={`/${locale}`} className="hit group flex shrink-0 items-center gap-2.5 whitespace-nowrap">
-                <FedoMark className="size-9" tap />
-                <span className="font-display text-[22px] font-semibold uppercase leading-none tracking-[0.08em]" aria-hidden>FEDO</span>
-                <span className="sr-only">{d.name}</span>
-                <span aria-hidden className="hidden border-l border-line pl-2.5 text-[13px] text-fg-secondary xl:inline">{d.name}</span>
+          {/* SIGNAL header: the hf. monogram with the name and role, two text links and «Обговорити проєкт ↗»,
+              then theme and language. */}
+          <header className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
+            <div className={`${container} flex h-16 items-center gap-3 sm:h-20 sm:gap-4`}>
+              <Link href={`/${locale}`} className="hit flex shrink-0 items-center gap-3.5 whitespace-nowrap" aria-label={d.name}>
+                <span aria-hidden className="grid size-9 place-items-center border border-fg pr-[3px] text-[18px] font-medium tracking-[-0.12em] sm:size-10 sm:text-[20px]">hf.</span>
+                <span aria-hidden className="flex flex-col text-[14px] font-semibold leading-[1.35]">
+                  {d.name}
+                  <small className="mt-0.5 hidden font-label text-[10px] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
+                </span>
               </Link>
-              <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
-              <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "header" })}
-                className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-[4px] border border-accent-text bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:ml-auto md:inline-flex lg:ml-0">
-                {INTAKE[locale].cta}
-              </Link>
-              <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
-                <SpecsToggle label={d.fedo.specs.button} hint={d.fedo.specs.hint} />
+              <SiteNav locale={locale} labels={{ work: d.nav.work, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} />
+              <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">
                 <ThemeToggle labelLight={d.ui.themeLight} labelDark={d.ui.themeDark} />
                 <LangSwitch current={locale} />
               </div>
             </div>
-            {/* Phones and tablets (below lg): the links take a second row instead of a hamburger — only three links.
-                One row needs about 910px (name, links, «Обговорити проєкт», theme, language); squeezed below that, the
-                labels wrapped onto two lines. */}
+            {/* Phones and tablets (below lg): the links take a second row instead of a hamburger — only three links. */}
             <div className={container}>
-              <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} mobile />
+              <SiteNav locale={locale} labels={{ work: d.nav.work, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} mobile />
             </div>
           </header>
 
@@ -128,66 +119,28 @@ export default async function SiteLayout({
             {children}
           </main>
 
-          <footer className="overflow-hidden bg-rail text-rail-fg">
-            <div className={`${container} relative flex flex-col gap-8 py-10 sm:flex-row sm:items-end sm:justify-between`}>
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-end gap-3">
-                    <p className="font-display text-[24px] font-bold uppercase leading-[1.1]">{d.name}</p>
-                    <Signature className="-mb-2 h-10 w-auto opacity-80" />
-                  </div>
-                  <p className="text-[14px] opacity-70">{d.role} · {d.location}</p>
-                </div>
-                <nav aria-label={d.ui.footerNav}>
-                  <ul className="flex flex-wrap gap-x-5 gap-y-1 text-[14px] font-semibold">
-                    <li><Link href={`/${locale}`} className="hit hover:underline">{d.ui.home}</Link></li>
-                    <li><Link href={`/${locale}/cases`} className="hit hover:underline">{d.nav.work}</Link></li>
-                    <li><Link href={`/${locale}/about`} className="hit hover:underline">{d.nav.about}</Link></li>
-                    <li><Link href={`/${locale}/start-project`} className="hit hover:underline" {...trackAttrs("project_request_cta", { location: "footer" })}>{INTAKE[locale].cta}</Link></li>
-                  </ul>
-                </nav>
-              </div>
-              <div className="flex flex-col gap-4 sm:items-end">
-                <ul className="flex gap-2">
-                  {SOCIAL.map(({ key, href, label, Icon, event }) => (
-                    <li key={key}>
-                      <a
-                        href={href}
-                        aria-label={label}
-                        title={label}
-                        {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer me" } : {})}
-                        {...trackAttrs(event, { location: "footer" })}
-                        className="flex h-11 w-11 items-center justify-center rounded-[4px] border border-current/25 transition-colors hover:border-current hover:bg-current/10"
-                      >
-                        <Icon className="h-5 w-5" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={`mailto:${CONTACTS.email}`}
-                  {...trackAttrs("contact_email_click", { location: "footer" })}
-                  className="hit text-[14px] font-semibold hover:underline"
-                >
-                  {CONTACTS.email}
-                </a>
-              </div>
-              {/* The mark, large and cut by the bottom bar: inverted on the rail. */}
-              <FedoMark className="pointer-events-none hidden w-[clamp(150px,15vw,210px)] translate-y-[34%] [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)] md:block" />
-            </div>
-            <div className={`${container} relative z-[1] flex items-center justify-between gap-4 border-t border-current/15 bg-rail py-4`}>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] opacity-60">
-                <span>© {year} · {d.footer.rights}</span>
-                {/* The private workspace: not for crawlers. */}
-                <Link href={`/${locale}/privacy`} className="hit hover:underline">{d.footer.privacy}</Link>
-                <Link href="/app" rel="nofollow" prefetch={false} className="hit hover:underline">{d.footer.login}</Link>
-              </div>
+          {/* SIGNAL footer: one mono line under a rule. */}
+          <footer className={`${container} mt-16 flex flex-col gap-4 border-t border-line py-7 font-label text-[11px] uppercase leading-[1.6] tracking-[0.04em] text-fg-secondary md:flex-row md:items-center md:justify-between`}>
+            <span>© {year} {d.name}</span>
+            <ul className="flex flex-wrap gap-x-5 gap-y-1" aria-label={d.ui.footerNav}>
+              {SOCIAL.map(({ key, href, label, event }) => (
+                <li key={key}>
+                  <a href={href}
+                    {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer me" } : {})}
+                    {...trackAttrs(event, { location: "footer" })}
+                    className="hit hover:text-fg">{label} ↗</a>
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-x-5 gap-y-1">
+              <Link href={`/${locale}/privacy`} className="hit hover:text-fg">{d.footer.privacy}</Link>
+              {/* The private workspace: not for crawlers. */}
+              <Link href="/app" rel="nofollow" prefetch={false} className="hit hover:text-fg">{d.footer.login}</Link>
+              <a href="#main" className="hit hover:text-fg">{s.top} ↑</a>
             </div>
           </footer>
         </div>
         <BackToTop label={d.ui.toTop} />
-        <FedoCursor />
-        <FedoIntro />
         <AnalyticsClickListener />
         <GoogleAnalytics />
         {gaId() && <ConsentBanner labels={d.privacy} privacyHref={`/${locale}/privacy`} />}

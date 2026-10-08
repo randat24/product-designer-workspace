@@ -468,7 +468,7 @@ test("case publication: the site changes only on publish, and unpublishing takes
 
   // The card in the list names how much of the work the workbook holds (the demo project has flows and screens).
   await site.goto("/uk/cases");
-  const card = site.locator(`main a[href="/uk/cases/${slug}"]`);
+  const card = site.locator("main article").filter({ has: site.locator(`a[href="/uk/cases/${slug}"]`) });
   await expect(card).toContainText("Глибина процесу");
   await expect(card.locator("dt", { hasText: "Екрани" })).toBeVisible();
 

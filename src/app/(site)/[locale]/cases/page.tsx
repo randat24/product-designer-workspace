@@ -4,7 +4,7 @@ import { dict, isLocale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
 import { JsonLd } from "@/site/json-ld";
 import { breadcrumbLd, graph, localeUrl, pageMetadata } from "@/site/seo";
-import { CaseList } from "@/site/case-list";
+import { SignalWork } from "@/site/signal/work";
 import { container } from "@/site/ui";
 
 export const revalidate = 60;
@@ -23,7 +23,7 @@ export default async function Cases({ params }: { params: Promise<{ locale: stri
   const cases = await getCases(locale);
 
   return (
-    <div className={`${container} flex flex-col gap-10 pb-20 pt-12`}>
+    <div className={`${container} pb-20 pt-12 sm:pt-16`}>
       <JsonLd
         data={graph(
           breadcrumbLd([
@@ -32,13 +32,15 @@ export default async function Cases({ params }: { params: Promise<{ locale: stri
           ]),
         )}
       />
-      <CaseList
+      <SignalWork
         cases={cases}
         locale={locale}
+        location="cases"
         heading={
-          <header className="flex max-w-[640px] flex-col gap-4">
-            <h1 className="page-title">{d.cases.title}</h1>
-            <p className="text-[18px] text-fg-secondary">{d.cases.lead}</p>
+          <header className="flex max-w-[640px] flex-col gap-5">
+            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{String(cases.length).padStart(2, "0")} /</span>{d.nav.work}</p>
+            <h1 className="sg-heading">{d.cases.title}</h1>
+            <p className="sg-lead">{d.cases.lead}</p>
           </header>
         }
       />

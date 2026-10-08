@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight } from "lucide-react";
 import { dict, type Locale } from "@/site/content";
 import { container } from "@/site/ui";
+import { HeroArt } from "./hero-art";
 
 /** SIGNAL hero copy (uk, en). Kept here while the redesign is on trial, so content.ts stays untouched. */
 const HERO = {
@@ -33,6 +33,8 @@ const HERO = {
 
 /** Anchor of the work section right under the hero. */
 export const WORK_ANCHOR = "selected-work";
+/** Anchor of «Мій підхід», the process section further down the home page. */
+export const APPROACH_ANCHOR = "approach";
 
 export function SignalHero({ locale }: { locale: Locale }) {
   const d = dict(locale);
@@ -52,23 +54,19 @@ export function SignalHero({ locale }: { locale: Locale }) {
             <a href={`#${WORK_ANCHOR}`} className="sg-button sg-button--primary">
               {h.work}<ArrowDownRight aria-hidden className="size-4" />
             </a>
-            <Link href={`/${locale}/about`} className="sg-button sg-button--ghost">
-              {h.approach}<ArrowUpRight aria-hidden className="size-4" />
-            </Link>
+            <a href={`#${APPROACH_ANCHOR}`} className="sg-button sg-button--ghost">
+              {h.approach}<ArrowDownRight aria-hidden className="size-4" />
+            </a>
           </div>
         </div>
-        <div className="sg-hero-art" aria-hidden="true">
+        <HeroArt>
           <span className="sg-art-label sg-art-label--top">{h.artTop.toUpperCase()}</span>
-          {/* eslint-disable-next-line @next/next/no-img-element -- static vector drawing, size known */}
-          <img className="sg-art-light" src="/signal/signal-light.svg" alt="" width={700} height={650} loading="lazy" decoding="async" />
-          {/* eslint-disable-next-line @next/next/no-img-element -- static vector drawing, size known */}
-          <img className="sg-art-dark" src="/signal/signal-dark.svg" alt="" width={700} height={650} loading="lazy" decoding="async" />
           <span className="sg-art-label sg-art-label--bottom">{h.artBottom.toUpperCase()}</span>
           <div className="sg-art-caption">
             <strong>{h.captionTitle}</strong>
             <span>{h.captionText}</span>
           </div>
-        </div>
+        </HeroArt>
       </section>
       <div className={container}>
         <div className="sg-hero-bottom">

@@ -3,13 +3,10 @@
 import { Anchor, Building2, Landmark } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import { cn } from "@/shared/lib/cn";
-import { AWARD_TILE, AwardSvg } from "./award-icons";
+import { AwardSvg } from "./award-icons";
 import type { Award } from "./content";
 
 const ISSUER_ICON = { state: Landmark, city: Building2, brigade: Anchor } as const;
-/** SIGNAL orange under the award title and on the chosen medal (6.9:1 on the dark tile). */
-const AWARD_ACCENT = "#FF6B35";
-
 const num = (i: number) => String(i + 1).padStart(2, "0");
 
 /**
@@ -44,13 +41,11 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === active} tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)} onKeyDown={onKey}
             className={cn(
-              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[12px] border p-3 text-[#F1F1E9] transition-colors sm:w-auto",
-              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B35]",
-              i === active ? "border-[#FF6B35] shadow-[inset_0_0_0_1px_#FF6B35]" : "border-white/10 hover:border-white/30",
-            )}
-            style={{ background: AWARD_TILE }}>
-            <span className="self-start text-[12px] font-semibold tabular-nums opacity-70">{num(i)}</span>
-            <AwardSvg icon={a.icon} className="h-20 w-auto object-contain sm:h-24" />
+              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[8px] border bg-surface p-3 text-fg transition-colors duration-[120ms] sm:w-auto",
+              i === active ? "border-accent-text shadow-[inset_0_0_0_1px_var(--accent-text)]" : "border-line hover:border-control",
+            )}>
+            <span className={cn("self-start font-label text-[11px] tabular-nums", i === active ? "text-accent-text" : "text-fg-secondary")}>{num(i)}</span>
+            <AwardSvg icon={a.icon} className="h-20 sm:h-24" />
             <span className="sr-only">{a.title}</span>
           </button>
         ))}
@@ -59,23 +54,22 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
         const Issuer = ISSUER_ICON[a.issuerKind];
         return (
           <section key={a.icon} id={`${id}-panel-${i}`} role="tabpanel" aria-labelledby={`${id}-tab-${i}`} hidden={i !== active}
-            className="grid gap-6 rounded-[12px] border border-white/10 p-6 text-[#F1F1E9] sm:p-8 md:grid-cols-[minmax(220px,300px)_1fr] md:items-center md:gap-10"
-            style={{ background: AWARD_TILE }}>
+            className="grid gap-6 rounded-[8px] border border-line bg-surface p-6 text-fg sm:p-8 md:grid-cols-[minmax(220px,300px)_1fr] md:items-center md:gap-10">
             <div className="relative mx-auto flex h-64 w-52 items-center justify-center sm:h-80 sm:w-64">
-              <span aria-hidden className="absolute aspect-square h-52 rounded-full bg-white/[0.04] sm:h-64" />
-              <AwardSvg icon={a.icon} className="relative max-h-full max-w-full object-contain" />
+              <span aria-hidden className="absolute aspect-square h-52 rounded-full border border-line bg-[radial-gradient(var(--line)_0.7px,transparent_0.7px)] [background-size:16px_16px] sm:h-64" />
+              <AwardSvg icon={a.icon} className="relative h-[88%]" />
             </div>
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap items-center gap-3 text-[14px]">
-                <span className="font-semibold tabular-nums opacity-70">{num(i)} / {String(awards.length).padStart(2, "0")}</span>
-                <span className="inline-flex items-center gap-2 rounded-[4px] border border-white/15 px-3 py-1 opacity-85">
+                <span className="font-label text-[12px] tabular-nums text-fg-secondary"><span className="text-accent-text">{num(i)}</span> / {String(awards.length).padStart(2, "0")}</span>
+                <span className="inline-flex items-center gap-2 rounded-[4px] border border-line px-3 py-1 text-fg-secondary">
                   <Issuer aria-hidden className="size-4" strokeWidth={1.5} />
                   {a.issuer}
                 </span>
               </div>
-              <h4 className="text-[24px] font-semibold leading-snug sm:text-[28px]">{a.title}</h4>
-              <span aria-hidden className="h-[3px] w-12 rounded-full" style={{ background: AWARD_ACCENT }} />
-              <p className="max-w-[62ch] text-[15px] leading-[1.65] opacity-80 sm:text-[16px]">{a.description}</p>
+              <h4 className="text-[24px] font-medium leading-snug tracking-[-0.03em] sm:text-[28px]">{a.title}</h4>
+              <span aria-hidden className="h-[2px] w-12 bg-accent-text" />
+              <p className="max-w-[62ch] text-[15px] leading-[1.65] text-fg-secondary sm:text-[16px]">{a.description}</p>
             </div>
           </section>
         );
