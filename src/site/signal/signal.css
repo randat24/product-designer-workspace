@@ -1,0 +1,248 @@
+/* SIGNAL 1.0 on the public site (trial branch). Source: the SIGNAL design-system package (tokens.css,
+ * components.css, the portfolio hero from preview.css). Everything is scoped to .signal, which only the public
+ * layout puts on <body>: the tool (/app, /w/**) keeps its own tokens from globals.css.
+ *
+ * 1. SIGNAL tokens (--sg-*), light / dark, following the site's theme switch (data-theme on <html>) and the system.
+ * 2. The site's own tokens (--canvas, --fg, --accent…) re-pointed at SIGNAL inside .signal, so every existing page
+ *    takes the new palette without touching its markup.
+ * 3. Type: Manrope everywhere (the site already ships it, 400–700), sentence-case display headings.
+ * 4. Components (sg-*) in @layer components, so Tailwind utilities still win over them.
+ * 5. The home hero. */
+
+/* ---------- 1. tokens ---------- */
+.signal {
+  color-scheme: light;
+  --sg-font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sg-font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --sg-font-display-tracking: -0.055em;
+  --sg-font-heading-tracking: -0.035em;
+  --sg-font-body-tracking: -0.01em;
+  --sg-radius-sm: 4px;
+  --sg-radius-md: 8px;
+  --sg-radius-lg: 12px;
+  --sg-focus-width: 3px;
+  --sg-focus-offset: 3px;
+  --sg-control-height: 48px;
+  --sg-duration-fast: 120ms;
+  --sg-duration-base: 220ms;
+  --sg-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --sg-bg: #F3F1EB;
+  --sg-surface: #FFFFFF;
+  --sg-surface-subtle: #E9E7E0;
+  --sg-fg: #20221F;
+  --sg-fg-secondary: #62645D;
+  --sg-border: #D0D1C8;
+  --sg-control-border: #797C72;
+  --sg-accent: #FF6B35;
+  --sg-accent-hover: #FF8254;
+  --sg-on-accent: #191B18;
+  --sg-accent-text: #AF360B;
+  --sg-focus: #AF360B;
+  --sg-success: #27603B;
+  --sg-success-bg: #E7F0E6;
+  --sg-warning: #775111;
+  --sg-warning-bg: #F9EED2;
+  --sg-danger: #B12F26;
+  --sg-danger-bg: #F9E7E4;
+  --sg-inverse-bg: #191B18;
+  --sg-inverse-fg: #F1F1E9;
+  --sg-on-status: #FFFFFF;
+  --sg-art-dot: #D0D1C8;
+}
+:root[data-theme="dark"] .signal {
+  color-scheme: dark;
+  --sg-bg: #191B18;
+  --sg-surface: #22251F;
+  --sg-surface-subtle: #2C3028;
+  --sg-fg: #F1F1E9;
+  --sg-fg-secondary: #B2B5AA;
+  --sg-border: #3D4237;
+  --sg-control-border: #818879;
+  --sg-accent-text: #FF8B60;
+  --sg-focus: #FF8B60;
+  --sg-success: #AAD8AA;
+  --sg-success-bg: #273B2A;
+  --sg-warning: #EDCD89;
+  --sg-warning-bg: #433B25;
+  --sg-danger: #FFB1A5;
+  --sg-danger-bg: #472B27;
+  /* The footer and the service block stay dark in the dark theme: a step lighter than the page. */
+  --sg-inverse-bg: #22251F;
+  --sg-inverse-fg: #F1F1E9;
+  --sg-on-status: #191B18;
+  --sg-art-dot: #3D4237;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .signal {
+    color-scheme: dark;
+    --sg-bg: #191B18;
+    --sg-surface: #22251F;
+    --sg-surface-subtle: #2C3028;
+    --sg-fg: #F1F1E9;
+    --sg-fg-secondary: #B2B5AA;
+    --sg-border: #3D4237;
+    --sg-control-border: #818879;
+    --sg-accent-text: #FF8B60;
+    --sg-focus: #FF8B60;
+    --sg-success: #AAD8AA;
+    --sg-success-bg: #273B2A;
+    --sg-warning: #EDCD89;
+    --sg-warning-bg: #433B25;
+    --sg-danger: #FFB1A5;
+    --sg-danger-bg: #472B27;
+    --sg-inverse-bg: #22251F;
+    --sg-inverse-fg: #F1F1E9;
+    --sg-on-status: #191B18;
+    --sg-art-dot: #3D4237;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal { --sg-duration-fast: 0ms; --sg-duration-base: 0ms; }
+}
+
+/* ---------- 2. the site's tokens, pointed at SIGNAL ---------- */
+.signal {
+  --canvas: var(--sg-bg);
+  --surface: var(--sg-surface);
+  --subtle: var(--sg-surface-subtle);
+  --line: var(--sg-border);
+  --fg: var(--sg-fg);
+  --fg-secondary: var(--sg-fg-secondary);
+  --accent: var(--sg-accent);
+  --accent-hover: var(--sg-accent-hover);
+  --on-accent: var(--sg-on-accent);
+  --danger: var(--sg-danger);
+  --warning: var(--sg-warning);
+  --success: var(--sg-success);
+  --on-status: var(--sg-on-status);
+  --rail: var(--sg-inverse-bg);
+  --rail-fg: var(--sg-inverse-fg);
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2362645D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+:root[data-theme="dark"] .signal {
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .signal {
+    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+}
+
+/* ---------- 3. type, focus ---------- */
+.signal {
+  font-family: var(--sg-font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: var(--sg-font-body-tracking);
+}
+.signal ::selection { background: var(--sg-accent); color: var(--sg-on-accent); }
+.signal :focus-visible { outline: var(--sg-focus-width) solid var(--sg-focus); outline-offset: var(--sg-focus-offset); }
+/* Inverted surfaces: the ring takes the surface's own text colour (as before). */
+.signal .bg-rail :focus-visible { outline-color: var(--rail-fg); }
+.signal :is(.f-bar, .f-stem) :focus-visible { outline-color: var(--canvas); }
+
+/* Display type: Manrope instead of the condensed Oswald. Headings lose the forced capitals — scale makes the
+   character; short labels (eyebrows, the FEDO wordmark) keep theirs. */
+.signal :is(.font-display, .display-num) { font-family: var(--sg-font-sans); letter-spacing: -0.02em; }
+.signal :is(h1, h2, h3, h4).font-display { text-transform: none; font-weight: 600; letter-spacing: var(--sg-font-heading-tracking); }
+.signal :is(.t-page, .t-section, .t-chapter, .page-title) {
+  font-family: var(--sg-font-sans);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: var(--sg-font-heading-tracking);
+  line-height: 1.08;
+}
+.signal .t-page { font-size: clamp(40px, 5.4vw, 76px); letter-spacing: -0.05em; line-height: 1.04; }
+.signal .t-section { font-size: clamp(32px, 4vw, 56px); letter-spacing: -0.045em; line-height: 1.06; }
+.signal .t-chapter { font-size: clamp(26px, 2.8vw, 40px); }
+.signal .page-title { font-size: clamp(34px, 4.4vw, 60px); letter-spacing: -0.045em; }
+
+/* ---------- 4. components (SIGNAL components.css, without its resets: Tailwind's preflight does those) ---------- */
+@layer components {
+  .signal .sg-eyebrow { font: 400 12px/1.5 var(--sg-font-mono); letter-spacing: .075em; text-transform: uppercase; }
+  .signal .sg-button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 16px;
+    min-height: var(--sg-control-height); padding: 12px 22px;
+    border: 1px solid transparent; border-radius: var(--sg-radius-sm);
+    font-weight: 600; font-size: 15px; line-height: 1.4; letter-spacing: 0; text-decoration: none;
+    transition: background var(--sg-duration-fast), border-color var(--sg-duration-fast), transform var(--sg-duration-fast);
+  }
+  .signal .sg-button--primary { background: var(--sg-accent); color: var(--sg-on-accent); border-color: var(--sg-accent-text); }
+  .signal .sg-button--primary:hover { background: var(--sg-accent-hover); }
+  .signal .sg-button--secondary { background: transparent; color: var(--sg-fg); border-color: var(--sg-control-border); }
+  .signal .sg-button--secondary:hover { background: var(--sg-surface-subtle); }
+  .signal .sg-button--ghost { background: transparent; color: var(--sg-fg); padding-inline: 12px; }
+  .signal .sg-button--ghost:hover { background: var(--sg-surface-subtle); }
+  .signal .sg-button:active { transform: translateY(1px); }
+}
+
+/* ---------- 5. home hero ---------- */
+.signal .sg-hero {
+  display: grid; grid-template-columns: 1.04fr 1fr; align-items: center; gap: 16px;
+  min-height: min(700px, calc(100dvh - 64px)); padding-block: 48px 56px;
+}
+.signal .sg-hero-copy { position: relative; z-index: 1; min-width: 0; }
+.signal .sg-availability { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--sg-fg-secondary); }
+.signal .sg-availability::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sg-success); flex-shrink: 0; }
+.signal .sg-hero h1 {
+  font-weight: 500; font-size: clamp(54px, 6.8vw, 104px); line-height: 1; letter-spacing: -0.07em;
+  margin: 28px 0 30px; text-wrap: balance;
+}
+.signal .sg-hero h1 em { font-style: normal; color: var(--sg-accent-text); }
+.signal .sg-hero-intro { font-size: 17px; line-height: 1.7; color: var(--sg-fg-secondary); max-width: 400px; }
+.signal .sg-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
+.signal .sg-hero-art {
+  position: relative; aspect-ratio: 1; min-width: 0;
+  background-image: radial-gradient(var(--sg-art-dot) .7px, transparent .7px); background-size: 22px 22px;
+  border: 1px solid var(--sg-border); border-radius: 50%;
+}
+.signal .sg-hero-art::before, .signal .sg-hero-art::after {
+  content: "+"; position: absolute; top: 48%; font: 22px/1 var(--sg-font-mono); color: var(--sg-fg-secondary);
+}
+.signal .sg-hero-art::before { left: -7px; }
+.signal .sg-hero-art::after { right: -7px; }
+.signal .sg-hero-art img { width: 110%; max-width: none; height: auto; margin-left: -5%; opacity: .94; }
+/* One drawing per theme. Both are lazy: a hidden lazy image is never fetched, so only the visible one loads. */
+.signal .sg-art-dark { display: none; }
+:root[data-theme="dark"] .signal .sg-art-light { display: none; }
+:root[data-theme="dark"] .signal .sg-art-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .signal .sg-art-light { display: none; }
+  :root:not([data-theme="light"]) .signal .sg-art-dark { display: block; }
+}
+.signal .sg-art-label { position: absolute; font: 12px/1.6 var(--sg-font-mono); letter-spacing: .04em; color: var(--sg-fg-secondary); white-space: nowrap; }
+.signal .sg-art-label--top { top: -20px; right: 22px; }
+.signal .sg-art-label--bottom { bottom: 0; left: 22px; }
+.signal .sg-art-caption {
+  position: absolute; bottom: 48px; right: -3px; display: grid; gap: 4px;
+  padding: 8px 12px; background: var(--sg-bg); border-left: 2px solid var(--sg-accent-text); font-size: 12px;
+}
+.signal .sg-art-caption strong { font-size: 14px; font-weight: 500; }
+.signal .sg-art-caption span { color: var(--sg-fg-secondary); }
+.signal .sg-hero-bottom {
+  display: flex; justify-content: space-between; gap: 20px; padding-block: 20px;
+  border-top: 1px solid var(--sg-border); color: var(--sg-fg-secondary);
+  font: 12px/1.6 var(--sg-font-mono); letter-spacing: .02em; text-transform: uppercase;
+}
+.signal .sg-hero-bottom a { text-decoration: none; }
+.signal .sg-hero-bottom a:hover { color: var(--sg-fg); }
+@media (max-width: 1100px) { .signal .sg-hero { min-height: 0; } }
+@media (max-width: 800px) {
+  .signal .sg-hero { padding-block: 40px 40px; }
+  .signal .sg-hero h1 { font-size: clamp(48px, 7.4vw, 58px); }
+  .signal .sg-hero-intro { font-size: 15px; }
+  .signal .sg-hero-art { margin-left: -24px; width: calc(100% + 24px); }
+  .signal .sg-art-caption { bottom: 0; }
+  .signal .sg-hero-bottom .sg-hero-coordinate { display: none; }
+}
+@media (max-width: 640px) {
+  .signal .sg-hero { grid-template-columns: minmax(0, 1fr); padding-top: 32px; gap: 40px; }
+  .signal .sg-hero h1 { font-size: clamp(48px, 13.4vw, 76px); margin-block: 22px; }
+  .signal .sg-hero-actions { margin-top: 26px; gap: 8px; }
+  .signal .sg-hero-art { width: min(100% - 32px, 360px); margin: 0 auto; }
+  .signal .sg-art-label { font-size: 11px; }
+  .signal .sg-art-label--top { top: -8px; right: 0; }
+  .signal .sg-art-label--bottom { bottom: 8px; left: 0; }
+  .signal .sg-art-caption { bottom: 22px; right: -16px; }
+}

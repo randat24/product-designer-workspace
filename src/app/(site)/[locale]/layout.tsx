@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../../fonts.css";
 import "../../globals.css";
+// SIGNAL design system (trial): re-skins the public site only; the tool keeps globals.css as is.
+import "@/site/signal/signal.css";
 import { getSiteUrl } from "@/shared/lib/site-url";
 import { CONTACTS, LOCALES, dict, isLocale, type Locale } from "@/site/content";
 import { AnalyticsClickListener } from "@/site/analytics/click-listener";
@@ -33,8 +35,8 @@ export function generateStaticParams() {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#eef0f3" },
-    { media: "(prefers-color-scheme: dark)", color: "#10132a" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F1EB" },
+    { media: "(prefers-color-scheme: dark)", color: "#191B18" },
   ],
 };
 
@@ -86,7 +88,7 @@ export default async function SiteLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
-      <body>
+      <body className="signal">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-[8px] focus:bg-fg focus:px-4 focus:py-2 focus:text-canvas"
@@ -105,7 +107,7 @@ export default async function SiteLayout({
               </Link>
               <SiteNav locale={locale} labels={d.nav} ariaLabel={d.ui.mainNav} />
               <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "header" })}
-                className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-[8px] bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:ml-auto md:inline-flex lg:ml-0">
+                className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-[4px] border border-[var(--sg-accent-text)] bg-accent px-3.5 text-[14px] font-semibold text-on-accent transition-colors duration-[120ms] hover:bg-accent-hover md:ml-auto md:inline-flex lg:ml-0">
                 {INTAKE[locale].cta}
               </Link>
               <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
