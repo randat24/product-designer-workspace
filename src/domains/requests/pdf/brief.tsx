@@ -2,7 +2,9 @@ import "server-only";
 
 // «Project brief» PDF: the first documented snapshot of what the client sent. Rendered on the server from the
 // immutable document in project_request_documents, so the same version always gives the same content.
-// Style follows the site and the CV: Oswald uppercase headings, Manrope text, ink header, lime marker.
+// Style follows the site and the CV (SIGNAL, light theme, see scripts/build-cv.ts): Manrope for all text, the title
+// Medium with tight tracking, IBM Plex Mono for eyebrows and labels, a canvas header band under an orange rule,
+// 1px rules instead of filled cards, section numbers «01 / …» in accent-text.
 
 import path from "node:path";
 import { Children } from "react";
@@ -18,11 +20,12 @@ function registerFonts() {
     family: "Manrope",
     fonts: [
       { src: path.join(FONTS, "Manrope-Regular.ttf"), fontWeight: 400 },
+      { src: path.join(FONTS, "Manrope-Medium.ttf"), fontWeight: 500 },
       { src: path.join(FONTS, "Manrope-SemiBold.ttf"), fontWeight: 600 },
       { src: path.join(FONTS, "Manrope-Bold.ttf"), fontWeight: 700 },
     ],
   });
-  Font.register({ family: "Oswald", src: path.join(FONTS, "Oswald-Bold.ttf"), fontWeight: 700 });
+  Font.register({ family: "Plex Mono", src: path.join(FONTS, "IBMPlexMono-Regular.ttf"), fontWeight: 400 });
   // No automatic hyphenation: its rules are English-only and break Ukrainian words.
   Font.registerHyphenationCallback((word) => [word]);
   registered = true;
@@ -89,31 +92,39 @@ const COPY: Record<"uk" | "en", Copy> = {
   },
 };
 
-const C = { ink: "#151a33", ink2: "#5b6078", line: "#d6d9e0", canvas: "#eef0f3", lime: "#d9ee8f", subtle: "#f5f6f8" };
+// SIGNAL light theme (src/app/globals.css), the same tokens as the CV.
+const C = { fg: "#20221F", fg2: "#62645D", line: "#D0D1C8", canvas: "#F3F1EB", accent: "#FF6B35", accentText: "#AF360B" };
+/** Mono eyebrow / label: IBM Plex Mono, uppercase, .075em tracking. */
+const mono = (fontSize: number) => ({ fontFamily: "Plex Mono", fontSize, textTransform: "uppercase" as const, letterSpacing: fontSize * 0.075 });
 const s = StyleSheet.create({
-  page: { fontFamily: "Manrope", fontSize: 9.5, color: C.ink, paddingTop: 34, paddingBottom: 64, paddingHorizontal: 38 },
-  hero: { backgroundColor: C.ink, color: C.canvas, borderRadius: 12, padding: 22, marginBottom: 18 },
-  eyebrow: { fontFamily: "Oswald", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: C.lime },
-  h1: { fontFamily: "Oswald", fontSize: 26, textTransform: "uppercase", lineHeight: 1.15, marginTop: 6 },
-  meta: { flexDirection: "row", marginTop: 14, gap: 24 },
-  metaK: { fontSize: 7.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, opacity: 0.65 },
-  metaV: { fontSize: 10, fontWeight: 600, marginTop: 2 },
-  note: { backgroundColor: C.subtle, borderRadius: 8, padding: 9, marginBottom: 14, fontSize: 8.5, color: C.ink2, lineHeight: 1.35 },
-  section: { borderTopWidth: 1.5, borderTopColor: C.ink, paddingTop: 9, marginTop: 12 },
-  h2: { fontFamily: "Oswald", fontSize: 12.5, textTransform: "uppercase", letterSpacing: 0.3, marginBottom: 6 },
-  row: { flexDirection: "row", marginBottom: 4 },
-  k: { width: 128, fontSize: 8.5, fontWeight: 600, color: C.ink2, paddingRight: 8, lineHeight: 1.35 },
+  page: { fontFamily: "Manrope", fontSize: 9.5, color: C.fg, paddingTop: 30, paddingBottom: 64, paddingHorizontal: 38 },
+  hero: {
+    backgroundColor: C.canvas, borderTopWidth: 2, borderTopColor: C.accent,
+    borderBottomLeftRadius: 8, borderBottomRightRadius: 8, paddingTop: 16, paddingBottom: 18, paddingHorizontal: 22, marginBottom: 14,
+  },
+  eyebrow: { ...mono(7.2), color: C.fg2, lineHeight: 1.5 },
+  h1: { fontSize: 28, fontWeight: 500, lineHeight: 1.08, letterSpacing: -1.2, marginTop: 10 },
+  meta: { flexDirection: "row", marginTop: 14, paddingTop: 9, borderTopWidth: 1, borderTopColor: C.line, gap: 28 },
+  metaK: { ...mono(6.6), color: C.fg2 },
+  metaV: { fontSize: 9.5, fontWeight: 600, marginTop: 2 },
+  note: { fontSize: 8.5, color: C.fg2, lineHeight: 1.4, marginBottom: 4 },
+  section: { borderTopWidth: 1, borderTopColor: C.fg, paddingTop: 7, marginTop: 14 },
+  h2: { ...mono(7.2), color: C.fg2, lineHeight: 1.5, marginBottom: 7 },
+  num: { color: C.accentText },
+  row: { flexDirection: "row", marginBottom: 5 },
+  k: { width: 128, ...mono(6.8), color: C.fg2, paddingRight: 8, paddingTop: 1.5, lineHeight: 1.5 },
   v: { flex: 1 },
-  vt: { flex: 1, fontSize: 9.5, lineHeight: 1.35 },
+  vt: { flex: 1, fontSize: 9.5, lineHeight: 1.4 },
   // Line height per text style, not on the page: a page-level lineHeight hides the fixed page number.
   // fontSize sits next to it: react-pdf resolves a unitless lineHeight against the element's own font size.
-  p: { fontSize: 9.5, lineHeight: 1.35 },
-  card: { borderWidth: 1, borderColor: C.line, borderRadius: 8, padding: 9, marginBottom: 6 },
-  cardTitle: { fontWeight: 700, fontSize: 10, marginBottom: 3 },
+  p: { fontSize: 9.5, lineHeight: 1.4 },
+  card: { borderTopWidth: 1, borderTopColor: C.line, paddingTop: 7, paddingBottom: 3, marginBottom: 4 },
+  cardFirst: { paddingBottom: 3, marginBottom: 4 },
+  cardTitle: { fontWeight: 600, fontSize: 10.5, letterSpacing: -0.2, marginBottom: 4 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 4 },
-  chip: { backgroundColor: C.subtle, borderRadius: 999, paddingVertical: 2, paddingHorizontal: 7, fontSize: 8.5, fontWeight: 600 },
-  disclaimer: { position: "absolute", bottom: 18, left: 38, right: 120, borderTopWidth: 1, borderTopColor: C.line, paddingTop: 6, fontSize: 7, color: C.ink2, lineHeight: 1.4 },
-  pageNo: { position: "absolute", bottom: 18, right: 38, paddingTop: 7, fontSize: 7.5, color: C.ink2, textAlign: "right" },
+  chip: { ...mono(6.6), borderWidth: 1, borderColor: C.line, borderRadius: 4, paddingVertical: 2.5, paddingHorizontal: 5 },
+  disclaimer: { position: "absolute", bottom: 18, left: 38, right: 140, borderTopWidth: 1, borderTopColor: C.line, paddingTop: 6, fontSize: 7, color: C.fg2, lineHeight: 1.4 },
+  pageNo: { position: "absolute", bottom: 18, right: 38, paddingTop: 7, ...mono(6.6), color: C.fg2, textAlign: "right" },
 });
 
 function Row({ k, v }: { k: string; v?: string | null }) {
@@ -130,7 +141,8 @@ function Row({ k, v }: { k: string; v?: string | null }) {
  * A section whose heading never stays alone at the bottom of a page: it is kept with the first item.
  * `flow` sections (one long text) keep only some room after the heading, so the text can break across pages.
  */
-function Section({ title, children, flow }: { title: string; children: React.ReactNode; flow?: boolean }) {
+function Section({ n, title, children, flow }: { n: number; title: string; children: React.ReactNode; flow?: boolean }) {
+  const heading = <Text style={s.h2}><Text style={s.num}>{String(n).padStart(2, "0")}</Text> / {title}</Text>;
   if (flow) {
     // The first lines stay with the heading, cut at a paragraph or sentence end (else a space); the rest flows.
     const text = String(Children.toArray(children).join(""));
@@ -139,7 +151,7 @@ function Section({ title, children, flow }: { title: string; children: React.Rea
     return (
       <View style={s.section}>
         <View wrap={false}>
-          <Text style={s.h2}>{title}</Text>
+          {heading}
           <Text style={s.p}>{text.slice(0, cut)}</Text>
         </View>
         {cut < text.length && <Text style={s.p}>{text.slice(cut).trimStart()}</Text>}
@@ -150,7 +162,7 @@ function Section({ title, children, flow }: { title: string; children: React.Rea
   return (
     <View style={s.section}>
       <View wrap={false}>
-        <Text style={s.h2}>{title}</Text>
+        {heading}
         {first}
       </View>
       {rest}
@@ -197,7 +209,7 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
         </View>
         <Text style={s.note}>{t.clientInput}</Text>
 
-        <Section title={t.sections.client}>
+        <Section n={1} title={t.sections.client}>
           <Row k={r.name!} v={b.client.name} />
           <Row k={r.company!} v={b.client.company} />
           <Row k={r.role!} v={b.client.role} />
@@ -208,7 +220,7 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
           <Row k={r.channel!} v={b.client.preferred_channel === "other" ? b.client.preferred_channel_note : label("channels", b.client.preferred_channel, L)} />
         </Section>
 
-        <Section title={t.sections.project}>
+        <Section n={2} title={t.sections.project}>
           <Row k={r.projectName!} v={name} />
           <View style={s.row}>
             <Text style={s.k}>{r.types}</Text>
@@ -217,7 +229,7 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
           <Row k={r.url!} v={b.existing.has ? b.existing.url : null} />
         </Section>
 
-        <Section title={t.sections.overview}>
+        <Section n={3} title={t.sections.overview}>
           <Row k={r.summary!} v={b.about.summary} />
           <Row k={r.whatItDoes!} v={b.about.what_it_does} />
           <Row k={r.problem!} v={b.about.problem} />
@@ -230,7 +242,7 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
           )}
         </Section>
 
-        <Section title={t.sections.existing}>
+        <Section n={4} title={t.sections.existing}>
           {b.existing.has ? (
             <>
               <Row k={r.description!} v={b.existing.description} />
@@ -242,7 +254,7 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
           ) : <Text style={s.p}>{t.noExisting}</Text>}
         </Section>
 
-        <Section title={t.sections.audience}>
+        <Section n={5} title={t.sections.audience}>
           <Row k={r.audience!} v={b.audience.audience} />
           <Row k={r.primaryUsers!} v={b.audience.primary_users} />
           <Row k={r.geography!} v={b.audience.geography} />
@@ -252,9 +264,9 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
           {!b.audience.audience && !b.audience.primary_users && !b.audience.pain_points && <Text style={s.p}>{t.none}</Text>}
         </Section>
 
-        <Section title={t.sections.competitors}>
+        <Section n={6} title={t.sections.competitors}>
           {b.competitors.length ? b.competitors.map((c, i) => (
-            <View key={i} style={s.card} wrap={false}>
+            <View key={i} style={i ? s.card : s.cardFirst} wrap={false}>
               <Text style={s.cardTitle}>{c.name}</Text>
               <Row k={r.url!} v={c.url} />
               <Row k={r.likes!} v={c.likes} />
@@ -264,39 +276,39 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
           )) : <Text style={s.p}>{t.none}</Text>}
         </Section>
 
-        <Section title={t.sections.references}>
+        <Section n={7} title={t.sections.references}>
           {b.references.length ? b.references.map((x, i) => (
-            <View key={i} style={s.card} wrap={false}>
+            <View key={i} style={i ? s.card : s.cardFirst} wrap={false}>
               <Text style={s.cardTitle}>{x.url}</Text>
               {x.note && <Text style={s.p}>{x.note}</Text>}
             </View>
           )) : <Text style={s.p}>{t.none}</Text>}
         </Section>
 
-        <Section title={t.sections.scope}>
+        <Section n={8} title={t.sections.scope}>
           <Chips items={labels("scope", b.scope.items, L)} />
           {b.scope.needs_advice && <Text style={[s.p, { marginTop: 4 }]}>{t.advice}</Text>}
         </Section>
 
-        <Section title={t.sections.materials}>
+        <Section n={9} title={t.sections.materials}>
           <Chips items={labels("materials", b.materials.items, L)} />
           <View style={{ marginTop: 4 }}><Row k={r.links!} v={links(b.materials.links)} /></View>
           {!b.materials.items.length && !b.materials.links.length && <Text style={s.p}>{t.none}</Text>}
         </Section>
 
-        <Section title={t.sections.budget}>
+        <Section n={10} title={t.sections.budget}>
           <Row k={r.range!} v={budgetLabel(b.budget, L)} />
           <Row k={r.currency!} v={b.budget.currency} />
           <Row k={r.note!} v={b.budget.note} />
         </Section>
 
-        <Section title={t.sections.timeline}>
+        <Section n={11} title={t.sections.timeline}>
           <Row k={r.start!} v={label("start", b.timeline.start, L)} />
           <Row k={r.deadline!} v={b.timeline.has_deadline ? deadline : t.none} />
           <Row k={r.reason!} v={b.timeline.has_deadline ? b.timeline.deadline_reason : null} />
         </Section>
 
-        <Section title={t.sections.additional} flow>{b.additional_info || t.none}</Section>
+        <Section n={12} title={t.sections.additional} flow>{b.additional_info || t.none}</Section>
 
         <Text style={s.disclaimer} fixed>{t.disclaimer}</Text>
         <Text style={s.pageNo} fixed render={({ pageNumber, totalPages }) => `${doc.code} · ${t.page(pageNumber, totalPages)}`} />
@@ -312,7 +324,7 @@ function BriefPdf({ doc, locale }: { doc: BriefDocument; locale: "uk" | "en" }) 
  */
 function freshFonts() {
   const families = Font.getRegisteredFonts() as Record<string, { sources: { data: unknown; loadResultPromise: unknown }[] }>;
-  for (const family of ["Manrope", "Oswald"]) {
+  for (const family of ["Manrope", "Plex Mono"]) {
     for (const source of families[family]?.sources ?? []) {
       source.data = null;
       source.loadResultPromise = null;
