@@ -1,81 +1,63 @@
 import { cn } from "@/shared/lib/cn";
-import { STAGE_COLOR, type CaseStory, type Mark, type Stage, type StoryLabels } from "./case-story";
-import { CaseContentsSpy } from "./case-contents-spy";
+import type { CaseStory, Mark, StoryLabels } from "./case-story";
+import { CaseContents } from "./case-contents";
 import { container } from "./ui";
 
-const STICKERS = ["var(--s3)", "var(--s7)", "var(--s5)", "var(--s1)", "var(--s6)", "var(--s4)"];
-const tint = (color: string, pct: number) => `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+const pad = (n: number) => String(n).padStart(2, "0");
 
-type Section = { id: string; title: string; stage?: Stage; body: React.ReactNode };
+type Section = { id: string; title: string; body: React.ReactNode };
 
-/** Sections of a published case, in the order of the tool's chain; missing blocks are skipped. */
+/**
+ * Sections of a published case, in the order of the tool's chain; missing blocks are skipped. Laid out as the
+ * SIGNAL case: contents in a sticky column, chapters under a rule, the accent only on codes and numbers.
+ */
 export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; labels: StoryLabels; sticker: string }) {
   const sections: Section[] = [
     { id: "overview", title: labels.overview, body: <Overview story={story} labels={labels} /> },
     { id: "process", title: labels.process, body: <Process story={story} /> },
   ];
-  if (story.research) sections.push({ id: "research", title: labels.research, stage: "research", body: <Research data={story.research} /> });
-  if (story.insights) sections.push({ id: "insights", title: labels.insights, stage: "synthesis", body: <Insights data={story.insights} /> });
+  if (story.research) sections.push({ id: "research", title: labels.research, body: <Research data={story.research} /> });
+  if (story.insights) sections.push({ id: "insights", title: labels.insights, body: <Insights data={story.insights} /> });
   if (story.competitors)
-    sections.push({ id: "competitors", title: labels.competitors, stage: "competitors", body: <Competitors data={story.competitors} labels={labels} /> });
-  if (story.opportunities)
-    sections.push({ id: "opportunities", title: labels.opportunities, stage: "opportunities", body: <Opportunities data={story.opportunities} /> });
-  if (story.flow) sections.push({ id: "flow", title: labels.flow, stage: "flows", body: <Flow data={story.flow} labels={labels} /> });
-  if (story.screens) sections.push({ id: "screens", title: labels.screens, stage: "screens", body: <Screens data={story.screens} sticker={sticker} /> });
-  if (story.decisions)
-    sections.push({ id: "decisions", title: labels.decisions, stage: "decisions", body: <Decisions data={story.decisions} labels={labels} /> });
+    sections.push({ id: "competitors", title: labels.competitors, body: <Competitors data={story.competitors} labels={labels} /> });
+  if (story.opportunities) sections.push({ id: "opportunities", title: labels.opportunities, body: <Opportunities data={story.opportunities} /> });
+  if (story.flow) sections.push({ id: "flow", title: labels.flow, body: <Flow data={story.flow} labels={labels} /> });
+  if (story.screens) sections.push({ id: "screens", title: labels.screens, body: <Screens data={story.screens} sticker={sticker} /> });
+  if (story.decisions) sections.push({ id: "decisions", title: labels.decisions, body: <Decisions data={story.decisions} labels={labels} /> });
   if (story.results) sections.push({ id: "results", title: labels.results, body: <Results data={story.results} /> });
 
   return (
-    <>
-      <nav id="case-contents" aria-label={labels.contents} className="z-10 border-y border-line bg-canvas/90 backdrop-blur lg:sticky lg:top-16">
-        <ol className={`${container} flex gap-1 overflow-x-auto py-2.5 text-[13px] font-semibold`}>
-          {sections.map((s, i) => (
-            <li key={s.id} className="shrink-0">
-              <a href={`#${s.id}`} className="hit flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-fg-secondary hover:bg-subtle hover:text-fg aria-[current]:bg-subtle aria-[current]:text-fg">
-                <span className="display-num text-[11px]">{String(i + 1).padStart(2, "0")}</span>
-                {s.title}
-              </a>
-            </li>
-          ))}
-        </ol>
-        <CaseContentsSpy ids={sections.map((s) => s.id)} navId="case-contents" />
-      </nav>
-
-      <div className={`${container} mt-12 flex flex-col gap-20`}>
+    <div className={`${container} sg-case-body`}>
+      <CaseContents label={labels.contents} sections={sections} />
+      <div className="min-w-0">
         {sections.map((s, i) => (
-          <section key={s.id} id={s.id} className="grid scroll-mt-32 gap-6 md:grid-cols-[220px_1fr]">
-            <header className="flex items-baseline gap-3 md:sticky md:top-32 md:self-start">
-              <span className="display-num text-[14px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
-              <h2 className="flex items-center gap-2 font-display text-[28px] font-bold uppercase leading-[1.1]">
-                {s.stage && <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: STAGE_COLOR[s.stage] }} aria-hidden="true" />}
-                {s.title}
-              </h2>
-            </header>
-            <div className="min-w-0">{s.body}</div>
+          <section key={s.id} id={s.id} className="sg-chapter" aria-labelledby={`${s.id}-h`}>
+            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
+            <h2 id={`${s.id}-h`}>{s.title}</h2>
+            {s.body}
           </section>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
 function Intro({ children }: { children: React.ReactNode }) {
-  return <p className="mb-6 max-w-[680px] text-[18px] leading-[1.6]">{children}</p>;
+  return <p>{children}</p>;
 }
 
 function Overview({ story, labels }: { story: CaseStory; labels: StoryLabels }) {
   const items = [
-    { title: labels.challenge, text: story.overview.challenge, color: "var(--entity-problem)" },
-    { title: labels.solution, text: story.overview.solution, color: "var(--entity-design)" },
-    { title: labels.outcome, text: story.overview.outcome, color: "var(--success)" },
+    { title: labels.challenge, text: story.overview.challenge },
+    { title: labels.solution, text: story.overview.solution },
+    { title: labels.outcome, text: story.overview.outcome },
   ];
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
+    <div className="sg-case-columns">
       {items.map((it) => (
-        <div key={it.title} className="flex flex-col gap-3 rounded-[12px] border border-line bg-surface p-5" style={{ borderTop: `4px solid ${it.color}` }}>
-          <p className="font-display text-[18px] font-bold uppercase leading-[1.1]">{it.title}</p>
-          <p className="leading-[1.6]">{it.text}</p>
+        <div key={it.title}>
+          <h3>{it.title}</h3>
+          <p className="sg-case-secondary">{it.text}</p>
         </div>
       ))}
     </div>
@@ -83,26 +65,12 @@ function Overview({ story, labels }: { story: CaseStory; labels: StoryLabels }) 
 }
 
 function Process({ story }: { story: CaseStory }) {
-  // Rows, not narrow columns: the value sits beside its label, so a long label never squeezes into a 120px card.
   return (
-    <ol className="grid gap-3 sm:grid-cols-2">
-      {story.process.map((p, i) => (
-        <li
-          key={p.stage}
-          className="flex items-center gap-5 rounded-[8px] border border-line bg-surface px-5 py-4"
-          style={{ background: tint(STAGE_COLOR[p.stage], 8) }}
-        >
-          <span className="flex w-[84px] shrink-0 flex-col gap-1">
-            <span className="display-num text-[11px] text-fg-secondary">{String(i + 1).padStart(2, "0")}</span>
-            {/* Large text: the entity colour with a little of the text colour, so the lightest one (opportunities) still reaches 3:1. */}
-            <span className="display-num text-[34px] leading-none" style={{ color: `color-mix(in srgb, ${STAGE_COLOR[p.stage]} 80%, var(--fg))` }}>
-              {p.value}
-            </span>
-          </span>
-          <span className="text-[15px] leading-snug text-fg-secondary">{p.label}</span>
-        </li>
+    <dl className="sg-case-result sg-case-result--four">
+      {story.process.map((p) => (
+        <div key={p.stage}><dt className="sr-only">{p.label}</dt><dd><strong>{p.value}</strong><span>{p.label}</span></dd></div>
       ))}
-    </ol>
+    </dl>
   );
 }
 
@@ -110,25 +78,19 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
   return (
     <>
       <Intro>{data.intro}</Intro>
-      <dl className="mb-8 flex flex-wrap gap-x-10 gap-y-4">
+      <dl className="sg-case-result">
         {data.facts.map((f) => (
-          <div key={f.label}>
-            <dt className="sr-only">{f.label}</dt>
-            <dd className="display-num text-[40px] leading-none">{f.value}</dd>
-            <dd className="mt-1 text-[13px] text-fg-secondary">{f.label}</dd>
-          </div>
+          <div key={f.label}><dt className="sr-only">{f.label}</dt><dd><strong>{f.value}</strong><span>{f.label}</span></dd></div>
         ))}
       </dl>
-      {/* Quotes as sticky notes from the research board */}
-      <ul className="grid gap-5 sm:grid-cols-2">
-        {data.quotes.map((q, i) => (
-          <li
-            key={q.who}
-            className="flex flex-col justify-between gap-4 rounded-[4px] p-5 text-on-sticky shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
-            style={{ background: STICKERS[i % STICKERS.length], transform: `rotate(${i % 2 ? 1 : -1}deg)` }}
-          >
-            <p className="text-[17px] font-semibold leading-snug"><q>{q.text}</q></p>
-            <p className="text-[13px] opacity-80">— {q.who}</p>
+      {/* What people said, as the package's pull quotes. */}
+      <ul className="grid gap-x-10 gap-y-2 md:grid-cols-2">
+        {data.quotes.map((q) => (
+          <li key={q.who}>
+            <figure className="sg-case-quote">
+              <blockquote><q>{q.text}</q></blockquote>
+              <figcaption>— {q.who}</figcaption>
+            </figure>
           </li>
         ))}
       </ul>
@@ -136,39 +98,33 @@ function Research({ data }: { data: NonNullable<CaseStory["research"]> }) {
   );
 }
 
-function Code({ code, color }: { code: string; color: string }) {
-  return (
-    // Text: the entity colour mixed 60/40 with the text colour — darker in light, lighter in dark, >= 4.5:1.
-    <span className="display-num w-fit shrink-0 whitespace-nowrap rounded-[4px] px-1.5 py-0.5 text-[12px]"
-      style={{ color: `color-mix(in srgb, ${color} 60%, var(--fg))`, background: tint(color, 14) }}>
-      {code}
-    </span>
-  );
+/** INS–001, OPP–02, DEC–003: the record's code, in mono and the accent. */
+function Code({ code }: { code: string }) {
+  return <span className="sg-case-code">{code}</span>;
 }
 
 function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
-  const color = STAGE_COLOR.synthesis;
   return (
-    <ul className="grid gap-4 lg:grid-cols-3">
+    <div>
       {data.map((ins) => (
-        <li key={ins.code} className="flex flex-col gap-3 rounded-[12px] border border-line bg-surface p-5">
-          <Code code={ins.code} color={color} />
-          <p className="font-display text-[22px] font-bold uppercase leading-[1.1]">{ins.title}</p>
-          <p className="leading-[1.6] text-fg-secondary">{ins.body}</p>
-          <p className="mt-auto border-t border-line pt-3 text-[13px] font-semibold" style={{ color }}>
-            {ins.evidence}
-          </p>
-        </li>
+        <div key={ins.code} className="sg-case-insight">
+          <Code code={ins.code} />
+          <div>
+            <h3>{ins.title}</h3>
+            <p>{ins.body}</p>
+            <small>{ins.evidence}</small>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
 
-const MARK_STYLE: Record<Mark, { bg: string; fg: string }> = {
-  // Light tints keep the status text at 4.5:1 or more (WCAG AA).
-  yes: { bg: tint("var(--success)", 12), fg: "var(--success)" },
-  partial: { bg: tint("var(--warning)", 12), fg: "var(--warning)" },
-  no: { bg: tint("var(--danger)", 12), fg: "var(--danger)" },
+const MARK_CLASS: Record<Mark, string> = {
+  // The accent marks the gaps of the others (the opportunity); a match is plain ink, a partial one is muted.
+  yes: "bg-subtle text-fg",
+  partial: "text-fg-secondary border border-dashed border-line",
+  no: "bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-accent-text",
 };
 
 function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitors"]>; labels: StoryLabels }) {
@@ -177,13 +133,13 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
       <Intro>{data.intro}</Intro>
       {/* Scrolls sideways on a phone: focusable so the keyboard can scroll it too (WCAG 2.1.1). */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-      <div tabIndex={0} role="region" aria-label={labels.competitors} className="overflow-x-auto rounded-[12px] border border-line bg-surface">
+      <div tabIndex={0} role="region" aria-label={labels.competitors} className="mt-8 overflow-x-auto border border-line bg-surface">
         <table className="w-full min-w-[560px] border-collapse text-[14px]">
           <thead>
             <tr>
               <th className="p-3 text-left" />
               {data.products.map((p, i) => (
-                <th key={p} className={cn("p-3 text-center font-semibold", i === 0 && "text-fg", i > 0 && "text-fg-secondary")}>
+                <th key={p} className={cn("p-3 text-center font-label text-[11px] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
                   {p}
                 </th>
               ))}
@@ -192,15 +148,10 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
           <tbody>
             {data.rows.map((r) => (
               <tr key={r.feature} className="border-t border-line">
-                <th scope="row" className="p-3 text-left font-semibold">
-                  {r.feature}
-                </th>
+                <th scope="row" className="p-3 text-left font-medium">{r.feature}</th>
                 {r.marks.map((m, i) => (
-                  <td key={i} className={cn("p-1.5", i === 0 && "bg-subtle")}>
-                    <span
-                      className="flex h-9 items-center justify-center rounded-[4px] text-[12px] font-bold"
-                      style={{ background: MARK_STYLE[m].bg, color: MARK_STYLE[m].fg }}
-                    >
+                  <td key={i} className="p-1.5">
+                    <span className={cn("flex h-9 items-center justify-center rounded-[3px] text-[12px] font-semibold", MARK_CLASS[m])}>
                       {labels.marks[m]}
                     </span>
                   </td>
@@ -210,22 +161,21 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
           </tbody>
         </table>
       </div>
-      <p className="mt-3 flex items-center gap-2 text-[13px] text-fg-secondary">
-        <span className="h-3 w-3 rounded-[3px]" style={{ background: MARK_STYLE.no.bg }} aria-hidden="true" />
+      <div className="mt-3 flex items-center gap-2 font-label text-[11px] text-fg-secondary">
+        <span className={cn("h-3 w-3 rounded-[2px]", MARK_CLASS.no)} aria-hidden="true" />
         {labels.redHint}
-      </p>
+      </div>
     </>
   );
 }
 
 function Opportunities({ data }: { data: NonNullable<CaseStory["opportunities"]> }) {
-  const color = STAGE_COLOR.opportunities;
   return (
-    <ol className="flex flex-col">
+    <ol>
       {data.map((o) => (
-        <li key={o.code} className="flex flex-col gap-2 border-t border-line py-5 sm:flex-row sm:items-baseline sm:gap-6">
-          <Code code={o.code} color={color} />
-          <p className="font-display text-[clamp(22px,2.6vw,30px)] font-bold uppercase leading-[1.1]">{o.text}</p>
+        <li key={o.code} className="sg-case-insight">
+          <Code code={o.code} />
+          <p className="sg-case-statement">{o.text}</p>
         </li>
       ))}
     </ol>
@@ -233,44 +183,22 @@ function Opportunities({ data }: { data: NonNullable<CaseStory["opportunities"]>
 }
 
 function Flow({ data, labels }: { data: NonNullable<CaseStory["flow"]>; labels: StoryLabels }) {
-  const color = STAGE_COLOR.flows;
   return (
     <>
       <Intro>{data.intro}</Intro>
-      <ol className="flex flex-col items-stretch gap-2 lg:flex-row lg:flex-wrap lg:items-center">
+      <ol className="sg-case-chain">
         {data.steps.map((s, i) => (
-          <li key={s.label} className="flex flex-col items-center gap-2 lg:flex-row">
-            <span
-              className={cn(
-                "w-full border px-4 py-3 text-center text-[14px] font-semibold lg:w-auto",
-                s.kind === "start" || s.kind === "end" ? "rounded-full" : "rounded-[4px]",
-                s.kind === "action" && "border-dashed",
-              )}
-              style={{
-                borderColor: color,
-                background: s.kind === "screen" ? tint(color, 12) : s.kind === "end" ? color : "transparent",
-                color: s.kind === "end" ? "var(--on-status)" : undefined,
-              }}
-            >
-              {s.label}
-            </span>
-            {i < data.steps.length - 1 && (
-              <span className="text-[18px] text-fg-secondary" aria-hidden="true">
-                <span className="lg:hidden">↓</span>
-                <span className="hidden lg:inline">→</span>
-              </span>
-            )}
+          <li key={s.label} className={cn(s.kind === "action" && "border-dashed", s.kind === "end" && "border-accent-text")}>
+            <span>{pad(i + 1)}</span>{s.label}
           </li>
         ))}
       </ol>
-      <div className="mt-8 rounded-[12px] border border-dashed border-line p-5">
-        <p className="mb-3 font-display text-[18px] font-bold uppercase leading-[1.1]">{labels.edgeCases}</p>
-        <ul className="flex flex-col gap-2">
+      <div className="border-t border-line pt-6">
+        <h3>{labels.edgeCases}</h3>
+        <ul className="flex flex-col gap-2 text-[15px]">
           {data.edgeCases.map((e) => (
-            <li key={e} className="flex gap-2">
-              <span style={{ color }} aria-hidden="true">
-                ◆
-              </span>
+            <li key={e} className="flex gap-3">
+              <span className="font-label text-accent-text" aria-hidden="true">+</span>
               {e}
             </li>
           ))}
@@ -284,28 +212,26 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
   return (
     <>
       <Intro>{data.intro}</Intro>
-      <ul className="grid gap-8 sm:grid-cols-3">
+      <ul className="mt-8 grid gap-8 sm:grid-cols-3">
         {data.items.map((sc) => (
           <li key={sc.title} className="flex flex-col gap-3">
             {/* Phone mock-up placeholder until real screens are published */}
-            <div className="mx-auto w-full max-w-[240px] rounded-[30px] border-[6px] border-fg bg-surface p-2 shadow-[0_12px_30px_rgba(0,0,0,0.15)]">
-              <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[12px] p-3 text-on-sticky" style={{ background: sticker }}>
+            <div className="mx-auto w-full max-w-[220px] rounded-[26px] border border-line bg-surface p-2">
+              <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[18px] p-3 text-on-sticky" style={{ background: sticker }}>
                 <div className="mx-auto h-1.5 w-12 rounded-full bg-current/25" />
                 <div className="mt-2 h-4 w-2/3 rounded-full bg-current/30" />
-                <div className="h-20 rounded-[8px] bg-white/50" />
+                <div className="h-20 rounded-[6px] bg-white/50" />
                 <div className="h-3 w-4/5 rounded-full bg-current/20" />
                 <div className="h-3 w-3/5 rounded-full bg-current/15" />
-                <div className="h-14 rounded-[8px] bg-white/40" />
+                <div className="h-14 rounded-[6px] bg-white/40" />
                 <div className="mt-auto h-9 rounded-[4px] bg-current/80" />
               </div>
             </div>
-            <p className="font-display text-[22px] font-bold uppercase leading-[1.1]">{sc.title}</p>
-            <p className="text-fg-secondary">{sc.caption}</p>
+            <h3 className="!mb-0">{sc.title}</h3>
+            <p className="sg-case-secondary !mb-0 !text-[15px]">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-[4px] border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">
-                  {st}
-                </li>
+                <li key={st} className="rounded-[3px] border border-line px-2 py-0.5 font-label text-[11px] text-fg-secondary">{st}</li>
               ))}
             </ul>
           </li>
@@ -316,44 +242,19 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
 }
 
 function Decisions({ data, labels }: { data: NonNullable<CaseStory["decisions"]>; labels: StoryLabels }) {
-  const color = STAGE_COLOR.decisions;
   return (
-    <ul className="flex flex-col gap-4">
-      {data.map((dec) => (
-        <li key={dec.code} className="grid gap-5 rounded-[12px] border border-line bg-surface p-5 lg:grid-cols-[1.2fr_1fr]">
-          <div className="flex flex-col gap-3">
-            <Code code={dec.code} color={color} />
-            <p className="font-display text-[24px] font-bold uppercase leading-[1.1]">{dec.title}</p>
-            <p className="leading-[1.6]">
-              <span className="font-semibold">{labels.why}: </span>
-              {dec.why}
-            </p>
-          </div>
-          <div className="flex flex-col gap-4 lg:border-l lg:border-line lg:pl-5">
-            <div>
-              <p className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-fg-secondary">{labels.rejected}</p>
-              <ul className="flex flex-col gap-1">
-                {dec.rejected.map((r) => (
-                  <li key={r} className="text-fg-secondary line-through decoration-danger/70">
-                    {r}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-fg-secondary">{labels.evidence}</p>
-              <ul className="flex flex-wrap gap-1.5">
-                {dec.evidence.map((e) => (
-                  <li key={e}>
-                    <Code code={e} color={STAGE_COLOR.synthesis} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </li>
+    <div className="mt-8">
+      {data.map((dec, i) => (
+        <details key={dec.code} className="sg-case-decision" open={i === 0}>
+          <summary><span><Code code={dec.code} />{dec.title}</span></summary>
+          <p><span className="font-semibold">{labels.why}: </span>{dec.why}</p>
+          <p className="sg-case-rejected">
+            {labels.rejected}: {dec.rejected.map((r, j) => <span key={r}>{j > 0 && "; "}<s>{r}</s></span>)}.{" "}
+            {labels.evidence}: {dec.evidence.join(", ")}.
+          </p>
+        </details>
       ))}
-    </ul>
+    </div>
   );
 }
 
@@ -361,20 +262,15 @@ function Results({ data }: { data: NonNullable<CaseStory["results"]> }) {
   return (
     <>
       <Intro>{data.intro}</Intro>
-      <ul className="grid gap-4 sm:grid-cols-3">
+      <dl className="sg-case-result">
         {data.metrics.map((m) => (
-          <li key={m.label} className="rounded-[12px] border border-line bg-surface p-5">
-            <p className="display-num text-[48px] leading-none" style={{ color: "var(--success)" }}>
-              {m.value}
-            </p>
-            <p className="mt-2 text-[14px] text-fg-secondary">{m.label}</p>
-          </li>
+          <div key={m.label}><dt className="sr-only">{m.label}</dt><dd><strong>{m.value}</strong><span>{m.label}</span></dd></div>
         ))}
-      </ul>
+      </dl>
       {data.quote && (
-        <figure className="mt-8 rounded-[12px] bg-rail p-6 text-rail-fg sm:p-10">
-          <blockquote className="font-display text-[clamp(24px,3vw,36px)] font-bold uppercase leading-[1.1]"><q>{data.quote.text}</q></blockquote>
-          <figcaption className="mt-4 text-[14px] opacity-70">— {data.quote.who}</figcaption>
+        <figure className="sg-case-pullquote">
+          <blockquote><q>{data.quote.text}</q></blockquote>
+          <figcaption>— {data.quote.who}</figcaption>
         </figure>
       )}
     </>

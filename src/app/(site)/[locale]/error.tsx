@@ -25,7 +25,7 @@ export default function SiteError({ reset }: { error: Error & { digest?: string 
   const locale = usePathname()?.startsWith("/en") ? "en" : "uk";
   const t = TEXT[locale];
   return (
-    <div className="mx-auto flex w-full max-w-[1120px] flex-col gap-6 px-4 py-24 sm:px-8">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
       <title>{t.title}</title>
       <meta name="robots" content="noindex" />
       <h1 className="page-title">{t.title}</h1>

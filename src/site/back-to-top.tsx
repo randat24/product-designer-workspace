@@ -1,27 +1,32 @@
 "use client";
 
 import { ArrowUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/shared/lib/cn";
 
-const R = 22;
-const C = 2 * Math.PI * R;
-
 /**
- * Floating «Вгору»: follows the page (fixed, bottom right), shows up after the first screen and draws
- * how much of the page is read as a ring around the arrow (goal-gradient, docs/UX_LAWS.md UX-22).
+ * Floating «Вгору» (SIGNAL): a plain square with an arrow, bottom right, shown after the first screen. How much of
+ * the page is read is a thin orange line along its bottom edge (goal-gradient, docs/UX_LAWS.md UX-22). Scrolling
+ * writes the line and the label straight to the DOM, so the page never re-renders while it scrolls.
  * Instant scroll when the visitor prefers reduced motion.
  */
 export function BackToTop({ label }: { label: string }) {
-  const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(false);
+  const button = useRef<HTMLButtonElement>(null);
+  const bar = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
+      const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      const text = label.replace("{n}", String(Math.round(progress * 100)));
+      if (bar.current) bar.current.style.transform = `scaleX(${progress})`;
+      if (button.current && button.current.title !== text) {
+        button.current.title = text;
+        button.current.setAttribute("aria-label", text);
+      }
       setVisible(window.scrollY > window.innerHeight * 0.6);
     };
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
@@ -29,26 +34,21 @@ export function BackToTop({ label }: { label: string }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(frame); };
-  }, []);
+  }, [label]);
 
-  const pct = Math.round(progress * 100);
-  const text = label.replace("{n}", String(pct));
+  const initial = label.replace("{n}", "0");
   return (
-    <button type="button" aria-label={text} title={text} tabIndex={visible ? 0 : -1} aria-hidden={!visible}
+    <button ref={button} type="button" aria-label={initial} title={initial} tabIndex={visible ? 0 : -1} aria-hidden={!visible}
       onClick={() => {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
       }}
       className={cn(
-        "fixed right-4 bottom-4 z-30 grid size-12 place-items-center rounded-[4px] bg-rail text-rail-fg shadow-lg transition-[opacity,transform] duration-200 sm:right-6 sm:bottom-6",
+        "fixed right-4 bottom-4 z-30 grid size-12 place-items-center overflow-hidden rounded-[4px] border border-control bg-surface text-fg transition-[opacity,transform,background-color] duration-200 hover:bg-subtle sm:right-6 sm:bottom-6",
         visible ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0",
       )}>
-      <svg aria-hidden viewBox="0 0 56 56" className="absolute inset-0 size-full -rotate-90">
-        <circle cx="28" cy="28" r={R} fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
-        <circle cx="28" cy="28" r={R} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)} />
-      </svg>
-      <ArrowUp aria-hidden className="relative size-5" />
+      <ArrowUp aria-hidden className="size-5" strokeWidth={1.75} />
+      <span ref={bar} aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-accent-text" />
     </button>
   );
 }

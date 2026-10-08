@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/cn";
-import { CursorIcon } from "@/shared/ui/fedo-mark";
-import { trackAttrs } from "./analytics/track";
 import { PROCESS_STAGES, type CaseProcess } from "./case-process";
 import { dict, type Case, type Locale } from "./content";
 
-export const container = "mx-auto w-full max-w-[1120px] px-4 sm:px-8";
+export const container = "mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12";
 
 export function Eyebrow({
   children,
@@ -23,23 +21,6 @@ export function Eyebrow({
     >
       {children}
     </p>
-  );
-}
-
-export function SectionTitle({
-  children,
-  id,
-}: {
-  children: React.ReactNode;
-  id?: string;
-}) {
-  return (
-    <h2
-      id={id}
-      className="font-display text-[clamp(28px,4vw,40px)] font-bold uppercase leading-[1.1] tracking-[0.01em]"
-    >
-      {children}
-    </h2>
   );
 }
 
@@ -154,72 +135,6 @@ export function CaseCover({
   );
 }
 
-/** A large cover cut like the F: the notch holds `children` (the case's facts, «next case»). */
-export function NotchedCover({ item, label, large, children, className }: {
-  item: Case; label: string; large?: boolean; children: React.ReactNode; className?: string;
-}) {
-  return (
-    <div className={cn("relative overflow-hidden rounded-[12px] rounded-br-none", className)} data-spec="F-обкладинка">
-      <CaseCover item={item} label={label} large={large} />
-      <div className={cn("f-notch", large ? "[--notch-r:22px] pl-5 pt-4 sm:pl-6 sm:pt-5" : "pl-3.5 pt-3")}>{children}</div>
-    </div>
-  );
-}
-
-/** Two-digit position of a case in the list: 01, 02… */
-const caseIndex = (n: number) => String(n).padStart(2, "0");
-
-/**
- * The cover of a card, cut like the F of the FEDO mark: the cover keeps the bar and the stem, «Open case» with the
- * mark's cursor sits in the notch. Blurred for 18+ unless it is safe; on hover a scrim lifts the tags.
- */
-function CardCover({ item, locale, label, large }: { item: Case; locale: Locale; label: string; large?: boolean }) {
-  const d = dict(locale);
-  const blurred = item.adult && !item.coverSafe;
-  return (
-    <div className="relative overflow-hidden rounded-[12px] rounded-br-none">
-      <div className={cn("transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none", blurred && "blur-xl")}>
-        <CaseCover item={item} label={label} large={large} />
-      </div>
-      {blurred && (
-        <span aria-hidden className="absolute inset-0 grid place-items-center">
-          <span className="grid size-14 place-items-center rounded-full bg-fg font-display text-[22px] font-bold text-canvas">{d.adult.badge}</span>
-        </span>
-      )}
-      {/* Pointer devices only: the same tags are listed under the card on touch screens. */}
-      <div aria-hidden className="absolute inset-0 hidden flex-col justify-start bg-[#191B18]/80 p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-fine:flex motion-reduce:transition-none">
-        <ul className="flex flex-wrap gap-1.5">
-          {item.tags.map((tag) => <li key={tag} className="rounded-[4px] border border-white/70 px-2.5 py-0.5 text-[12px]">{tag}</li>)}
-        </ul>
-      </div>
-      <span aria-hidden className={cn("f-notch flex items-center gap-2 font-semibold", large ? "pl-5 pt-4 text-[17px]" : "pl-3.5 pt-3 text-[14px]")}>
-        <CursorIcon className={cn("transition-transform duration-200 group-hover:-translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none", large ? "size-5" : "size-4")} />
-        {d.cases.open}
-      </span>
-    </div>
-  );
-}
-
-function CardBadges({ item, locale }: { item: Case; locale: Locale }) {
-  const d = dict(locale);
-  return (
-    <span className="flex flex-wrap items-center gap-1.5">
-      {item.kind && <KindBadge kind={item.kind} label={item.kind === "concept" ? d.project.concept : d.project.real} />}
-      {item.adult && <AdultBadge label={d.adult.badge} />}
-    </span>
-  );
-}
-
-function CardTags({ tags, className }: { tags: string[]; className?: string }) {
-  return (
-    <ul className={cn("flex flex-wrap gap-1.5", className)}>
-      {tags.map((tag) => (
-        <li key={tag} className="rounded-[4px] border border-line px-2.5 py-0.5 text-[12px] text-fg-secondary">{tag}</li>
-      ))}
-    </ul>
-  );
-}
-
 /**
  * «Глибина процесу»: records of each stage in the workbook, every number named, with the stage's colour from the
  * tool. Cards show five stages; the case page shows all nine with a note that it is not a score.
@@ -228,186 +143,18 @@ export function ProcessStrip({ process, locale, full }: { process: CaseProcess; 
   const p = dict(locale).process;
   const stages = PROCESS_STAGES.filter((s) => full || s.card);
   return (
-    <div className="flex flex-col gap-2">
-      <p className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{p.title}</p>
-      <dl className={cn("grid gap-x-1.5 gap-y-3", full ? "grid-cols-3 sm:grid-cols-5 lg:grid-cols-9" : "grid-cols-5")}>
+    <div className="flex flex-col gap-3">
+      <p className="sg-eyebrow text-fg-secondary">{p.title}</p>
+      <dl className={cn("grid gap-x-3 gap-y-4", full ? "grid-cols-3 sm:grid-cols-5 lg:grid-cols-9" : "grid-cols-5")}>
         {stages.map((s) => (
-          // A stage with no records keeps readable text; only its colour bar turns grey.
-          <div key={s.key} className="flex min-w-0 flex-col-reverse justify-end gap-0.5 border-t-[3px] pt-1.5"
-            style={{ borderColor: process[s.key] === 0 ? "var(--line)" : s.color }}>
-            <dt className="truncate font-label text-[10px] uppercase tracking-[0.02em] text-fg-secondary" title={p.stages[s.key]}>{p.stages[s.key]}</dt>
-            <dd className={cn("font-display font-bold leading-none tabular-nums", full ? "text-[clamp(22px,2.2vw,30px)]" : "text-[20px]")}>{process[s.key]}</dd>
+          // A stage with no records keeps readable text; only its rule stays grey.
+          <div key={s.key} className={cn("flex min-w-0 flex-col-reverse justify-end gap-1 border-t pt-2.5", process[s.key] === 0 ? "border-line" : "border-accent-text")}>
+            <dt className="truncate font-label text-[10px] uppercase tracking-[0.04em] text-fg-secondary" title={p.stages[s.key]}>{p.stages[s.key]}</dt>
+            <dd className={cn("font-medium leading-none tracking-[-0.04em] tabular-nums", full ? "text-[clamp(24px,2.4vw,34px)]" : "text-[20px]")}>{process[s.key]}</dd>
           </div>
         ))}
       </dl>
-      {full && <p className="text-[13px] text-fg-secondary">{p.note}</p>}
+      {full && <p className="text-[12px] text-fg-secondary">{p.note}</p>}
     </div>
   );
 }
-
-/** A case in the grid: cover, then its number, badges, title, client · year and the summary. */
-export function CaseCard({
-  item,
-  locale,
-  label,
-  index,
-  location = "cases",
-}: {
-  item: Case;
-  locale: Locale;
-  label: string;
-  /** 1-based position in the list, shown as 02, 03… */
-  index: number;
-  location?: "home" | "cases";
-}) {
-  // Home: under the "Selected work" h2. Work page: directly under the page h1.
-  const Title = location === "home" ? "h3" : "h2";
-  return (
-    <Link
-      href={`/${locale}/cases/${item.slug}`}
-      data-kind={item.kind ?? "real"}
-      className="group flex flex-col gap-4"
-      data-cursor={dict(locale).cases.open}
-      {...trackAttrs("case_open", { case_slug: item.slug, location })}
-    >
-      <CardCover item={item} locale={locale} label={label} />
-      <div className="flex flex-col gap-2">
-        <p className="flex items-center justify-between gap-2">
-          <span className="font-label text-[12px] text-fg-secondary">{caseIndex(index)}</span>
-          <CardBadges item={item} locale={locale} />
-        </p>
-        <Title className="font-display text-[26px] font-bold uppercase leading-[1.08]">{item.title}</Title>
-        <p className="text-[14px] text-fg-secondary">{item.client} · {item.year}</p>
-        <p className="text-fg-secondary">{item.summary}</p>
-        <CardTags tags={item.tags} className="mt-1 pointer-fine:hidden" />
-        {item.process && <div className="mt-2"><ProcessStrip process={item.process} locale={locale} /></div>}
-      </div>
-    </Link>
-  );
-}
-
-/**
- * The opening of the home page: the first case as the page's headline, like a gallery's work of the day. The title
- * in the largest type on the site beside its facts and how much of the work is documented, then a wide cover.
- */
-export function HeroCase({ item, locale, label, total }: { item: Case; locale: Locale; label: string; total: number }) {
-  const d = dict(locale);
-  const facts = [
-    { label: d.cases.client, value: item.client },
-    { label: d.cases.year, value: item.year },
-    { label: d.cases.type, value: item.kind === "concept" ? d.project.concept : d.project.real },
-    { label: d.cases.role, value: item.role },
-  ].filter((f) => f.value);
-  return (
-    <Link
-      href={`/${locale}/cases/${item.slug}`}
-      data-kind={item.kind ?? "real"}
-      className="group flex flex-col gap-5"
-      data-cursor={d.cases.open}
-      {...trackAttrs("case_open", { case_slug: item.slug, location: "home" })}
-    >
-      <p className="flex items-center justify-between gap-2 font-label text-[12px] uppercase tracking-[0.04em]">
-        <span className="flex items-center gap-2"><span aria-hidden className="size-2 rounded-full bg-fg" />{d.cases.featured}</span>
-        <span className="text-fg-secondary">{caseIndex(1)} / {caseIndex(total)}</span>
-      </p>
-      <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] md:gap-12">
-        <div className="flex min-w-0 flex-col gap-4">
-          <CardBadges item={item} locale={locale} />
-          {/* The page's h1 names the site; each case title is the h2 of its own block. */}
-          <h2 className="t-page">{item.title}</h2>
-          <p className="max-w-[60ch] text-[clamp(17px,1.8vw,20px)] leading-[1.5] text-fg-secondary">{item.summary}</p>
-        </div>
-        <div className="flex min-w-0 flex-col gap-5">
-          <dl className="grid grid-cols-2 border-t border-line">
-            {facts.map((f) => (
-              <div key={f.label} className="flex flex-col-reverse justify-end gap-0.5 border-b border-line py-2.5 pr-3">
-                <dd className="text-[14px] font-semibold">{f.value}</dd>
-                <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{f.label}</dt>
-              </div>
-            ))}
-          </dl>
-          {item.process && <ProcessStrip process={item.process} locale={locale} />}
-        </div>
-      </div>
-      <CardCover item={item} locale={locale} label={label} large />
-    </Link>
-  );
-}
-
-/** The first case, shown large: cover beside its title, summary and facts. */
-export function FeaturedCase({
-  item,
-  locale,
-  label,
-  total,
-  location = "cases",
-}: {
-  item: Case;
-  locale: Locale;
-  label: string;
-  total: number;
-  location?: "home" | "cases";
-}) {
-  const d = dict(locale);
-  const Title = location === "home" ? "h3" : "h2";
-  const facts = [
-    { label: d.cases.client, value: item.client },
-    { label: d.cases.year, value: item.year },
-    { label: d.cases.type, value: item.kind === "concept" ? d.project.concept : d.project.real },
-    { label: d.cases.role, value: item.role },
-  ].filter((f) => f.value);
-  return (
-    <Link
-      href={`/${locale}/cases/${item.slug}`}
-      data-kind={item.kind ?? "real"}
-      className="group grid gap-6 rounded-[12px] border border-line bg-surface p-4 [--notch-bg:var(--surface)] sm:p-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-8"
-      data-cursor={dict(locale).cases.open}
-      {...trackAttrs("case_open", { case_slug: item.slug, location })}
-    >
-      <CardCover item={item} locale={locale} label={label} />
-      <div className="flex min-w-0 flex-col gap-4">
-        <p className="flex items-center justify-between gap-2 font-label text-[12px] uppercase tracking-[0.04em]">
-          <span className="flex items-center gap-2"><span aria-hidden className="size-2 rounded-full bg-fg" />{d.cases.featured}</span>
-          <span className="text-fg-secondary">{caseIndex(1)} / {caseIndex(total)}</span>
-        </p>
-        <CardBadges item={item} locale={locale} />
-        <Title className="font-display text-[clamp(24px,2.4vw,32px)] font-bold uppercase leading-[1.08] text-balance">{item.title}</Title>
-        <p className="text-fg-secondary">{item.summary}</p>
-        <dl className="grid grid-cols-2 border-t border-line">
-          {facts.map((f) => (
-            <div key={f.label} className="flex flex-col-reverse justify-end gap-0.5 border-b border-line py-2.5 pr-3">
-              <dd className="text-[14px] font-semibold">{f.value}</dd>
-              <dt className="font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">{f.label}</dt>
-            </div>
-          ))}
-        </dl>
-        <CardTags tags={item.tags} />
-        {item.process && <ProcessStrip process={item.process} locale={locale} />}
-      </div>
-    </Link>
-  );
-}
-
-/** 18+ marker on case cards and pages. */
-export function AdultBadge({ label }: { label: string }) {
-  return (
-    <span className="rounded-[4px] border border-danger px-2 py-0.5 text-[11px] font-bold tracking-[0.06em] text-danger">
-      {label}
-    </span>
-  );
-}
-
-/** "Real project" / "Concept" marker on case cards and pages. */
-export function KindBadge({ kind, label }: { kind: "real" | "concept"; label: string }) {
-  return (
-    <span
-      className={cn(
-        "rounded-[4px] px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.06em]",
-        kind === "concept" ? "border border-dashed border-fg-secondary text-fg-secondary" : "bg-fg text-canvas",
-      )}
-    >
-      {label}
-    </span>
-  );
-}
-

@@ -33,7 +33,7 @@ export default async function CasePreview({ params }: { params: Params }) {
 
   const banner = (
     <div role="note" className="mb-8 border-y border-dashed border-fg bg-subtle">
-      <p className="mx-auto flex w-full max-w-[1120px] flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-3 text-[15px] sm:px-8">
+      <p className="mx-auto flex w-full max-w-[1440px] flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-3 text-[15px] sm:px-8 lg:px-12">
         <span className="font-semibold">{t.caseEditor.previewBanner}</span>
         <Link href={editor} className="font-semibold underline underline-offset-4">{t.caseEditor.backToEditor}</Link>
       </p>
@@ -44,7 +44,7 @@ export default async function CasePreview({ params }: { params: Params }) {
     return (
       <article className="pb-20 pt-10">
         {banner}
-        <p role="alert" className="mx-auto max-w-[1120px] px-4 text-[18px] sm:px-8">
+        <p role="alert" className="mx-auto max-w-[1440px] px-5 text-[18px] sm:px-8 lg:px-12">
           {t.caseEditor.publishInvalid} <span className="text-fg-secondary">({snapshotProblem(data.draft, locale)})</span>
         </p>
       </article>

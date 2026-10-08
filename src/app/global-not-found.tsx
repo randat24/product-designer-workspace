@@ -27,7 +27,7 @@ export default async function GlobalNotFound() {
       <body>
         <div className="flex min-h-dvh flex-col">
           <header className="border-b border-line">
-            <div className="mx-auto flex h-16 w-full max-w-[1120px] items-center px-4 sm:px-8">
+            <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-5 sm:px-8 lg:px-12">
               <Link href={`/${locale}`} className="group flex items-center gap-2.5">
                 <FedoMark tap className="size-9" />
                 <span aria-hidden className="font-display text-[22px] font-semibold uppercase leading-none tracking-[0.08em]">FEDO</span>
@@ -35,7 +35,7 @@ export default async function GlobalNotFound() {
               </Link>
             </div>
           </header>
-          <main id="main" className="mx-auto flex w-full max-w-[1120px] flex-1 flex-col gap-6 px-4 py-24 sm:px-8">
+          <main id="main" className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
             {/* The cursor of the mark missed the notch: there is nothing at this address. */}
             <div className="flex items-end gap-6">
               <FedoOutline miss className="size-[clamp(64px,9vw,110px)]" />

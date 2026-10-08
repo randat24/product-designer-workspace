@@ -1,8 +1,8 @@
-// Award icons: vector traces (public/awards/*.svg) of the stylised medal artwork —
-// one light tone on transparent, shown on a dark tile (SIGNAL inverse surface) in both themes.
+import { cn } from "@/shared/lib/cn";
 
-/** Tile colour behind the icons. */
-export const AWARD_TILE = "#22251F";
+// Award icons: vector traces (public/awards/*.svg) of the stylised medal artwork, one tone on transparent.
+// The file is used as a mask, so the medal is drawn in the text colour (SIGNAL ink in light, paper in dark)
+// instead of the lavender of the source files.
 
 export const AWARD_ICONS = [
   "defence-of-ukraine",
@@ -14,7 +14,10 @@ export const AWARD_ICONS = [
 ] as const;
 export type AwardIcon = (typeof AWARD_ICONS)[number];
 
+/** The medal in `currentColor`; size it by height (the drawing is 840 × 1350). */
 export function AwardSvg({ icon, className }: { icon: AwardIcon; className?: string }) {
-  // eslint-disable-next-line @next/next/no-img-element -- static SVG files
-  return <img src={`/awards/${icon}.svg`} alt="" aria-hidden="true" className={className} loading="lazy" />;
+  return (
+    <span aria-hidden="true" className={cn("award-icon", className)}
+      style={{ "--award": `url(/awards/${icon}.svg)` } as React.CSSProperties} />
+  );
 }
