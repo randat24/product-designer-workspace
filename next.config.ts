@@ -19,6 +19,9 @@ const SECURITY_HEADERS = [
 const config: NextConfig = {
   typedRoutes: false,
   poweredByHeader: false,
+  // This repository is one standalone app with its own package-lock.json. Without this, a lockfile
+  // in a parent directory makes Next.js pick that directory as the root for file tracing.
+  outputFileTracingRoot: __dirname,
   // Fonts read from disk: the Open Graph image route and the project brief PDF (client copy and workspace).
   outputFileTracingIncludes: {
     "/og": ["./src/site/og/fonts/**"],

@@ -7,7 +7,20 @@ const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta
 // Next.js rules (core web vitals, TypeScript) plus the full accessibility set
 // (docs/QUALITY_REVIEW.md C3, C5: labelled controls, no clickable divs).
 const config = [
-  { ignores: [".next/**", "node_modules/**", "supabase/**", "next-env.d.ts", "playwright-report/**", "test-results/**"] },
+  {
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "supabase/**",
+      "next-env.d.ts",
+      "playwright-report/**",
+      "test-results/**",
+      // design-sync: generated bundle and its tooling, not application source.
+      ".design-sync/**",
+      ".ds-sync/**",
+      "ds-bundle/**",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript", "plugin:jsx-a11y/recommended"),
   {
     rules: {

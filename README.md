@@ -127,7 +127,7 @@ Phase 1 — Foundation:
 |---|---|
 | Next.js 15 (App Router, TS strict), Tailwind 4, токены из DESIGN-SYSTEM | `typecheck` и `build` проходят |
 | Supabase Auth: magic link + Google, middleware-защита маршрутов | редиректы проверены на собранном приложении |
-| Схема ядра: profiles, workspaces, members, projects, entity_types, project_counters, trace_links + правила, activity_log | миграции применяются на PostgreSQL 16 |
+| Схема ядра: profiles, workspaces, members, projects, entity_types, project_counters, trace_links + правила, activity_log | миграции применяются на локальном PostgreSQL 17 (`supabase/config.toml`) |
 | RLS на всех таблицах, роли owner / editor / viewer | 21 pgTAP-тест |
 | Traceability: правила, проверка «тот же проект», очистка при удалении, `trace_graph()` | 18 pgTAP-тестов |
 | `attach_domain_table()` — подключение новой таблицы домена одной строкой | покрыто тестами trace |
@@ -156,7 +156,17 @@ npm run db:types   # сгенерировать src/types/database.ts (заме�
 
 ## Облако (развёрнуто)
 
-Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1), миграции 001–013 применены, smoke-тест и advisors пройдены. Остаются только осознанные замечания: `is_workspace_member`, `can_access_project_file` и `next_code` вызываются из RLS и триггеров, поэтому роль `authenticated` должна иметь к ним доступ (`next_code` сам проверяет права editor). У `project_counters` нет политик, доступ к нему только через `next_code`. Проверка утёкших паролей не нужна: входа по паролю нет.
+Supabase: проект `xmrzukcmmybjloallslg` (eu-west-1).
+
+Состояние миграций — две разные вещи:
+
+- **В репозитории:** `supabase/migrations/` содержит 24 файла, 001–024 (`20260929000001_core.sql` … `20261014000024_restore_grants.sql`). Это то, что применяют `supabase start`, `db reset` и CI.
+- **В облаке:** репозиторий этого не знает и не доказывает. Дата и номер в имени файла не означают, что миграция развёрнута. Проверяется только по самой базе: `npx supabase migration list --linked` (нужен доступ к проекту) или Dashboard → Database → Migrations.
+- Последняя сверка, 2026-10-10 (только чтение: история миграций): в истории облака записаны те же 24 версии, что лежат в `supabase/migrations/`, 001–024, без лишних и без пропусков.
+- До этого история расходилась: 023 была в базе без записи, а 024 была записана под версией `20261008111056`. Историю выровняли вручную, схема при этом не менялась. Схема сверена 2026-10-10: локальная база, собранная из 24 миграций, сравнена с облаком по каталогу схем `public` и `private` (колонки, ограничения, индексы, политики, включая `storage`, триггеры, RLS, enum, права на таблицы и функции, бакеты, определения функций) — совпадает. Два отличия, оба не в логике: в облаке у функций `next_code`, `project_stage_counts`, `submit_project_request` и `synthesis_refs_validate` нет комментариев внутри тела (код тот же), и есть `rls_auto_enable` с event-триггером `ensure_rls`, которые создаёт сам Supabase (миграция 009 лишь закрывает к ней доступ). Это сверка каталога запросами на чтение, а не `supabase db diff --linked`.
+- Запись в истории говорит, что миграция была выполнена, но не гарантирует, что схему потом не меняли вручную (SQL Editor).
+
+Security advisors на 2026-10-09: ошибок нет, только предупреждения. Осознанные: `is_workspace_member`, `can_access_project_file` и `next_code` вызываются из RLS и триггеров, поэтому роль `authenticated` должна иметь к ним доступ (`next_code` сам проверяет права editor); `get_request_brief`, `site_profile` и `submit_project_request` открыты гостям намеренно (публичный сайт и форма заявки); `convert_project_request` и `restore_project` доступны вошедшим и сами проверяют роль. У `project_counters`, `request_counters` и `signup_allowlist` нет политик: доступ только через функции. Осознанно оставлено: проверка утёкших паролей выключена, хотя вход сейчас по паролю, — на текущем тарифе Supabase она недоступна (платная функция). Риск ограничен тем, что регистрация закрыта списком `signup_allowlist`.
 Vercel: https://product-designer-workspace.vercel.app (деплой из `main`).
 URL: `https://xmrzukcmmybjloallslg.supabase.co` · ключ: publishable key из Project Settings → API.
 
@@ -190,6 +200,8 @@ insert into public.signup_allowlist (email) values ('colleague@example.com');
 ```
 docs/                    PRD, ARCHITECTURE, DATABASE, IA, MVP, ROADMAP, DESIGN-SYSTEM, AI, adr/
 supabase/migrations/     001 core · 002 trace · 003 activity + attach_domain_table · 004 hardening · 005 briefs + demo · 006 competitors + matrix + attachments · 007 research · 008 synthesis
+                         009 db_tuning · 010 signup_allowlist · 011 flows · 012 design · 013 competitor_review · 014 case_studies · 015 project_stage_counts · 016 open_demo_project
+                         017 project_requests · 018 request_conversion · 019 ukrainian_ui · 020 case_media · 021 case_drafts · 022 site_profile · 023 project_restore · 024 restore_grants
 supabase/tests/database/ pgTAP
 src/app/                 маршруты (docs/IA.md); (site)/[locale] — публичный сайт, (app) — инструмент на /app
 src/site/                сайт: контент uk/en (content.ts), кейсы из базы (cases-source.ts), подача кейса (case-story*)
