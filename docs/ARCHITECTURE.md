@@ -57,7 +57,7 @@
 │  └─ adr/                       # 0001-trace-links.md, ...
 ├─ content/knowledge/            # MDX-страницы методов (ux/, ui/)
 ├─ supabase/
-│  ├─ migrations/                # (после ревью)
+│  ├─ migrations/                # 001–024, список в README
 │  ├─ seed.sql                   # демо-проект «Restaurant App»
 │  └─ functions/                 # SQL-функции: trace_graph, is_member...
 ├─ src/
