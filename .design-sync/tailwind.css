@@ -1,0 +1,20 @@
+/* design-sync stylesheet entry: the app's own tokens and component CSS (src/app/globals.css), compiled by
+   Tailwind over the app sources, plus a safelist of the design-system vocabulary so a design built with
+   these components can use token utilities the app itself happens not to use yet.
+   Fonts ship separately (src/app/fonts.css via cfg.extraFonts). */
+@import "../src/app/globals.css";
+@source "../src";
+@source "./previews";
+
+@source inline("{hover:,}{bg,text,border}-{canvas,surface,subtle,line,fg,fg-secondary,accent,accent-hover,on-accent,danger,warning,success,on-status,rail,rail-fg,on-sticky}");
+@source inline("{bg,text,border}-{danger,warning,success,fg,accent}/{5,10,12,16,20}");
+@source inline("{bg,text,border}-entity-{research,synthesis,problem,opportunity,structure,design,decision}");
+@source inline("text-{caption,meta,sm,body,heading,title,display-xs,display-sm,display-md,display-lg}");
+@source inline("font-{sans,display,label,normal,medium,semibold,bold}");
+@source inline("rounded-{chip,control,panel,hero,full}");
+@source inline("{p,px,py,pt,pb,pl,pr,m,mx,my,mt,mb,ml,mr,gap,gap-x,gap-y,space-x,space-y}-{0,0.5,1,1.5,2,2.5,3,4,5,6,8,10,12,16}");
+@source inline("{w,h,size}-{4,5,6,8,9,10,11,12,full}");
+@source inline("{flex,inline-flex,grid,block,inline-block,hidden,flex-col,flex-row,flex-wrap,flex-1,shrink-0,grow,items-start,items-center,items-end,items-baseline,justify-start,justify-center,justify-between,justify-end,border,border-b,border-t,border-dashed,uppercase,truncate,tabular-nums,w-full,min-w-0,mx-auto}");
+@source inline("grid-cols-{1,2,3,4}");
+@source inline("{sm,md,lg}:grid-cols-{1,2,3,4}");
+@source inline("max-w-{sm,md,lg,xl,2xl,3xl,4xl}");
