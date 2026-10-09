@@ -529,7 +529,8 @@
   .signal .sg-contact-bottom { flex-direction: column; margin-top: 32px; }
   .signal .sg-case-hero { padding-block: 32px 36px; }
   .signal .sg-case-back { margin-bottom: 28px; }
-  .signal .sg-case-title { font-size: clamp(40px, 11.5vw, 66px); margin-top: 20px; }
+  /* A long word («енергоспоживання») is wider than a phone: hyphenate it, or break it where hyphenation is not available. */
+  .signal .sg-case-title { font-size: clamp(40px, 11.5vw, 66px); margin-top: 20px; hyphens: auto; overflow-wrap: break-word; }
   .signal .sg-case-hero-bottom { gap: 28px; }
   .signal .sg-case-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
   .signal .sg-case-meta dd { font-size: 13px; }
