@@ -1,0 +1,41 @@
+{
+  "projectId": "760dc0d7-70a3-4dfd-9d43-ff001bf271c1",
+  "pkg": "workspace-ui",
+  "globalName": "WorkspaceUI",
+  "shape": "package",
+  "buildCmd": "node .design-sync/build.mjs",
+  "entry": ".design-sync/.cache/pkg/index.js",
+  "srcDir": "../../../src/shared/ui",
+  "tsconfig": "../../tsconfig.json",
+  "cssEntry": "styles.css",
+  "extraFonts": [
+    "../../../src/app/fonts.css"
+  ],
+  "guidelinesGlob": [
+    "../../../docs/DESIGN-SYSTEM.md"
+  ],
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "ConfirmDelete": {
+      "cardMode": "column"
+    },
+    "PageHeader": {
+      "cardMode": "column"
+    },
+    "Panel": {
+      "cardMode": "column"
+    },
+    "TextField": {
+      "cardMode": "column"
+    },
+    "Textarea": {
+      "cardMode": "column"
+    },
+    "Section": {
+      "cardMode": "column"
+    },
+    "ErrorState": {
+      "cardMode": "column"
+    }
+  }
+}

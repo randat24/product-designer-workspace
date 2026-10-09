@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "incremental": false,
+    "plugins": [],
+    "jsx": "react-jsx",
+    "rootDir": "../src",
+    "outDir": "./.cache/pkg/types"
+  },
+  "include": ["../src/shared/ui/**/*.tsx"],
+  "exclude": ["../node_modules"]
+}
