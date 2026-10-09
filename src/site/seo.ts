@@ -94,6 +94,20 @@ export function personLd(locale: Locale): Json {
     },
     knowsAbout: d.skills.flatMap((s) => s.items.split(/,\s*/)).slice(0, 12),
     knowsLanguage: ["uk", "en"],
+    // Awards and education as listed on the About page; certificates link to their public record.
+    award: d.awards.map((a) => a.title),
+    alumniOf: d.education
+      .filter((e) => !e.certificate)
+      .map((e) => ({ "@type": "EducationalOrganization", name: e.place })),
+    hasCredential: d.education
+      .filter((e) => e.certificate)
+      .map((e) => ({
+        "@type": "EducationalOccupationalCredential",
+        name: e.title,
+        credentialCategory: "certificate",
+        recognizedBy: { "@type": "EducationalOrganization", name: e.place.split(" · ")[0] },
+        url: e.certificate,
+      })),
     sameAs: [CONTACTS.linkedin, CONTACTS.dribbble, CONTACTS.telegram],
   };
 }
@@ -133,6 +147,27 @@ export function caseLd(locale: Locale, c: Case): Json {
     ...(c.year ? { temporalCoverage: c.year.replace(/\s*—\s*/, "/") } : {}),
     ...(c.updatedAt ? { dateModified: c.updatedAt } : {}),
     image: ogImageUrl(locale, c.slug),
+  };
+}
+
+/** The case list page: a collection whose items are the published cases (samples are noindex, so left out). */
+export function casesCollectionLd(locale: Locale, cases: Case[], name: string, description: string): Json {
+  const url = localeUrl(locale, "/cases");
+  return {
+    "@type": "CollectionPage",
+    "@id": `${url}#page`,
+    url,
+    name,
+    description,
+    inLanguage: locale,
+    isPartOf: { "@id": websiteId() },
+    author: { "@id": personId() },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: cases
+        .filter((c) => !c.sample)
+        .map((c, i) => ({ "@type": "ListItem", position: i + 1, url: localeUrl(locale, `/cases/${c.slug}`), name: c.title })),
+    },
   };
 }
 
