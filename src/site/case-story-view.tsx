@@ -132,12 +132,13 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
     <>
       <Intro>{data.intro}</Intro>
       {/* Scrolls sideways on a phone: focusable so the keyboard can scroll it too (WCAG 2.1.1). */}
+      {/* Named by its columns: the chapter around it is already the «competitors» landmark. */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-      <div tabIndex={0} role="region" aria-label={labels.competitors} className="mt-8 overflow-x-auto border border-line bg-surface">
+      <div tabIndex={0} role="region" aria-label={`${labels.competitors}: ${data.products.join(", ")}`} className="mt-8 overflow-x-auto border border-line bg-surface">
         <table className="w-full min-w-[560px] border-collapse text-[14px]">
           <thead>
             <tr>
-              <th className="p-3 text-left" />
+              <td className="p-3" />
               {data.products.map((p, i) => (
                 <th key={p} className={cn("p-3 text-center font-label text-[11px] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
                   {p}
