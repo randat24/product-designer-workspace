@@ -61,17 +61,44 @@ Middleware (`src/shared/lib/supabase/middleware.ts`) ходит в Supabase то
 |---|---|
 | Главная | `WebSite` + `Person` |
 | Про мене | `ProfilePage` (mainEntity → `Person`) + `Person` + `BreadcrumbList` |
-| Роботи | `BreadcrumbList` |
+| Роботи | `CollectionPage` (mainEntity → `ItemList` опубликованных кейсов) + `BreadcrumbList` |
 | Кейс | `CreativeWork` (автор → `Person`) + `BreadcrumbList` |
 
-Только факты, видимые на сайте: имя, роль, город, публичные профили (`sameAs`), навыки. Никаких рейтингов,
+Только факты, видимые на сайте: имя, роль, город, публичные профили (`sameAs`), навыки, награды (`award`),
+обучение (`alumniOf`, сертификаты — `hasCredential` со ссылкой на запись). Никаких рейтингов,
 отзывов, выдуманных клиентов или дат. Проверка: <https://search.google.com/test/rich-results> и <https://validator.schema.org/>.
 
 ## robots.txt и sitemap.xml
 
 - `app/robots.ts`: на production — `Allow: /`, `Disallow: /app`, `/w/`, `/account` и ссылка на sitemap; иначе `Disallow: /`.
+  Боты AI-ассистентов перечислены отдельной группой с теми же правилами (см. «AI-поиск»).
 - `app/sitemap.ts`: главная, «Роботи», «Про мене» и опубликованные кейсы на обоих языках с `hreflang`-альтернативами.
   Кейсы-примеры (`sample: true`) и приватные URL в sitemap не попадают. Обновляется раз в час.
+
+## AI-поиск (ChatGPT, Perplexity, Claude, Google AI)
+
+Цель — чтобы ассистенты находили сайт и цитировали нужную страницу на вопросы вроде «продуктовый дизайнер
+из Украины с дизайн-системами».
+
+- **`/llms.txt`** (`app/llms.txt/route.ts`, формат <https://llmstxt.org>): Markdown-сводка — кто, роль, город,
+  навыки, опыт, служба, награды, обучение, формат работы, все опубликованные кейсы со ссылками и коротким
+  описанием, страницы и контакты. Сначала английский, затем то же по-украински. Собирается из тех же данных,
+  что и страницы (`dict()`, «Профіль сайту», опубликованные кейсы), обновляется раз в час; примеры не входят.
+  Новый кейс попадает туда сам. На превью отдаётся с `X-Robots-Tag: noindex`.
+- **robots.txt**: поисковые и «по запросу пользователя» боты (`OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`,
+  `Claude-User`, `PerplexityBot`, `Perplexity-User`, `Bingbot`) и боты обучения (`GPTBot`, `ClaudeBot`,
+  `Google-Extended`, `Applebot-Extended`) разрешены явно: для портфолио важно, чтобы модели знали автора.
+  Чтобы запретить только обучение, вынести `GPTBot`, `ClaudeBot`, `Google-Extended`, `Applebot-Extended` в
+  отдельную группу с `Disallow: /` — цитирование в поиске это не отключит.
+- **JSON-LD** (выше): `Person` с наградами и обучением, `CollectionPage` + `ItemList` для списка работ.
+
+Что делается вне кода:
+- Тексты: короткие самодостаточные ответы (40–60 слов) в начале «Про мене» и кейсов — кто, что сделал, какой
+  результат в цифрах. Тексты ведутся в `src/site/content.ts` и в инструменте.
+- Присутствие: LinkedIn, Dribbble, Behance с той же ролью и формулировкой, что на сайте, и ссылкой на него.
+  Ассистенты сверяют источники между собой.
+- Проверка раз в месяц: задать ChatGPT (с поиском), Perplexity и Google 5–10 запросов («product designer
+  Mykolaiv», «Hennadii Fedorov designer», «UI/UX дизайнер Україна дизайн-система») и записать, цитируется ли сайт.
 
 ## Кейсы: реальные, концепты, примеры
 
@@ -105,6 +132,7 @@ Speed Insights). HSTS Vercel ставит сам. `poweredByHeader: false`.
 SITE=https://домен
 curl -sI $SITE/ | grep -iE "^(HTTP|location|vary)"          # 307 → /uk или /en
 curl -s  $SITE/robots.txt
+curl -sI $SITE/llms.txt | grep -i content-type                  # text/markdown
 curl -s  $SITE/sitemap.xml | head -40
 curl -sI $SITE/uk/nope | head -1                              # 404
 curl -sI $SITE/app | grep -i x-robots                          # noindex, nofollow

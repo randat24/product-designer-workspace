@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { dict, isLocale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
 import { JsonLd } from "@/site/json-ld";
-import { breadcrumbLd, graph, localeUrl, pageMetadata } from "@/site/seo";
+import { breadcrumbLd, casesCollectionLd, graph, localeUrl, pageMetadata } from "@/site/seo";
 import { SignalWork } from "@/site/signal/work";
 import { container } from "@/site/ui";
 
@@ -26,6 +26,7 @@ export default async function Cases({ params }: { params: Promise<{ locale: stri
     <div className={`${container} pb-20 pt-12 sm:pt-16`}>
       <JsonLd
         data={graph(
+          casesCollectionLd(locale, cases, d.seo.cases.title, d.seo.cases.description),
           breadcrumbLd([
             { name: d.ui.home, url: localeUrl(locale, "") },
             { name: d.cases.title, url: localeUrl(locale, "/cases") },
