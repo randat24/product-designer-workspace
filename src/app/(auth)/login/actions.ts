@@ -4,14 +4,14 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
-import { env } from "@/shared/lib/env";
+import { trustedOrigin } from "@/shared/lib/site-url";
 import { t } from "@/shared/i18n/uk";
 
 export type LoginState = { error?: string } | undefined;
 
 async function origin() {
   const h = await headers();
-  return h.get("origin") ?? env.siteUrl;
+  return trustedOrigin(h.get("origin"), h.get("x-forwarded-host") ?? h.get("host"));
 }
 
 function safeNext(next: FormDataEntryValue | null) {

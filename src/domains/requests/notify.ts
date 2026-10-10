@@ -1,5 +1,5 @@
 import "server-only";
-import { env } from "@/shared/lib/env";
+import { getSiteUrl } from "@/shared/lib/site-url";
 import { buildNewRequestNotice } from "./notification";
 import type { RequestData } from "./schema";
 
@@ -13,7 +13,7 @@ export async function notifyNewRequest(d: RequestData, code: string): Promise<vo
   const to = process.env.INTAKE_NOTIFY_EMAIL?.trim();
   if (!key || !to) return;
   const from = process.env.INTAKE_EMAIL_FROM?.trim() || "Portfolio <onboarding@resend.dev>";
-  const notice = buildNewRequestNotice(d, code, `${env.siteUrl}/app/requests/${encodeURIComponent(code)}`);
+  const notice = buildNewRequestNotice(d, code, `${getSiteUrl()}/app/requests/${encodeURIComponent(code)}`);
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
