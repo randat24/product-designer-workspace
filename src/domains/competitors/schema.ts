@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { withScheme } from "@/shared/lib/url";
+import { isHttpUrl, withScheme } from "@/shared/lib/url";
 
 const text = (max = 5000) => z.string().trim().max(max).nullish().transform((v) => v || null);
 
@@ -10,13 +10,14 @@ export const COMPETITOR_KINDS = [
 ] as const;
 export type CompetitorKind = (typeof COMPETITOR_KINDS)[number]["value"];
 
-/** Accepts "example.com" as well as full URLs. */
+/** Accepts "example.com" as well as full URLs; other schemes (javascript:, file:) are rejected. */
 const url = z
   .string()
   .trim()
   .max(2000)
   .nullish()
-  .transform((v) => (v ? withScheme(v) : null));
+  .transform((v) => (v ? withScheme(v) : null))
+  .refine((v) => v === null || isHttpUrl(v), { error: "Посилання має починатися з http:// або https://" });
 
 export const competitorSchema = z.object({
   name: z.string().trim().min(1, { error: "Введіть назву" }).max(120),
