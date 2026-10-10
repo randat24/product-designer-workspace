@@ -210,6 +210,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             <div className="flex flex-col gap-3">
               <p className="max-w-[62ch] text-[17px] leading-[1.7]">{d.about.serviceText}</p>
               {serviceJob && <p className="text-[15px] text-fg-secondary">{serviceJob.title} · {serviceJob.place}</p>}
+              <p className="mt-3 max-w-[62ch] text-pretty text-[17px] leading-[1.7]">{d.about.serviceThanks}</p>
             </div>
           </div>
           <div className="flex flex-col gap-4">
