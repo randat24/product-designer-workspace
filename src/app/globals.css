@@ -184,6 +184,11 @@
 }
 
 html { color-scheme: light dark; }
+/* The site's consent banner floats over the bottom of the page. While it is open it sets --consent-space
+   (src/site/consent-banner.tsx): the page ends that much lower, and a control that takes keyboard focus is
+   scrolled clear of the banner instead of ending up under it. */
+html { scroll-padding-bottom: var(--consent-space, 0px); }
+body { padding-bottom: var(--consent-space, 0px); }
 :root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"] { color-scheme: dark; }
 

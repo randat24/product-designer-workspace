@@ -196,6 +196,8 @@ export type Dictionary = {
     title: string;
     lede: string;
     sections: { title: string; body: string; id?: string }[];
+    /** The banner's name for assistive technology. */
+    bannerLabel: string;
     bannerText: string;
     accept: string;
     decline: string;
@@ -615,6 +617,7 @@ const uk: Dictionary = {
         body: "Згоду можна змінити будь-коли кнопкою нижче. Вибір зберігається лише у вашому браузері.",
       },
     ],
+    bannerLabel: "Згода на аналітику",
     bannerText: "Сайт рахує відвідування без cookie. Дозволите Google Analytics — я краще бачитиму, які кейси вам цікаві.",
     accept: "Дозволити",
     decline: "Відмовитися",
@@ -1041,6 +1044,7 @@ const en: Dictionary = {
         body: "You can change your consent at any time with the button below. The choice is stored only in your browser.",
       },
     ],
+    bannerLabel: "Analytics consent",
     bannerText: "This site counts visits without cookies. Allow Google Analytics and I'll see better which cases interest you.",
     accept: "Allow",
     decline: "Decline",

@@ -55,6 +55,7 @@ export function TextField({ id, label, hint, error, optional, value, onChange, t
         inputMode={inputMode}
         autoComplete={autoComplete}
         maxLength={maxLength}
+        aria-required={optional ? undefined : true}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
         className={sg.input}
@@ -110,7 +111,8 @@ export function ChoiceGroup({ id, legend, hint, error, optional, options, value,
 }) {
   const selected = Array.isArray(value) ? value : value ? [value] : [];
   return (
-    <fieldset id={id} tabIndex={-1} aria-describedby={describedBy(id, hint, error)} className="flex flex-col gap-2 outline-none">
+    <fieldset id={id} tabIndex={-1} aria-describedby={describedBy(id, hint, error)} className="flex flex-col gap-2 outline-none"
+      {...(multiple ? {} : { role: "radiogroup", "aria-required": optional ? undefined : true })}>
       <legend className={cn(sg.label, "mb-1.5")}>
         {legend}
         {optional && <span className="ml-1.5 font-normal text-fg-secondary">({optional})</span>}
