@@ -15,21 +15,21 @@ export function getSiteUrl(): string {
 }
 
 /**
- * The origin that auth links (password reset, the OAuth round trip) come back to. The request's own Origin
- * is kept only when it is this deployment: the site URL, the Vercel production, deployment or branch URL,
- * or localhost when not running on Vercel. Anything else gets the site URL, so a forged Origin header
- * cannot point a link from an auth e-mail at another host.
+ * The origin that auth links (password reset, the OAuth round trip) come back to: the origin the visitor is
+ * on, so the sign-in cookie set there is found again — on the main domain, an alias, a preview or localhost.
+ * The Origin header is believed only when it names the host this request was sent to; a header that
+ * disagrees with the request, or is not a URL, gets the site URL instead.
  */
-export function trustedOrigin(requested: string | null | undefined): string {
+export function trustedOrigin(requested: string | null | undefined, requestHost: string | null | undefined): string {
   const site = getSiteUrl();
-  if (!requested) return site;
-  const vercel = [process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL]
-    .map(clean)
-    .filter((v): v is string => !!v)
-    .map((host) => `https://${host}`);
-  if ([site, ...vercel].includes(requested)) return requested;
-  if (!process.env.VERCEL && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(requested)) return requested;
-  return site;
+  if (!requested || !requestHost) return site;
+  try {
+    const url = new URL(requested);
+    const sameHost = url.host.toLowerCase() === requestHost.trim().toLowerCase();
+    return sameHost && (url.protocol === "https:" || url.protocol === "http:") ? url.origin : site;
+  } catch {
+    return site;
+  }
 }
 
 /**

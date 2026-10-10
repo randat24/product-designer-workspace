@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
+import { httpUrlOrNull } from "@/shared/lib/url";
 import type { Database } from "@/types/database";
 import { t } from "@/shared/i18n/uk";
 
@@ -72,7 +73,7 @@ export async function importNotebook(_prev: ImportState, formData: FormData): Pr
   if (competitors.length) {
     const kind = (k?: string) => (k === "Косвенный" || k === "Непрямий" ? "indirect" : "direct") as "direct" | "indirect";
     const { error } = await supabase.from("competitors").insert(competitors.map((c, i) => ({
-      project_id: pid, name: c.name!.slice(0, 120), kind: kind(c.kind), url: c.url || null,
+      project_id: pid, name: c.name!.slice(0, 120), kind: kind(c.kind), url: httpUrlOrNull(c.url),
       strengths: c.strengths || null, weaknesses: c.weaknesses || null, borrow: c.borrow || null, position: 100 + i,
     })));
     if (error) return { error: t.research.import.failed };

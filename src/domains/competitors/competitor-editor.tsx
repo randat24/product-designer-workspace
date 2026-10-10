@@ -43,7 +43,9 @@ export function CompetitorEditor({ id, initial, isOwn, canEdit, screenshots, ver
           <div className="flex flex-col gap-1.5">
             <label htmlFor="url" className="text-meta font-semibold text-fg-secondary">{f.url}</label>
             <Input id="url" type="url" inputMode="url" placeholder="https://" value={c.url ?? ""} readOnly={!canEdit} maxLength={2000}
+              aria-invalid={error?.field === "url"} aria-describedby={error?.field === "url" ? "url-error" : undefined}
               onChange={(e) => update({ url: e.target.value })} />
+            <FieldError id="url" message={error?.field === "url" ? error.message : null} />
           </div>
         </div>
         {!isOwn && (

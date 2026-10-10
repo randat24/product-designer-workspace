@@ -10,7 +10,8 @@ import { t } from "@/shared/i18n/uk";
 export type LoginState = { error?: string } | undefined;
 
 async function origin() {
-  return trustedOrigin((await headers()).get("origin"));
+  const h = await headers();
+  return trustedOrigin(h.get("origin"), h.get("x-forwarded-host") ?? h.get("host"));
 }
 
 function safeNext(next: FormDataEntryValue | null) {

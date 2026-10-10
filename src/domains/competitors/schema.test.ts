@@ -10,6 +10,8 @@ describe("competitorSchema", () => {
     for (const url of ["javascript:alert(1)", "data:text/html,x", "file:///etc/passwd"])
       expect(competitorSchema.safeParse({ name: "Acme", url, kind: "direct" }).success).toBe(false);
     expect(competitorSchema.safeParse({ name: "Acme", url: "", kind: "direct" }).success).toBe(true);
+    const port = competitorSchema.safeParse({ name: "Acme", url: "acme.com:8080/pricing", kind: "direct" });
+    expect(port.success && port.data.url).toBe("https://acme.com:8080/pricing");
   });
   it("requires a name", () => {
     expect(competitorSchema.safeParse({ name: "  ", kind: "direct" }).success).toBe(false);
