@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ATELIER · Lace / 01 — прототип</title>
+<meta name="description" content="Інтерактивна вітрина мереживного комплекту на скляному манекені: ракурси, відтінки, фактура й розмір на одному світлому екрані. Концепт для портфоліо.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4EFE7">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/prototypes/lace/burgundy-front.webp">
+<style>
+/* ATELIER · Lace / 01. A warm ivory studio: the glass figure stands in soft light, type is a quiet antiqua, the
+   interface is thin graphite lines on air. The only solid shape is the graphite button. Spacing on an 8 px grid. */
+:root {
+  --bg: #F4EFE7;
+  --bg-2: #EFE7DB;
+  --ink: #252320;
+  --ink-2: #79736B;
+  --line: #D8D0C5;
+  --paper: #FBF8F3;
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
+  --sans: "Manrope", system-ui, sans-serif;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  color: var(--ink); font: 400 16px/1.5 var(--sans); -webkit-font-smoothing: antialiased; min-height: 100svh;
+  font-variant-numeric: lining-nums; /* the antiqua's default old-style figures turn «01» into «oi» */
+  background:
+    radial-gradient(60% 70% at 52% 38%, #FFFDF8 0%, transparent 70%),
+    linear-gradient(180deg, #F7F2EA 0%, var(--bg) 55%, var(--bg-2) 100%);
+  background-attachment: fixed;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { max-width: 1672px; margin: 0 auto; padding: 0 clamp(20px, 3.4vw, 56px); }
+
+/* ---------- header: a rule broken where the figure's head rises through it ---------- */
+.top { position: relative; z-index: 3; display: flex; align-items: center; gap: 32px; height: 72px; }
+.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, var(--line) 0 38%, transparent 41% 57%, var(--line) 60% 100%); }
+.logo { font: 500 21px/1 var(--serif); letter-spacing: .42em; text-decoration: none; }
+.top .dash { width: 56px; height: 1px; background: var(--line); }
+.nav { display: flex; gap: 40px; font: 500 19px/1 var(--serif); letter-spacing: .02em; }
+.nav a { text-decoration: none; padding: 8px 0; border-bottom: 1px solid transparent; }
+.nav a:hover { border-bottom-color: var(--ink); }
+.tools { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+.lang { display: flex; font-size: 12px; letter-spacing: .12em; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.lang button { min-height: 36px; padding: 0 12px; color: var(--ink-2); }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.bag { position: relative; display: grid; place-items: center; width: 44px; height: 44px; }
+.bag svg { width: 26px; height: 26px; }
+.bag b { position: absolute; right: 2px; top: 4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--ink); color: var(--paper); font: 600 11px/18px var(--sans); text-align: center; transform: scale(0); transition: transform .3s var(--ease); }
+.bag b.on { transform: scale(1); }
+
+/* ---------- hero: copy · figure · choice ---------- */
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 27fr) minmax(0, 36fr) minmax(0, 33fr); gap: clamp(16px, 2vw, 40px); min-height: calc(100svh - 72px); }
+.intro { position: relative; z-index: 2; padding: 32px 0 40px; display: flex; flex-direction: column; }
+.intro h1 { margin: 0; font: 400 clamp(52px, min(6.1vw, 11.5svh), 104px)/.92 var(--serif); letter-spacing: -.015em; }
+.intro .sub { margin: 14px 0 0; font: 400 clamp(20px, 1.9vw, 30px)/1.2 var(--serif); letter-spacing: .04em; color: #4A463F; }
+/* The frame and the thumbnails take what the window's height leaves, so the views stay on the first screen. */
+.fabric { margin-top: clamp(16px, 3svh, 40px); max-width: min(432px, 44svh); }
+.fabric-frame { padding: 7px; border: 1px solid #BDB3A4; background: var(--paper); }
+.fabric-frame img { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; opacity: 0; transition: opacity .5s; }
+.fabric-frame { position: relative; aspect-ratio: 8 / 5.18; }
+.fabric-frame img { position: absolute; inset: 7px; width: calc(100% - 14px); height: calc(100% - 14px); }
+.fabric-frame img.on { opacity: 1; }
+.fabric-cap { display: flex; align-items: center; gap: 16px; margin-top: 18px; font: 400 20px/1 var(--serif); letter-spacing: .03em; }
+.fabric-cap::after { content: ""; width: 80px; height: 1px; background: #A99F90; }
+.angles { margin-top: auto; padding-top: clamp(16px, 3svh, 40px); }
+.eyebrow { display: flex; align-items: center; gap: 14px; margin: 0 0 16px; font: 400 20px/1 var(--serif); letter-spacing: .03em; color: #4A463F; }
+.eyebrow::after { content: ""; width: 28px; height: 1px; background: #A99F90; }
+.thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: min(432px, 44svh); }
+.thumbs button { position: relative; aspect-ratio: 3 / 4.1; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; background: linear-gradient(180deg, #FBF7F0, #EFE7DB); transition: border-color .25s; }
+.thumbs button:hover { border-color: #A99F90; }
+.thumbs button[aria-pressed="true"] { border: 2px solid var(--ink); }
+.thumbs img { position: absolute; left: 50%; top: 4%; height: 118%; width: auto; transform: translateX(-50%); }
+
+.stage-col { position: relative; }
+.stage {
+  position: absolute; left: 50%; top: -72px; bottom: 0; transform: translateX(-50%); aspect-ratio: 482 / 817;
+  touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; perspective: 1400px; z-index: 1;
+}
+.stage:active { cursor: grabbing; }
+.figure { position: absolute; inset: 0; will-change: transform; -webkit-mask-image: linear-gradient(#000 90%, transparent 100%); mask-image: linear-gradient(#000 90%, transparent 100%); }
+.figure img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .5s ease; pointer-events: none; filter: drop-shadow(0 26px 36px rgb(120 92 60 / 16%)); }
+.figure img.on { opacity: 1; }
+.floor { position: absolute; left: 8%; right: 8%; bottom: -2%; height: 12%; background: radial-gradient(closest-side, rgb(140 110 78 / 18%), transparent); pointer-events: none; }
+.turn { position: absolute; right: -4%; bottom: 5%; z-index: 2; display: grid; justify-items: center; gap: 6px; padding: 8px 12px; min-width: 132px; font: 400 19px/1 var(--serif); letter-spacing: .03em; color: #4A463F; }
+.turn svg { width: 132px; height: 34px; transition: transform .5s var(--ease); }
+.turn:hover svg { transform: translateX(4px); }
+.auto { position: absolute; left: -2%; bottom: 6%; z-index: 2; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.auto i { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #A99F90; border-radius: 50%; }
+.auto svg { width: 12px; height: 12px; }
+.auto[aria-pressed="true"] { color: var(--ink); }
+.auto[aria-pressed="true"] i { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.viewname { position: absolute; left: 50%; bottom: 1.5%; transform: translateX(-50%); z-index: 2; font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+/* The line from the fabric frame to the lace on the figure (front view, wide screens). */
+.callout { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: visible; opacity: 0; transition: opacity .4s; }
+.callout.on { opacity: 1; }
+.callout path { fill: none; stroke: #6F685E; stroke-width: 1; }
+.callout circle { fill: #3A3631; }
+
+.config { position: relative; z-index: 2; padding: 64px 0 40px clamp(20px, 2.6vw, 44px); margin-top: 0; }
+.config::before { content: ""; position: absolute; left: 0; top: 64px; height: min(540px, 66svh); width: 1px; background: var(--line); }
+.config h2 { margin: 0; font: 400 clamp(52px, 5.4vw, 92px)/1 var(--serif); letter-spacing: .01em; }
+.price { margin: 12px 0 0; display: flex; align-items: baseline; gap: 14px; font: 500 20px/1 var(--sans); letter-spacing: -.01em; }
+.price small { font: 400 12px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.tick-rule { width: 40px; height: 1px; background: #8E8577; margin: 22px 0 22px; }
+.group-title { margin: 0 0 18px; font: 400 23px/1 var(--serif); letter-spacing: .03em; }
+.swatches { display: flex; flex-wrap: wrap; gap: clamp(10px, 1.4vw, 22px); }
+.swatch { display: grid; justify-items: center; gap: 12px; width: clamp(72px, 6.2vw, 104px); font: 500 12px/1.2 var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+.swatch i { position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%; background-size: cover; background-position: center; box-shadow: 0 0 0 1px var(--line); transition: box-shadow .25s; }
+.swatch:hover i { box-shadow: 0 0 0 1px #A99F90; }
+.swatch[aria-pressed="true"] i { box-shadow: 0 0 0 5px var(--bg), 0 0 0 6.5px var(--ink); }
+.swatch i::after { content: ""; position: absolute; right: 2%; bottom: 2%; width: 24%; aspect-ratio: 1; border-radius: 50%; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FBF8F3' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center / 62% no-repeat; box-shadow: 0 0 0 2px var(--bg); transform: scale(0); transition: transform .3s var(--ease); }
+.swatch[aria-pressed="true"] i::after { transform: scale(1); }
+.rule { height: 1px; background: var(--line); margin: 30px 0 28px; }
+.rule::before { content: ""; display: block; width: 40px; height: 1px; background: #8E8577; }
+.sizes { display: flex; flex-wrap: wrap; gap: clamp(8px, 1.1vw, 18px); }
+.sizes button { width: clamp(52px, 4.3vw, 72px); aspect-ratio: 1; border-radius: 50%; border: 1px solid #A99F90; font: 400 22px/1 var(--serif); transition: background .25s, color .25s, border-color .25s, box-shadow .25s; }
+.sizes button:hover { border-color: var(--ink); }
+.sizes button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--ink); }
+.sizes.need button { border-color: #B4573B; }
+.guide { display: flex; justify-content: flex-end; margin-top: 22px; }
+.guide button { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font: 400 20px/1 var(--serif); letter-spacing: .02em; }
+.guide button span:first-child { border-bottom: 1px solid #8E8577; padding-bottom: 3px; }
+.buy { margin-top: 12px; width: 100%; min-height: 76px; display: flex; align-items: center; justify-content: center; gap: 22px; background: var(--ink); color: var(--paper); border-radius: 2px; font: 500 clamp(22px, 1.9vw, 28px)/1 var(--serif); letter-spacing: .04em; transition: background .25s; }
+.buy:hover { background: #000; }
+.buy svg { width: 34px; height: 14px; transition: transform .4s var(--ease); }
+.buy:hover svg { transform: translateX(6px); }
+.note { margin: 14px 0 0; min-height: 1.5em; font-size: 14px; color: var(--ink-2); }
+.note.warn { color: #9C4026; }
+
+/* ---------- about ---------- */
+.about { position: relative; z-index: 2; border-top: 1px solid var(--line); margin-top: 24px; padding-block: clamp(56px, 8vw, 112px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(32px, 6vw, 96px); scroll-margin-top: 16px; }
+.about h2 { margin: 0; font: 400 clamp(40px, 4.4vw, 72px)/1 var(--serif); }
+.about .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; align-self: end; }
+.about .cols div { border-top: 1px solid #A99F90; padding-top: 18px; }
+.about .cols b { display: block; font: 400 30px/1 var(--serif); margin-bottom: 12px; }
+.about .cols p { margin: 0; color: #5B564E; font-size: 15px; line-height: 1.65; }
+footer { position: relative; z-index: 2; border-top: 1px solid var(--line); padding-block: 24px 36px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--ink-2); font-size: 13px; letter-spacing: .06em; }
+footer a { text-underline-offset: 4px; }
+
+dialog { border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 32px; max-width: min(520px, calc(100% - 32px)); border-radius: 2px; }
+dialog::backdrop { background: rgb(37 35 32 / 45%); }
+dialog h3 { margin: 0 0 6px; font: 400 34px/1.1 var(--serif); }
+dialog p { margin: 0 0 20px; color: var(--ink-2); font-size: 14px; }
+dialog table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+dialog th, dialog td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+dialog th { color: var(--ink-2); font-weight: 500; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+dialog .close { margin-top: 24px; min-height: 48px; padding: 0 24px; border: 1px solid var(--ink); font: 500 19px/1 var(--serif); }
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); padding: 16px 24px; background: var(--ink); color: var(--paper); font-size: 15px; opacity: 0; transition: opacity .3s, transform .3s var(--ease); pointer-events: none; z-index: 20; max-width: calc(100% - 32px); border-radius: 2px; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- narrower ---------- */
+@media (max-width: 1180px) {
+  .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; }
+  .intro { grid-column: 1 / -1; padding-bottom: 8px; }
+  .fabric, .angles .eyebrow { display: none; }
+  .angles { padding-top: 20px; }
+  .stage-col { min-height: min(78svh, 760px); }
+  .stage { top: 0; }
+  .config { padding-top: 24px; }
+  .config::before { top: 24px; }
+  .top::after { background: var(--line); }
+  .callout { display: none; }
+}
+@media (max-width: 760px) {
+  .top { gap: 16px; height: 60px; }
+  .top .dash, .nav { display: none; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .intro { padding-top: 20px; }
+  .intro h1 { font-size: 46px; }
+  .intro .sub { font-size: 19px; }
+  .angles { order: 3; }
+  .stage-col { min-height: min(74svh, 620px); margin-top: 8px; }
+  .turn { right: 0; min-width: 0; font-size: 16px; }
+  .turn svg { width: 96px; height: 26px; }
+  .auto { left: 0; }
+  .auto span { display: none; }
+  .thumbs { max-width: none; margin-top: 16px; }
+  .config { padding: 28px 0 32px; }
+  .config::before { display: none; }
+  .config h2 { font-size: 52px; }
+  .swatch { width: 76px; }
+  .sizes button { width: 56px; font-size: 19px; }
+  /* Sticky only inside the size block (.pick): it follows the sizes and never covers the figure or the product name. */
+  .buy { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); min-height: 62px; z-index: 5; box-shadow: 0 14px 30px rgb(37 35 32 / 22%); }
+  .about, .about .cols { grid-template-columns: minmax(0, 1fr); }
+  .toast { bottom: calc(92px + env(safe-area-inset-bottom)); }
+}
+/* `font` shorthands above reset numeric variants, so lining figures are set last: «01», not «oi». */
+h1, h2, h3, .price, .sizes button, .about .cols b, .logo { font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" 1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#top" aria-label="ATELIER">ATELIER</a>
+    <span class="dash" aria-hidden="true"></span>
+    <nav class="nav" aria-label="Головне" data-i18n-attr="aria-label:nav">
+      <a href="#top" data-i18n="collection">Колекція</a>
+      <a href="#about" data-i18n="brand">Про бренд</a>
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" aria-label="Мова / Language">
+        <button type="button" data-lang="uk" aria-pressed="true">UA</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <p class="bag" id="bag" style="margin:0">
+        <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M5 9h16v14H5z"/><path d="M9 9V7a4 4 0 0 1 8 0v2"/></svg>
+        <b id="bag-n" aria-hidden="true">0</b><span class="sr-only" id="bag-sr" aria-live="polite"></span>
+      </p>
+    </div>
+  </header>
+
+  <main class="hero" id="top">
+    <section class="intro" aria-labelledby="h1">
+      <h1 id="h1" data-i18n-html="h1">Ніжність<br>у деталях</h1>
+      <p class="sub" data-i18n="sub">Мереживний комплект</p>
+      <figure class="fabric" id="fabric" style="margin-inline:0;margin-bottom:0">
+        <div class="fabric-frame" id="fabric-frame"></div>
+        <figcaption class="fabric-cap" data-i18n="fabric">Фактура мережива</figcaption>
+      </figure>
+      <div class="angles">
+        <p class="eyebrow" id="angles-h" data-i18n="angle">Ракурс</p>
+        <div class="thumbs" id="thumbs" role="group" aria-labelledby="angles-h"></div>
+      </div>
+    </section>
+
+    <section class="stage-col" aria-labelledby="stage-h">
+      <h2 class="sr-only" id="stage-h" data-i18n="stage-h">Вітрина: манекен у комплекті</h2>
+      <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="вітрина" data-i18n-attr="aria-roledescription:roledesc" aria-describedby="viewname">
+        <div class="floor" aria-hidden="true"></div>
+        <div class="figure" id="figure"></div>
+      </div>
+      <button type="button" class="auto" id="auto" aria-pressed="false">
+        <i aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path id="auto-icon" d="M3 1.5v9l7.5-4.5z"/></svg></i><span data-i18n="auto">Автоповорот</span>
+      </button>
+      <button type="button" class="turn" id="turn">
+        <svg viewBox="0 0 132 34" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true"><path d="M6 8c26 22 94 22 120 0"/><path d="M6 8l1 10M6 8l10 1M126 8l-1 10M126 8l-10 1"/></svg>
+        <span data-i18n="turn">Повернути</span>
+      </button>
+      <p class="viewname" id="viewname" aria-live="polite"></p>
+    </section>
+
+    <section class="config" aria-labelledby="product">
+      <h2 id="product">LACE / 01</h2>
+      <p class="price"><span>3 900 ₴</span><small data-i18n="demo">демо-ціна</small></p>
+      <div class="tick-rule" aria-hidden="true"></div>
+      <p class="group-title" id="g-color"><span data-i18n="color">Колір</span>: <span id="color-name">Бордовий</span></p>
+      <div class="swatches" role="group" aria-labelledby="g-color">
+        <button type="button" class="swatch" data-color="burgundy" aria-pressed="true"><i style="background-image:url(/prototypes/lace/swatch-burgundy.webp)" aria-hidden="true"></i><span data-i18n="c-burgundy">Бордовий</span></button>
+        <button type="button" class="swatch" data-color="black" aria-pressed="false"><i style="background-image:url(/prototypes/lace/swatch-black.webp)" aria-hidden="true"></i><span data-i18n="c-black">Чорний</span></button>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+      <div class="pick">
+      <p class="group-title" id="g-size" data-i18n="size">Розмір</p>
+      <div class="sizes" id="sizes" role="group" aria-labelledby="g-size">
+        <button type="button" aria-pressed="false">XS</button><button type="button" aria-pressed="false">S</button><button type="button" aria-pressed="false">M</button><button type="button" aria-pressed="false">L</button><button type="button" aria-pressed="false">XL</button>
+      </div>
+      <p class="guide"><button type="button" id="guide"><span data-i18n="guide">Таблиця розмірів</span><svg viewBox="0 0 26 10" width="26" height="10" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M0 5h25M20 1l5 4-5 4"/></svg></button></p>
+      <button type="button" class="buy" id="buy"><span data-i18n="buy">Обрати комплект</span>
+        <svg viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 7h33M26 1l7 6-7 6"/></svg></button>
+      <p class="note" id="note" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <svg class="callout" id="callout" aria-hidden="true"><path id="callout-path"/><circle id="callout-dot" r="2.5"/></svg>
+  </main>
+
+  <section class="about" id="about" aria-labelledby="about-h">
+    <h2 id="about-h" data-i18n-html="about-h">Скло тримає форму.<br>Мереживо — характер.</h2>
+    <div class="cols">
+      <div><b>01</b><p data-i18n="a1">Манекен зі скла не відволікає: на ньому видно лише крій, посадку й візерунок.</p></div>
+      <div><b>02</b><p data-i18n="a2">Ракурси поруч із фігурою: комплект роздивляються з усіх боків, не залишаючи екрана.</p></div>
+      <div><b>03</b><p data-i18n="a3">Колір і розмір обирають там, де дивляться: праворуч від манекена, без зайвих кроків.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span data-i18n="footer">Концепт для портфоліо. Зображення згенеровані, ціна й розміри демонстраційні.</span>
+    <a href="/uk/cases" id="back" data-i18n="back">Портфоліо Геннадія Федорова</a>
+  </footer>
+</div>
+
+<dialog id="guide-dialog" aria-labelledby="guide-h">
+  <h3 id="guide-h" data-i18n="guide">Таблиця розмірів</h3>
+  <p data-i18n="guide-p">Демо-таблиця для прототипу: обхват грудей і стегон, см.</p>
+  <table>
+    <thead><tr><th data-i18n="t-size">Розмір</th><th data-i18n="t-bust">Груди</th><th data-i18n="t-hips">Стегна</th></tr></thead>
+    <tbody><tr><td>XS</td><td>80–84</td><td>86–90</td></tr><tr><td>S</td><td>84–88</td><td>90–94</td></tr><tr><td>M</td><td>88–92</td><td>94–98</td></tr><tr><td>L</td><td>92–96</td><td>98–102</td></tr><tr><td>XL</td><td>96–100</td><td>102–106</td></tr></tbody>
+  </table>
+  <form method="dialog"><button class="close" data-i18n="close">Закрити</button></form>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const VIEWS = ["front", "side", "back", "turn"];
+  const COLORS = ["burgundy", "black"];
+  const T = {
+    uk: {
+      nav: "Головне", collection: "Колекція", brand: "Про бренд", h1: "Ніжність<br>у деталях", sub: "Мереживний комплект", fabric: "Фактура мережива",
+      angle: "Ракурс", "stage-h": "Вітрина: манекен у комплекті", roledesc: "вітрина", auto: "Автоповорот", turn: "Повернути", demo: "демо-ціна",
+      color: "Колір", "c-burgundy": "Бордовий", "c-black": "Чорний", size: "Розмір", guide: "Таблиця розмірів", buy: "Обрати комплект",
+      "guide-p": "Демо-таблиця для прототипу: обхват грудей і стегон, см.", "t-size": "Розмір", "t-bust": "Груди", "t-hips": "Стегна", close: "Закрити",
+      views: ["Спереду", "Профіль", "Ззаду", "Поворот"], view: (n, name) => `Ракурс ${n} / 4 · ${name}`, need: "Оберіть розмір, щоб додати комплект.",
+      added: (c, s) => `Додано: Lace / 01, ${c}, ${s}`, cart: (n) => `У кошику: ${n}`,
+      "about-h": "Скло тримає форму.<br>Мереживо — характер.",
+      a1: "Манекен зі скла не відволікає: на ньому видно лише крій, посадку й візерунок.",
+      a2: "Ракурси поруч із фігурою: комплект роздивляються з усіх боків, не залишаючи екрана.",
+      a3: "Колір і розмір обирають там, де дивляться: праворуч від манекена, без зайвих кроків.",
+      footer: "Концепт для портфоліо. Зображення згенеровані, ціна й розміри демонстраційні.", back: "Портфоліо Геннадія Федорова",
+      title: "ATELIER · Lace / 01 — прототип", backHref: "/uk/cases", thumb: (name) => `Ракурс: ${name}`,
+    },
+    en: {
+      nav: "Main", collection: "Collection", brand: "About the brand", h1: "Tenderness<br>in the details", sub: "A lace set", fabric: "The lace up close",
+      angle: "View", "stage-h": "Showcase: the mannequin in the set", roledesc: "showcase", auto: "Auto-turn", turn: "Turn", demo: "demo price",
+      color: "Colour", "c-burgundy": "Burgundy", "c-black": "Black", size: "Size", guide: "Size guide", buy: "Choose the set",
+      "guide-p": "A demo table for the prototype: bust and hips, cm.", "t-size": "Size", "t-bust": "Bust", "t-hips": "Hips", close: "Close",
+      views: ["Front", "Profile", "Back", "Turn"], view: (n, name) => `View ${n} / 4 · ${name}`, need: "Pick a size to add the set.",
+      added: (c, s) => `Added: Lace / 01, ${c}, ${s}`, cart: (n) => `In the bag: ${n}`,
+      "about-h": "Glass holds the form.<br>Lace holds the character.",
+      a1: "A glass mannequin does not distract: all you see is the cut, the fit and the pattern.",
+      a2: "The views sit next to the figure: the set is studied from every side without leaving the screen.",
+      a3: "Colour and size are chosen where people look: to the right of the mannequin, with no extra steps.",
+      footer: "A portfolio concept. Images are generated, the price and sizes are for the demo.", back: "Hennadii Fedorov's portfolio",
+      title: "ATELIER · Lace / 01 — prototype", backHref: "/en/cases", thumb: (name) => `View: ${name}`,
+    },
+  };
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const state = { lang: "uk", color: "burgundy", view: 0, auto: false, size: null, bag: 0 };
+  const t = (k) => T[state.lang][k];
+  const stage = $("#stage"), figure = $("#figure"), thumbs = $("#thumbs"), frame = $("#fabric-frame");
+
+  // Every render is stacked once; colour and view only move the "on" class, so nothing jumps while loading.
+  const imgs = {}, laces = {}, thumbImgs = [];
+  for (const c of COLORS) {
+    VIEWS.forEach((v, i) => {
+      const img = new Image(); img.src = `/prototypes/lace/${c}-${v}.webp`; img.alt = ""; img.decoding = "async"; img.draggable = false;
+      figure.append(img); imgs[`${c}-${i}`] = img;
+    });
+    const l = new Image(); l.src = `/prototypes/lace/lace-${c}.webp`; l.alt = ""; l.decoding = "async"; frame.append(l); laces[c] = l;
+  }
+  VIEWS.forEach((v, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.dataset.view = i;
+    const img = new Image(); img.alt = ""; img.decoding = "async"; img.draggable = false; b.append(img); thumbs.append(b); thumbImgs.push(img);
+    b.addEventListener("click", () => setView(i));
+  });
+
+  function render() {
+    for (const [k, img] of Object.entries(imgs)) img.classList.toggle("on", k === `${state.color}-${state.view}`);
+    for (const [c, img] of Object.entries(laces)) img.classList.toggle("on", c === state.color);
+    thumbImgs.forEach((img, i) => { const src = `/prototypes/lace/${state.color}-${VIEWS[i]}.webp`; if (!img.src.endsWith(src)) img.src = src; });
+    $$("#thumbs button").forEach((b, i) => { b.setAttribute("aria-pressed", String(i === state.view)); b.setAttribute("aria-label", t("thumb")(t("views")[i])); });
+    $$(".swatch").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.color === state.color)));
+    $("#color-name").textContent = t(`c-${state.color}`);
+    $("#viewname").textContent = t("view")(state.view + 1, t("views")[state.view]);
+    $("#auto").setAttribute("aria-pressed", String(state.auto));
+    $("#auto-icon").setAttribute("d", state.auto ? "M2.5 1.5h2.5v9H2.5zM7 1.5h2.5v9H7z" : "M3 1.5v9l7.5-4.5z");
+    drawCallout();
+  }
+  function setView(i, opts = {}) { state.view = (i + 4) % 4; if (!opts.keepAuto) stopAuto(); render(); }
+
+  // ---- the line from the fabric frame to the lace: front view only, measured from the layout ----
+  function drawCallout() {
+    const svg = $("#callout"), fab = $("#fabric"), hero = $(".hero");
+    const show = state.view === 0 && fab.offsetParent !== null && innerWidth > 1180;
+    svg.classList.toggle("on", show);
+    if (!show) return;
+    const h = hero.getBoundingClientRect(), f = frame.getBoundingClientRect(), s = stage.getBoundingClientRect();
+    const x1 = f.right - h.left - 60, y1 = f.top - h.top + f.height * .52;
+    const x3 = s.left - h.left + s.width * .385, y3 = s.top - h.top + s.height * .392;
+    const x2 = Math.min(f.right - h.left + 46, x3 - 40);
+    $("#callout-path").setAttribute("d", `M${x1} ${y1}H${x2}L${x3} ${y3}`);
+    $("#callout-dot").setAttribute("cx", x3); $("#callout-dot").setAttribute("cy", y3);
+  }
+  addEventListener("resize", drawCallout);
+  document.fonts?.ready.then(drawCallout);
+
+  // ---- auto-turn: a slow pass through the views; any manual move stops it, and so does leaving the screen ----
+  let timer = null;
+  function startAuto() { if (timer) return; state.auto = true; timer = setInterval(() => setView(state.view + 1, { keepAuto: true }), 1800); render(); }
+  function stopAuto() { clearInterval(timer); timer = null; state.auto = false; }
+  $("#auto").addEventListener("click", () => { state.auto ? stopAuto() : startAuto(); render(); });
+  $("#turn").addEventListener("click", () => setView(state.view + 1));
+  new IntersectionObserver(([e]) => { if (!e.isIntersecting && state.auto) { stopAuto(); render(); } }).observe(stage);
+
+  // ---- drag / swipe: one view per ~70 px; a vertical swipe keeps scrolling the page (touch-action: pan-y) ----
+  let drag = null;
+  stage.addEventListener("pointerdown", (e) => { drag = { x: e.clientX }; stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 70) { setView(state.view + (dx < 0 ? 1 : -1)); drag.x = e.clientX; }
+  });
+  const end = () => { drag = null; };
+  stage.addEventListener("pointerup", end); stage.addEventListener("pointercancel", end);
+  stage.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { setView(state.view + 1); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { setView(state.view - 1); e.preventDefault(); }
+  });
+
+  // ---- the figure leans a little toward the cursor (±8° / ±2°), eased, only over the stage ----
+  if (fine && !reduce) {
+    const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
+    stage.addEventListener("pointermove", (e) => {
+      if (drag) return;
+      const r = stage.getBoundingClientRect();
+      tilt.ty = ((e.clientX - r.left) / r.width - .5) * 16; tilt.tx = -((e.clientY - r.top) / r.height - .5) * 4;
+    });
+    stage.addEventListener("pointerleave", () => { tilt.tx = tilt.ty = 0; });
+    let visible = true;
+    new IntersectionObserver(([e]) => { const was = visible; visible = e.isIntersecting; if (visible && !was) loop(); }).observe(stage);
+    function loop() {
+      tilt.x += (tilt.tx - tilt.x) * .08; tilt.y += (tilt.ty - tilt.y) * .08;
+      figure.style.transform = `rotateY(${tilt.y.toFixed(2)}deg) rotateX(${tilt.x.toFixed(2)}deg)`;
+      if (visible) requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  // ---- colour keeps the view ----
+  $$(".swatch").forEach((b) => b.addEventListener("click", () => { state.color = b.dataset.color; render(); }));
+
+  // ---- size and the bag ----
+  const sizes = $("#sizes"), note = $("#note");
+  sizes.addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    state.size = state.size === b.textContent ? null : b.textContent;
+    $$("button", sizes).forEach((x) => x.setAttribute("aria-pressed", String(x.textContent === state.size)));
+    sizes.classList.remove("need"); note.classList.remove("warn"); note.textContent = "";
+  });
+  let toastTimer = 0;
+  function toast(msg) { const el = $("#toast"); el.textContent = msg; el.classList.add("on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("on"), 2800); }
+  $("#buy").addEventListener("click", () => {
+    if (!state.size) {
+      sizes.classList.add("need"); note.classList.add("warn"); note.textContent = t("need");
+      sizes.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+      return;
+    }
+    state.bag += 1;
+    const n = $("#bag-n"); n.textContent = state.bag; n.classList.add("on"); $("#bag-sr").textContent = t("cart")(state.bag);
+    toast(t("added")(t(`c-${state.color}`), state.size));
+  });
+  $("#guide").addEventListener("click", () => $("#guide-dialog").showModal());
+
+  // ---- language ----
+  function setLang(l) {
+    state.lang = l; document.documentElement.lang = l; document.title = t("title");
+    $$("[data-i18n]").forEach((el) => { const v = t(el.dataset.i18n); if (typeof v === "string") el.textContent = v; });
+    $$("[data-i18n-html]").forEach((el) => { el.innerHTML = t(el.dataset.i18nHtml); });
+    $$("[data-i18n-attr]").forEach((el) => { const [a, k] = el.dataset.i18nAttr.split(":"); el.setAttribute(a, t(k)); });
+    $$(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === l)));
+    $("#back").href = t("backHref");
+    if (note.classList.contains("warn")) note.textContent = t("need");
+    render();
+  }
+  $$(".lang button").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  setLang(new URLSearchParams(location.search).get("lang") === "en" ? "en" : "uk");
+})();
+</script>
+</body>
+</html>
