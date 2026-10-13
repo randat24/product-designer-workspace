@@ -496,7 +496,8 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
               value={d.range} onChange={(v) => set("budget", { range: v as string })} />
             {d.range === "custom" && (
               <div className="grid gap-4 sm:grid-cols-2">
-                <TextField id={f("min")} label={`${b.min.label}, ${d.currency}`} error={err("min")} inputMode="numeric"
+                {/* Either bound is enough (the schema asks for at least one), so neither is announced as required. */}
+                <TextField id={f("min")} label={`${b.min.label}, ${d.currency}`} required={false} error={err("min")} inputMode="numeric"
                   value={d.min} onChange={(v) => set("budget", { min: v })} />
                 <TextField id={f("max")} label={`${b.max.label}, ${d.currency}`} optional={opt} error={err("max")} inputMode="numeric"
                   value={d.max} onChange={(v) => set("budget", { max: v })} />

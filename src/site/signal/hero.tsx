@@ -1,6 +1,6 @@
 import { ArrowDownRight } from "lucide-react";
 import { button } from "./ui";
-import { dict, type Locale } from "@/site/content";
+import { dict, type Case, type Locale } from "@/site/content";
 import { container } from "@/site/ui";
 import { HeroTrace } from "./hero-trace";
 
@@ -29,7 +29,8 @@ export const WORK_ANCHOR = "selected-work";
 /** Anchor of «Мій підхід», the process section further down the home page. */
 export const APPROACH_ANCHOR = "approach";
 
-export function SignalHero({ locale }: { locale: Locale }) {
+/** `traceCase`: the published case the drawing's chain comes from (src/site/signal/hero-trace.tsx). */
+export function SignalHero({ locale, traceCase }: { locale: Locale; traceCase: Case | undefined }) {
   const d = dict(locale);
   const h = HERO[locale];
   const [first, second, last] = h.title;
@@ -53,7 +54,7 @@ export function SignalHero({ locale }: { locale: Locale }) {
           </div>
         </div>
         <div className="sg-hero-stage">
-          <HeroTrace locale={locale} />
+          <HeroTrace locale={locale} item={traceCase} />
         </div>
       </section>
       <div className={container}>

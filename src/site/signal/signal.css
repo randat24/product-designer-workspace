@@ -261,7 +261,9 @@
 .signal .sg-trace-caption .sg-link { justify-self: start; margin-top: 6px; }
 
 /* Short stage: a row of codes (the screen goes by its stage name), the decision with its title under it. */
-@container (max-height: 470px) {
+/* The full chain is about 500 px tall in a wide column and up to 585 px in a narrow one (titles wrap), so a narrow
+   column folds sooner. */
+@container (max-height: 520px) or ((max-width: 520px) and (max-height: 600px)) {
   .signal .sg-trace { padding: 20px 16px 14px; }
   .signal .sg-trace-list { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 4px; padding-left: 0; }
   .signal .sg-trace-list::before, .signal .sg-trace-list::after, .signal .sg-trace-node::before { display: none; }

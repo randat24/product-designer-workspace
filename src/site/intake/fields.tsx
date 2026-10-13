@@ -36,8 +36,10 @@ export function FieldShell({ id, label, hint, error, optional, children, classNa
 const describedBy = (id: string, hint?: string, error?: string) =>
   [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
 
-export function TextField({ id, label, hint, error, optional, value, onChange, type = "text", placeholder, inputMode, autoComplete, maxLength, className }: {
+export function TextField({ id, label, hint, error, optional, required = !optional, value, onChange, type = "text", placeholder, inputMode, autoComplete, maxLength, className }: {
   id: string; label: string; hint?: string; error?: string; optional?: string;
+  /** Announced as required; by default every field not marked optional. Off for «one of several» fields. */
+  required?: boolean;
   value: string; onChange: (v: string) => void;
   type?: "text" | "email" | "tel" | "url" | "number";
   placeholder?: string; inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"]; autoComplete?: string; maxLength?: number;
@@ -55,7 +57,7 @@ export function TextField({ id, label, hint, error, optional, value, onChange, t
         inputMode={inputMode}
         autoComplete={autoComplete}
         maxLength={maxLength}
-        aria-required={optional ? undefined : true}
+        aria-required={required || undefined}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
         className={sg.input}

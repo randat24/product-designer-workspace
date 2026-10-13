@@ -9,7 +9,7 @@ One Next.js 15 app (App Router, React 19, TS strict, Tailwind 4, Supabase) holdi
 - **Public site** (portfolio + CV) at `/[locale]` (`uk` / `en`), in `src/app/(site)` and `src/site/`. Needs no login.
 - **Product designer tool** at `/app` and `/w/[ws]/…`, in `src/app/(app)` and `src/domains/`. Its core is end-to-end traceability: `Interview → Quote → Insight → Pain Point → Opportunity → Flow → Screen → Decision`.
 
-The README, docs and many code comments are in Russian. The tool UI is Ukrainian (strings in `src/shared/i18n/uk.ts`); site copy is uk/en in `src/site/content.ts`, except the home page and site frame of the SIGNAL redesign: `src/site/signal/home-content.ts` and `src/site/signal/hero.tsx`. Product and architecture docs are in `docs/` (PRD, ARCHITECTURE, DATABASE, IA, DESIGN-SYSTEM, QUALITY_REVIEW, UX_LAWS, ADRs in `docs/adr/`).
+The README, docs and many code comments are in Russian. The tool UI is Ukrainian (strings in `src/shared/i18n/uk.ts`); site copy is uk/en in `src/site/content.ts`, except the home page and site frame of the SIGNAL redesign: `src/site/signal/home-content.ts`, `src/site/signal/hero.tsx` and the hero's decision trail `src/site/signal/hero-trace.tsx` (its records come from the published `designer-workspace` case; without it the block is hidden). Product and architecture docs are in `docs/` (PRD, ARCHITECTURE, DATABASE, IA, DESIGN-SYSTEM, QUALITY_REVIEW, UX_LAWS, ADRs in `docs/adr/`).
 
 ## Commands
 

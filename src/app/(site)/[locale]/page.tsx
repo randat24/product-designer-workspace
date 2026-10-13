@@ -6,6 +6,7 @@ import { getCases } from "@/site/cases-source";
 import { JsonLd } from "@/site/json-ld";
 import { graph, pageMetadata, personLd, websiteLd } from "@/site/seo";
 import { SignalHero, WORK_ANCHOR } from "@/site/signal/hero";
+import { HERO_TRACE_CASE } from "@/site/signal/hero-trace";
 import { signalCopy } from "@/site/signal/home-content";
 import { SectionEyebrow, SignalAbout, SignalContact, SignalProcess, SignalServices } from "@/site/signal/home-sections";
 import { SignalWork } from "@/site/signal/work";
@@ -33,7 +34,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       <JsonLd data={graph(websiteLd(locale), personLd(locale))} />
-      <SignalHero locale={locale} />
+      <SignalHero locale={locale} traceCase={cases.find((c) => c.slug === HERO_TRACE_CASE)} />
       <section id={WORK_ANCHOR} className="sg-section sg-work" aria-labelledby="work-heading">
         <div className={container}>
           <SignalWork
