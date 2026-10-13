@@ -374,6 +374,27 @@
 .signal .sg-project-visual:hover .sg-phone:nth-child(2) { transform: rotate(4deg); }
 .signal .sg-abstract { position: absolute; inset: 0; }
 .signal .sg-abstract > div { height: 100%; aspect-ratio: auto; border-radius: 0; }
+/* Type cover (src/site/ui.tsx, CaseCover): a case without a picture shows itself — kind and year, the title, its
+   tags — on its colour with the dot grid of the hero and a large initial, scaled to the cover's own width. */
+.signal .sg-type-cover {
+  position: relative; overflow: hidden; container-type: inline-size; border-radius: 4px;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 4cqw; padding: 6cqw;
+  background-image: radial-gradient(rgb(0 0 0 / 14%) .8px, transparent .8px); background-size: 18px 18px;
+}
+.signal .sg-type-cover::after {
+  content: attr(data-initial); position: absolute; right: -1cqw; bottom: -9cqw; pointer-events: none;
+  font-weight: 500; font-size: 52cqw; line-height: 1; letter-spacing: -.08em; opacity: .09;
+}
+.signal .sg-type-cover-meta { position: relative; font: 500 max(11px, 1.9cqw)/1.4 var(--sg-font-mono); letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
+.signal .sg-type-cover-title {
+  position: relative; max-width: 22ch; font-weight: 500; font-size: clamp(22px, 6.4cqw, 72px); line-height: 1.04;
+  letter-spacing: -.045em; text-wrap: balance;
+}
+.signal .sg-type-cover-tags { position: relative; display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+.signal .sg-type-cover-tags span {
+  padding: 4px 10px; border: 1px solid rgb(0 0 0 / 22%); border-radius: 999px;
+  font-size: max(11px, 1.7cqw); line-height: 1.3; background: rgb(255 255 255 / 30%);
+}
 .signal .sg-adult {
   position: absolute; inset: 0; display: grid; place-items: center; font-weight: 600; font-size: 22px; color: var(--sg-fg);
 }

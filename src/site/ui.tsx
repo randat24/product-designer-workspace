@@ -62,15 +62,21 @@ export function SecondaryLink(props: LinkButtonProps) {
   return <LinkButton {...props} className={button({ variant: "secondary" })} />;
 }
 
-/** Cover in a sticky-note colour: the case's real screen when it has one, otherwise an abstract placeholder. */
+/**
+ * Cover in a sticky-note colour: the case's real screen when it has one; otherwise a type cover made of the case
+ * itself (kind and year, title, tags, a large initial) instead of a «picture coming soon» placeholder.
+ * `kindLabel`: «Концепт» / «Реальний проєкт»; `bare` leaves the title out where the card already sets it large.
+ */
 export function CaseCover({
   item,
-  label,
+  kindLabel,
   large,
+  bare,
 }: {
   item: Case;
-  label: string;
+  kindLabel?: string | null;
   large?: boolean;
+  bare?: boolean;
 }) {
   if (item.cover) {
     return (
@@ -91,41 +97,22 @@ export function CaseCover({
       </div>
     );
   }
+  const meta = [kindLabel, item.year].filter(Boolean).join(" · ");
   return (
     <div
-      className={cn(
-        "relative overflow-hidden rounded-[4px] text-on-sticky",
-        large ? "aspect-[16/8]" : "aspect-[4/3]",
-      )}
-      style={{ background: item.sticker }}
+      className={cn("sg-type-cover text-on-sticky", large ? "aspect-[16/8]" : "aspect-[4/3]")}
+      style={{ backgroundColor: item.sticker }}
+      data-initial={item.title.trim().charAt(0)}
       role="img"
-      aria-label={`${item.title} — ${label}`}
+      aria-label={item.title}
     >
-      {/* phone-ish frame */}
-      <div className="absolute bottom-[-18%] left-[8%] h-[88%] w-[34%] rotate-[-4deg] rounded-[12px] border-2 border-current/25 bg-white/35 p-[3%]">
-        <div className="h-[8%] w-1/2 rounded-full bg-current/20" />
-        <div className="mt-[10%] h-[28%] rounded-[4px] bg-current/15" />
-        <div className="mt-[8%] h-[5%] w-4/5 rounded-full bg-current/20" />
-        <div className="mt-[5%] h-[5%] w-3/5 rounded-full bg-current/15" />
-        <div className="mt-[10%] h-[10%] rounded-[4px] bg-current/30" />
-      </div>
-      {/* desktop-ish frame */}
-      <div className="absolute right-[-6%] top-[14%] h-[70%] w-[58%] rotate-[3deg] rounded-[8px] border-2 border-current/25 bg-white/35 p-[2.5%]">
-        <div className="flex gap-[3%]">
-          <div className="h-[10px] w-[10px] rounded-full bg-current/25" />
-          <div className="h-[10px] w-[10px] rounded-full bg-current/25" />
-          <div className="h-[10px] w-[10px] rounded-full bg-current/25" />
-        </div>
-        <div className="mt-[6%] grid grid-cols-3 gap-[4%]">
-          <div className="aspect-square rounded-[4px] bg-current/15" />
-          <div className="aspect-square rounded-[4px] bg-current/20" />
-          <div className="aspect-square rounded-[4px] bg-current/15" />
-        </div>
-        <div className="mt-[6%] h-[8%] w-2/3 rounded-full bg-current/20" />
-      </div>
-      <span className="absolute left-3 top-3 rounded-[4px] bg-white/60 px-2.5 py-1 text-[12px] font-semibold">
-        {label}
-      </span>
+      {meta && <span className="sg-type-cover-meta">{meta}</span>}
+      {!bare && <span className="sg-type-cover-title">{item.title}</span>}
+      {item.tags.length > 0 && (
+        <span className="sg-type-cover-tags">
+          {item.tags.slice(0, 4).map((t) => <span key={t}>{t}</span>)}
+        </span>
+      )}
     </div>
   );
 }

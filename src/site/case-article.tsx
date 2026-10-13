@@ -47,7 +47,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
         // eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known
         <img src={item.cover.src} alt={item.cover.alt} width={item.cover.width} height={item.cover.height} fetchPriority="high" decoding="async" />
       ) : (
-        <CaseCover item={item} label={d.cases.placeholder} large />
+        <CaseCover item={item} kindLabel={kind} large />
       )}
       <figcaption className="sg-case-caption">
         <span>{item.cover?.caption ?? item.title}</span>

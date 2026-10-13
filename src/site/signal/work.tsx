@@ -65,7 +65,7 @@ function ProjectCard({ item, index, locale, location, variant }: {
             <span className="sg-cover-arrow">↗</span>
           </span>
         )}
-        <span className={cn("sg-shots", blurred && "blur-xl")}><Shots item={item} label={d.cases.placeholder} /></span>
+        <span className={cn("sg-shots", blurred && "blur-xl")}><Shots item={item} kindLabel={kind} bare={variant === "lead"} /></span>
         {blurred && <span className="sg-adult">{d.adult.badge}</span>}
       </Link>
       <div className="sg-project-meta">
@@ -84,8 +84,8 @@ function ProjectCard({ item, index, locale, location, variant }: {
   );
 }
 
-/** The case's own screen, two phone pages from its gallery, or the abstract cover when there is neither. */
-function Shots({ item, label }: { item: Case; label: string }) {
+/** The case's own screen, two phone pages from its gallery, or the type cover when there is neither. */
+function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare: boolean }) {
   if (item.cover) {
     const c = item.cover;
     // eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known
@@ -107,5 +107,5 @@ function Shots({ item, label }: { item: Case; label: string }) {
     // eslint-disable-next-line @next/next/no-img-element -- static page, sizes known
     return <img className="sg-shot" src={page.src} alt="" width={page.width} height={page.height} loading="lazy" decoding="async" />;
   }
-  return <span className="sg-abstract"><CaseCover item={item} label={label} /></span>;
+  return <span className="sg-abstract"><CaseCover item={item} kindLabel={kindLabel} bare={bare} /></span>;
 }
