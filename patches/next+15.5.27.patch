@@ -1,3 +1,22 @@
+diff --git a/node_modules/next/dist/client/app-index.js b/node_modules/next/dist/client/app-index.js
+index b583ccc..c5f2cb7 100644
+--- a/node_modules/next/dist/client/app-index.js
++++ b/node_modules/next/dist/client/app-index.js
+@@ -220,12 +220,12 @@ function hydrate(instrumentationHooks) {
+         }
+         _client.default.createRoot(appElement, reactRootOptions).render(element);
+     } else {
+-        _react.default.startTransition(()=>{
++        (()=>{
+             _client.default.hydrateRoot(appElement, reactEl, {
+                 ...reactRootOptions,
+                 formState: initialFormStateData
+             });
+-        });
++        })();
+     }
+     // TODO-APP: Remove this logic when Float has GC built-in in development.
+     if (process.env.NODE_ENV !== 'production') {
 diff --git a/node_modules/next/dist/compiled/react-dom-experimental/cjs/react-dom-client.development.js b/node_modules/next/dist/compiled/react-dom-experimental/cjs/react-dom-client.development.js
 index 0053084..b3da396 100644
 --- a/node_modules/next/dist/compiled/react-dom-experimental/cjs/react-dom-client.development.js
@@ -153,3 +172,22 @@ index 85185b0..476b68e 100644
        : (workInProgressRootPingedLanes |= pingedLanes),
      workInProgressSuspendedRetryLanes === workInProgressRootRenderLanes &&
        (workInProgressSuspendedRetryLanes = 0));
+diff --git a/node_modules/next/dist/esm/client/app-index.js b/node_modules/next/dist/esm/client/app-index.js
+index 1b1577d..a34ca84 100644
+--- a/node_modules/next/dist/esm/client/app-index.js
++++ b/node_modules/next/dist/esm/client/app-index.js
+@@ -210,12 +210,12 @@ export function hydrate(instrumentationHooks) {
+         }
+         ReactDOMClient.createRoot(appElement, reactRootOptions).render(element);
+     } else {
+-        React.startTransition(()=>{
++        (()=>{
+             ReactDOMClient.hydrateRoot(appElement, reactEl, {
+                 ...reactRootOptions,
+                 formState: initialFormStateData
+             });
+-        });
++        })();
+     }
+     // TODO-APP: Remove this logic when Float has GC built-in in development.
+     if (process.env.NODE_ENV !== 'production') {
