@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createClient } from "@/shared/lib/supabase/server";
 import { invalid, type Failure } from "@/shared/lib/action-result";
 import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update";
+import { parseKeepingStored } from "@/shared/lib/keep-stored";
 import { t } from "@/shared/i18n/uk";
 import {
   ATTACHMENT_MAX_BYTES, ATTACHMENT_MIME, competitorSchema, featureSchema, FEATURE_VALUES, isAssessed, UX_TEMPLATES,
@@ -46,24 +47,13 @@ export async function createCompetitor(formData: FormData) {
 export type SaveResult = { ok: true; version: string | null } | Failure;
 
 /** Autosave target for the competitor card. */
-/**
- * A link saved before links had to be http(s) (mailto:, tel:, ftp://) must not block the rest of the card: autosave
- * sends every field, and an `invalid` result is never retried. When the link is the only problem and it is still the
- * stored value, the other fields are saved and the link is left as it is; a newly typed bad link is still rejected.
- */
-async function parseCompetitor(id: string, input: CompetitorInput) {
-  const parsed = competitorSchema.safeParse(input);
-  if (parsed.success) return parsed;
-  if (!parsed.error.issues.every((i) => i.path[0] === "url")) return parsed;
-  const supabase = await createClient();
-  const { data } = await supabase.from("competitors").select("url").eq("id", id).maybeSingle();
-  if (!data?.url || data.url !== (input.url ?? "").trim()) return parsed;
-  return competitorSchema.omit({ url: true }).safeParse(input);
-}
-
 export async function saveCompetitor(id: string, input: CompetitorInput, version?: string | null): Promise<SaveResult> {
   if (!uuid.safeParse(id).success) return invalid();
-  const parsed = await parseCompetitor(id, input);
+  // A link saved before links had to be http(s) (mailto:, tel:, ftp://) must not block the rest of the card.
+  const parsed = await parseKeepingStored(competitorSchema, input, "url", async () => {
+    const { data } = await (await createClient()).from("competitors").select("url").eq("id", id).maybeSingle();
+    return data?.url;
+  });
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
     return invalid(issue?.message, issue?.path[0]?.toString());

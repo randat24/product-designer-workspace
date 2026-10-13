@@ -8,7 +8,8 @@ import { denied, invalid, transient, type Failure } from "@/shared/lib/action-re
 import { insertOnce, requestIdOf } from "@/shared/lib/supabase/insert-once";
 import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update";
 import { t } from "@/shared/i18n/uk";
-import { isHttpUrl, withScheme } from "@/shared/lib/url";
+import { optionalHttpUrl } from "@/shared/lib/url";
+import { parseKeepingStored } from "@/shared/lib/keep-stored";
 import { decisionSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
 
 const refresh = () => revalidatePath("/w/[ws]/p/[project]", "layout");
@@ -36,8 +37,12 @@ export async function createScreen(formData: FormData): Promise<Result> {
 }
 
 export async function saveScreen(id: string, input: ScreenSpec, version?: string | null): Promise<Result> {
-  const parsed = screenSpecSchema.safeParse(input);
   if (!uuid.safeParse(id).success) return invalid();
+  // A Figma link stored before links had to be http(s) must not block the rest of the spec.
+  const parsed = await parseKeepingStored(screenSpecSchema, input, "figma_url", async () => {
+    const { data } = await (await createClient()).from("screens").select("figma_url").eq("id", id).maybeSingle();
+    return data?.figma_url;
+  });
   if (!parsed.success) {
     const field = String(parsed.error.issues[0]?.path[0] ?? "");
     return invalid(field === "figma_url" ? t.screens.invalidUrl : undefined, field);
@@ -67,7 +72,7 @@ export async function deleteScreen(formData: FormData): Promise<Result> {
 const statePatch = z.object({
   status: z.enum(["missing", "designed", "n_a"]),
   description: z.string().trim().max(1000).transform((v) => v || null),
-  figma_url: z.string().trim().max(2000).transform((v) => (v ? withScheme(v) : null)).refine((v) => v === null || isHttpUrl(v)),
+  figma_url: optionalHttpUrl(),
 }).partial();
 
 export async function saveState(id: string, patch: z.input<typeof statePatch>): Promise<Result> {

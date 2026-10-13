@@ -51,5 +51,9 @@ describe("case draft", () => {
     expect(caseDraftSchema.safeParse({ ...base, liveUrl: "javascript:alert(1)" }).success).toBe(false);
     expect(caseDraftSchema.safeParse({ ...base, cover: { src: "data:image/png;base64,x", alt: "", width: 1, height: 1 } }).success).toBe(false);
     expect(caseDraftSchema.safeParse({ ...base, liveUrl: "https://nudesmaker.com" }).success).toBe(true);
+    const bare = caseDraftSchema.safeParse({ ...base, liveUrl: "acme.com" });
+    expect(bare.success && bare.data.liveUrl).toBe("https://acme.com");
+    const empty = caseDraftSchema.safeParse({ ...base, liveUrl: "" });
+    expect(empty.success && empty.data.liveUrl).toBe("");
   });
 });

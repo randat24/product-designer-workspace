@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalHttpUrl } from "@/shared/lib/url";
 import type { ProductStory } from "@/site/product-story";
 import { productStorySchema } from "./product-blocks";
 
@@ -32,7 +33,8 @@ export const caseDraftSchema = z.object({
   client: text(200),
   year: text(50),
   kind: z.enum(["real", "concept"]),
-  liveUrl: z.union([z.literal(""), z.url({ protocol: /^https?$/ }).max(2000)]),
+  // The same link rule as every other form: "acme.com" becomes https://acme.com; empty stays "" in the snapshot.
+  liveUrl: optionalHttpUrl().transform((v) => v ?? ""),
   tags: z.array(text(60)).max(12),
   metrics: z.array(z.object({ value: text(40), label: text(200) })).max(8),
   cover: imageSchema.nullable(),
