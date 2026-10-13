@@ -14,6 +14,11 @@ describe("withScheme (Postel's law, UX-28)", () => {
     expect(withScheme("acme.com:8080/pricing")).toBe("https://acme.com:8080/pricing");
     expect(withScheme("localhost:3000")).toBe("https://localhost:3000");
     expect(withScheme("javascript:alert(1)")).toBe("javascript:alert(1)");
+    expect(withScheme("127.0.0.1:3000/x")).toBe("https://127.0.0.1:3000/x");
+  });
+  it("keeps scheme:digits as a scheme, not a host with a port", () => {
+    for (const v of ["tel:0501234567", "skype:12345", "javascript:1"]) expect(withScheme(v)).toBe(v);
+    expect(optionalHttpUrl().safeParse("tel:0501234567").success).toBe(false);
   });
   it("leaves an empty value empty", () => {
     expect(withScheme("   ")).toBe("");
@@ -39,5 +44,15 @@ describe("optionalHttpUrl and httpUrlOrNull", () => {
     expect(httpUrlOrNull(" acme.com ")).toBe("https://acme.com");
     expect(httpUrlOrNull("javascript:alert(1)")).toBeNull();
     expect(httpUrlOrNull(null)).toBeNull();
+  });
+  it("treat a scheme being typed by hand as still empty", () => {
+    const schema = optionalHttpUrl();
+    for (const v of ["http:", "https:", "http:/", "https://", "HTTP:/"]) expect(schema.parse(v)).toBeNull();
+    expect(schema.parse("https://a.co")).toBe("https://a.co");
+  });
+  it("httpUrlOrNull: placeholder cells from an imported file are not links", () => {
+    for (const v of ["n/a", "—", "см. сайт", "-", "tbd", "https://n/a"]) expect(httpUrlOrNull(v)).toBeNull();
+    expect(httpUrlOrNull("localhost:3000")).toBe("https://localhost:3000");
+    expect(httpUrlOrNull("https://acme.com/pricing")).toBe("https://acme.com/pricing");
   });
 });
