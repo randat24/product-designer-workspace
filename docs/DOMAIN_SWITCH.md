@@ -1,6 +1,9 @@
 # Переход на свой домен
 
 Состояние: **отложено до команды владельца.** Домен не покупается без явного «да».
+
+13 октября 2026 адрес на Vercel сменили с `product-designer-workspace.vercel.app` на `fedorov-design.vercel.app`: новый адрес добавлен к проекту, `NEXT_PUBLIC_SITE_URL` указывает на него, резюме пересобраны. Старый адрес пока тоже открывается (canonical ведёт на новый). В Supabase → Authentication → URL Configuration нужно добавить новый адрес (шаг 4 ниже).
+
 Кандидат: `hennadiifedorov.com` ($11.25 / год в Vercel, на 1 октября 2026 свободен). Ниже `домен` — выбранный домен.
 
 Код к переходу готов: все абсолютные адреса (canonical, hreflang, sitemap, robots, JSON-LD, Open Graph)
@@ -12,7 +15,7 @@
 1. **Купить домен** в Vercel (команда `randat24s-projects`) — только после «да».
 2. **Подключить к проекту** `product-designer-workspace`: Vercel → Domains → Add.
    - Основной — `домен`; `www.домен` — Redirect (308) на основной.
-   - `product-designer-workspace.vercel.app` — Redirect (308) на `https://домен`, чтобы у поисковиков был один адрес.
+   - `fedorov-design.vercel.app` и старый `product-designer-workspace.vercel.app` — Redirect (308) на `https://домен`, чтобы у поисковиков был один адрес.
    - Дождаться *Valid Configuration* и выпуска сертификата (DNS у Vercel — минуты).
 3. **Переменные Vercel (Production):** `NEXT_PUBLIC_SITE_URL=https://домен` (без слеша в конце). Redeploy production.
 4. **Supabase → Authentication → URL Configuration** (делает владелец):

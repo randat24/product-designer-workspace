@@ -95,11 +95,11 @@ export default async function SiteLayout({
         {/* First in the document (it is fixed, so only the tab order changes): the keyboard reaches the choice at once. */}
         {gaId() && <ConsentBanner labels={d.privacy} privacyHref={`/${locale}/privacy`} />}
         <div className="flex min-h-dvh flex-col">
-          {/* SIGNAL header: the hf. monogram with the name and role, two text links and «Обговорити проєкт ↗»,
+          {/* SIGNAL header: the FEDO mark with the name and role, two text links and «Обговорити проєкт ↗»,
               then theme and language. */}
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:h-20 sm:gap-4`}>
-              <Link href={`/${locale}`} className="hit flex shrink-0 items-center gap-3.5 whitespace-nowrap" aria-label={d.name}>
+              <Link href={`/${locale}`} className="group hit flex shrink-0 items-center gap-3.5 whitespace-nowrap" aria-label={d.name}>
                 <BrandMark />
                 <span aria-hidden className="flex flex-col text-[14px] font-semibold leading-[1.35]">
                   {d.name}

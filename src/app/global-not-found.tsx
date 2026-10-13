@@ -31,7 +31,7 @@ export default async function GlobalNotFound() {
         <div className="flex min-h-dvh flex-col">
           <header className="border-b border-line">
             <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-5 sm:h-20 sm:px-8 lg:px-12">
-              <Link href={`/${locale}`} className="flex items-center gap-3.5" aria-label={d.name}>
+              <Link href={`/${locale}`} className="group flex items-center gap-3.5" aria-label={d.name}>
                 <BrandMark />
                 <span aria-hidden className="text-[14px] font-semibold">{d.name}</span>
               </Link>

@@ -21,7 +21,7 @@
 Запись не удалять: она нужна для постоянного подтверждения.
 
 > **Без своего домена** (сайт пока на `*.vercel.app`): ресурс **URL prefix** →
-> `https://product-designer-workspace.vercel.app/` → способ **HTML tag**. Из тега
+> `https://fedorov-design.vercel.app/` → способ **HTML tag**. Из тега
 > `<meta name="google-site-verification" content="…">` скопировать значение `content` и добавить в Vercel переменную
 > `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` (Production) → Redeploy → **Verify**. Код уже выводит тег на страницах сайта.
 > Когда появится домен — добавить ресурс **Domain** с подтверждением через DNS, как выше.
