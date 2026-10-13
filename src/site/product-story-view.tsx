@@ -7,6 +7,7 @@ import type { GalleryItem } from "./content";
 import { CaseContents } from "./case-contents";
 import type { BrandShape, ProductSection, ProductStory, TrustIcon } from "./product-story";
 import { container } from "./ui";
+import { SIZES, responsive } from "@/site/img";
 
 const num = (i: number) => String(i + 1).padStart(2, "0");
 
@@ -364,7 +365,7 @@ function Figures({ images, dark }: { images: GalleryItem[]; dark?: boolean }) {
       {images.map((im, i) => (
         <figure key={im.src} className={cn("flex flex-col gap-2", images.length > 2 && i === 0 && "lg:col-span-2")}>
           {/* eslint-disable-next-line @next/next/no-img-element -- static case images with known size */}
-          <img src={im.src} alt={im.alt} width={im.width} height={im.height} loading="lazy" decoding="async"
+          <img {...responsive(im.src, im.width, SIZES.figure)} alt={im.alt} width={im.width} height={im.height} loading="lazy" decoding="async"
             className={cn("h-auto w-full rounded-[8px] border", dark ? "border-white/15" : "border-line")} />
           {im.caption && <figcaption className={cn("text-[14px]", dark ? "text-white/70" : "text-fg-secondary")}>{im.caption}</figcaption>}
         </figure>

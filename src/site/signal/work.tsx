@@ -4,6 +4,7 @@ import { trackAttrs } from "@/site/analytics/track";
 import { dict, type Case, type Locale } from "@/site/content";
 import { CaseCover, ProcessStrip } from "@/site/ui";
 import { WorkFilter } from "./work-filter";
+import { SIZES, responsive } from "@/site/img";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -89,7 +90,7 @@ function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare:
   if (item.cover) {
     const c = item.cover;
     // eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known
-    return <img className="sg-shot" src={c.src} alt="" width={c.width} height={c.height} loading="lazy" decoding="async" />;
+    return <img className="sg-shot" {...responsive(c.src, c.width, SIZES.card)} alt="" width={c.width} height={c.height} loading="lazy" decoding="async" />;
   }
   const phones = (item.gallery ?? []).filter((g) => g.device === "mobile" || g.height > g.width).slice(0, 2);
   if (phones.length === 2) {
@@ -97,7 +98,7 @@ function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare:
       <>
         {phones.map((g) => (
           // eslint-disable-next-line @next/next/no-img-element -- static page, sizes known
-          <img key={g.src} className="sg-phone" src={g.src} alt="" width={g.width} height={g.height} loading="lazy" decoding="async" />
+          <img key={g.src} className="sg-phone" {...responsive(g.src, g.width, SIZES.thumb)} alt="" width={g.width} height={g.height} loading="lazy" decoding="async" />
         ))}
       </>
     );
@@ -105,7 +106,7 @@ function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare:
   const page = item.gallery?.[0];
   if (page) {
     // eslint-disable-next-line @next/next/no-img-element -- static page, sizes known
-    return <img className="sg-shot" src={page.src} alt="" width={page.width} height={page.height} loading="lazy" decoding="async" />;
+    return <img className="sg-shot" {...responsive(page.src, page.width, SIZES.card)} alt="" width={page.width} height={page.height} loading="lazy" decoding="async" />;
   }
   return <span className="sg-abstract"><CaseCover item={item} kindLabel={kindLabel} bare={bare} /></span>;
 }

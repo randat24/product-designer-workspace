@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/site/content";
 import { INTAKE } from "@/site/intake/content";
 import { IntakeWizard } from "@/site/intake/wizard";
-import { pageMetadata } from "@/site/seo";
+import { JsonLd } from "@/site/json-ld";
+import { pageLd, pageMetadata } from "@/site/seo";
 import { container } from "@/site/ui";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -23,6 +24,7 @@ export default async function StartProject({ params }: { params: Promise<{ local
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || undefined;
   return (
     <div className={`${container} max-w-[800px] pb-20 pt-10 sm:pt-14`}>
+      <JsonLd data={pageLd(locale, "/start-project", "ContactPage", INTAKE[locale].seo.title, INTAKE[locale].seo.description)} />
       <IntakeWizard locale={locale} turnstileSiteKey={siteKey} privacyHref={`/${locale}/privacy#requests`} />
     </div>
   );

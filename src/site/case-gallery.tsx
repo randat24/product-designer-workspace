@@ -6,6 +6,7 @@ import { cn } from "@/shared/lib/cn";
 import { track } from "./analytics/track";
 import { button } from "./signal/ui";
 import type { GalleryItem } from "./content";
+import { SIZES, responsive } from "@/site/img";
 
 type Labels = { pages: string; pagesLead: string; open: string; close: string; prev: string; next: string };
 
@@ -56,7 +57,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
             >
               <span className="block overflow-hidden rounded-[8px] border border-line bg-surface transition-transform duration-200 group-hover:-translate-y-1">
                 {/* eslint-disable-next-line @next/next/no-img-element -- project pages of any origin, sizes known */}
-                <img src={it.src} alt="" width={it.width} height={it.height} loading="lazy" decoding="async" className="h-auto w-full" />
+                <img {...responsive(it.src, it.width, SIZES.thumb)} alt="" width={it.width} height={it.height} loading="lazy" decoding="async" className="h-auto w-full" />
               </span>
               {it.caption && <span className="text-[13px] font-semibold">{it.caption}</span>}
             </button>
@@ -85,7 +86,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
             <div className="flex h-full min-w-0 flex-1 items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element -- full-size project page */}
               <img
-                src={item.src}
+                {...responsive(item.src, item.width, SIZES.full)}
                 alt={item.alt}
                 width={item.width}
                 height={item.height}

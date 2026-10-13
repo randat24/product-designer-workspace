@@ -16,6 +16,7 @@ import { TraceGraph } from "@/site/trace-graph";
 import { INTAKE } from "@/site/intake/content";
 import { signalCopy } from "@/site/signal/home-content";
 import { button } from "@/site/signal/ui";
+import { SIZES, responsive } from "@/site/img";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -45,7 +46,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
     <figure className="sg-case-cover">
       {item.cover ? (
         // eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known
-        <img src={item.cover.src} alt={item.cover.alt} width={item.cover.width} height={item.cover.height} fetchPriority="high" decoding="async" />
+        <img {...responsive(item.cover.src, item.cover.width, SIZES.cover)} alt={item.cover.alt} width={item.cover.width} height={item.cover.height} fetchPriority="high" decoding="async" />
       ) : (
         <CaseCover item={item} kindLabel={kind} large />
       )}
@@ -194,7 +195,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               {sec.image && (
                 <figure className="sg-case-figure">
                   {/* eslint-disable-next-line @next/next/no-img-element -- static case images with known size */}
-                  <img src={sec.image.src} alt={sec.image.alt} width={sec.image.width} height={sec.image.height} loading="lazy" decoding="async" />
+                  <img {...responsive(sec.image.src, sec.image.width, SIZES.figure)} alt={sec.image.alt} width={sec.image.width} height={sec.image.height} loading="lazy" decoding="async" />
                   {sec.image.caption && <figcaption className="sg-case-caption"><span>{sec.image.caption}</span></figcaption>}
                 </figure>
               )}

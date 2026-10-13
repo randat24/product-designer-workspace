@@ -31,6 +31,12 @@ const config: NextConfig = {
   // globalNotFound: one 404 page (app/global-not-found.tsx) for the several root layouts.
   // 4 MB: a project backup restored from its JSON file (Vercel accepts up to 4.5 MB per request).
   experimental: { serverActions: { bodySizeLimit: "4mb" }, globalNotFound: true },
+  // Case pictures go through the image optimizer (src/site/img.ts): files in /public and case media uploaded
+  // to Supabase Storage (public bucket only).
+  images: {
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [{ protocol: "https", hostname: "**.supabase.co", pathname: "/storage/v1/object/public/**" }],
+  },
   // A case renamed after it went live keeps its old address working.
   async redirects() {
     return [

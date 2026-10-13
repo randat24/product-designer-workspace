@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dict, isLocale } from "@/site/content";
-import { pageMetadata } from "@/site/seo";
+import { JsonLd } from "@/site/json-ld";
+import { pageLd, pageMetadata } from "@/site/seo";
 import { container } from "@/site/ui";
 import { ConsentControls } from "@/site/consent-banner";
 import { gaId } from "@/site/analytics/google-analytics";
@@ -21,6 +22,7 @@ export default async function Privacy({ params }: { params: Promise<{ locale: st
   // The width limit sits on the article: next to `container` its max-width loses to the 1440 px one.
   return (
     <div className={`${container} pb-20 pt-12`}>
+      <JsonLd data={pageLd(locale, "/privacy", "WebPage", p.title, p.lede)} />
       <article className="flex max-w-[760px] flex-col gap-8">
         <header className="flex flex-col gap-4">
           <h1 className="page-title">{p.title}</h1>

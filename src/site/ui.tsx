@@ -3,6 +3,7 @@ import { cn } from "@/shared/lib/cn";
 import { PROCESS_STAGES, type CaseProcess } from "./case-process";
 import { dict, type Case, type Locale } from "./content";
 import { button } from "./signal/ui";
+import { SIZES, responsive } from "@/site/img";
 
 export const container = "mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12";
 
@@ -86,7 +87,7 @@ export function CaseCover({
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known */}
         <img
-          src={item.cover.src}
+          {...responsive(item.cover.src, item.cover.width, large ? SIZES.cover : SIZES.card)}
           alt={large ? item.cover.alt : ""}
           width={item.cover.width}
           height={item.cover.height}

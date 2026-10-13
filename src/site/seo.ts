@@ -36,6 +36,24 @@ type PageMeta = {
   type?: "website" | "article" | "profile";
 };
 
+/**
+ * A meta description of at most 160 characters (what a search result shows): whole sentences while they fit,
+ * otherwise whole words and an ellipsis. Case descriptions come from the database and can be longer.
+ */
+export function clampDescription(text: string, max = 160): string {
+  const t = text.trim().replace(/\s+/g, " ");
+  if (t.length <= max) return t;
+  const sentences = t.match(/[^.!?]+[.!?]+(?=\s|$)/g) ?? [];
+  let out = "";
+  for (const s of sentences) {
+    if ((out + s).trim().length > max) break;
+    out += s;
+  }
+  if (out.trim().length >= max * 0.6) return out.trim();
+  const cut = t.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:—–-]+$/, "").trim()}…`;
+}
+
 export function pageMetadata(p: PageMeta): Metadata {
   const d = dict(p.locale);
   const url = localeUrl(p.locale, p.path);
@@ -45,9 +63,14 @@ export function pageMetadata(p: PageMeta): Metadata {
   const index = isIndexable() && !p.noindex;
   const image = { url: ogImageUrl(p.locale, p.caseSlug), width: 1200, height: 630, alt: p.title };
 
+  // Search results cut a title at about 60 characters: when «title | name» would not fit, the title goes alone
+  // (the name is still in the site name, the breadcrumbs and the structured data).
+  const fits = `${p.title} | ${d.name}`.length <= 60;
+  const description = clampDescription(p.description);
+
   return {
-    title: p.absoluteTitle ? { absolute: p.title } : p.title,
-    description: p.description,
+    title: p.absoluteTitle || !fits ? { absolute: p.title } : p.title,
+    description,
     alternates: { canonical: url, languages },
     robots: index
       ? { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } }
@@ -58,12 +81,12 @@ export function pageMetadata(p: PageMeta): Metadata {
       url,
       siteName: d.name,
       title: p.title,
-      description: p.description,
+      description,
       locale: OG_LOCALE[p.locale],
       alternateLocale: LOCALES.filter((l) => l !== p.locale).map((l) => OG_LOCALE[l]),
       images: [image],
     },
-    twitter: { card: "summary_large_image", title: p.title, description: p.description, images: [image.url] },
+    twitter: { card: "summary_large_image", title: p.title, description, images: [image.url] },
   };
 }
 
@@ -134,6 +157,15 @@ export function breadcrumbLd(items: { name: string; url: string }[]): Json {
     "@type": "BreadcrumbList",
     itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, item: it.url })),
   };
+}
+
+/** A plain page (privacy, the project request): what it is, in which language, and where it sits on the site. */
+export function pageLd(locale: Locale, path: string, type: "WebPage" | "ContactPage", name: string, description: string): Json {
+  const d = dict(locale);
+  return graph(
+    { "@type": type, "@id": `${localeUrl(locale, path)}#page`, url: localeUrl(locale, path), name, description: clampDescription(description), inLanguage: locale, isPartOf: { "@id": websiteId() }, about: { "@id": personId() } },
+    breadcrumbLd([{ name: d.ui.home, url: localeUrl(locale, "") }, { name, url: localeUrl(locale, path) }]),
+  );
 }
 
 export function caseLd(locale: Locale, c: Case): Json {
