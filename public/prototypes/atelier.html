@@ -19,9 +19,10 @@
   --surface: #161714;
   --ink: #F2EEE6;
   --ink-2: #A9A399;
-  --ink-3: #6F6A62;
+  --ink-3: #8B867D;   /* 5.3:1: small labels and the footer */
   --line: #2C2D29;
   --line-strong: #474842;
+  --control: #6E6F66; /* borders of controls: 3:1 against the ground (non-text contrast) */
   --accent: #D9ECA2;
   --accent-ink: #12130F;
   --serif: "Cormorant Garamond", "Times New Roman", serif;
@@ -49,11 +50,11 @@ a { color: inherit; }
 .nav a[aria-current] { color: var(--accent); }
 .nav a:hover { color: var(--accent); }
 .tools { display: flex; align-items: center; gap: 14px; }
-.lang { display: flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; font-size: 12px; letter-spacing: .1em; }
-.lang button { padding: 8px 12px; min-height: 36px; color: var(--ink-2); }
+.lang { display: flex; border: 1px solid var(--control); border-radius: 999px; overflow: hidden; font-size: 12px; letter-spacing: .1em; }
+.lang button { padding: 8px 14px; min-height: 44px; color: var(--ink-2); }
 .lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .bag { display: flex; align-items: center; gap: 12px; font-size: 15px; }
-.bag span[aria-hidden] { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--line-strong); border-radius: 50%; font-variant-numeric: tabular-nums; transition: border-color .3s, color .3s; }
+.bag span[aria-hidden] { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--control); border-radius: 50%; font-variant-numeric: tabular-nums; transition: border-color .3s, color .3s; }
 .bag.bump span[aria-hidden] { border-color: var(--accent); color: var(--accent); }
 
 .strip { display: flex; justify-content: space-between; gap: 16px; padding-block: 40px 8px; }
@@ -68,7 +69,7 @@ a { color: inherit; }
 .intro .lead { font-size: clamp(22px, 1.9vw, 28px); line-height: 1.35; margin: 0; letter-spacing: -.01em; }
 .intro .quiet { color: var(--ink-2); font-size: 18px; line-height: 1.75; margin: 0; }
 .explore { display: inline-flex; align-items: center; gap: 22px; font-size: 17px; align-self: start; }
-.explore span[aria-hidden] { display: grid; place-items: center; width: 76px; height: 76px; border: 1px solid var(--line-strong); border-radius: 50%; font-size: 28px; color: var(--accent); transition: border-color .3s, transform .4s var(--ease); }
+.explore span[aria-hidden] { display: grid; place-items: center; width: 76px; height: 76px; border: 1px solid var(--control); border-radius: 50%; font-size: 28px; color: var(--accent); transition: border-color .3s, transform .4s var(--ease); }
 .explore:hover span[aria-hidden] { border-color: var(--accent); transform: rotate(45deg); }
 .count { display: flex; align-items: center; gap: 28px; }
 .count b { font: 500 clamp(36px, 3.2vw, 46px)/1 var(--serif); letter-spacing: .02em; }
@@ -115,7 +116,7 @@ a { color: inherit; }
 .hot[hidden] { display: grid; opacity: 0; pointer-events: none; transform: scale(.6); }
 @keyframes ping { 0% { transform: scale(.85); opacity: .5; } 70%, 100% { transform: scale(1.45); opacity: 0; } }
 .ctl { position: absolute; right: 4%; bottom: 5%; display: flex; gap: 14px; }
-.ctl button { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-strong); background: rgb(14 15 13 / 60%); transition: border-color .3s, background .3s; }
+.ctl button { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--control); background: rgb(14 15 13 / 60%); transition: border-color .3s, background .3s; }
 .ctl button:hover { border-color: var(--accent); }
 .ctl .play { background: #3A3B35; border-color: #3A3B35; }
 .ctl .play[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
@@ -146,17 +147,17 @@ a { color: inherit; }
 .group { margin-top: 36px; }
 .group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 18px; }
 .group-head .val { color: var(--accent); font-size: 17px; }
-.group-head button { font-size: 14px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--line-strong); }
+.group-head button { min-height: 44px; font-size: 14px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--line-strong); }
 .group-head button:hover { color: var(--ink); }
 .swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.swatch { display: flex; align-items: center; gap: 16px; min-height: 78px; padding: 0 18px; border: 1px solid var(--line-strong); text-align: left; font-size: 18px; transition: border-color .25s; }
+.swatch { display: flex; align-items: center; gap: 16px; min-height: 78px; padding: 0 18px; border: 1px solid var(--control); text-align: left; font-size: 18px; transition: border-color .25s; }
 .swatch i { width: 30px; height: 30px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 14%); }
 .swatch .tick { margin-left: auto; color: var(--accent); opacity: 0; }
 .swatch[aria-pressed="true"] { border-color: var(--accent); }
 .swatch[aria-pressed="true"] .tick { opacity: 1; }
 .swatch:hover { border-color: var(--ink-2); }
 .sizes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
-.sizes button { min-height: 68px; border: 1px solid var(--line-strong); font-size: 19px; font-variant-numeric: tabular-nums; transition: border-color .25s, background .25s, color .25s; }
+.sizes button { min-height: 68px; border: 1px solid var(--control); font-size: 19px; font-variant-numeric: tabular-nums; transition: border-color .25s, background .25s, color .25s; }
 .sizes button:hover { border-color: var(--ink-2); }
 .sizes button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .group.need .sizes button { border-color: #8E6B4B; }
@@ -189,7 +190,7 @@ dialog p { margin: 0 0 20px; color: var(--ink-2); font-size: 14px; }
 dialog table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
 dialog th, dialog td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
 dialog th { color: var(--ink-2); font-weight: 500; font-size: 13px; letter-spacing: .08em; }
-dialog .close { margin-top: 24px; min-height: 48px; padding: 0 22px; border: 1px solid var(--line-strong); }
+dialog .close { margin-top: 24px; min-height: 48px; padding: 0 22px; border: 1px solid var(--control); }
 
 .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); padding: 16px 22px; background: var(--ink); color: var(--bg); font-size: 15px; opacity: 0; transition: opacity .3s, transform .3s var(--ease); pointer-events: none; z-index: 20; max-width: calc(100% - 32px); }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
@@ -268,7 +269,7 @@ dialog .close { margin-top: 24px; min-height: 48px; padding: 0 22px; border: 1px
 
     <section class="viewer" aria-labelledby="viewer-title">
       <h2 class="sr-only" id="viewer-title" data-i18n="viewer-title">Вітрина: манекен у комплекті</h2>
-      <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="вітрина" data-i18n-attr="aria-roledescription:roledesc"
+      <div class="stage" id="stage" tabindex="0" role="group" aria-labelledby="viewer-title" aria-roledescription="вітрина" data-i18n-attr="aria-roledescription:roledesc"
         aria-describedby="hint">
         <div class="figure" id="figure"><div class="zoom" id="zoom"><div class="oval" aria-hidden="true"></div><div class="glow" aria-hidden="true"></div></div></div>
         <div class="stage-meta" aria-hidden="true">
