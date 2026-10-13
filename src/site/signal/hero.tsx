@@ -8,18 +8,18 @@ import { HeroTrace } from "./hero-trace";
 const HERO = {
   uk: {
     title: ["Дизайн,", "де кожне рішення", "має доказ."],
-    intro: "Допомагаю перетворювати складні задачі на зрозумілі цифрові продукти. Від першого «чому» до останньої деталі.",
+    intro: "Проєктую вебсервіси й мобільні застосунки: від розмов з користувачами до макетів, за якими розробникам не треба нічого вгадувати.",
     work: "Дивитися роботи",
     approach: "Мій підхід",
-    strip: "Продумані інтерфейси. Цілісний досвід.",
+    strip: "Продуктовий дизайн · UX · дизайн-системи",
     next: "Далі — роботи ↓",
   },
   en: {
     title: ["Design", "where every decision", "has proof."],
-    intro: "I help turn complex problems into clear digital products. From the first “why” to the last detail.",
+    intro: "I design web services and mobile apps: from talking to users to mockups developers can build without guessing.",
     work: "See the work",
     approach: "My approach",
-    strip: "Considered interfaces. Coherent experience.",
+    strip: "Product design · UX · design systems",
     next: "Next — work ↓",
   },
 } as const;

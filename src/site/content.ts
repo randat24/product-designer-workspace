@@ -354,7 +354,7 @@ const uk: Dictionary = {
   about: {
     title: "Про мене",
     summary:
-      "7 років у вебі та продуктових командах. Працюю системно: дослідження → дизайн-система → чистий handoff. Найкраще проявляю себе там, де замість набору макетів потрібен передбачуваний інтерфейс, який команда може розвивати без мене.",
+      "Сім років у вебі та продуктових командах. Веду продукт від інтерв’ю з користувачами до передачі в розробку, а дорогою збираю дизайн-систему, щоб команда могла розвивати інтерфейс і без мене.",
     experience: "Досвід",
     serviceTitle: "Служба",
     serviceText:
@@ -373,7 +373,7 @@ const uk: Dictionary = {
       { value: "2", label: "дизайнери під моїм менторством" },
     ],
     approach: "Як я працюю",
-    approachLead: "Від питань до продукту, який команда розвиває без мене. Кожен крок лишає артефакт, на який можна спертися.",
+    approachLead: "Кожен крок лишає артефакт: дослідження, сценарій, компонент, рішення. На них можна спертися, навіть коли мене поруч немає.",
     steps: [
       {
         title: "Дослідження",
@@ -781,7 +781,7 @@ const en: Dictionary = {
   about: {
     title: "About",
     summary:
-      "7 years in web and product teams. I work systematically: research → design system → clean handoff. I'm at my best where a team needs a predictable interface it can evolve without me, not just a set of mockups.",
+      "Seven years in web and product teams. I take a product from user interviews to handoff and build a design system along the way, so the team can keep growing the interface without me.",
     experience: "Experience",
     serviceTitle: "Service",
     serviceText:
@@ -800,7 +800,7 @@ const en: Dictionary = {
       { value: "2", label: "designers mentored" },
     ],
     approach: "How I work",
-    approachLead: "From questions to a product the team can evolve without me. Every step leaves an artefact the next one can rely on.",
+    approachLead: "Every step leaves an artifact: research, a flow, a component, a decision. The team can rely on them even when I’m not around.",
     steps: [
       {
         title: "Research",

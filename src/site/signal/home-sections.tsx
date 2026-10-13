@@ -16,7 +16,41 @@ export function SectionEyebrow({ index, children, className }: { index: string; 
   );
 }
 
-/** «Дизайнер за роботами»: who is behind the work, three facts and the way to the full story. */
+/** «Чим можу допомогти»: the four formats people hire for, each with what they get, and the way to the brief. */
+export function SignalServices({ locale }: { locale: Locale }) {
+  const v = signalCopy(locale).services;
+  return (
+    <section id="services" className="sg-section" aria-labelledby="services-heading">
+      <div className={container}>
+        <div className="sg-section-header">
+          <div>
+            <SectionEyebrow index={v.index}>{v.eyebrow}</SectionEyebrow>
+            <h2 className="sg-heading" id="services-heading">{v.title[0]}<br />{v.title[1]}</h2>
+          </div>
+          <p className="sg-process-lead">{v.lead}</p>
+        </div>
+        <ul className="sg-services">
+          {v.items.map((item, i) => (
+            <li key={item.title} className="sg-service">
+              <p className="sg-eyebrow sg-service-index">{String(i + 1).padStart(2, "0")}</p>
+              <h3>{item.title}</h3>
+              <p className="sg-service-text">{item.text}</p>
+              <p className="sg-service-result"><span>{v.resultLabel}</span>{item.result}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-10">
+          <Link href={`/${locale}/start-project`} className={button({ variant: "primary" })}
+            {...trackAttrs("project_request_cta", { location: "services" })}>
+            {v.cta}<ArrowUpRight aria-hidden className="size-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** «Хто я»: who is behind the work, three facts and the way to the full story. */
 export function SignalAbout({ locale }: { locale: Locale }) {
   const a = signalCopy(locale).about;
   return (
@@ -67,7 +101,7 @@ export function SignalProcess({ locale }: { locale: Locale }) {
   );
 }
 
-/** «Наступний сильний проєкт — ваш?»: the big line opens the brief, the links write directly. */
+/** «Контакт»: the big line and the button open the brief, the links write directly. */
 export function SignalContact({ locale }: { locale: Locale }) {
   const c = signalCopy(locale).contact;
   const links = [
@@ -84,7 +118,13 @@ export function SignalContact({ locale }: { locale: Locale }) {
         </Link>
       </h2>
       <div className="sg-contact-bottom">
-        <p>{c.text[0]}<br />{c.text[1]}</p>
+        <div className="sg-contact-lead">
+          <p>{c.text[0]}<br />{c.text[1]}</p>
+          <Link href={`/${locale}/start-project`} className={button({ variant: "primary" })}
+            {...trackAttrs("project_request_cta", { location: "contact" })}>
+            {c.brief}<ArrowUpRight aria-hidden className="size-4" />
+          </Link>
+        </div>
         <ul className="sg-contact-links">
           {links.map((l) => (
             <li key={l.label}>

@@ -29,7 +29,7 @@ export type AnalyticsEvent =
   | "project_brief_downloaded";
 
 /** Where on the page the interaction happened. */
-export type AnalyticsLocation = "header" | "hero" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found" | "confirmation";
+export type AnalyticsLocation = "header" | "hero" | "services" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found" | "confirmation";
 
 export type AnalyticsParams = Partial<{
   location: AnalyticsLocation;

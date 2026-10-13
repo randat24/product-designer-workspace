@@ -397,6 +397,25 @@
 .signal .sg-process-step .sg-eyebrow { color: var(--sg-accent-text); margin-bottom: 36px; }
 .signal .sg-process-step h3 { font-size: 22px; font-weight: 500; letter-spacing: -.03em; margin-bottom: 12px; }
 .signal .sg-process-step p:not(.sg-eyebrow) { color: var(--sg-fg-secondary); font-size: 14px; line-height: 1.6; }
+/* Services: a 2×2 grid of cards; what the client gets sits at the bottom of each card, on one line with the others. */
+.signal .sg-services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.signal .sg-service {
+  display: flex; flex-direction: column; padding: 28px; min-width: 0;
+  background: var(--sg-surface); border: 1px solid var(--sg-border); border-radius: var(--sg-radius-lg);
+  transition: border-color var(--sg-duration-base);
+}
+.signal .sg-service:hover { border-color: var(--sg-control-border); }
+.signal .sg-service-index { color: var(--sg-accent-text); margin-bottom: 28px; }
+.signal .sg-service h3 { font-size: 24px; font-weight: 500; letter-spacing: -.03em; line-height: 1.2; margin-bottom: 12px; }
+.signal .sg-service-text { color: var(--sg-fg-secondary); font-size: 15px; line-height: 1.65; max-width: 52ch; }
+.signal .sg-service-result {
+  display: grid; gap: 4px; margin-top: auto; padding-top: 24px; font-size: 14px; line-height: 1.5;
+}
+.signal .sg-service-result span {
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--sg-border);
+  font: 11px/1.5 var(--sg-font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--sg-fg-secondary);
+}
+.signal .sg-contact-lead { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
 .signal .sg-contact { padding-block: 100px 48px; scroll-margin-top: 80px; }
 .signal .sg-contact-title { font-size: clamp(50px, 8.8vw, 138px); font-weight: 500; line-height: 1; letter-spacing: -.07em; margin-top: 24px; }
 .signal .sg-contact-title a { text-decoration: none; transition: color var(--sg-duration-fast); }
@@ -509,6 +528,7 @@
 }
 @media (max-width: 640px) {
   .signal .sg-section-header { display: block; margin-bottom: 28px; }
+  .signal .sg-section-header .sg-process-lead { margin-top: 16px; }
   .signal .sg-work-filters { margin-top: 24px; }
   .signal .sg-project-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .signal .sg-project-visual--lead { display: flex; flex-direction: column; gap: 28px; align-items: start; padding: 30px 24px 0; height: 410px !important; }
@@ -523,6 +543,10 @@
   .signal .sg-about-facts strong { font-size: clamp(22px, 7vw, 30px); }
   .signal .sg-about-facts span { font-size: 11px; }
   .signal .sg-process-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .signal .sg-services { grid-template-columns: minmax(0, 1fr); }
+  .signal .sg-service { padding: 22px; }
+  .signal .sg-service-index { margin-bottom: 18px; }
+  .signal .sg-service h3 { font-size: 21px; }
   .signal .sg-process-step + .sg-process-step { border-left: 0; border-top: 1px solid var(--sg-border); padding-left: 0; }
   .signal .sg-process-step { padding-block: 24px; }
   .signal .sg-process-step .sg-eyebrow { margin-bottom: 16px; }

@@ -9,7 +9,7 @@ import { absoluteUrl } from "@/site/seo";
 export const revalidate = 3600;
 
 /** Date of the last content change of the static pages (content.ts). Update with the content. */
-const CONTENT_UPDATED = "2026-09-30";
+const CONTENT_UPDATED = "2026-10-13";
 
 type Entry = MetadataRoute.Sitemap[number];
 
