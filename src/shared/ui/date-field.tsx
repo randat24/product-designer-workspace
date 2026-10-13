@@ -18,7 +18,7 @@ const TEXT: Record<DateLocale, { placeholder: string; open: string; prev: string
 };
 
 export function DateField({
-  id, value, onChange, locale = "uk", readOnly, invalid, describedBy, className, size = "md",
+  id, value, onChange, locale = "uk", readOnly, invalid, required, describedBy, className, size = "md",
 }: {
   id: string;
   /** ISO date (YYYY-MM-DD) or "". */
@@ -27,6 +27,8 @@ export function DateField({
   locale?: DateLocale;
   readOnly?: boolean;
   invalid?: boolean;
+  /** Announced as required to screen readers (the form checks it itself). */
+  required?: boolean;
   describedBy?: string;
   className?: string;
   /** md: 36 px, the tool's fields. lg: 48 px with a 1.5 px border, the site's form. */
@@ -70,6 +72,7 @@ export function DateField({
           placeholder={tx.placeholder}
           value={text}
           readOnly={readOnly}
+          aria-required={required || undefined}
           aria-invalid={invalid || badText || undefined}
           aria-describedby={[describedBy, badText && `${id}-bad`].filter(Boolean).join(" ") || undefined}
           onChange={(e) => { setText(e.target.value); setBadText(false); }}

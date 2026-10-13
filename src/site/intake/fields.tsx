@@ -72,7 +72,7 @@ export function DateInput({ id, label, hint, error, optional, value, onChange, l
   return (
     <FieldShell id={id} label={label} hint={hint} error={error} optional={optional} className={className}>
       <DateField id={id} size="lg" locale={locale} value={value} onChange={onChange}
-        invalid={!!error} describedBy={describedBy(id, hint, error)} />
+        invalid={!!error} required={!optional} describedBy={describedBy(id, hint, error)} />
     </FieldShell>
   );
 }
@@ -91,6 +91,7 @@ export function TextArea({ id, label, hint, error, optional, value, onChange, ro
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         maxLength={maxLength}
+        aria-required={optional ? undefined : true}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
         className={cn(sg.input, "min-h-[96px] resize-y leading-[1.5]")}
@@ -99,9 +100,12 @@ export function TextArea({ id, label, hint, error, optional, value, onChange, ro
   );
 }
 
-/** A chip group: checkboxes (multiple) or radios (one), in a fieldset with a legend. */
-export function ChoiceGroup({ id, legend, hint, error, optional, options, value, onChange, multiple = true, columns }: {
-  id: string; legend: string; hint?: string; error?: string; optional?: string;
+/**
+ * A chip group: checkboxes (multiple) or radios (one), in a fieldset with a legend. `required` is the word screen
+ * readers hear after the legend; groups with a default value leave it out (the form submits without an answer).
+ */
+export function ChoiceGroup({ id, legend, hint, error, optional, required, options, value, onChange, multiple = true, columns }: {
+  id: string; legend: string; hint?: string; error?: string; optional?: string; required?: string;
   options: { value: string; label: string }[];
   value: string[] | string | undefined;
   onChange: (v: string[] | string) => void;
@@ -111,11 +115,13 @@ export function ChoiceGroup({ id, legend, hint, error, optional, options, value,
 }) {
   const selected = Array.isArray(value) ? value : value ? [value] : [];
   return (
-    <fieldset id={id} tabIndex={-1} aria-describedby={describedBy(id, hint, error)} className="flex flex-col gap-2 outline-none"
-      {...(multiple ? {} : { role: "radiogroup", "aria-required": optional ? undefined : true })}>
+    <fieldset id={id} tabIndex={-1} aria-describedby={describedBy(id, hint, error)} className="flex flex-col gap-2 outline-none">
       <legend className={cn(sg.label, "mb-1.5")}>
         {legend}
         {optional && <span className="ml-1.5 font-normal text-fg-secondary">({optional})</span>}
+        {/* A group has no aria-required (and a role override can lose the legend as its name): the word goes into
+            the name instead, for checkboxes and radios alike. */}
+        {required && <span className="sr-only"> ({required})</span>}
       </legend>
       {hint && <p id={`${id}-hint`} className={cn(sg.hint, "-mt-1 mb-1")}>{hint}</p>}
       <div className={cn(columns ? "grid gap-2 sm:grid-cols-2" : "flex flex-wrap gap-2")}>

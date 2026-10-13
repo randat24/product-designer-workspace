@@ -298,7 +298,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         const d = data.project;
         return (
           <>
-            <ChoiceGroup id={f("types")} legend={s.project.types.label} error={err("types")}
+            <ChoiceGroup id={f("types")} legend={s.project.types.label} required={t.required} error={err("types")}
               options={PROJECT_TYPES.map((k) => ({ value: k, label: label("types", k, L) }))}
               value={d.types} onChange={(v) => set("project", { types: v as string[] })} />
             {d.types.includes("other") && (
@@ -320,7 +320,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         const d = data.existing;
         return (
           <>
-            <ChoiceGroup id={f("has")} legend={s.existing.has.label} multiple={false} columns error={err("has")}
+            <ChoiceGroup id={f("has")} legend={s.existing.has.label} required={t.required} multiple={false} columns error={err("has")}
               options={[{ value: "yes", label: s.existing.yes }, { value: "no", label: s.existing.no }]}
               value={d.has === undefined ? undefined : d.has ? "yes" : "no"}
               onChange={(v) => set("existing", { has: v === "yes" })} />
@@ -455,7 +455,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         const d = data.scope;
         return (
           <>
-            <ChoiceGroup id={f("items")} legend={s.scope.items.label} error={err("items")}
+            <ChoiceGroup id={f("items")} legend={s.scope.items.label} required={t.required} error={err("items")}
               options={SCOPE.map((k) => ({ value: k, label: label("scope", k, L) }))}
               value={d.items} onChange={(v) => set("scope", { items: v as string[] })} />
             <Checkbox id={f("needs_advice")} label={<strong>{s.scope.advice}</strong>} hint={s.scope.adviceHint}
@@ -486,7 +486,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
             <Select id={f("currency")} label={b.currency.label} className="max-w-[200px]"
               options={CURRENCIES.map((c) => ({ value: c, label: c }))} value={d.currency}
               onChange={(v) => set("budget", { currency: v as Currency, range: (BUDGET_SPECIAL as readonly string[]).includes(d.range) ? d.range : "" })} />
-            <ChoiceGroup id={f("range")} legend={b.range.label} multiple={false} columns error={err("range")}
+            <ChoiceGroup id={f("range")} legend={b.range.label} required={t.required} multiple={false} columns error={err("range")}
               options={[
                 { value: "undecided", label: label("budgetSpecial", "undecided", L) },
                 ...ranges.map((r) => ({ value: r.key, label: budgetLabel({ min: r.min, max: r.max, currency: d.currency }, L) })),
@@ -504,7 +504,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
             )}
             <TextField id={f("note")} {...b.note} optional={opt} error={err("note")} maxLength={1000}
               value={d.note} onChange={(v) => set("budget", { note: v })} />
-            <ChoiceGroup id={f("start")} legend={b.start.label} multiple={false} columns error={err("start")}
+            <ChoiceGroup id={f("start")} legend={b.start.label} required={t.required} multiple={false} columns error={err("start")}
               options={START_OPTIONS.map((k) => ({ value: k, label: label("start", k, L) }))}
               value={d.start} onChange={(v) => set("budget", { start: v as string })} />
             <ChoiceGroup id={f("has_deadline")} legend={b.deadline.label} multiple={false}
