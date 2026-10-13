@@ -48,12 +48,11 @@
   --sg-inverse-fg: #F1F1E9;
   --sg-shadow-float: 0 12px 32px rgb(32 34 31 / 12%);
   /* the hero mesh: green-grey ink on paper, pale sage on the dark ground */
-  --sg-mesh: #394A36;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --sg-mesh: #C6D0BA; --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
+  :root:not([data-theme="light"]) { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
 }
-:root[data-theme="dark"] { --sg-mesh: #C6D0BA; --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
+:root[data-theme="dark"] { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
 @media (prefers-reduced-motion: reduce) { :root { --sg-duration-fast: 0ms; --sg-duration-base: 0ms; } }
 
 /* The public site reads at 16 px (SIGNAL body-sm); the tool keeps its 15 px. */
@@ -209,10 +208,6 @@
   align-self: stretch; min-width: 0; min-height: 0; container-type: size;
   display: grid; place-items: center;
 }
-.signal .sg-hero-stage .sg-hero-art { width: min(100cqw, 100cqh - 24px); }
-@container (max-height: 140px) { .signal .sg-hero-stage .sg-hero-art { display: none; } }
-/* The drawing turns a little (hero motion): clip it to the section so it never widens the page. */
-.signal .sg-hero { overflow-x: clip; }
 .signal .sg-hero-copy { position: relative; z-index: 1; min-width: 0; }
 .signal .sg-availability { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--sg-fg-secondary); }
 .signal .sg-availability::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sg-success); flex-shrink: 0; }
@@ -223,64 +218,79 @@
 .signal .sg-hero h1 em { font-style: normal; color: var(--sg-accent-text); }
 .signal .sg-hero-intro { font-size: 17px; line-height: 1.7; color: var(--sg-fg-secondary); max-width: 400px; }
 .signal .sg-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: clamp(20px, 3.5svh, 32px); }
-.signal .sg-hero-art {
-  position: relative; aspect-ratio: 1; min-width: 0;
-  background-image: radial-gradient(var(--sg-border) .7px, transparent .7px); background-size: 22px 22px;
-  border: 1px solid var(--sg-border); border-radius: 50%;
+/* ---------- hero trace: one real chain from a case (src/site/signal/hero-trace.tsx) ----------
+   Records stand on a vertical line, each with its stage colour; a signal runs down the line towards the decision.
+   The stage is a size container: when it is short (phones, low windows) the chain folds into a row of codes and
+   only the decision keeps its title; when even that does not fit, the drawing gives way to the strip below. */
+.signal .sg-trace {
+  position: relative; width: min(100cqw, 480px); margin: 0; padding: 28px 24px 20px;
+  border: 1px solid var(--sg-border); border-radius: var(--sg-radius-lg);
+  background-color: var(--sg-bg); background-image: radial-gradient(var(--sg-border) .7px, transparent .7px); background-size: 22px 22px;
 }
-.signal .sg-hero-art::before, .signal .sg-hero-art::after {
-  content: "+"; position: absolute; top: 48%; font: 22px/1 var(--sg-font-mono); color: var(--sg-fg-secondary);
+.signal .sg-trace-label {
+  position: absolute; top: -9px; right: 20px; padding-inline: 8px; background: var(--sg-bg);
+  font: 12px/1.5 var(--sg-font-mono); letter-spacing: .04em; color: var(--sg-fg-secondary); white-space: nowrap;
 }
-.signal .sg-hero-art::before { left: -7px; }
-.signal .sg-hero-art::after { right: -7px; }
-/* The drawing: the mesh is one file used as a mask, so its colour follows the theme (--sg-mesh); the orange rings
-   are inline paths (src/site/signal/hero-art.tsx). */
-.signal .sg-art-figure { position: relative; width: 110%; margin-left: -5%; aspect-ratio: 700 / 650; transform-origin: 50% 47%; }
-.signal .sg-art-mesh {
-  position: absolute; inset: 0; background: var(--sg-mesh); opacity: .94;
-  -webkit-mask: url(/signal/signal-mesh.svg) center / 100% 100% no-repeat; mask: url(/signal/signal-mesh.svg) center / 100% 100% no-repeat;
+.signal .sg-trace-list { position: relative; display: grid; gap: 14px; margin: 0; padding: 0 0 0 22px; list-style: none; }
+/* The line and the signal on it, from the first dot to the last. */
+.signal .sg-trace-list::before, .signal .sg-trace-list::after {
+  content: ""; position: absolute; left: 4px; top: 22px; bottom: 30px; width: 1px; background: var(--sg-border);
 }
-.signal .sg-art-signal { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.signal .sg-ring { stroke: var(--sg-accent); stroke-width: 1.5; }
-.signal .sg-pulse { stroke: var(--sg-accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 34 966; opacity: 0; }
-.signal .sg-art-orbit { position: absolute; inset: -1px; border-radius: 50%; pointer-events: none; }
-.signal .sg-art-orbit::before {
-  content: ""; position: absolute; left: calc(50% - 4px); top: -4px; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--sg-accent); box-shadow: 0 0 0 4px var(--sg-bg);
+.signal .sg-trace-list::after {
+  width: 3px; left: 3px; border-radius: 2px; opacity: 0;
+  background: linear-gradient(transparent, var(--sg-accent) 50%, transparent) 0 -48px / 100% 48px no-repeat;
 }
+.signal .sg-trace-node {
+  position: relative; display: grid; gap: 4px; padding: 10px 14px;
+  background: var(--sg-surface); border: 1px solid var(--sg-border); border-radius: var(--sg-radius-md);
+}
+.signal .sg-trace-node::before {
+  content: ""; position: absolute; left: -23px; top: 16px; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--stage); box-shadow: 0 0 0 3px var(--sg-bg);
+}
+.signal .sg-trace-node[data-stage="decisions"] { border-color: var(--sg-accent-text); box-shadow: inset 2px 0 0 var(--sg-accent-text); }
+.signal .sg-trace-node[data-stage="decisions"]::before { background: var(--sg-accent); }
+.signal .sg-trace-meta {
+  display: flex; justify-content: space-between; gap: 12px;
+  font: 11px/1.5 var(--sg-font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--sg-fg-secondary);
+}
+.signal .sg-trace-title { font-size: 15px; line-height: 1.4; font-weight: 500; color: var(--sg-fg); text-wrap: pretty; }
+.signal .sg-trace-caption { display: grid; gap: 2px; margin-top: 18px; padding-left: 12px; border-left: 2px solid var(--sg-accent-text); font-size: 13px; }
+.signal .sg-trace-caption strong { font-size: 14px; font-weight: 500; }
+.signal .sg-trace-source { color: var(--sg-fg-secondary); }
+.signal .sg-trace-caption .sg-link { justify-self: start; margin-top: 6px; }
 
-/* ---------- hero motion: transform and stroke offset only, nothing that reflows the page ----------
-   The drawing turns a few degrees and back; the rings draw in one after another (research → structure → form), then
-   a signal runs along each at its own pace; a dot orbits the circle. Paused off screen ([data-paused]), none under
-   reduced motion. */
+/* Short stage: a row of codes (the screen goes by its stage name), the decision with its title under it. */
+@container (max-height: 470px) {
+  .signal .sg-trace { padding: 20px 16px 14px; }
+  .signal .sg-trace-list { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 4px; padding-left: 0; }
+  .signal .sg-trace-list::before, .signal .sg-trace-list::after, .signal .sg-trace-node::before { display: none; }
+  .signal .sg-trace-node:not([data-stage="decisions"]) { padding: 4px 8px; }
+  .signal .sg-trace-node:not([data-stage="decisions"]) .sg-trace-title { display: none; }
+  .signal .sg-trace-node:is([data-stage="insights"], [data-stage="opportunities"])::after { content: "→"; position: absolute; right: -11px; top: 50%; translate: 0 -50%; font: 11px/1 var(--sg-font-mono); color: var(--sg-fg-secondary); }
+  .signal .sg-trace-node:not([data-stage="decisions"]) .sg-trace-meta > :not(:last-child) { display: none; }
+  .signal .sg-trace-node:not([data-stage="decisions"]) { margin-right: 10px; }
+  .signal .sg-trace-node[data-stage="decisions"] { flex-basis: 100%; margin-top: 4px; }
+  .signal .sg-trace-caption { margin-top: 12px; }
+}
+@container (max-height: 250px) {
+  .signal .sg-trace-caption :is(strong, .sg-trace-source) { display: none; }
+  .signal .sg-trace-caption .sg-link { margin-top: 0; }
+}
+@container (max-height: 150px) { .signal .sg-hero-stage .sg-trace { display: none; } }
+
+/* Motion: the records come in one after another, then the signal runs down the line. None under reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-  .signal .sg-art-figure { animation: sg-drift 16s ease-in-out infinite alternate; }
-  .signal .sg-art-mesh { animation: sg-reveal 1.2s ease-out both; }
-  .signal .sg-ring { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: sg-draw 1.5s cubic-bezier(.65, 0, .35, 1) forwards; }
-  .signal .sg-ring:nth-child(1) { animation-delay: .2s; }
-  .signal .sg-ring:nth-child(2) { animation-delay: .5s; }
-  .signal .sg-ring:nth-child(3) { animation-delay: .8s; }
-  .signal .sg-pulse { animation: sg-on .4s 2.1s forwards, sg-run 9s 2.1s linear infinite; }
-  .signal .sg-pulse:nth-child(5) { animation-duration: .4s, 12s; animation-direction: normal, reverse; }
-  .signal .sg-pulse:nth-child(6) { animation-duration: .4s, 7s; }
-  .signal .sg-art-orbit { animation: sg-orbit 48s linear infinite; }
-  .signal .sg-hero-art[data-paused] :is(.sg-art-figure, .sg-art-mesh, .sg-ring, .sg-pulse, .sg-art-orbit) { animation-play-state: paused; }
+  .signal .sg-trace-node { animation: sg-rise .5s cubic-bezier(.2, .7, .3, 1) both; }
+  .signal .sg-trace-node:nth-child(2) { animation-delay: .15s; }
+  .signal .sg-trace-node:nth-child(3) { animation-delay: .3s; }
+  .signal .sg-trace-node:nth-child(4) { animation-delay: .45s; }
+  .signal .sg-trace-list::after { animation: sg-on .3s 1s forwards, sg-signal 3.2s 1s ease-in-out infinite; }
 }
-@keyframes sg-drift { from { transform: rotate(-2.5deg) translateY(5px); } to { transform: rotate(2.5deg) translateY(-5px); } }
-@keyframes sg-reveal { from { opacity: 0; transform: scale(.96); } }
-@keyframes sg-draw { to { stroke-dashoffset: 0; } }
+@keyframes sg-rise { from { opacity: 0; transform: translateY(8px); } }
 @keyframes sg-on { to { opacity: 1; } }
-@keyframes sg-run { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -1000; } }
-@keyframes sg-orbit { to { transform: rotate(1turn); } }
-.signal .sg-art-label { position: absolute; font: 12px/1.6 var(--sg-font-mono); letter-spacing: .04em; color: var(--sg-fg-secondary); white-space: nowrap; }
-.signal .sg-art-label--top { top: -20px; right: 22px; }
-.signal .sg-art-label--bottom { bottom: 0; left: 22px; }
-.signal .sg-art-caption {
-  position: absolute; bottom: 48px; right: -3px; display: grid; gap: 4px;
-  padding: 8px 12px; background: var(--sg-bg); border-left: 2px solid var(--sg-accent-text); font-size: 12px;
-}
-.signal .sg-art-caption strong { font-size: 14px; font-weight: 500; }
-.signal .sg-art-caption span { color: var(--sg-fg-secondary); }
+@keyframes sg-signal { to { background-position: 0 calc(100% + 48px); } }
+
 .signal .sg-hero-bottom {
   display: flex; justify-content: space-between; gap: 20px; padding-block: clamp(12px, 2.5svh, 20px);
   border-top: 1px solid var(--sg-border); color: var(--sg-fg-secondary);
@@ -291,20 +301,12 @@
 @media (max-width: 800px) {
   .signal .sg-hero h1 { font-size: clamp(48px, 7.4vw, 58px); }
   .signal .sg-hero-intro { font-size: 15px; }
-  .signal .sg-art-caption { bottom: 0; }
   .signal .sg-hero-bottom .sg-hero-coordinate { display: none; }
 }
 @media (max-width: 640px) {
   .signal .sg-hero { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 24px; }
-  .signal .sg-hero h1 { font-size: clamp(48px, 13.4vw, 76px); margin-block: 22px; }
+  .signal .sg-hero h1 { font-size: clamp(40px, 11vw, 64px); margin-block: 18px; }
   .signal .sg-hero-actions { margin-top: 26px; gap: 8px; }
-  .signal .sg-hero-stage .sg-hero-art { width: min(100cqw - 32px, 360px, 100cqh - 16px); }
-  /* A small circle keeps the drawing only: the labels and the caption would cover it. */
-  @container (max-height: 300px) { .signal .sg-hero-stage :is(.sg-art-label, .sg-art-caption) { display: none; } }
-  .signal .sg-art-label { font-size: 11px; }
-  .signal .sg-art-label--top { top: -8px; right: 0; }
-  .signal .sg-art-label--bottom { bottom: 8px; left: 0; }
-  .signal .sg-art-caption { bottom: 22px; right: -16px; }
 }
 
 /* Case covers on the site: the sticker tones, retuned to SIGNAL's warm, muted ground (sage, sand, clay, stone).
