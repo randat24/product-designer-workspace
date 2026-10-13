@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ATELIER · Nocturne / 01 — прототип</title>
+<meta name="description" content="Інтерактивна вітрина білизни на скляному манекені: чотири ракурси, два відтінки, розміри й деталі мережива. Концепт для портфоліо.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0E0F0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/prototypes/atelier/cherry-front.webp">
+<style>
+/* ATELIER · Nocturne / 01. A dark studio: the glass figure is the light source, the interface stays matte and sharp.
+   Lime is the one accent (current choice, call to action); everything else is ink, warm grey and thin rules. */
+:root {
+  --bg: #0E0F0D;
+  --surface: #161714;
+  --ink: #F2EEE6;
+  --ink-2: #A9A399;
+  --ink-3: #6F6A62;
+  --line: #2C2D29;
+  --line-strong: #474842;
+  --accent: #D9ECA2;
+  --accent-ink: #12130F;
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
+  --sans: "Manrope", system-ui, sans-serif;
+  --gap: 8px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.label { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-2); }
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 3vw, 40px); }
+
+/* ---------- header ---------- */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 28px 24px; border-bottom: 1px solid var(--line); }
+.logo { text-decoration: none; display: grid; gap: 6px; }
+.logo b { font: 600 clamp(30px, 3.2vw, 44px)/1 var(--serif); letter-spacing: .14em; }
+.logo small { font-size: 11px; letter-spacing: .34em; color: var(--ink-2); }
+.nav { display: flex; gap: clamp(20px, 4vw, 56px); font-size: 15px; }
+.nav a { text-decoration: none; padding: 6px 0; }
+.nav a[aria-current] { color: var(--accent); }
+.nav a:hover { color: var(--accent); }
+.tools { display: flex; align-items: center; gap: 14px; }
+.lang { display: flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; font-size: 12px; letter-spacing: .1em; }
+.lang button { padding: 8px 12px; min-height: 36px; color: var(--ink-2); }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.bag { display: flex; align-items: center; gap: 12px; font-size: 15px; }
+.bag span[aria-hidden] { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--line-strong); border-radius: 50%; font-variant-numeric: tabular-nums; transition: border-color .3s, color .3s; }
+.bag.bump span[aria-hidden] { border-color: var(--accent); color: var(--accent); }
+
+.strip { display: flex; justify-content: space-between; gap: 16px; padding-block: 40px 8px; }
+.strip .label:first-child::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 18px; border-radius: 50%; background: var(--accent); vertical-align: 2px; }
+
+/* ---------- hero: intro · viewer · configurator ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 25fr) minmax(0, 40fr) minmax(0, 30fr); gap: clamp(24px, 3vw, 56px); align-items: start; padding-block: 24px 64px; }
+.intro { padding-top: 96px; display: flex; flex-direction: column; gap: 40px; }
+.intro h1 { margin: 0; font-weight: 500; line-height: .92; }
+.intro h1 .a { display: block; font: 500 clamp(44px, 4.6vw, 72px)/.95 var(--sans); letter-spacing: -.055em; text-transform: uppercase; }
+.intro h1 .b { display: block; margin-top: 8px; font: italic 600 clamp(64px, 6.6vw, 104px)/.9 var(--serif); color: var(--accent); letter-spacing: -.02em; }
+.intro .lead { font-size: clamp(22px, 1.9vw, 28px); line-height: 1.35; margin: 0; letter-spacing: -.01em; }
+.intro .quiet { color: var(--ink-2); font-size: 18px; line-height: 1.75; margin: 0; }
+.explore { display: inline-flex; align-items: center; gap: 22px; font-size: 17px; align-self: start; }
+.explore span[aria-hidden] { display: grid; place-items: center; width: 76px; height: 76px; border: 1px solid var(--line-strong); border-radius: 50%; font-size: 28px; color: var(--accent); transition: border-color .3s, transform .4s var(--ease); }
+.explore:hover span[aria-hidden] { border-color: var(--accent); transform: rotate(45deg); }
+.count { display: flex; align-items: center; gap: 28px; }
+.count b { font: 500 clamp(36px, 3.2vw, 46px)/1 var(--serif); letter-spacing: .02em; }
+.count span { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+
+/* viewer */
+.viewer { position: relative; display: flex; flex-direction: column; }
+.stage {
+  position: relative; aspect-ratio: 482 / 790; margin: 0 auto; overflow: hidden;
+  width: min(100%, 500px, calc((100svh - 300px) * 482 / 790)); min-width: min(100%, 300px);
+  touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; perspective: 1400px;
+}
+.stage:active { cursor: grabbing; }
+.oval { /* the studio arch behind the figure: drawn under the renders, it shows only where they are black */
+  position: absolute; inset: 6% 2% -2%; border: 1px solid var(--line-strong); border-radius: 50% 50% 0 0 / 34% 34% 0 0;
+}
+.glow { position: absolute; inset: 10% 8% 0; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 236 214 / 22%), transparent 72%); opacity: 0; transition: opacity .6s; pointer-events: none; }
+.light-on .glow { opacity: 1; }
+.figure { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+/* The zoom layer carries the page colour: the renders blend into it (lighten), so their black ground disappears
+   even inside the 3D-transformed figure, which isolates blending from the page behind it. */
+.zoom { position: absolute; inset: 0; background: var(--bg); transition: transform .9s var(--ease); transform-origin: 50% 40%; }
+.figure img {
+  position: absolute; left: 0; top: 0; width: 100%; height: auto; mix-blend-mode: lighten; /* the renders' black ground becomes the page */
+  opacity: 0; transition: opacity .45s ease, filter .6s; pointer-events: none;
+}
+.figure img.on { opacity: 1; }
+.light-on .figure img { filter: brightness(1.08) contrast(1.04); }
+.stage-meta { position: absolute; inset: 0; pointer-events: none; font-size: 13px; letter-spacing: .14em; }
+.stage-meta .num { position: absolute; left: 6%; top: 3%; font-variant-numeric: tabular-nums; }
+.stage-meta .vert { position: absolute; left: 0; top: 50%; transform: translate(-30%, -50%) rotate(90deg); color: var(--ink-2); font-size: 11px; letter-spacing: .32em; white-space: nowrap; }
+.stage-meta .vname { position: absolute; left: 6%; bottom: 7%; text-transform: uppercase; letter-spacing: .24em; text-shadow: 0 1px 12px rgb(0 0 0 / 90%); }
+.light { position: absolute; right: 4%; top: 2.4%; display: flex; align-items: center; gap: 10px; font-size: 15px; min-height: 44px; padding: 0 6px; }
+.light i { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--ink-2); display: grid; place-items: center; }
+.light i::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ink-2); transition: background .3s; }
+.light[aria-pressed="true"] i::after { background: var(--accent); }
+.hot {
+  position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; display: grid; place-items: center;
+  background: rgb(20 21 18 / 72%); border: 1px solid var(--accent); color: var(--accent); font-size: 24px; line-height: 1;
+  transition: opacity .35s, transform .35s var(--ease);
+}
+.hot::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 1px solid var(--accent); opacity: .35; animation: ping 2.6s ease-out infinite; }
+.hot:hover { transform: scale(1.08); }
+.hot[hidden] { display: grid; opacity: 0; pointer-events: none; transform: scale(.6); }
+@keyframes ping { 0% { transform: scale(.85); opacity: .5; } 70%, 100% { transform: scale(1.45); opacity: 0; } }
+.ctl { position: absolute; right: 4%; bottom: 5%; display: flex; gap: 14px; }
+.ctl button { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-strong); background: rgb(14 15 13 / 60%); transition: border-color .3s, background .3s; }
+.ctl button:hover { border-color: var(--accent); }
+.ctl .play { background: #3A3B35; border-color: #3A3B35; }
+.ctl .play[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctl svg { width: 24px; height: 24px; }
+.note { position: absolute; left: 50%; bottom: 18%; transform: translateX(-50%); width: min(82%, 300px); padding: 14px 16px; background: rgb(14 15 13 / 88%); border: 1px solid var(--line-strong); font-size: 14px; line-height: 1.5; text-align: left; opacity: 0; transition: opacity .35s; pointer-events: none; }
+.note.on { opacity: 1; }
+.note b { display: block; font-weight: 600; margin-bottom: 4px; color: var(--accent); }
+
+.views { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); margin-top: 0; }
+.views button { padding: 20px 0 18px; text-align: left; font-size: 15px; color: var(--ink-2); border-bottom: 2px solid transparent; min-height: 56px; }
+.views button span { font-variant-numeric: tabular-nums; margin-right: 10px; color: var(--ink-3); }
+.views button[aria-pressed="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.views button[aria-pressed="true"] span { color: var(--accent); }
+.focus { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 28px; }
+.focus button { padding: 14px 18px; border-radius: 999px; border: 1px solid transparent; font-size: 15px; font-weight: 500; min-height: 48px; }
+.focus button[aria-pressed="true"] { border-color: var(--line-strong); color: var(--accent); background: #191A16; }
+.hint { margin: 24px 0 0; text-align: center; font-size: 14px; color: var(--ink-2); }
+
+/* configurator */
+.config { padding-top: 96px; display: flex; flex-direction: column; }
+.config .edit { display: flex; justify-content: space-between; align-items: center; }
+.config .edit svg { width: 40px; height: 40px; color: var(--accent); }
+.config h2 { margin: 48px 0 0; font: 500 clamp(40px, 3.6vw, 56px)/1 var(--sans); letter-spacing: -.04em; }
+.config h2 em { font: italic 500 .9em var(--serif); color: var(--ink-2); letter-spacing: 0; margin-left: .2em; }
+.config .desc { margin: 28px 0 0; color: var(--ink-2); font-size: 19px; line-height: 1.7; }
+.price { display: flex; align-items: baseline; gap: 22px; margin-top: 36px; padding-bottom: 36px; border-bottom: 1px solid var(--line); }
+.price b { font: 500 clamp(40px, 3.4vw, 52px)/1 var(--sans); letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.group { margin-top: 36px; }
+.group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 18px; }
+.group-head .val { color: var(--accent); font-size: 17px; }
+.group-head button { font-size: 14px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--line-strong); }
+.group-head button:hover { color: var(--ink); }
+.swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.swatch { display: flex; align-items: center; gap: 16px; min-height: 78px; padding: 0 18px; border: 1px solid var(--line-strong); text-align: left; font-size: 18px; transition: border-color .25s; }
+.swatch i { width: 30px; height: 30px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 14%); }
+.swatch .tick { margin-left: auto; color: var(--accent); opacity: 0; }
+.swatch[aria-pressed="true"] { border-color: var(--accent); }
+.swatch[aria-pressed="true"] .tick { opacity: 1; }
+.swatch:hover { border-color: var(--ink-2); }
+.sizes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.sizes button { min-height: 68px; border: 1px solid var(--line-strong); font-size: 19px; font-variant-numeric: tabular-nums; transition: border-color .25s, background .25s, color .25s; }
+.sizes button:hover { border-color: var(--ink-2); }
+.sizes button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.group.need .sizes button { border-color: #8E6B4B; }
+.buy { margin-top: 44px; display: flex; align-items: center; justify-content: space-between; min-height: 100px; padding: 0 36px; background: var(--accent); color: var(--accent-ink); font-size: 24px; letter-spacing: -.01em; transition: filter .25s; }
+.buy:hover { filter: brightness(1.05); }
+.buy svg { width: 36px; height: 36px; transition: transform .4s var(--ease); }
+.buy:hover svg { transform: translate(4px, -4px); }
+.buy-note { margin: 18px 0 0; color: var(--ink-2); font-size: 15px; min-height: 1.5em; }
+.buy-note.warn { color: #E8C39B; }
+.concept { display: flex; gap: 22px; margin-top: 44px; padding-top: 36px; border-top: 1px solid var(--line); }
+.concept svg { flex: none; width: 36px; height: 36px; color: var(--accent); }
+.concept p { margin: 0; font-size: 17px; }
+.concept small { display: block; color: var(--ink-2); font-size: 15px; margin-top: 6px; }
+.concept a { color: var(--ink-2); text-underline-offset: 4px; }
+
+/* manifesto */
+.manifest { border-top: 1px solid var(--line); padding-block: clamp(64px, 9vw, 128px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(32px, 6vw, 96px); scroll-margin-top: 24px; }
+.manifest h2 { margin: 24px 0 0; font: italic 500 clamp(44px, 5vw, 80px)/1 var(--serif); }
+.manifest .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; align-self: end; }
+.manifest .cols div { border-top: 1px solid var(--line-strong); padding-top: 20px; }
+.manifest .cols b { display: block; font: 500 34px/1 var(--serif); color: var(--accent); margin-bottom: 14px; }
+.manifest .cols p { margin: 0; color: var(--ink-2); font-size: 16px; line-height: 1.65; }
+footer { border-top: 1px solid var(--line); padding-block: 28px 40px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--ink-3); font-size: 13px; letter-spacing: .08em; }
+
+/* size guide */
+dialog { border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); padding: 32px; max-width: min(520px, calc(100% - 32px)); }
+dialog::backdrop { background: rgb(0 0 0 / 70%); }
+dialog h3 { margin: 0 0 6px; font: 500 30px/1.1 var(--serif); }
+dialog p { margin: 0 0 20px; color: var(--ink-2); font-size: 14px; }
+dialog table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+dialog th, dialog td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+dialog th { color: var(--ink-2); font-weight: 500; font-size: 13px; letter-spacing: .08em; }
+dialog .close { margin-top: 24px; min-height: 48px; padding: 0 22px; border: 1px solid var(--line-strong); }
+
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); padding: 16px 22px; background: var(--ink); color: var(--bg); font-size: 15px; opacity: 0; transition: opacity .3s, transform .3s var(--ease); pointer-events: none; z-index: 20; max-width: calc(100% - 32px); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 1180px) {
+  .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .intro { grid-column: 1 / -1; padding-top: 24px; flex-direction: row; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 24px 48px; }
+  .intro .count, .intro .quiet { display: none; }
+  .config { padding-top: 24px; }
+}
+@media (max-width: 760px) {
+  body { font-size: 15px; }
+  .top { padding-block: 16px; }
+  .nav, .bag > span:first-child { display: none; }
+  .logo small { letter-spacing: .26em; font-size: 10px; }
+  .bag span[aria-hidden] { width: 44px; height: 44px; }
+  .strip { padding-block: 20px 0; }
+  .strip .label:last-child { display: none; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-bottom: 48px; }
+  .intro { display: block; }
+  .intro h1 .a { font-size: 44px; }
+  .intro h1 .b { font-size: 64px; }
+  .intro .label, .intro .lead, .explore { display: none; }
+  .ctl button { width: 52px; height: 52px; }
+  .views button { font-size: 13px; }
+  .views button span { display: none; }
+  .focus { justify-content: flex-start; }
+  .focus button { padding: 10px 14px; font-size: 14px; }
+  .config { padding-top: 0; }
+  .config h2 { margin-top: 24px; }
+  .sizes button { min-height: 56px; font-size: 16px; }
+  /* Sticky only inside the configurator: it follows the sizes and the price, never covers the figure. */
+  .buy { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); min-height: 64px; padding: 0 22px; font-size: 18px; z-index: 10; box-shadow: 0 12px 32px rgb(0 0 0 / 50%); }
+  .buy svg { width: 26px; height: 26px; }
+  .manifest, .manifest .cols { grid-template-columns: minmax(0, 1fr); }
+  .toast { bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .config .sizes { scroll-margin-bottom: 96px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#top" aria-label="ATELIER — Intimate objects"><b>ATELIER</b><small>INTIMATE OBJECTS</small></a>
+    <nav class="nav" aria-label="Main" data-i18n-attr="aria-label:nav">
+      <a href="#top" aria-current="page" data-i18n="collection">Колекція 01</a>
+      <a href="#manifest" data-i18n="manifest">Маніфест ↗</a>
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" aria-label="Мова / Language">
+        <button type="button" data-lang="uk" aria-pressed="true">UA</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <p class="bag" id="bag"><span data-i18n="bag">Ваш вибір</span><span aria-hidden="true" id="bag-n">0</span><span class="sr-only" id="bag-sr">0</span></p>
+    </div>
+  </header>
+
+  <div class="strip" id="top">
+    <p class="label" data-i18n="strip">Нова форма чуттєвості</p>
+    <p class="label">Study 002 — Nocturne</p>
+  </div>
+
+  <main class="hero">
+    <section class="intro" aria-labelledby="h1">
+      <p class="label" data-i18n="intro-eyebrow">Скло / мереживо / ти</p>
+      <h1 id="h1"><span class="a" data-i18n="h1a">Тендітна</span><span class="b" data-i18n="h1b">сила.</span></h1>
+      <p class="lead" data-i18n="lead">Ніжність не питає дозволу.</p>
+      <p class="quiet" data-i18n-html="quiet">Прозора форма.<br>Виразний характер.<br>Решта — зайве.</p>
+      <button type="button" class="explore" id="explore"><span aria-hidden="true">↗</span><span data-i18n="explore">Роздивитися деталі</span></button>
+      <div class="count"><b>01—04</b><span data-i18n-html="count">Чотири погляди.<br>Один характер.</span></div>
+    </section>
+
+    <section class="viewer" aria-labelledby="viewer-title">
+      <h2 class="sr-only" id="viewer-title" data-i18n="viewer-title">Вітрина: манекен у комплекті</h2>
+      <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="вітрина" data-i18n-attr="aria-roledescription:roledesc"
+        aria-describedby="hint">
+        <div class="figure" id="figure"><div class="zoom" id="zoom"><div class="oval" aria-hidden="true"></div><div class="glow" aria-hidden="true"></div></div></div>
+        <div class="stage-meta" aria-hidden="true">
+          <span class="num" id="num">01 / 04</span>
+          <span class="vert" id="vert">PEARL FORM · CHERRY SOUL</span>
+          <span class="vname" id="vname">Спереду</span>
+        </div>
+        <button type="button" class="light" id="light" aria-pressed="false"><i aria-hidden="true"></i><span data-i18n="light">Світло</span></button>
+        <button type="button" class="hot" id="hot-bra" style="left:66%;top:40%" data-focus="bra" data-i18n-attr="aria-label:hot-bra" aria-label="Бюстгальтер">+</button>
+        <button type="button" class="hot" id="hot-briefs" style="left:60%;top:64%" data-focus="briefs" data-i18n-attr="aria-label:hot-briefs" aria-label="Трусики">+</button>
+        <p class="note" id="note" aria-live="polite"></p>
+        <div class="ctl">
+          <button type="button" class="play" id="play" aria-pressed="false" data-i18n-attr="aria-label:play" aria-label="Автоповорот">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path id="play-icon" d="M8 5.5v13l10.5-6.5z"/></svg>
+          </button>
+          <button type="button" id="reset" data-i18n-attr="aria-label:reset" aria-label="Скинути ракурс">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="views" role="group" data-i18n-attr="aria-label:views" aria-label="Ракурс">
+        <button type="button" data-view="0" aria-pressed="true"><span>01</span><b data-i18n="v0" style="font-weight:inherit">Спереду</b></button>
+        <button type="button" data-view="1" aria-pressed="false"><span>02</span><b data-i18n="v1" style="font-weight:inherit">Профіль</b></button>
+        <button type="button" data-view="2" aria-pressed="false"><span>03</span><b data-i18n="v2" style="font-weight:inherit">Ззаду</b></button>
+        <button type="button" data-view="3" aria-pressed="false"><span>04</span><b data-i18n="v3" style="font-weight:inherit">Поворот</b></button>
+      </div>
+      <div class="focus" role="group" data-i18n-attr="aria-label:focus" aria-label="Деталь">
+        <button type="button" data-focus="full" aria-pressed="true" data-i18n="f-full">Весь образ</button>
+        <button type="button" data-focus="bra" aria-pressed="false" data-i18n="f-bra">Бюстгальтер</button>
+        <button type="button" data-focus="briefs" aria-pressed="false" data-i18n="f-briefs">Трусики</button>
+        <button type="button" data-focus="lace" aria-pressed="false" data-i18n="f-lace">Мереживо ↗</button>
+      </div>
+      <p class="hint" id="hint" data-i18n="hint">← Потягніть убік, щоб змінити ракурс →</p>
+      <p class="sr-only" id="live" aria-live="polite"></p>
+    </section>
+
+    <section class="config" aria-labelledby="product">
+      <div class="edit"><p class="label">The Nocturne Edit</p>
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 4v32M4 20h32M8.7 8.7l22.6 22.6M31.3 8.7 8.7 31.3"/></svg></div>
+      <h2 id="product">NOCTURNE<em>/ 01</em></h2>
+      <p class="desc" data-i18n-html="desc">Мереживо з характером.<br>Бюстгальтер і трусики з високою посадкою.</p>
+      <p class="price"><b>3 900 ₴</b><span class="label" data-i18n="demo-price">Демо-ціна</span></p>
+
+      <div class="group">
+        <div class="group-head"><p class="label" id="g-color" data-i18n="g-color">01 / Відтінок</p><span class="val" id="color-name">Вишня</span></div>
+        <div class="swatches" role="group" aria-labelledby="g-color">
+          <button type="button" class="swatch" data-color="cherry" aria-pressed="true"><i style="background:radial-gradient(circle at 35% 30%,#B33A5A,#6E1027)" aria-hidden="true"></i><span data-i18n="c-cherry">Вишня</span><span class="tick" aria-hidden="true">✓</span></button>
+          <button type="button" class="swatch" data-color="noir" aria-pressed="false"><i style="background:radial-gradient(circle at 35% 30%,#3A3A3A,#050505)" aria-hidden="true"></i><span data-i18n="c-noir">Ніч</span><span class="tick" aria-hidden="true">✓</span></button>
+        </div>
+      </div>
+
+      <div class="group" id="g-bra-wrap">
+        <div class="group-head"><p class="label" id="g-bra" data-i18n="g-bra">02 / Бюстгальтер</p><button type="button" id="guide" data-i18n="guide">Гід по розмірах ↗</button></div>
+        <div class="sizes" role="group" aria-labelledby="g-bra" data-size="bra">
+          <button type="button" aria-pressed="false">70B</button><button type="button" aria-pressed="false">75B</button><button type="button" aria-pressed="false">75C</button><button type="button" aria-pressed="false">80B</button><button type="button" aria-pressed="false">80C</button>
+        </div>
+      </div>
+      <div class="group" id="g-briefs-wrap">
+        <div class="group-head"><p class="label" id="g-briefs" data-i18n="g-briefs">03 / Трусики</p></div>
+        <div class="sizes" role="group" aria-labelledby="g-briefs" data-size="briefs">
+          <button type="button" aria-pressed="false">XS</button><button type="button" aria-pressed="false">S</button><button type="button" aria-pressed="false">M</button><button type="button" aria-pressed="false">L</button><button type="button" aria-pressed="false">XL</button>
+        </div>
+      </div>
+
+      <button type="button" class="buy" id="buy"><span data-i18n="buy">До мого вибору</span>
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 27 27 9M12 9h15v15"/></svg></button>
+      <p class="buy-note" id="buy-note" aria-live="polite" data-i18n="buy-note">Оберіть два розміри — зберіть свій комплект.</p>
+
+      <div class="concept">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 4v32M4 20h32M8.7 8.7l22.6 22.6M31.3 8.7 8.7 31.3"/></svg>
+        <p><span data-i18n="concept">Концепт, який можна дослідити.</span>
+          <small><span data-i18n="concept-sub">Демо-колекція. Без оформлення й оплати.</span> <a href="/uk/cases" id="back" data-i18n="back">Портфоліо Геннадія Федорова</a></small></p>
+      </div>
+    </section>
+  </main>
+
+  <section class="manifest" id="manifest" aria-labelledby="manifest-h">
+    <div><p class="label" data-i18n="m-eyebrow">Маніфест</p><h2 id="manifest-h" data-i18n="m-title">Скло тримає форму. Мереживо — характер.</h2></div>
+    <div class="cols">
+      <div><b>01</b><p data-i18n="m1">Манекен зі скла не відволікає: на ньому видно лише крій, посадку й візерунок.</p></div>
+      <div><b>02</b><p data-i18n="m2">Чотири ракурси замість десятка фото: комплект роздивляються, не залишаючи екрана.</p></div>
+      <div><b>03</b><p data-i18n="m3">Вибір відтінку й двох розмірів поруч із фігурою: рішення ухвалюють там, де дивляться.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>ATELIER · Study 002 — Nocturne</span>
+    <span data-i18n="footer">Концепт для портфоліо. Зображення згенеровані, ціни демонстраційні.</span>
+  </footer>
+</div>
+
+<dialog id="guide-dialog" aria-labelledby="guide-h">
+  <h3 id="guide-h" data-i18n="guide-h">Гід по розмірах</h3>
+  <p data-i18n="guide-p">Демо-таблиця для прототипу: обхват під грудьми й по грудях, см.</p>
+  <table>
+    <thead><tr><th data-i18n="t-size">Розмір</th><th data-i18n="t-under">Під грудьми</th><th data-i18n="t-bust">По грудях</th></tr></thead>
+    <tbody>
+      <tr><td>70B</td><td>68–72</td><td>84–86</td></tr><tr><td>75B</td><td>73–77</td><td>89–91</td></tr>
+      <tr><td>75C</td><td>73–77</td><td>91–93</td></tr><tr><td>80B</td><td>78–82</td><td>94–96</td></tr><tr><td>80C</td><td>78–82</td><td>96–98</td></tr>
+    </tbody>
+  </table>
+  <form method="dialog"><button class="close" data-i18n="close">Закрити</button></form>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const VIEWS = ["front", "side", "back", "turn"];
+  const COLORS = ["cherry", "noir"];
+  // Where to aim when a part is in focus, per view: transform-origin in % of the figure and the zoom.
+  const FOCUS = {
+    full: { o: [[50, 50], [50, 50], [50, 50], [50, 50]], s: 1 },
+    bra: { o: [[51, 39], [53, 38], [52, 40], [46, 39]], s: 2 },
+    briefs: { o: [[56, 64], [44, 63], [52, 66], [62, 63]], s: 1.85 },
+    lace: { o: [[42, 40], [62, 39], [42, 62], [34, 39]], s: 3.4 },
+  };
+  const T = {
+    uk: {
+      nav: "Головне", collection: "Колекція 01", manifest: "Маніфест ↗", bag: "Ваш вибір", strip: "Нова форма чуттєвості",
+      "intro-eyebrow": "Скло / мереживо / ти", h1a: "Тендітна", h1b: "сила.", lead: "Ніжність не питає дозволу.",
+      quiet: "Прозора форма.<br>Виразний характер.<br>Решта — зайве.", explore: "Роздивитися деталі", count: "Чотири погляди.<br>Один характер.",
+      "viewer-title": "Вітрина: манекен у комплекті", roledesc: "вітрина", light: "Світло", "hot-bra": "Бюстгальтер: показати ближче", "hot-briefs": "Трусики: показати ближче",
+      play: "Автоповорот", reset: "Скинути ракурс", views: "Ракурс", focus: "Деталь", v0: "Спереду", v1: "Профіль", v2: "Ззаду", v3: "Поворот",
+      "f-full": "Весь образ", "f-bra": "Бюстгальтер", "f-briefs": "Трусики", "f-lace": "Мереживо ↗", hint: "← Потягніть убік, щоб змінити ракурс →",
+      desc: "Мереживо з характером.<br>Бюстгальтер і трусики з високою посадкою.", "demo-price": "Демо-ціна", "g-color": "01 / Відтінок",
+      "c-cherry": "Вишня", "c-noir": "Ніч", "g-bra": "02 / Бюстгальтер", guide: "Гід по розмірах ↗", "g-briefs": "03 / Трусики",
+      buy: "До мого вибору", "buy-note": "Оберіть два розміри — зберіть свій комплект.", "need-both": "Оберіть розмір бюстгальтера й трусиків.",
+      added: (c, b, p) => `Додано до вибору: Nocturne / 01, ${c}, ${b} · ${p}`, concept: "Концепт, який можна дослідити.",
+      "concept-sub": "Демо-колекція. Без оформлення й оплати.", back: "Портфоліо Геннадія Федорова", "m-eyebrow": "Маніфест",
+      "m-title": "Скло тримає форму. Мереживо — характер.",
+      m1: "Манекен зі скла не відволікає: на ньому видно лише крій, посадку й візерунок.",
+      m2: "Чотири ракурси замість десятка фото: комплект роздивляються, не залишаючи екрана.",
+      m3: "Вибір відтінку й двох розмірів поруч із фігурою: рішення ухвалюють там, де дивляться.",
+      footer: "Концепт для портфоліо. Зображення згенеровані, ціни демонстраційні.", "guide-h": "Гід по розмірах",
+      "guide-p": "Демо-таблиця для прототипу: обхват під грудьми й по грудях, см.", "t-size": "Розмір", "t-under": "Під грудьми", "t-bust": "По грудях", close: "Закрити",
+      notes: { bra: ["Бюстгальтер", "Чашки з квіткового мережива на кісточках, тонкі атласні бретелі."], briefs: ["Трусики", "Висока посадка, мереживні боки й атласна вставка."], lace: ["Мереживо", "Квітковий візерунок крупним планом: видно малюнок і щільність."] },
+      view: (n, name) => `Ракурс ${n} з 4: ${name}`, cart: (n) => `У виборі: ${n}`, soul: { cherry: "CHERRY SOUL", noir: "NOIR SOUL" },
+      title: "ATELIER · Nocturne / 01 — прототип", backHref: "/uk/cases",
+    },
+    en: {
+      nav: "Main", collection: "Collection 01", manifest: "Manifesto ↗", bag: "Your edit", strip: "A new form of sensuality",
+      "intro-eyebrow": "Glass / lace / you", h1a: "Fragile", h1b: "strength.", lead: "Tenderness asks no permission.",
+      quiet: "A transparent form.<br>A clear character.<br>Nothing else.", explore: "Explore the details", count: "Four views.<br>One character.",
+      "viewer-title": "Showcase: the mannequin in the set", roledesc: "showcase", light: "Light", "hot-bra": "Bra: show closer", "hot-briefs": "Briefs: show closer",
+      play: "Auto-turn", reset: "Reset view", views: "View", focus: "Detail", v0: "Front", v1: "Profile", v2: "Back", v3: "Turn",
+      "f-full": "Full look", "f-bra": "Bra", "f-briefs": "Briefs", "f-lace": "Lace ↗", hint: "← Drag sideways to change the view →",
+      desc: "Lace with character.<br>An underwire bra and high-waist briefs.", "demo-price": "Demo price", "g-color": "01 / Shade",
+      "c-cherry": "Cherry", "c-noir": "Night", "g-bra": "02 / Bra", guide: "Size guide ↗", "g-briefs": "03 / Briefs",
+      buy: "Add to my edit", "buy-note": "Pick two sizes to build your set.", "need-both": "Pick a bra size and a briefs size.",
+      added: (c, b, p) => `Added to your edit: Nocturne / 01, ${c}, ${b} · ${p}`, concept: "A concept you can explore.",
+      "concept-sub": "Demo collection. No checkout or payment.", back: "Hennadii Fedorov's portfolio", "m-eyebrow": "Manifesto",
+      "m-title": "Glass holds the form. Lace holds the character.",
+      m1: "A glass mannequin does not distract: all you see is the cut, the fit and the pattern.",
+      m2: "Four views instead of a dozen photos: the set is studied without leaving the screen.",
+      m3: "Shade and both sizes sit next to the figure: the choice is made where people look.",
+      footer: "A portfolio concept. Images are generated, prices are for the demo.", "guide-h": "Size guide",
+      "guide-p": "A demo table for the prototype: underbust and bust, cm.", "t-size": "Size", "t-under": "Underbust", "t-bust": "Bust", close: "Close",
+      notes: { bra: ["Bra", "Underwire cups in floral lace, fine satin straps."], briefs: ["Briefs", "High waist, lace sides and a satin panel."], lace: ["Lace", "The floral pattern up close: the motif and the density."] },
+      view: (n, name) => `View ${n} of 4: ${name}`, cart: (n) => `In your edit: ${n}`, soul: { cherry: "CHERRY SOUL", noir: "NOIR SOUL" },
+      title: "ATELIER · Nocturne / 01 — prototype", backHref: "/en/cases",
+    },
+  };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const state = { lang: "uk", color: "cherry", view: 0, focus: "full", auto: false, light: false, bra: null, briefs: null, bag: 0 };
+  const stage = $("#stage"), figure = $("#figure"), zoom = $("#zoom");
+  const t = (k) => T[state.lang][k];
+
+  // All eight renders are stacked once; switching colour or view only moves the "on" class.
+  const imgs = {};
+  for (const c of COLORS) VIEWS.forEach((v, i) => {
+    const img = new Image();
+    img.src = `/prototypes/atelier/${c}-${v}.webp`; img.alt = ""; img.decoding = "async"; img.draggable = false;
+    img.width = 482; img.height = 817;
+    zoom.append(img); imgs[`${c}-${i}`] = img;
+  });
+
+  function render() {
+    for (const [k, img] of Object.entries(imgs)) img.classList.toggle("on", k === `${state.color}-${state.view}`);
+    const f = FOCUS[state.focus];
+    const [ox, oy] = f.o[state.view];
+    zoom.style.transformOrigin = `${ox}% ${oy}%`;
+    zoom.style.transform = `scale(${f.s})`;
+    $("#num").textContent = `0${state.view + 1} / 04`;
+    $("#vname").textContent = t(`v${state.view}`);
+    $("#vert").textContent = `PEARL FORM · ${t("soul")[state.color]}`;
+    $("#color-name").textContent = t(`c-${state.color}`);
+    $$(".views button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.view === state.view)));
+    $$(".focus button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.focus === state.focus)));
+    $$(".swatch").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.color === state.color)));
+    // Hotspots belong to the front view of the full look; elsewhere they would point at nothing.
+    const showHot = state.view === 0 && state.focus === "full";
+    $("#hot-bra").hidden = !showHot; $("#hot-briefs").hidden = !showHot;
+    const note = $("#note"), n = t("notes")[state.focus];
+    note.classList.toggle("on", !!n);
+    note.innerHTML = n ? `<b>${n[0]}</b>${n[1]}` : "";
+    stage.classList.toggle("light-on", state.light);
+    $("#light").setAttribute("aria-pressed", String(state.light));
+    $("#play").setAttribute("aria-pressed", String(state.auto));
+    $("#play-icon").setAttribute("d", state.auto ? "M8 5.5v13M16 5.5v13" : "M8 5.5v13l10.5-6.5z");
+  }
+  const announce = () => { $("#live").textContent = t("view")(state.view + 1, t(`v${state.view}`)); };
+  function setView(i, opts = {}) {
+    state.view = (i + 4) % 4;
+    if (!opts.keepAuto) stopAuto();
+    render(); announce();
+  }
+
+  // ---- auto-turn: a slow pass through the four views; any manual move stops it ----
+  let autoTimer = null;
+  function startAuto() { if (autoTimer) return; state.auto = true; autoTimer = setInterval(() => setView(state.view + 1, { keepAuto: true }), 1700); render(); }
+  function stopAuto() { clearInterval(autoTimer); autoTimer = null; state.auto = false; }
+  $("#play").addEventListener("click", () => { state.auto ? stopAuto() : (state.focus = "full", startAuto()); render(); });
+  $("#reset").addEventListener("click", () => { stopAuto(); state.focus = "full"; tilt.tx = tilt.ty = 0; setView(0); });
+  // Not on screen, not running.
+  new IntersectionObserver(([e]) => { if (!e.isIntersecting && state.auto) { stopAuto(); render(); } }).observe(stage);
+
+  // ---- drag / swipe: one view per ~70 px; vertical swipes keep scrolling the page (touch-action: pan-y) ----
+  let drag = null;
+  stage.addEventListener("pointerdown", (e) => {
+    if (e.target.closest("button")) return;
+    drag = { x: e.clientX, moved: false }; stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 70) { drag.moved = true; setView(state.view + (dx < 0 ? 1 : -1)); drag.x = e.clientX; }
+  });
+  const endDrag = () => { drag = null; };
+  stage.addEventListener("pointerup", endDrag); stage.addEventListener("pointercancel", endDrag);
+  stage.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { setView(state.view + 1); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { setView(state.view - 1); e.preventDefault(); }
+  });
+
+  // ---- the figure leans a little toward the cursor (±8° turn, ±2° tilt), eased, only inside the stage ----
+  const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
+  if (fine && !reduce) {
+    stage.addEventListener("pointermove", (e) => {
+      if (drag || e.target.closest("button")) return;
+      const r = stage.getBoundingClientRect();
+      tilt.ty = ((e.clientX - r.left) / r.width - .5) * 16;
+      tilt.tx = -((e.clientY - r.top) / r.height - .5) * 4;
+    });
+    stage.addEventListener("pointerleave", () => { tilt.tx = tilt.ty = 0; });
+    let raf = 0, visible = true;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) loop(); }).observe(stage);
+    function loop() {
+      tilt.x += (tilt.tx - tilt.x) * .08; tilt.y += (tilt.ty - tilt.y) * .08;
+      figure.style.transform = `rotateY(${tilt.y.toFixed(2)}deg) rotateX(${tilt.x.toFixed(2)}deg)`;
+      if (visible) raf = requestAnimationFrame(loop); else cancelAnimationFrame(raf);
+    }
+    loop();
+  }
+
+  // ---- views, detail, light, hotspots ----
+  $$(".views button").forEach((b) => b.addEventListener("click", () => setView(+b.dataset.view)));
+  const setFocus = (f) => { stopAuto(); state.focus = f; render(); };
+  $$("[data-focus]").forEach((b) => b.addEventListener("click", () => setFocus(b.dataset.focus)));
+  $("#explore").addEventListener("click", () => { setFocus("lace"); stage.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" }); });
+  $("#light").addEventListener("click", () => { state.light = !state.light; render(); });
+
+  // ---- colour keeps the view and the zoom ----
+  $$(".swatch").forEach((b) => b.addEventListener("click", () => { state.color = b.dataset.color; render(); }));
+
+  // ---- sizes and the edit ----
+  $$(".sizes").forEach((g) => g.addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    const part = g.dataset.size;
+    state[part] = state[part] === b.textContent ? null : b.textContent;
+    $$("button", g).forEach((x) => x.setAttribute("aria-pressed", String(x.textContent === state[part])));
+    g.closest(".group").classList.remove("need");
+    if (state.bra && state.briefs) { const n = $("#buy-note"); n.classList.remove("warn"); n.textContent = t("buy-note"); }
+  }));
+  let toastTimer = 0;
+  function toast(msg) { const el = $("#toast"); el.textContent = msg; el.classList.add("on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("on"), 2800); }
+  $("#buy").addEventListener("click", () => {
+    const note = $("#buy-note");
+    if (!state.bra || !state.briefs) {
+      note.textContent = t("need-both"); note.classList.add("warn");
+      if (!state.bra) $("#g-bra-wrap").classList.add("need");
+      if (!state.briefs) $("#g-briefs-wrap").classList.add("need");
+      ($("#g-bra-wrap.need") || $("#g-briefs-wrap.need")).scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+      return;
+    }
+    state.bag += 1;
+    $("#bag-n").textContent = state.bag; $("#bag-sr").textContent = t("cart")(state.bag);
+    const bag = $("#bag"); bag.classList.add("bump"); setTimeout(() => bag.classList.remove("bump"), 900);
+    toast(t("added")(t(`c-${state.color}`), state.bra, state.briefs));
+  });
+  $("#guide").addEventListener("click", () => $("#guide-dialog").showModal());
+
+  // ---- language ----
+  function setLang(l) {
+    state.lang = l; document.documentElement.lang = l; document.title = t("title");
+    $$("[data-i18n]").forEach((el) => { const v = t(el.dataset.i18n); if (typeof v === "string") el.textContent = v; });
+    $$("[data-i18n-html]").forEach((el) => { el.innerHTML = t(el.dataset.i18nHtml); });
+    $$("[data-i18n-attr]").forEach((el) => { const [a, k] = el.dataset.i18nAttr.split(":"); el.setAttribute(a, t(k)); });
+    $$(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === l)));
+    $("#back").href = t("backHref");
+    if (!(state.bra && state.briefs)) { const n = $("#buy-note"); n.classList.remove("warn"); n.textContent = t("buy-note"); }
+    render();
+  }
+  $$(".lang button").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  const q = new URLSearchParams(location.search).get("lang");
+  setLang(q === "en" ? "en" : "uk");
+})();
+</script>
+</body>
+</html>
