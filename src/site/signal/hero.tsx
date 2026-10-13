@@ -2,32 +2,24 @@ import { ArrowDownRight } from "lucide-react";
 import { button } from "./ui";
 import { dict, type Locale } from "@/site/content";
 import { container } from "@/site/ui";
-import { HeroArt } from "./hero-art";
+import { HeroTrace } from "./hero-trace";
 
 /** SIGNAL hero copy (uk, en). Kept here while the redesign is on trial, so content.ts stays untouched. */
 const HERO = {
   uk: {
-    title: ["Дизайн,", "що має", "значення."],
-    intro: "Допомагаю перетворювати складні задачі на зрозумілі цифрові продукти. Від першого «чому» до останньої деталі.",
+    title: ["Дизайн,", "де кожне рішення", "має доказ."],
+    intro: "Проєктую вебсервіси й мобільні застосунки: від розмов з користувачами до макетів, за якими розробникам не треба нічого вгадувати.",
     work: "Дивитися роботи",
     approach: "Мій підхід",
-    artTop: "[ from complexity to clarity ]",
-    artBottom: "research → structure → form",
-    captionTitle: "Кожна лінія має причину.",
-    captionText: "Кожне рішення — свій доказ.",
-    strip: "Продумані інтерфейси. Цілісний досвід.",
+    strip: "Продуктовий дизайн · UX · дизайн-системи",
     next: "Далі — роботи ↓",
   },
   en: {
-    title: ["Design", "that", "matters."],
-    intro: "I help turn complex problems into clear digital products. From the first “why” to the last detail.",
+    title: ["Design", "where every decision", "has proof."],
+    intro: "I design web services and mobile apps: from talking to users to mockups developers can build without guessing.",
     work: "See the work",
     approach: "My approach",
-    artTop: "[ from complexity to clarity ]",
-    artBottom: "research → structure → form",
-    captionTitle: "Every line has a reason.",
-    captionText: "Every decision has its proof.",
-    strip: "Considered interfaces. Coherent experience.",
+    strip: "Product design · UX · design systems",
     next: "Next — work ↓",
   },
 } as const;
@@ -61,14 +53,7 @@ export function SignalHero({ locale }: { locale: Locale }) {
           </div>
         </div>
         <div className="sg-hero-stage">
-          <HeroArt>
-            <span className="sg-art-label sg-art-label--top">{h.artTop.toUpperCase()}</span>
-            <span className="sg-art-label sg-art-label--bottom">{h.artBottom.toUpperCase()}</span>
-            <div className="sg-art-caption">
-              <strong>{h.captionTitle}</strong>
-              <span>{h.captionText}</span>
-            </div>
-          </HeroArt>
+          <HeroTrace locale={locale} />
         </div>
       </section>
       <div className={container}>
