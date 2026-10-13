@@ -92,6 +92,8 @@ export default async function SiteLayout({
         >
           {d.ui.skip}
         </a>
+        {/* First in the document (it is fixed, so only the tab order changes): the keyboard reaches the choice at once. */}
+        {gaId() && <ConsentBanner labels={d.privacy} privacyHref={`/${locale}/privacy`} />}
         <div className="flex min-h-dvh flex-col">
           {/* SIGNAL header: the hf. monogram with the name and role, two text links and «Обговорити проєкт ↗»,
               then theme and language. */}
@@ -101,7 +103,7 @@ export default async function SiteLayout({
                 <BrandMark />
                 <span aria-hidden className="flex flex-col text-[14px] font-semibold leading-[1.35]">
                   {d.name}
-                  <small className="mt-0.5 hidden font-label text-[10px] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
+                  <small className="mt-0.5 hidden font-label text-[11px] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
                 </span>
               </Link>
               <SiteNav locale={locale} labels={{ work: d.nav.work, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} />
@@ -143,7 +145,6 @@ export default async function SiteLayout({
         <BackToTop label={d.ui.toTop} />
         <AnalyticsClickListener />
         <GoogleAnalytics />
-        {gaId() && <ConsentBanner labels={d.privacy} privacyHref={`/${locale}/privacy`} />}
         {/* Vercel serves /_vercel/speed-insights only on its own deployments. */}
         {/* Vercel Web Analytics (pageviews, no cookies) and Speed Insights; only on Vercel, where /_vercel/* exists. */}
         {process.env.VERCEL && <Analytics />}

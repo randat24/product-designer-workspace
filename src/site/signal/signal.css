@@ -445,11 +445,16 @@
 .signal .sg-case-disclosure { max-width: 760px; color: var(--sg-fg-secondary); font-size: 13px; line-height: 1.7; }
 .signal .sg-chapter-title { font-size: clamp(30px, 3.5vw, 48px); line-height: 1.08; font-weight: 500; letter-spacing: -.045em; }
 .signal .sg-case-body { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: clamp(48px, 7vw, 112px); align-items: start; }
-.signal .sg-case-contents { position: sticky; top: 112px; padding-top: 6px; }
+/* The list stays inside the window and above the consent banner (--consent-space, 0 without it): a long one
+   scrolls on its own. The side padding keeps focus rings from being clipped by the scroll container. */
+.signal .sg-case-contents {
+  position: sticky; top: 112px; padding: 6px 8px 8px; margin-inline: -8px;
+  max-height: calc(100dvh - 112px - var(--consent-space, 0px)); overflow-y: auto;
+}
 .signal .sg-case-contents > p { margin-bottom: 24px; font: 11px/1.5 var(--sg-font-mono); letter-spacing: .08em; color: var(--sg-fg-secondary); text-transform: uppercase; }
 .signal .sg-case-contents ol { display: flex; flex-direction: column; gap: 14px; }
 .signal .sg-case-contents a { display: flex; gap: 16px; color: var(--sg-fg-secondary); font-size: 13px; line-height: 1.5; text-decoration: none; transition: color var(--sg-duration-fast); }
-.signal .sg-case-contents a span { font: 10px/1.5 var(--sg-font-mono); padding-top: 2px; }
+.signal .sg-case-contents a span { font: 11px/1.5 var(--sg-font-mono); padding-top: 2px; }
 .signal .sg-case-contents a:hover { color: var(--sg-accent-text); }
 .signal .sg-case-contents a[aria-current] { color: var(--sg-fg); }
 .signal .sg-case-contents a[aria-current] span { color: var(--sg-accent-text); }
@@ -478,7 +483,7 @@
 .signal .sg-case-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--sg-border); border-radius: 3px; }
 .signal .sg-case-chain { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0; }
 .signal .sg-case-chain li { padding: 12px 14px; border: 1px solid var(--sg-border); font-size: 13px; line-height: 1.4; }
-.signal .sg-case-chain li span { margin-right: 10px; color: var(--sg-accent-text); font: 10px var(--sg-font-mono); }
+.signal .sg-case-chain li span { margin-right: 10px; color: var(--sg-accent-text); font: 11px var(--sg-font-mono); }
 .signal .sg-case-decision { padding: 28px 0; border-top: 1px solid var(--sg-border); }
 .signal .sg-case-decision summary {
   display: flex; align-items: baseline; justify-content: space-between; gap: 24px; cursor: pointer; list-style: none;
@@ -506,7 +511,7 @@
   .signal .sg-case-hero-bottom { grid-template-columns: 1fr; gap: 36px; }
   .signal .sg-case-meta { grid-template-columns: repeat(3, 1fr); }
   .signal .sg-case-body { grid-template-columns: minmax(0, 1fr); gap: 44px; }
-  .signal .sg-case-contents { position: static; padding-bottom: 24px; border-bottom: 1px solid var(--sg-border); }
+  .signal .sg-case-contents { position: static; max-height: none; overflow: visible; margin-inline: 0; padding: 6px 0 24px; border-bottom: 1px solid var(--sg-border); }
   .signal .sg-case-contents > p { margin-bottom: 16px; }
   .signal .sg-case-contents ol { flex-direction: row; flex-wrap: wrap; column-gap: 24px; row-gap: 12px; }
   .signal .sg-chapter { padding-bottom: 56px; margin-bottom: 48px; }
@@ -516,7 +521,7 @@
   .signal .sg-section { padding-block: 64px; }
   .signal .sg-project-visual--lead { height: 340px !important; padding: 24px 0 24px 28px; }
   .signal .sg-cover-type { font-size: 34px; }
-  .signal .sg-cover-type small { margin-bottom: 24px; font-size: 9px; }
+  .signal .sg-cover-type small { margin-bottom: 24px; font-size: 11px; }
   .signal .sg-cover-arrow { margin-top: 24px; font-size: 40px; }
   .signal .sg-project-visual, .signal .sg-project--full .sg-project-visual { height: 270px; }
   .signal .sg-project-meta :is(h2, h3) { font-size: 18px; }
@@ -561,7 +566,7 @@
   .signal .sg-case-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
   .signal .sg-case-meta dd { font-size: 13px; }
   .signal .sg-case-cover { padding: 12px; margin-bottom: 36px; }
-  .signal .sg-case-caption { font-size: 10px; gap: 12px; flex-wrap: wrap; }
+  .signal .sg-case-caption { font-size: 11px; gap: 12px; flex-wrap: wrap; }
   .signal .sg-case-columns { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 24px; }
   .signal .sg-case-insight { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .signal .sg-case-pullquote { padding-left: 20px; }
