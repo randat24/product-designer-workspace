@@ -58,11 +58,19 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       {/* SIGNAL page opening, as on a case: eyebrow, the title set large, the summary beside the facts. */}
       <section className={container} aria-labelledby="about-h">
         <header className="sg-case-hero">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <p className="sg-eyebrow text-fg-secondary">{d.about.eyebrow}</p>
-            <VeteranBadge locale={locale} />
+          {/* Title on the left, the photo on the right, in the same columns as the summary and the facts below. */}
+          <div className="sg-about-top">
+            <div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <p className="sg-eyebrow text-fg-secondary">{d.about.eyebrow}</p>
+                <VeteranBadge locale={locale} />
+              </div>
+              <h1 id="about-h" className="sg-case-title">{d.about.title}</h1>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element -- the owner's photo, size known */}
+            <img className="sg-about-top-photo" {...responsive(PHOTO.wide.src, PHOTO.wide.width, SIZES.thumb)} alt={PHOTO.alt[locale]}
+              width={PHOTO.wide.width} height={PHOTO.wide.height} fetchPriority="high" decoding="async" />
           </div>
-          <h1 id="about-h" className="sg-case-title">{d.about.title}</h1>
           <div className="sg-case-hero-bottom">
             <p className="sg-case-deck">{d.about.summary}</p>
             <div className="flex flex-col gap-7">
@@ -89,15 +97,6 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           </div>
         </header>
       </section>
-
-      {/* The photo sits in the content column, at about its own width (1088 px), so it stays sharp. */}
-      <figure className={`${container} mt-4 mb-20 grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:gap-[clamp(48px,7vw,112px)]`}>
-        <span aria-hidden className="hidden md:block" />
-        {/* eslint-disable-next-line @next/next/no-img-element -- the owner's photo, size known */}
-        <img {...responsive(PHOTO.wide.src, PHOTO.wide.width, SIZES.figure)} alt={PHOTO.alt[locale]}
-          width={PHOTO.wide.width} height={PHOTO.wide.height} fetchPriority="high" decoding="async"
-          className="h-auto w-full max-w-[1088px] rounded-[8px]" />
-      </figure>
 
       {/* The design career as an index of roles: each row opens to what was done there. */}
       <section className={`${container} grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:gap-[clamp(48px,7vw,112px)]`} aria-labelledby="experience-h">

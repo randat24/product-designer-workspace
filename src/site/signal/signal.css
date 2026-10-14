@@ -466,6 +466,9 @@
 .signal .sg-case-back:hover { color: var(--sg-accent-text); }
 .signal .sg-case-title { font-size: clamp(48px, 7.7vw, 112px); font-weight: 500; line-height: .99; letter-spacing: -.065em; max-width: 1080px; margin: 24px 0 32px; text-wrap: balance; }
 .signal .sg-case-hero-bottom { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: end; }
+/* About: the photo beside the title, in the column of the facts below; on narrow screens it follows the title. */
+.signal .sg-about-top { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: center; }
+.signal .sg-about-top-photo { width: 100%; height: auto; aspect-ratio: 1088 / 608; object-fit: cover; border-radius: var(--sg-radius-md); margin-bottom: 32px; }
 .signal .sg-case-deck { font-size: clamp(18px, 2vw, 25px); line-height: 1.5; max-width: 620px; letter-spacing: -.02em; }
 .signal .sg-case-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .signal .sg-case-meta div { border-top: 1px solid var(--sg-border); padding-top: 12px; }
@@ -542,6 +545,8 @@
 }
 @media (max-width: 900px) {
   .signal .sg-case-hero-bottom { grid-template-columns: 1fr; gap: 36px; }
+  .signal .sg-about-top { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .signal .sg-about-top-photo { max-width: 640px; margin-bottom: 36px; }
   .signal .sg-case-meta { grid-template-columns: repeat(3, 1fr); }
   .signal .sg-case-body { grid-template-columns: minmax(0, 1fr); gap: 44px; }
   .signal .sg-case-contents { position: static; max-height: none; overflow: visible; margin-inline: 0; padding: 6px 0 24px; border-bottom: 1px solid var(--sg-border); }
