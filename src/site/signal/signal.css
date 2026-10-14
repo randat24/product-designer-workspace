@@ -575,7 +575,10 @@
   .signal .sg-project-visual--lead .sg-shot { width: 116%; transform: rotate(-5deg); }
   .signal .sg-project-visual, .signal .sg-project--full .sg-project-visual { height: 300px; }
   .signal .sg-phone { width: 39%; }
-  .signal .sg-project-meta { padding-top: 16px; }
+  /* The number moves up beside the kind badge, so the title and summary take the card's full width instead of a
+     narrow column beside it. */
+  .signal .sg-project-meta { display: block; position: relative; padding-top: 16px; }
+  .signal .sg-project-number { position: absolute; top: 16px; right: 0; line-height: 24px; } /* the badge row: 12 × 1.5 + padding + border */
   .signal .sg-about-facts { gap: 18px; }
   .signal .sg-about-facts strong { font-size: clamp(22px, 7vw, 30px); }
   .signal .sg-about-facts span { font-size: 11px; }
