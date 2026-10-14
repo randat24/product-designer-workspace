@@ -14,6 +14,16 @@ const shot = (file: string, alt: string, caption: string): GalleryItem => ({
   height: 900,
 });
 
+// Phone screens of the same demo project, 390 × 844 at 2x, light theme.
+const phone = (file: string, alt: string, caption: string): GalleryItem => ({
+  src: `/cases/designer-workspace/${file}.webp`,
+  alt,
+  caption,
+  device: "mobile",
+  width: 780,
+  height: 1688,
+});
+
 export const workspaceGalleryUk: GalleryItem[] = [
   shot("01-overview", "Огляд проєкту: дев'ять етапів з прогресом і список «Що зробити далі»", "Огляд проєкту"),
   shot("02-brief", "Бриф: продукт, бізнес-модель і вимоги, зберігається автоматично", "Бриф"),
@@ -24,6 +34,14 @@ export const workspaceGalleryUk: GalleryItem[] = [
   shot("07-flow", "Редактор сценарію: кроки «Екран», «Дія», «Розвилка», «Помилка» на схемі", "Редактор сценарію"),
   shot("08-screen", "Специфікація екрана: «Де ми можемо бути кращими», превʼю й зв'язки", "Специфікація екрана"),
   shot("09-decision", "Рішення з журналу: контекст, що вирішили, чому, і докази в панелі «Зв'язки»", "Журнал рішень"),
+  phone("m01-overview", "Огляд проєкту на телефоні: розділи рядком угорі, готовність 78% і етапи", "Огляд проєкту"),
+  phone("m02-synthesis", "Дошка синтезу на телефоні: колонки гортаються вбік, картку можна перемістити з меню", "Дошка синтезу"),
+  phone("m03-insight-links", "Панель «Зв'язки» інсайту на телефоні: джерела, ланцюжок і на що перетворився", "Інсайт і зв'язки"),
+  phone("m04-competitors", "Матриця конкурентів на телефоні: перша колонка закріплена, продукти гортаються вбік", "Матриця конкурентів"),
+  phone("m05-flow", "Сценарій на телефоні: замість схеми — список кроків з розвилками й помилками", "Сценарій списком"),
+  phone("m06-screen-states", "Стани екрана на телефоні: основний, завантаження, порожньо, помилка", "Стани екрана"),
+  phone("m07-decision-evidence", "Докази рішення на телефоні: болі, інсайти й цитати користувачів", "Докази рішення"),
+  phone("m08-search", "Пошук на телефоні: за словом «ресторан» знаходяться інсайт, можливість, сценарій і екран", "Пошук"),
 ];
 
 export const workspaceGalleryEn: GalleryItem[] = [
@@ -36,6 +54,14 @@ export const workspaceGalleryEn: GalleryItem[] = [
   shot("07-flow", "Flow editor: Screen, Action, Branch and Error steps on the canvas", "Flow editor"),
   shot("08-screen", "Screen spec: “Where we can do better”, preview and links", "Screen spec"),
   shot("09-decision", "A decision from the log: context, what was decided, why, and the evidence in the Links panel", "Decision log"),
+  phone("m01-overview", "Project overview on a phone: sections in a row at the top, 78% readiness and the stages", "Project overview"),
+  phone("m02-synthesis", "Synthesis board on a phone: columns scroll sideways, a card moves from its menu", "Synthesis board"),
+  phone("m03-insight-links", "An insight's Links panel on a phone: sources, the chain and what it turned into", "Insight and links"),
+  phone("m04-competitors", "Competitor matrix on a phone: the first column stays put, products scroll sideways", "Competitor matrix"),
+  phone("m05-flow", "A flow on a phone: a list of steps with branches and errors instead of the canvas", "Flow as a list"),
+  phone("m06-screen-states", "Screen states on a phone: default, loading, empty, error", "Screen states"),
+  phone("m07-decision-evidence", "A decision's evidence on a phone: pain points, insights and user quotes", "Decision evidence"),
+  phone("m08-search", "Search on a phone: “ресторан” (restaurant) finds an insight, an opportunity, a flow and a screen", "Search"),
 ];
 
 export const workspaceUk: CaseStory = {
@@ -43,6 +69,7 @@ export const workspaceUk: CaseStory = {
     { label: "Статус", value: "У роботі, 2026" },
     { label: "Стек", value: "Next.js · Supabase" },
     { label: "Команда", value: "Соло, код з AI-асистентом" },
+    { label: "Платформи", value: "Комп'ютер, планшет, телефон" },
   ],
   overview: {
     challenge:
@@ -117,10 +144,11 @@ export const workspaceUk: CaseStory = {
       "Видалений артефакт — зв'язки не ламаються, панель показує, що зникло",
       "Забутий пароль — відновлення листом",
       "Втрата даних — резервна копія проєкту в JSON",
+      "Телефон — схема сценарію стає списком кроків, таблиці гортаються вбік з закріпленою першою колонкою",
     ],
   },
   screens: {
-    intro: "Ключові екрани інструмента. У кожного є стани, які легко забути: порожньо, завантаження, помилка.",
+    intro: "Ключові екрани інструмента. У кожного є стани, які легко забути: порожньо, завантаження, помилка. Кожен працює й на телефоні — скриншоти обох версій у «Сторінках проєкту» вище.",
     items: [
       { title: "Огляд проєкту", caption: "Прогрес по етапах і наступні кроки — що саме не дороблено", states: ["Новий проєкт", "У роботі", "Усе готово"] },
       { title: "Дошка синтезу", caption: "Цитати й спостереження перетягуються в колонки-патерни; з колонки — інсайт", states: ["Порожня", "Без патерну", "Готовий до інсайту"] },
@@ -158,14 +186,21 @@ export const workspaceUk: CaseStory = {
       rejected: ["Відкрита реєстрація"],
       evidence: ["Аудит безпеки перед запуском"],
     },
+    {
+      code: "DEC-005",
+      title: "Телефон — повноцінна версія, а не перегляд",
+      why: "Проєкт треба відкрити й поправити там, де він знадобився: на зустрічі, в дорозі. Тому на телефоні той самий інструмент: розділи — рядком угорі, схема сценарію — списком кроків, широкі таблиці гортаються вбік, а пошук веде до будь-якого артефакту. Кожен реліз автоматично перевіряє сторінки на екрані телефона: нічого не має виходити за край.",
+      rejected: ["Версія лише для перегляду", "Окремий мобільний застосунок"],
+      evidence: ["Автоматичні тести на екрані телефона", "Скриншоти телефона вище"],
+    },
   ],
   results: {
     intro:
-      "Інструмент запущено, ним я веду власні проєкти. Цей сайт — його продовження: кейси публікуються з інструмента, а сторінки сайту перевіряються автоматично на доступність і мобільну верстку.",
+      "Інструмент запущено, ним я веду власні проєкти. Цей сайт — його продовження: кейси публікуються з інструмента, а сторінки сайту й інструмента перевіряються автоматично на доступність і верстку на телефоні.",
     metrics: [
       { value: "9", label: "етапів у ланцюжку проєкту" },
-      { value: "36", label: "таблиць з правилами доступу до рядків" },
-      { value: "196", label: "автоматичних перевірок бази даних" },
+      { value: "46", label: "таблиць з правилами доступу до рядків" },
+      { value: "276", label: "автоматичних перевірок бази даних" },
       { value: "2", label: "мови сайту: українська й англійська" },
     ],
   },
@@ -176,6 +211,7 @@ export const workspaceEn: CaseStory = {
     { label: "Status", value: "In progress, 2026" },
     { label: "Stack", value: "Next.js · Supabase" },
     { label: "Team", value: "Solo, code with an AI assistant" },
+    { label: "Platforms", value: "Desktop, tablet, phone" },
   ],
   overview: {
     challenge:
@@ -250,10 +286,11 @@ export const workspaceEn: CaseStory = {
       "Deleted artifact — links do not break, the panel shows what is gone",
       "Forgotten password — recovery by email",
       "Data loss — a JSON backup of the project",
+      "Phone — the flow canvas becomes a list of steps, tables scroll sideways with the first column pinned",
     ],
   },
   screens: {
-    intro: "Key screens of the tool. Each has the states that are easy to forget: empty, loading, error.",
+    intro: "Key screens of the tool. Each has the states that are easy to forget: empty, loading, error. Each also works on a phone: screenshots of both versions are in Project pages above.",
     items: [
       { title: "Project overview", caption: "Progress by stage and next steps — exactly what is unfinished", states: ["New project", "In progress", "All done"] },
       { title: "Synthesis board", caption: "Quotes and observations are dragged into pattern columns; a column becomes an insight", states: ["Empty", "No pattern", "Ready for an insight"] },
@@ -291,14 +328,21 @@ export const workspaceEn: CaseStory = {
       rejected: ["Open sign-up"],
       evidence: ["Security audit before launch"],
     },
+    {
+      code: "DEC-005",
+      title: "The phone is a full version, not a viewer",
+      why: "A project has to be opened and fixed where it is needed: in a meeting, on the go. So the phone gets the same tool: sections in a row at the top, the flow canvas as a list of steps, wide tables scrolling sideways, and search that reaches any artifact. Every release checks the pages on a phone screen automatically: nothing may run off the edge.",
+      rejected: ["A read-only version", "A separate mobile app"],
+      evidence: ["Automated tests on a phone screen", "Phone screenshots above"],
+    },
   ],
   results: {
     intro:
-      "The tool is launched and I run my own projects in it. This site is its continuation: case studies are published from the tool, and the site pages are checked automatically for accessibility and mobile layout.",
+      "The tool is launched and I run my own projects in it. This site is its continuation: case studies are published from the tool, and the pages of the site and the tool are checked automatically for accessibility and phone layout.",
     metrics: [
       { value: "9", label: "stages in the project chain" },
-      { value: "36", label: "tables with row-level access rules" },
-      { value: "196", label: "automated database checks" },
+      { value: "46", label: "tables with row-level access rules" },
+      { value: "276", label: "automated database checks" },
       { value: "2", label: "site languages: Ukrainian and English" },
     ],
   },

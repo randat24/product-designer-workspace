@@ -14,10 +14,10 @@ export async function WorkspaceHeader({ current }: { current: string }) {
   return (
     <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
       <span className="flex min-w-0 items-center gap-4">
-        <span className="flex items-center gap-2.5"><FedoMark className="size-7 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" /><span className="font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span></span>
+        <span className="flex min-w-0 items-center gap-2.5"><FedoMark className="size-7 shrink-0 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" /><span className="min-w-0 truncate font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span></span>
         <WorkspaceSwitcher current={current} workspaces={workspaces} />
       </span>
-      <form action="/auth/signout" method="post" className="flex items-center gap-3 text-meta">
+      <form action="/auth/signout" method="post" className="flex shrink-0 items-center gap-3 text-meta">
         {/* The tool lives next to the portfolio; this is the way back to it. */}
         <Link href="/uk" className="hit inline-flex items-center gap-1.5 font-semibold opacity-80 hover:opacity-100 hover:underline">
           <Globe aria-hidden className="size-4 shrink-0" />
