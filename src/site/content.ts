@@ -276,7 +276,7 @@ const uk: Dictionary = {
   home: {
     hello: "Привіт, я Геннадій —",
     lead: "продуктовий дизайнер. 7 років у вебі та продуктових командах. Дослідження → дизайн-система → чистий handoff. Роблю передбачуваний інтерфейс, який команда може розвивати без мене.",
-    available: "Відкритий до проєктів · part-time, 20 год/тиждень",
+    available: "Відкритий до проєктів · part-time, 30 год/тиждень",
     cta: "Написати мені",
     ctaCv: "Резюме (PDF)",
     selected: "Вибрані роботи",
@@ -400,7 +400,7 @@ const uk: Dictionary = {
     ],
     inWorkbook: "У робочому зошиті",
     ctaTitle: "Працюймо разом",
-    ctaText: "Відкритий до проєктної роботи або part-time, 20 годин на тиждень. Розкажіть про продукт — відповім протягом доби.",
+    ctaText: "Відкритий до проєктної роботи або part-time, 30 годин на тиждень. Розкажіть про продукт — відповім протягом доби.",
   },
   jobs: [
     {
@@ -412,16 +412,17 @@ const uk: Dictionary = {
         "Забезпечую звʼязок підрозділу",
         "Розробляв регламенти управління ротою",
         "Навчаю особовий склад",
-        "Відзначений нагородами (2022, 2024)",
+        "Відзначений нагородами (2022, 2023, 2024, 2025)",
       ],
       details: [
-        "Організовую звʼязок підрозділу: розгортання точок звʼязку, налаштування, діагностика й ремонт обладнання.",
+        "Мобілізований у перші дні повномасштабного вторгнення, пройшов шлях від стрільця піхотного підрозділу до фахівця зі звʼязку розвідувальної роти.",
+        "Організовую звʼязок підрозділу: розгортання точок звʼязку, налаштування, діагностика й ремонт обладнання, супутниковий інтернет.",
         "Вибудував і задокументував процеси управління ротою — регламенти, звітність, порядок передачі інформації між підрозділами.",
-        "Навчаю особовий склад роботі із засобами звʼязку. Відзначений нагородами (2022, 2024).",
+        "Навчаю особовий склад роботі із засобами звʼязку. Відзначений нагородами (2022, 2023, 2024, 2025).",
       ],
     },
     {
-      period: "03.2020 — 01.2022",
+      period: "08.2021 — 02.2022",
       title: "UI/UX Designer & Mentor",
       place: "Wgroup · Миколаїв",
       points: [
@@ -479,7 +480,7 @@ const uk: Dictionary = {
     },
     {
       group: "Інструменти",
-      items: "Figma, Sketch, Photoshop, Illustrator, After Effects, Blender",
+      items: "Figma, Photoshop, Illustrator, After Effects, Blender",
     },
     { group: "Технічне", items: "HTML, CSS, базовий JS, адаптивна верстка" },
   ],
@@ -507,9 +508,9 @@ const uk: Dictionary = {
     { name: "Англійська", level: "початковий" },
   ],
   availability: [
-    "Проєктна робота або part-time, 20 год/тиждень, дистанційно",
+    "Проєктна робота або part-time, 30 год/тиждень, дистанційно",
     "Асинхронна комунікація, відповідь у межах доби",
-    "На військовій службі: можливі паузи до 5 днів, попереджаю заздалегідь",
+    "На військовій службі: можливі паузи до 7 днів, попереджаю заздалегідь",
     "Готовий до тестового завдання й пробного спринту",
     "Статус учасника бойових дій: роботодавець може отримати компенсацію від Державної служби зайнятості",
   ],
@@ -704,7 +705,7 @@ const en: Dictionary = {
   home: {
     hello: "Hi, I'm Hennadii —",
     lead: "a product designer with 7 years in web and product teams. Research → design system → clean handoff. I build predictable interfaces a team can keep growing without me.",
-    available: "Open to projects · part-time, 20 h/week",
+    available: "Open to projects · part-time, 30 h/week",
     cta: "Get in touch",
     ctaCv: "CV (PDF, Ukrainian)",
     selected: "Selected work",
@@ -828,7 +829,7 @@ const en: Dictionary = {
     ],
     inWorkbook: "In the workbook",
     ctaTitle: "Let's work together",
-    ctaText: "Open to project work or part-time, 20 hours a week. Tell me about your product and I'll reply within a day.",
+    ctaText: "Open to project work or part-time, 30 hours a week. Tell me about your product and I'll reply within a day.",
   },
   jobs: [
     {
@@ -840,16 +841,17 @@ const en: Dictionary = {
         "Run communications for my unit",
         "Wrote company command procedures",
         "Train personnel",
-        "Decorated (2022, 2024)",
+        "Decorated (2022, 2023, 2024, 2025)",
       ],
       details: [
-        "Run my unit's communications: deploying signal points, setting up, diagnosing and repairing equipment.",
+        "Mobilised in the first days of the full-scale invasion; went from rifleman in an infantry unit to signals specialist in a reconnaissance company.",
+        "Run my unit's communications: deploying signal points, setting up, diagnosing and repairing equipment, satellite internet.",
         "Built and documented company command procedures — regulations, reporting, how information passes between units.",
-        "Train personnel on communications equipment. Decorated (2022, 2024).",
+        "Train personnel on communications equipment. Decorated (2022, 2023, 2024, 2025).",
       ],
     },
     {
-      period: "03.2020 — 01.2022",
+      period: "08.2021 — 02.2022",
       title: "UI/UX Designer & Mentor",
       place: "Wgroup · Mykolaiv",
       points: [
@@ -907,7 +909,7 @@ const en: Dictionary = {
     },
     {
       group: "Tools",
-      items: "Figma, Sketch, Photoshop, Illustrator, After Effects, Blender",
+      items: "Figma, Photoshop, Illustrator, After Effects, Blender",
     },
     { group: "Technical", items: "HTML, CSS, basic JS, responsive markup" },
   ],
@@ -935,9 +937,9 @@ const en: Dictionary = {
     { name: "English", level: "basic" },
   ],
   availability: [
-    "Project work or part-time, 20 h/week, remote",
+    "Project work or part-time, 30 h/week, remote",
     "Async communication, reply within a day",
-    "On military service: possible breaks of up to 5 days, announced in advance",
+    "On military service: possible breaks of up to 7 days, announced in advance",
     "Happy to do a test task or a trial sprint",
   ],
   awards: [

@@ -33,7 +33,7 @@ export const SIGNAL_COPY = {
         },
         {
           title: "Дизайнер у вашу команду",
-          text: "Дизайнер потрібен постійно, але не на повний день. Працюю part-time, 20 годин на тиждень, асинхронно, у ваших процесах та інструментах.",
+          text: "Дизайнер потрібен постійно, але не на повний день. Працюю part-time, 30 годин на тиждень, асинхронно, у ваших процесах та інструментах.",
           result: "Регулярний дизайн до релізів, рев’ю реалізації, UI QA",
         },
       ],
@@ -102,7 +102,7 @@ export const SIGNAL_COPY = {
         },
         {
           title: "A designer on your team",
-          text: "You need a designer all the time, just not full-time. I work part-time, 20 hours a week, asynchronously, inside your processes and tools.",
+          text: "You need a designer all the time, just not full-time. I work part-time, 30 hours a week, asynchronously, inside your processes and tools.",
           result: "Steady design for releases, build reviews, UI QA",
         },
       ],
