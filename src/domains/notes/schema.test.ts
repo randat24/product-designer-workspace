@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { NOTE_MAX, noteSchema, replySchema } from "./schema";
+import { NOTE_MAX, noteSchema } from "./schema";
 
 const base = { body_uk: "Текст", body_en: "", image: null, tags: [], parent_id: null };
 
@@ -18,12 +18,5 @@ describe("noteSchema", () => {
     const image = { src: "javascript:alert(1)", alt: "", width: 10, height: 10 };
     expect(noteSchema.safeParse({ ...base, image }).success).toBe(false);
     expect(noteSchema.safeParse({ ...base, image: { ...image, src: "https://x.supabase.co/a.png" } }).success).toBe(true);
-  });
-});
-
-describe("replySchema", () => {
-  it("needs some text", () => {
-    expect(replySchema.safeParse({ body: "   ", contact: "" }).success).toBe(false);
-    expect(replySchema.safeParse({ body: "Питання", contact: "" }).success).toBe(true);
   });
 });

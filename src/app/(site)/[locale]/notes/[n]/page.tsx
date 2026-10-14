@@ -4,7 +4,6 @@ import { notFound, redirect } from "next/navigation";
 import { LOCALES, dict, isLocale, type Locale } from "@/site/content";
 import { JsonLd } from "@/site/json-ld";
 import { NoteEntry } from "@/site/note-entry";
-import { NoteReply } from "@/site/note-reply";
 import { getNotes, threadOf } from "@/site/notes-source";
 import { breadcrumbLd, clampDescription, graph, localeUrl, noteHeadline, noteLd, pageMetadata } from "@/site/seo";
 import { container } from "@/site/ui";
@@ -46,7 +45,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   });
 }
 
-/** One note with its whole thread, its reactions and the private reply to the author. */
+/** One note with its whole thread and its reactions. */
 export default async function NotePage({ params }: { params: Params }) {
   const { locale, n } = await params;
   if (!isLocale(locale)) notFound();
@@ -59,7 +58,6 @@ export default async function NotePage({ params }: { params: Params }) {
   const { note, notes } = found;
   const d = dict(locale);
   const thread = threadOf(notes, note.number);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || undefined;
 
   return (
     <div className={`${container} pb-20 pt-12 sm:pt-16`}>
@@ -87,7 +85,6 @@ export default async function NotePage({ params }: { params: Params }) {
           <NoteEntry key={x.number} note={x} locale={locale} link={x.number !== note.number} current={thread.length > 1 && x.number === note.number} location="note" />
         ))}
       </div>
-      <NoteReply number={note.number} locale={locale} copy={d.notes.reply} turnstileSiteKey={siteKey} />
     </div>
   );
 }

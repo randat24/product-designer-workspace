@@ -27,10 +27,9 @@ export type AnalyticsEvent =
   | "project_request_submitted"
   | "project_request_failed"
   | "project_brief_downloaded"
-  // Notes: which note and which reaction, never the reply's text.
+  // Notes: which note and which reaction.
   | "note_open"
-  | "note_reaction"
-  | "note_reply_sent";
+  | "note_reaction";
 
 /** Where on the page the interaction happened. */
 export type AnalyticsLocation = "header" | "hero" | "services" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found" | "confirmation" | "notes" | "note";

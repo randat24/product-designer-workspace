@@ -21,24 +21,6 @@ export async function getNote(workspaceId: string, number: number) {
   return data;
 }
 
-/** Visitors' replies, newest first, with the number of the note each answers. */
-export async function listReplies(workspaceId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("note_replies")
-    .select("id, body, contact, locale, created_at, read_at, site_notes(number, body_uk)")
-    .eq("workspace_id", workspaceId).order("created_at", { ascending: false }).limit(200);
-  if (error) throw error;
-  return data;
-}
-
-/** Unread replies, for the badge on the «Нотатки» tab. Zero for anyone but the owner. */
-export async function countUnreadReplies(workspaceId: string): Promise<number> {
-  const supabase = await createClient();
-  const { count, error } = await supabase.from("note_replies").select("id", { count: "exact", head: true })
-    .eq("workspace_id", workspaceId).is("read_at", null);
-  return error ? 0 : (count ?? 0);
-}
-
 /** Whether the site shows this workspace's notes: the request form delivers here. Owner-only, like the notes. */
 export async function isSiteWorkspace(workspaceId: string): Promise<boolean> {
   const supabase = await createClient();

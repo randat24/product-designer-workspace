@@ -3,7 +3,6 @@ import { imageSchema } from "@/domains/cases/schema";
 
 export const NOTE_MAX = 1500;
 export const NOTE_TAGS_MAX = 5;
-export const REPLY_MAX = 1000;
 export const REACTIONS = ["agree", "disagree", "new"] as const;
 export type Reaction = (typeof REACTIONS)[number];
 
@@ -19,9 +18,3 @@ export const noteSchema = z.object({
   parent_id: z.uuid().nullable(),
 });
 export type NoteInput = z.input<typeof noteSchema>;
-
-/** A visitor's private reply to a note. */
-export const replySchema = z.object({
-  body: z.string().trim().min(1).max(REPLY_MAX),
-  contact: z.string().trim().max(200),
-});

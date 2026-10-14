@@ -363,10 +363,6 @@
 .signal .sg-note-image { display: block; width: 100%; height: auto; margin-top: 20px; border: 1px solid var(--sg-border); border-radius: var(--sg-radius-md); }
 .signal .sg-note-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 20px; }
 .signal .sg-note-foot .sg-link { margin-left: auto; }
-.signal .sg-note-reply { max-width: 740px; margin-top: 40px; padding: 28px; }
-.signal .sg-note-reply h2 { font-size: 1.375rem; font-weight: 500; letter-spacing: -.03em; }
-.signal .sg-note-reply-lead { margin-top: 8px; color: var(--sg-fg-secondary); font-size: 0.875rem; line-height: 1.6; }
-.signal .sg-note-reply form { display: grid; gap: 20px; margin-top: 20px; }
 .signal .sg-note-empty { border-top: 1px solid var(--sg-border); padding-top: 28px; color: var(--sg-fg-secondary); }
 
 /* ---------- work grid ---------- */
