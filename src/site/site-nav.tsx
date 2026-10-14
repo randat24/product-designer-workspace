@@ -11,19 +11,20 @@ import { trackAttrs } from "./analytics/track";
  */
 export function SiteNav({ locale, labels, ariaLabel, mobile }: {
   locale: string;
-  labels: { work: string; about: string; discuss: string };
+  labels: { work: string; notes: string; about: string; discuss: string };
   ariaLabel: string;
   mobile?: boolean;
 }) {
   const path = usePathname();
   const items = [
     { href: `/${locale}/cases`, label: labels.work, current: path.startsWith(`/${locale}/cases`) },
+    { href: `/${locale}/notes`, label: labels.notes, current: path.startsWith(`/${locale}/notes`) },
     { href: `/${locale}/about`, label: labels.about, current: path.startsWith(`/${locale}/about`) },
   ];
   const discussCurrent = path.startsWith(`/${locale}/start-project`);
   return (
     <nav aria-label={ariaLabel}
-      className={mobile ? "flex gap-5 pb-2.5 text-[0.875rem] font-medium lg:hidden" : "ml-auto hidden items-center gap-8 text-[0.875rem] font-medium lg:flex"}>
+      className={mobile ? "flex flex-wrap gap-x-5 gap-y-1 pb-2.5 text-[0.875rem] font-medium lg:hidden" : "ml-auto hidden items-center gap-8 text-[0.875rem] font-medium lg:flex"}>
       {items.map((it) => (
         <Link key={it.href} href={it.href} aria-current={it.current ? "page" : undefined}
           className={cn(

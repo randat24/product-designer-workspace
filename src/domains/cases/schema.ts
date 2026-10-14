@@ -13,7 +13,7 @@ export const CASE_MEDIA_MAX_BYTES = 10 * 1024 * 1024;
 const text = (max: number) => z.string().trim().max(max);
 
 /** A picture of the case: a file in `case-media` or a built-in one under /cases/. */
-const imageSchema = z.object({
+export const imageSchema = z.object({
   src: z.string().max(2000).regex(/^(\/|https?:\/\/)/),
   alt: text(300),
   width: z.number().int().positive().max(20000),

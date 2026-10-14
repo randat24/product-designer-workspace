@@ -26,14 +26,20 @@ export type AnalyticsEvent =
   | "project_request_reviewed"
   | "project_request_submitted"
   | "project_request_failed"
-  | "project_brief_downloaded";
+  | "project_brief_downloaded"
+  // Notes: which note and which reaction, never the reply's text.
+  | "note_open"
+  | "note_reaction"
+  | "note_reply_sent";
 
 /** Where on the page the interaction happened. */
-export type AnalyticsLocation = "header" | "hero" | "services" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found" | "confirmation";
+export type AnalyticsLocation = "header" | "hero" | "services" | "contact" | "footer" | "about" | "case" | "cases" | "home" | "not_found" | "confirmation" | "notes" | "note";
 
 export type AnalyticsParams = Partial<{
   location: AnalyticsLocation;
   case_slug: string;
+  note_number: number;
+  reaction: string;
   next_slug: string;
   from: string;
   to: string;

@@ -9,6 +9,7 @@ const PAGES = [
   { path: "/uk/about", lang: "uk" },
   { path: "/en/privacy", lang: "en" },
   { path: "/uk/start-project", lang: "uk" },
+  { path: "/uk/notes", lang: "uk" },
 ];
 
 async function checkPage(page: Page, testInfo: TestInfo, path: string, lang: string, contrast = true) {
@@ -54,4 +55,17 @@ test("theme toggle switches and remembers", async ({ page }) => {
   expect(after).not.toBe(before);
   await page.reload();
   expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe(after);
+});
+
+// Notes come from the database too; reactions are written through the server, so the click must stick.
+test("site: first published note and a reaction", async ({ page }, testInfo) => {
+  await page.goto("/uk/notes");
+  const href = await page.locator('main a[href^="/uk/notes/"]:not([href$=".xml"])').first().getAttribute("href", { timeout: 5_000 }).catch(() => null);
+  test.skip(!href, "no published notes in this database");
+  await checkPage(page, testInfo, href!, "uk");
+  const reaction = page.getByRole("group", { name: "Реакції на нотатку" }).last().getByRole("button").first();
+  const pressed = await reaction.getAttribute("aria-pressed");
+  await reaction.click();
+  await expect(reaction).toHaveAttribute("aria-pressed", pressed === "true" ? "false" : "true");
+  await expect(page.getByText("Реакцію не збережено")).toHaveCount(0);
 });

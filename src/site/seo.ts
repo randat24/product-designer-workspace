@@ -18,10 +18,11 @@ export function localeUrl(locale: Locale, path: string): string {
   return absoluteUrl(`/${locale}${path}`);
 }
 
-/** Open Graph image of a page: the site card, or a case card when a slug is given. */
-export function ogImageUrl(locale: Locale, slug?: string): string {
+/** Open Graph image of a page: the site card, a case card when a slug is given, or a note card. */
+export function ogImageUrl(locale: Locale, slug?: string, note?: number): string {
   const q = new URLSearchParams({ locale });
   if (slug) q.set("case", slug);
+  if (note) q.set("note", String(note));
   return absoluteUrl(`/og?${q.toString()}`);
 }
 
@@ -34,6 +35,10 @@ type PageMeta = {
   absoluteTitle?: boolean;
   noindex?: boolean;
   caseSlug?: string;
+  /** A note page: its own preview card. */
+  noteNumber?: number;
+  /** The languages the page exists in (hreflang); all by default. A note without English text is uk only. */
+  locales?: readonly Locale[];
   type?: "website" | "article" | "profile";
 };
 
@@ -62,11 +67,11 @@ export const titleTemplate = (name: string) => `%s | ${name}`;
 export function pageMetadata(p: PageMeta): Metadata {
   const d = dict(p.locale);
   const url = localeUrl(p.locale, p.path);
-  const languages: Record<string, string> = Object.fromEntries(LOCALES.map((l) => [l, localeUrl(l, p.path)]));
+  const languages: Record<string, string> = Object.fromEntries((p.locales ?? LOCALES).map((l) => [l, localeUrl(l, p.path)]));
   // x-default: the language-picking root for the home page, the Ukrainian page elsewhere.
   languages["x-default"] = p.path === "" ? absoluteUrl("/") : localeUrl("uk", p.path);
   const index = isIndexable() && !p.noindex;
-  const image = { url: ogImageUrl(p.locale, p.caseSlug), width: 1200, height: 630, alt: p.title };
+  const image = { url: ogImageUrl(p.locale, p.caseSlug, p.noteNumber), width: 1200, height: 630, alt: p.title };
 
   // Search results cut a title at about 60 characters: when «title | name» would not fit, the title goes alone
   // (the name is still in the site name, the breadcrumbs and the structured data).
@@ -88,7 +93,7 @@ export function pageMetadata(p: PageMeta): Metadata {
       title: p.title,
       description,
       locale: OG_LOCALE[p.locale],
-      alternateLocale: LOCALES.filter((l) => l !== p.locale).map((l) => OG_LOCALE[l]),
+      alternateLocale: (p.locales ?? LOCALES).filter((l) => l !== p.locale).map((l) => OG_LOCALE[l]),
       images: [image],
     },
     twitter: { card: "summary_large_image", title: p.title, description, images: [image.url] },
@@ -213,6 +218,45 @@ export function casesCollectionLd(locale: Locale, cases: Case[], name: string, d
         .map((c, i) => ({ "@type": "ListItem", position: i + 1, url: localeUrl(locale, `/cases/${c.slug}`), name: c.title })),
     },
   };
+}
+
+/** The notes feed: a blog whose posts are the notes in this language. */
+export function notesLd(locale: Locale, notes: { number: number; body: string; publishedAt: string }[], name: string, description: string): Json {
+  const url = localeUrl(locale, "/notes");
+  return {
+    "@type": "Blog",
+    "@id": `${url}#blog`,
+    url,
+    name,
+    description,
+    inLanguage: locale,
+    isPartOf: { "@id": websiteId() },
+    author: { "@id": personId() },
+    blogPost: notes.slice(0, 50).map((n) => noteLd(locale, n)),
+  };
+}
+
+/** One note: a short post by the site's person. */
+export function noteLd(locale: Locale, n: { number: number; body: string; publishedAt: string }): Json {
+  const url = localeUrl(locale, `/notes/${n.number}`);
+  return {
+    "@type": "BlogPosting",
+    "@id": `${url}#note`,
+    url,
+    headline: noteHeadline(n.body),
+    datePublished: n.publishedAt,
+    inLanguage: locale,
+    author: { "@id": personId() },
+    image: ogImageUrl(locale, undefined, n.number),
+  };
+}
+
+/** A note's first line, cut to a title's length: notes have no title of their own. */
+export function noteHeadline(body: string, max = 70): string {
+  const first = body.trim().split(/\n/)[0]!.trim();
+  if (first.length <= max) return first;
+  const cut = first.slice(0, max - 1);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max / 2)).replace(/[,;:—–-]+$/, "").trim()}…`;
 }
 
 /** A @graph document; serialize with jsonLdScript(). */
