@@ -4,9 +4,10 @@ import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 import { dict, isLocale, type Locale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
+import { getNotes } from "@/site/notes-source";
 import { Signature } from "@/site/signature";
 
-// Social preview images, 1200×630: /og?locale=uk (site card) and /og?locale=uk&case=<slug>.
+// Social preview images, 1200×630: /og?locale=uk (site card), /og?locale=uk&case=<slug> and /og?locale=uk&note=<n>.
 // Rendered on demand and cached by the CDN for a day.
 
 // SIGNAL: the dark ground, warm off-white type, one orange accent.
@@ -39,6 +40,12 @@ export async function GET(request: NextRequest) {
   // Cases unreadable right now: the generic card is better than no preview at all.
   const item = slug ? (await getCases(locale).catch(() => [])).find((c) => c.slug === slug) : undefined;
   const accent = ACCENT;
+  const noteNumber = Number(params.get("note"));
+  const note = !item && Number.isInteger(noteNumber) && noteNumber > 0
+    ? (await getNotes(locale).catch(() => [])).find((n) => n.number === noteNumber)
+    : undefined;
+  // A note has no title: its text is the card, cut to what fits in six lines.
+  const noteText = note && (note.body.length > 260 ? `${note.body.slice(0, 259).replace(/\s+\S*$/, "")}…` : note.body);
 
   const image = new ImageResponse(
     (
@@ -55,6 +62,15 @@ export async function GET(request: NextRequest) {
               </div>
               <div style={{ fontSize: 30, fontWeight: 500, opacity: 0.8, maxWidth: 940, lineHeight: 1.35 }}>{item.summary}</div>
             </div>
+          ) : note ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              <div style={{ display: "flex", gap: 12, fontSize: 26, fontWeight: 700, color: accent, textTransform: "uppercase", letterSpacing: 2 }}>
+                {d.nav.notes} · N-{note.number}
+              </div>
+              <div style={{ fontSize: noteText!.length > 140 ? 40 : 54, fontWeight: 500, lineHeight: 1.25, letterSpacing: -1, maxWidth: 1000 }}>
+                {noteText}
+              </div>
+            </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               <div style={{ fontSize: 112, fontWeight: 500, lineHeight: 1, letterSpacing: -5 }}>{d.name}</div>
@@ -64,8 +80,8 @@ export async function GET(request: NextRequest) {
           )}
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {item && <div style={{ fontSize: 34, fontWeight: 700 }}>{d.name}</div>}
-              <div style={{ fontSize: 24, opacity: 0.7 }}>{item ? d.seo.ogRole : d.location}</div>
+              {(item || note) && <div style={{ fontSize: 34, fontWeight: 700 }}>{d.name}</div>}
+              <div style={{ fontSize: 24, opacity: 0.7 }}>{item || note ? d.seo.ogRole : d.location}</div>
             </div>
             <div style={{ display: "flex", color: PAPER, width: 230, height: 122 }}>
               <Signature width={230} height={122} />

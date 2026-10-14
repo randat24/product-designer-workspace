@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Globe } from "lucide-react";
 import { getCurrentUser, getMyRole, listMyWorkspaces } from "@/domains/projects";
 import { countNewRequests } from "@/domains/requests/queries";
+import { countUnreadReplies } from "@/domains/notes";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
 import { WorkspaceSwitcher } from "./workspace-switcher";
@@ -32,12 +33,16 @@ export async function WorkspaceHeader({ current }: { current: string }) {
   );
 }
 
-/** «Проекты · Заявки · Профіль сайту» with the number of new requests; the profile is the owner's only. */
-export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: string; workspaceId: string; current: "projects" | "requests" | "site" }) {
-  const [fresh, role] = await Promise.all([countNewRequests(workspaceId), getMyRole(workspaceId)]);
+/**
+ * «Проекты · Заявки · Нотатки · Профіль сайту» with the number of new requests and unread replies to notes;
+ * notes and the profile are the owner's only.
+ */
+export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: string; workspaceId: string; current: "projects" | "requests" | "notes" | "site" }) {
+  const [fresh, role, replies] = await Promise.all([countNewRequests(workspaceId), getMyRole(workspaceId), countUnreadReplies(workspaceId)]);
   const tabs = [
     { key: "projects", href: `/w/${wsSlug}`, label: t.requests.navProjects, badge: 0 },
     { key: "requests", href: `/w/${wsSlug}/requests`, label: t.requests.nav, badge: fresh },
+    ...(role === "owner" || current === "notes" ? [{ key: "notes", href: `/w/${wsSlug}/notes`, label: t.notes.nav, badge: replies, badgeLabel: t.notes.replies.newCount(replies) }] : []),
     ...(role === "owner" || current === "site" ? [{ key: "site", href: `/w/${wsSlug}/site`, label: t.siteProfile.nav, badge: 0 }] : []),
   ];
   return (
@@ -50,7 +55,7 @@ export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: 
           )}>
           {tab.label}
           {tab.badge > 0 && (
-            <span className="rounded-[4px] bg-accent-hover px-1.5 text-[0.75rem] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
+            <span className="rounded-[4px] bg-accent-hover px-1.5 text-[0.75rem] leading-5 text-on-accent" aria-label={"badgeLabel" in tab ? tab.badgeLabel : t.requests.newCount(tab.badge)}>
               {tab.badge}
             </span>
           )}

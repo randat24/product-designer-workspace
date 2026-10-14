@@ -107,7 +107,7 @@ export default async function SiteLayout({
                   <small className="mt-0.5 hidden font-label text-[0.6875rem] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
                 </span>
               </Link>
-              <SiteNav locale={locale} labels={{ work: d.nav.work, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} />
+              <SiteNav locale={locale} labels={{ work: d.nav.work, notes: d.nav.notes, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} />
               <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">
                 <ThemeToggle labelLight={d.ui.themeLight} labelDark={d.ui.themeDark} />
                 <LangSwitch current={locale} />
@@ -115,7 +115,7 @@ export default async function SiteLayout({
             </div>
             {/* Phones and tablets (below lg): the links take a second row instead of a hamburger — only three links. */}
             <div className={container}>
-              <SiteNav locale={locale} labels={{ work: d.nav.work, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} mobile />
+              <SiteNav locale={locale} labels={{ work: d.nav.work, notes: d.nav.notes, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} mobile />
             </div>
           </header>
 

@@ -107,7 +107,33 @@ export type Dictionary = {
   location: string;
   /** The veteran badge beside the name (src/site/signal/badges.tsx). */
   veteran: string;
-  nav: { work: string; about: string; contact: string };
+  nav: { work: string; about: string; contact: string; notes: string };
+  /** «Нотатки»: short posts on design, a feed with reactions and private replies. */
+  notes: {
+    title: string;
+    lead: string;
+    empty: string;
+    open: string;
+    thread: string;
+    continues: (n: number) => string;
+    continued: (n: number) => string;
+    back: string;
+    rss: string;
+    reactionsLabel: string;
+    reactions: { agree: string; disagree: string; new: string };
+    reactionFailed: string;
+    reply: {
+      title: string;
+      lead: string;
+      body: string;
+      contact: string;
+      contactHint: string;
+      send: string;
+      sending: string;
+      sent: string;
+      errors: { validation: string; spam: string; captcha: string; rate_limit: string; unavailable: string };
+    };
+  };
   home: {
     hello: string;
     lead: string;
@@ -213,6 +239,7 @@ export type Dictionary = {
   seo: {
     home: { title: string; description: string };
     cases: { title: string; description: string };
+    notes: { title: string; description: string };
     about: { title: string; description: string };
     notFound: { title: string; description: string };
     ogRole: string;
@@ -279,7 +306,38 @@ const uk: Dictionary = {
   role: "Product / UI-UX дизайнер",
   location: "Миколаїв · дистанційно",
   veteran: "Ветеран",
-  nav: { work: "Роботи", about: "Про мене", contact: "Контакт" },
+  nav: { work: "Роботи", about: "Про мене", contact: "Контакт", notes: "Нотатки" },
+  notes: {
+    title: "Нотатки",
+    lead: "Короткі думки про дизайн, поки свіжі: що помітив у роботі, з чим не згоден, що спрацювало. Відреагуйте або напишіть мені — відповідь бачу тільки я.",
+    empty: "Тут скоро з'являться перші нотатки.",
+    open: "Відкрити нотатку",
+    thread: "Тред",
+    continues: (n) => `Продовження нотатки N-${n}`,
+    continued: (n) => `${n} продовж.`,
+    back: "Усі нотатки",
+    rss: "RSS",
+    reactionsLabel: "Реакції на нотатку",
+    reactions: { agree: "Згоден", disagree: "Сперечаюсь", new: "Не знав" },
+    reactionFailed: "Реакцію не збережено. Спробуйте ще раз за хвилину.",
+    reply: {
+      title: "Відповісти автору",
+      lead: "Питання, заперечення чи свій приклад. Бачу тільки я; цікаве можу взяти в наступну нотатку — без вашого імені.",
+      body: "Ваша відповідь",
+      contact: "Як вам відповісти (необов'язково)",
+      contactHint: "E-mail або Telegram, якщо хочете відповідь.",
+      send: "Надіслати",
+      sending: "Надсилаємо…",
+      sent: "Дякую! Відповідь у мене.",
+      errors: {
+        validation: "Напишіть відповідь — до 1000 символів.",
+        spam: "Не вдалося надіслати. Зачекайте кілька секунд і спробуйте ще раз.",
+        captcha: "Не вдалося перевірити, що ви людина. Оновіть сторінку й спробуйте ще раз.",
+        rate_limit: "Забагато відповідей поспіль. Спробуйте пізніше.",
+        unavailable: "Відповіді зараз не приймаються. Напишіть мені в Telegram або на пошту.",
+      },
+    },
+  },
   home: {
     hello: "Привіт, я Геннадій —",
     lead: "продуктовий дизайнер. 7 років у вебі та продуктових командах. Дослідження → дизайн-система → чистий handoff. Роблю передбачуваний інтерфейс, який команда може розвивати без мене.",
@@ -647,6 +705,10 @@ const uk: Dictionary = {
       description:
         "Кейси продуктового дизайну: від дослідження користувачів і аналізу конкурентів до флоу, екранів і рішень, переданих у розробку.",
     },
+    notes: {
+      title: "Нотатки продуктового дизайнера",
+      description: "Короткі нотатки Геннадія Федорова про продуктовий і UX-дизайн: спостереження з роботи, суперечливі рішення, що спрацювало й що ні.",
+    },
     about: {
       title: "Про мене — продуктовий дизайнер: підхід, досвід, навички",
       description:
@@ -712,7 +774,38 @@ const en: Dictionary = {
   role: "Product / UI-UX designer",
   location: "Mykolaiv, Ukraine · remote",
   veteran: "Veteran",
-  nav: { work: "Work", about: "About", contact: "Contact" },
+  nav: { work: "Work", about: "About", contact: "Contact", notes: "Notes" },
+  notes: {
+    title: "Notes",
+    lead: "Short thoughts on design while they are fresh: what I noticed at work, what I disagree with, what worked. React, or write to me — only I see your reply.",
+    empty: "The first notes are coming soon.",
+    open: "Open the note",
+    thread: "Thread",
+    continues: (n) => `Continues note N-${n}`,
+    continued: (n) => `${n} follow-up${n === 1 ? "" : "s"}`,
+    back: "All notes",
+    rss: "RSS",
+    reactionsLabel: "Reactions to the note",
+    reactions: { agree: "Agree", disagree: "Disagree", new: "Didn't know" },
+    reactionFailed: "The reaction was not saved. Try again in a minute.",
+    reply: {
+      title: "Reply to the author",
+      lead: "A question, an objection or your own example. Only I see it; I may pick up a good one in a later note — without your name.",
+      body: "Your reply",
+      contact: "How to answer you (optional)",
+      contactHint: "E-mail or Telegram, if you want an answer.",
+      send: "Send",
+      sending: "Sending…",
+      sent: "Thank you! I have your reply.",
+      errors: {
+        validation: "Write a reply — up to 1000 characters.",
+        spam: "Could not send. Wait a few seconds and try again.",
+        captcha: "Could not check that you are human. Reload the page and try again.",
+        rate_limit: "Too many replies in a row. Try again later.",
+        unavailable: "Replies are not accepted right now. Write to me on Telegram or by e-mail.",
+      },
+    },
+  },
   home: {
     hello: "Hi, I'm Hennadii —",
     lead: "a product designer with 7 years in web and product teams. Research → design system → clean handoff. I build predictable interfaces a team can keep growing without me.",
@@ -1078,6 +1171,10 @@ const en: Dictionary = {
       title: "Product and UX design case studies",
       description:
         "Product design case studies: from user research and competitor analysis to flows, screens and decisions handed off to development.",
+    },
+    notes: {
+      title: "Notes of a product designer",
+      description: "Short notes by Hennadii Fedorov on product and UX design: observations from work, contested decisions, what worked and what did not.",
     },
     about: {
       title: "About — product designer: approach, experience, skills",

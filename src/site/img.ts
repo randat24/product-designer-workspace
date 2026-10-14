@@ -27,4 +27,5 @@ export const SIZES = {
   cover: "(max-width: 1440px) 100vw, 1344px",
   figure: "(max-width: 1024px) 100vw, 960px",
   thumb: "(max-width: 640px) 50vw, 420px",
+  note: "(max-width: 780px) 100vw, 740px",
 } as const;

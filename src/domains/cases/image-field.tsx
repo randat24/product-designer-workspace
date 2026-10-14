@@ -21,10 +21,13 @@ async function imageSize(file: File) {
 /**
  * One picture of the case. The browser uploads straight to the public `case-media` bucket
  * (row-level security checks the project from the path); the editor keeps its address, size and description.
+ * `store` puts it elsewhere: site notes upload to `note-media` under the workspace.
  */
-export function ImageField({ projectId, id, value, readOnly, onChange }: {
-  projectId: string; id: string; value: CaseImage | null; readOnly: boolean; onChange: (v: CaseImage | null) => void;
+export function ImageField({ projectId, store, id, value, readOnly, onChange }: {
+  projectId?: string; store?: { bucket: string; folder: string };
+  id: string; value: CaseImage | null; readOnly: boolean; onChange: (v: CaseImage | null) => void;
 }) {
+  const target = store ?? { bucket: "case-media", folder: `${projectId}/case` };
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
@@ -40,8 +43,8 @@ export function ImageField({ projectId, id, value, readOnly, onChange }: {
     try {
       const { width, height } = await imageSize(file);
       const { createBrowserSupabase } = await import("@/shared/lib/supabase/browser");
-      const storage = createBrowserSupabase().storage.from("case-media");
-      const path = `${projectId}/case/${crypto.randomUUID()}.${EXT[file.type]}`;
+      const storage = createBrowserSupabase().storage.from(target.bucket);
+      const path = `${target.folder}/${crypto.randomUUID()}.${EXT[file.type]}`;
       const { error } = await storage.upload(path, file, { contentType: file.type, cacheControl: "31536000" });
       if (error) throw error;
       onChange({ src: storage.getPublicUrl(path).data.publicUrl, alt: value?.alt ?? "", width, height });

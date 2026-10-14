@@ -52,6 +52,9 @@ GA4 (Google Analytics 4) + Vercel Web Analytics + Vercel Speed Insights. Тол�
 | `project_request_submitted` | заявка сохранена | `project_types_count`, `has_existing`, `budget_band` (`undecided` / `estimate` / `custom` / `lt_1k` / `1k_5k` / `5k_plus`) |
 | `project_request_failed` | отправка не удалась | `reason`: `validation` / `spam` / `captcha` / `rate_limit` / `unavailable` / `server` |
 | `project_brief_downloaded` | скачан или отправлен бриф (PDF) | `location`: `confirmation` |
+| `note_open` | ссылка на нотатку | `note_number`, `location`: `home` / `notes` / `note` |
+| `note_reaction` | поставлена реакция на нотатку | `note_number`, `reaction`: `agree` / `disagree` / `new` |
+| `note_reply_sent` | отправлен приватный ответ на нотатку (текст не передаётся) | `note_number` |
 | `certificate_open` | сертификат на «Про мене» | `provider` (организация, выдавшая сертификат) |
 | `language_switch` | переключатель UA / EN | `from`, `to` |
 | `theme_switch` | светлая / тёмная тема | `theme` |
