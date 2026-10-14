@@ -16,6 +16,7 @@ import { TraceGraph } from "@/site/trace-graph";
 import { INTAKE } from "@/site/intake/content";
 import { signalCopy } from "@/site/signal/home-content";
 import { button } from "@/site/signal/ui";
+import { KindBadge } from "@/site/signal/badges";
 import { SIZES, responsive } from "@/site/img";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -80,11 +81,14 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       <div className={container}>
         <header className="sg-case-hero">
           <Link href={`/${locale}/cases`} className="sg-case-back"><ArrowLeft aria-hidden className="size-4" />{s.back}</Link>
-          <p className="sg-eyebrow text-fg-secondary">
-            {position && <span className="sg-section-index">{pad(position.index)} /</span>}
-            {[kind, item.year].filter(Boolean).join(" · ")}
-            {item.adult && <span className="ml-3 text-danger">{d.adult.badge}</span>}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="sg-eyebrow text-fg-secondary">
+              {position && <span className="sg-section-index">{pad(position.index)} /</span>}
+              {item.year}
+              {item.adult && <span className="ml-3 text-danger">{d.adult.badge}</span>}
+            </p>
+            {item.kind && <KindBadge item={item} locale={locale} />}
+          </div>
           {/* The case is the headline: its title is the largest type on the page. */}
           <h1 className="sg-case-title">{item.title}</h1>
           <div className="sg-case-hero-bottom">

@@ -42,6 +42,8 @@
   --sg-warning-bg: var(--warning-bg);
   --sg-danger: var(--danger);
   --sg-danger-bg: var(--danger-bg);
+  --sg-veteran: var(--veteran);
+  --sg-veteran-bg: var(--veteran-bg);
   --sg-disabled-bg: var(--subtle);
   --sg-disabled-fg: var(--fg-secondary);
   --sg-inverse-bg: #191B18;
@@ -137,6 +139,13 @@
   .signal .sg-badge--success { color: var(--sg-success); background: var(--sg-success-bg); border-color: transparent; }
   .signal .sg-badge--warning { color: var(--sg-warning); background: var(--sg-warning-bg); border-color: transparent; }
   .signal .sg-badge--danger { color: var(--sg-danger); background: var(--sg-danger-bg); border-color: transparent; }
+  /* Project kind on cards and case pages: shipped work in green with a dot, a concept on a dashed outline. */
+  .signal .sg-badge--real::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .signal .sg-badge--real { color: var(--sg-success); background: var(--sg-success-bg); border-color: transparent; gap: 6px; }
+  .signal .sg-badge--concept { color: var(--sg-fg-secondary); border-style: dashed; border-color: var(--sg-control-border); }
+  /* «Ветеран» beside the name: the war-veteran medal from the awards on a khaki fill. */
+  .signal .sg-badge--veteran { color: var(--sg-veteran); background: var(--sg-veteran-bg); border-color: transparent; gap: 6px; padding: 3px 10px 3px 8px; font-size: 13px; }
+  .signal .sg-badge--veteran .award-icon { height: 16px; }
   .signal .sg-badge--outline-danger { color: var(--sg-danger); border-color: var(--sg-danger); font-weight: 700; letter-spacing: .06em; }
 
   /* Form field. */

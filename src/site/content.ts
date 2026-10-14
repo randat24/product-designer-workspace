@@ -105,6 +105,8 @@ export type Dictionary = {
   name: string;
   role: string;
   location: string;
+  /** The veteran badge beside the name (src/site/signal/badges.tsx). */
+  veteran: string;
   nav: { work: string; about: string; contact: string };
   home: {
     hello: string;
@@ -272,6 +274,7 @@ const uk: Dictionary = {
   name: "Геннадій Федоров",
   role: "Product / UI-UX дизайнер",
   location: "Миколаїв · дистанційно",
+  veteran: "Ветеран",
   nav: { work: "Роботи", about: "Про мене", contact: "Контакт" },
   home: {
     hello: "Привіт, я Геннадій —",
@@ -701,6 +704,7 @@ const en: Dictionary = {
   name: "Hennadii Fedorov",
   role: "Product / UI-UX designer",
   location: "Mykolaiv, Ukraine · remote",
+  veteran: "Veteran",
   nav: { work: "Work", about: "About", contact: "Contact" },
   home: {
     hello: "Hi, I'm Hennadii —",

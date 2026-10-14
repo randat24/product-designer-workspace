@@ -4,6 +4,7 @@ import { trackAttrs } from "@/site/analytics/track";
 import { dict, type Case, type Locale } from "@/site/content";
 import { CaseCover, ProcessStrip } from "@/site/ui";
 import { WorkFilter } from "./work-filter";
+import { KindBadge } from "./badges";
 import { SIZES, responsive } from "@/site/img";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -61,7 +62,7 @@ function ProjectCard({ item, index, locale, location, variant }: {
         className={cn("sg-project-visual", variant === "lead" && "sg-project-visual--lead")} style={{ background: tone }}>
         {variant === "lead" && (
           <span className="sg-cover-type">
-            <small>{kind} / {item.client}</small>
+            <small>{item.client}</small>
             {item.title}
             <span className="sg-cover-arrow">↗</span>
           </span>
@@ -71,6 +72,7 @@ function ProjectCard({ item, index, locale, location, variant }: {
       </Link>
       <div className="sg-project-meta">
         <div className="min-w-0">
+          <KindBadge item={item} locale={locale} className="mb-3" />
           <Title><Link href={href} {...track}>{item.title} <span aria-hidden>↗</span></Link></Title>
           <p>{item.summary}</p>
           {/* How much of the work the workbook holds, for cases published from the tool. */}

@@ -28,6 +28,8 @@ const EXTRA: Record<Locale, { cv: string; phone: string; portfolio: string }> = 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const bare = (url: string) => url.replace(/^https?:\/\//, "").replace(/^www\./, "");
 const FONTS = pathToFileURL(join(ROOT, "src/app/fonts.css")).href;
+/** The war-veteran medal of the awards (public/awards), as a mask for the «Ветеран» badge beside the name. */
+const MEDAL = `data:image/svg+xml;base64,${readFileSync(join(ROOT, "public/awards/veteran-of-war.svg")).toString("base64")}`;
 function html(locale: Locale): string {
   const d = dict(locale);
   const x = EXTRA[locale];
@@ -78,7 +80,7 @@ function html(locale: Locale): string {
 <style>
   @page { size: A4; margin: 11mm 13mm 12mm; }
   /* SIGNAL light theme (src/app/globals.css). */
-  :root { --canvas:#F3F1EB; --surface:#FFFFFF; --fg:#20221F; --fg2:#62645D; --line:#D0D1C8; --accent:#FF6B35; --accent-text:#AF360B; --success:#27603B;
+  :root { --canvas:#F3F1EB; --surface:#FFFFFF; --fg:#20221F; --fg2:#62645D; --line:#D0D1C8; --accent:#FF6B35; --accent-text:#AF360B; --success:#27603B; --veteran:#45441F; --veteran-bg:#E8E6C6;
           --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -93,7 +95,10 @@ function html(locale: Locale): string {
   .eyebrow { font-size: 7.2pt; line-height: 1.5; color: var(--fg2); }
   .open { display: inline-flex; align-items: center; gap: 2mm; font-size: 8.4pt; font-weight: 500; }
   .open i { width: 1.9mm; height: 1.9mm; border-radius: 50%; background: var(--success); }
-  .hero h1 { margin-top: 4mm; font-size: 36pt; font-weight: 500; line-height: 1.02; letter-spacing: -0.05em; word-spacing: .12em; }
+  .name { margin-top: 4mm; display: flex; align-items: center; gap: 4mm; }
+  .veteran { display: inline-flex; align-items: center; gap: 1.4mm; padding: .8mm 2.6mm .8mm 2mm; border-radius: 4px; background: var(--veteran-bg); color: var(--veteran); font-size: 8.6pt; font-weight: 500; }
+  .veteran i { width: 2.6mm; height: 4.2mm; background: currentColor; -webkit-mask: url("${MEDAL}") center / contain no-repeat; mask: url("${MEDAL}") center / contain no-repeat; }
+  .hero h1 { font-size: 36pt; font-weight: 500; line-height: 1.02; letter-spacing: -0.05em; word-spacing: .12em; }
   .hero .role { margin-top: 2.6mm; font: 400 8.4pt/1.5 var(--mono); text-transform: uppercase; letter-spacing: .075em; }
   .hero .role span { color: var(--fg2); }
   .contacts { margin-top: 5mm; padding-top: 3mm; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 2.4mm 6mm; font-size: 8.6pt; }
@@ -131,7 +136,7 @@ function html(locale: Locale): string {
       <p class="eyebrow">${esc(x.cv)}</p>
       <p class="open"><i></i>${esc(d.home.available)}</p>
     </div>
-    <h1>${esc(d.name)}</h1>
+    <div class="name"><h1>${esc(d.name)}</h1><span class="veteran"><i></i>${esc(d.veteran)}</span></div>
     <p class="role">${esc(d.role)} <span>· ${esc(d.location)}</span></p>
     <ul class="contacts">${contacts.map(([k, v, href]) => `<li><small>${esc(k!)}</small><a href="${esc(href!)}">${esc(v!)}</a></li>`).join("")}</ul>
   </header>

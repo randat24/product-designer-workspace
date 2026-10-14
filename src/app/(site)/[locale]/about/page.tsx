@@ -14,6 +14,7 @@ import { INTAKE } from "@/site/intake/content";
 import { Eyebrow, PrimaryLink, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 import { ExternalIcon } from "@/site/social-icons";
+import { VeteranBadge } from "@/site/signal/badges";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -55,7 +56,10 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       {/* SIGNAL page opening, as on a case: eyebrow, the title set large, the summary beside the facts. */}
       <section className={container} aria-labelledby="about-h">
         <header className="sg-case-hero">
-          <p className="sg-eyebrow text-fg-secondary">{d.about.eyebrow}</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="sg-eyebrow text-fg-secondary">{d.about.eyebrow}</p>
+            <VeteranBadge locale={locale} />
+          </div>
           <h1 id="about-h" className="sg-case-title">{d.about.title}</h1>
           <div className="sg-case-hero-bottom">
             <p className="sg-case-deck">{d.about.summary}</p>
