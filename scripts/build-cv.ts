@@ -2,7 +2,8 @@
 // (the light theme, for print): Manrope for all text, headings Medium in sentence case with tight tracking,
 // IBM Plex Mono for eyebrows, periods and labels; ink #20221F on white with a canvas header band, 1px rules instead
 // of cards, 4px chips, one orange accent (a 2px rule, the section numbers in accent-text), the availability dot in
-// success green, the medals drawn in ink. Fonts come from src/app/fonts.css, the same @fontsource files the site uses.
+// success green. Awards are on the site only, not in the CV.
+// Fonts come from src/app/fonts.css, the same @fontsource files the site uses.
 // Run: npm run cv  (Chromium from Playwright; no dev server needed).
 //
 // The CV and the «Про мене» page read the same data (src/site/content.ts), so they cannot drift apart.
@@ -27,12 +28,6 @@ const EXTRA: Record<Locale, { cv: string; phone: string; portfolio: string }> = 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const bare = (url: string) => url.replace(/^https?:\/\//, "").replace(/^www\./, "");
 const FONTS = pathToFileURL(join(ROOT, "src/app/fonts.css")).href;
-/** The medal artwork inline, one tone in the text colour (as on the site), instead of the lavender of the files. */
-const medal = (icon: string) =>
-  readFileSync(join(ROOT, "public/awards", `${icon}.svg`), "utf8")
-    .replace(/fill="#BABED6"/gi, 'fill="currentColor"')
-    .replace("<svg ", '<svg aria-hidden="true" ');
-
 function html(locale: Locale): string {
   const d = dict(locale);
   const x = EXTRA[locale];
@@ -76,10 +71,6 @@ function html(locale: Locale): string {
     );
 
   const availability = `<ul class="dots">${d.availability.map((a) => `<li>${esc(a)}</li>`).join("")}</ul>`;
-
-  const awards = `<ul class="awards">${d.awards
-    .map((a) => `<li><span class="medal">${medal(a.icon)}</span><span><b>${esc(a.title)}</b><small>${esc(a.issuer)}</small></span></li>`)
-    .join("")}</ul>`;
 
   return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8">
 <title>${esc(d.name)} — CV</title>
@@ -134,13 +125,6 @@ function html(locale: Locale): string {
   ul.dots li { position: relative; padding-left: 4.4mm; margin-bottom: 1mm; break-inside: avoid; }
   ul.dots li::before { content: ""; position: absolute; left: .4mm; top: 1.85mm; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--success); }
 
-  .awards { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; }
-  .awards li { display: grid; grid-template-columns: 6mm 1fr; gap: 3mm; align-items: center; padding: 1.8mm 0; border-top: 1px solid var(--line); break-inside: avoid; }
-  .awards li:nth-child(-n+2) { border-top: 0; }
-  .medal { display: block; color: var(--fg); }
-  .medal svg { display: block; width: 5.2mm; height: auto; }
-  .awards b { display: block; font-size: 8.8pt; font-weight: 600; line-height: 1.3; }
-  .awards small { display: block; margin-top: .4mm; font-size: 8pt; color: var(--fg2); }
 </style></head><body>
   <header class="hero">
     <div class="hero-top">
@@ -156,7 +140,6 @@ function html(locale: Locale): string {
   ${section(d.about.skills, skills)}
   ${section(d.about.education, education)}
   ${section(d.about.availability, availability)}
-  ${section(d.about.awards, awards)}
 </body></html>`;
 }
 
