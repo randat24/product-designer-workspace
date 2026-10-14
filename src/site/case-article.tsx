@@ -98,10 +98,10 @@ export function CaseArticle({ item, locale, next, position, banner }: {
                 <>
                   <ul className="flex flex-wrap gap-2">
                     {item.product.disciplines.map((x) => (
-                      <li key={x} className="rounded-[4px] border border-line px-3 py-1 text-[13px]">{x}</li>
+                      <li key={x} className="rounded-[4px] border border-line px-3 py-1 text-[0.8125rem]">{x}</li>
                     ))}
                   </ul>
-                  {item.product.note && <p className="text-[13px] text-fg-secondary">{item.product.note}</p>}
+                  {item.product.note && <p className="text-[0.8125rem] text-fg-secondary">{item.product.note}</p>}
                 </>
               )}
             </div>
@@ -192,7 +192,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
               <p className="whitespace-pre-line">{sec.body}</p>
               {/* Sample cases keep a dashed slot where a picture will go; real sections bring their own. */}
               {item.sample && !sec.image && i % 2 === 1 && (
-                <div className="flex aspect-[16/9] items-center justify-center rounded-[4px] border border-dashed border-line bg-subtle text-[14px] text-fg-secondary">
+                <div className="flex aspect-[16/9] items-center justify-center rounded-[4px] border border-dashed border-line bg-subtle text-[0.875rem] text-fg-secondary">
                   {d.cases.placeholder}
                 </div>
               )}
@@ -228,7 +228,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           </section>
         )}
         <div className="flex flex-col gap-5 border-t border-line py-10 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-[46ch] text-[17px] text-fg-secondary">{d.contact.lead}</p>
+          <p className="max-w-[46ch] text-[1.0625rem] text-fg-secondary">{d.contact.lead}</p>
           <div className="flex flex-wrap gap-3">
             <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "case" })}>
               {INTAKE[locale].cta}

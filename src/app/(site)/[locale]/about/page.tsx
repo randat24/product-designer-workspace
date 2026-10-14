@@ -106,15 +106,15 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             <li key={`${i}`} className="border-t border-line">
               <details className="group" open={i === 0}>
                 <summary className="hit grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_24px] gap-x-4 gap-y-1 py-6 [&::-webkit-details-marker]:hidden">
-                  <span className="font-label text-[11px] uppercase tracking-[0.08em] text-fg-secondary">{job.period}</span>
-                  <h3 className="col-start-1 text-[clamp(20px,2vw,26px)] font-medium leading-[1.25] tracking-[-0.03em]">{job.title}</h3>
-                  <span className="col-start-1 text-[15px] text-fg-secondary">{job.place}</span>
-                  <span aria-hidden className="col-start-2 row-span-3 row-start-1 self-center font-label text-[20px] leading-none text-accent-text transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none">+</span>
+                  <span className="font-label text-[0.6875rem] uppercase tracking-[0.08em] text-fg-secondary">{job.period}</span>
+                  <h3 className="col-start-1 text-[clamp(1.25rem,2vw,1.625rem)] font-medium leading-[1.25] tracking-[-0.03em]">{job.title}</h3>
+                  <span className="col-start-1 text-[0.9375rem] text-fg-secondary">{job.place}</span>
+                  <span aria-hidden className="col-start-2 row-span-3 row-start-1 self-center font-label text-[1.25rem] leading-none text-accent-text transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none">+</span>
                 </summary>
                 <div className="flex max-w-[72ch] flex-col gap-3 pb-7">
                   <ul className="flex flex-wrap gap-1.5">
                     {job.points.map((p, k) => (
-                      <li key={k} className="rounded-[4px] border border-line px-3 py-1 text-[13px]">{p}</li>
+                      <li key={k} className="rounded-[4px] border border-line px-3 py-1 text-[0.8125rem]">{p}</li>
                     ))}
                   </ul>
                   {job.details?.map((p, k) => <p key={k} className="leading-[1.7] text-fg-secondary">{p}</p>)}
@@ -129,7 +129,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       <section aria-labelledby="approach-h" className={`${container} mt-24 flex flex-col gap-8`}>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
           <h2 id="approach-h" className={bigTitle}>{d.about.approach}</h2>
-          <p className="max-w-[52ch] text-[17px] leading-[1.55] text-fg-secondary">{d.about.approachLead}</p>
+          <p className="max-w-[52ch] text-[1.0625rem] leading-[1.55] text-fg-secondary">{d.about.approachLead}</p>
         </div>
         <ol className="sg-process-grid">
           {d.about.steps.map((step, i) => (
@@ -137,7 +137,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               <p className="sg-eyebrow" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
-              <div className="mt-auto pt-5 font-label text-[11px] uppercase leading-[1.5] tracking-[0.04em] text-fg">
+              <div className="mt-auto pt-5 font-label text-[0.6875rem] uppercase leading-[1.5] tracking-[0.04em] text-fg">
                 <span className="text-fg-secondary">{d.about.inWorkbook}:</span> {step.tie}
               </div>
             </li>
@@ -194,9 +194,9 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                   ) : (
                     <p className="font-semibold">{e.title}</p>
                   )}
-                  <p className="text-[14px] text-fg-secondary">{e.place}</p>
+                  <p className="text-[0.875rem] text-fg-secondary">{e.place}</p>
                 </div>
-                <span className="shrink-0 tabular-nums text-[14px] text-fg-secondary">{e.year}</span>
+                <span className="shrink-0 tabular-nums text-[0.875rem] text-fg-secondary">{e.year}</span>
               </li>
             ))}
           </ul>
@@ -222,15 +222,15 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               <h2 className="t-section">{d.about.serviceTitle}</h2>
             </div>
             <div className="flex flex-col gap-3">
-              <p className="max-w-[62ch] text-[17px] leading-[1.7]">{d.about.serviceText}</p>
-              {serviceJob && <p className="text-[15px] text-fg-secondary">{serviceJob.title} · {serviceJob.place}</p>}
-              <blockquote className="mt-3 max-w-[62ch] border-l-[3px] border-accent-text bg-subtle px-5 py-4 text-pretty text-[17px] font-medium leading-[1.7]">
+              <p className="max-w-[62ch] text-[1.0625rem] leading-[1.7]">{d.about.serviceText}</p>
+              {serviceJob && <p className="text-[0.9375rem] text-fg-secondary">{serviceJob.title} · {serviceJob.place}</p>}
+              <blockquote className="mt-3 max-w-[62ch] border-l-[3px] border-accent-text bg-subtle px-5 py-4 text-pretty text-[1.0625rem] font-medium leading-[1.7]">
                 {d.about.serviceThanks}
               </blockquote>
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            <h3 className="text-[21px] font-semibold tracking-[-0.02em]">{d.about.awards}</h3>
+            <h3 className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{d.about.awards}</h3>
             <AwardsShowcase awards={d.awards} label={d.about.awards} />
           </div>
         </div>
@@ -241,7 +241,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         <div className="flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between">
           <h2 id="cta-h" className={bigTitle}>{d.about.ctaTitle}</h2>
           <div className="flex max-w-[460px] flex-col gap-4">
-            <p className="text-[17px] leading-[1.55] text-fg-secondary">{d.about.ctaText}</p>
+            <p className="text-[1.0625rem] leading-[1.55] text-fg-secondary">{d.about.ctaText}</p>
             <div className="flex flex-wrap gap-3">
               <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "about" })}>
                 {INTAKE[locale].cta}
@@ -266,7 +266,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 function Block({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn("flex flex-col gap-4 border-t border-line pt-5", className)}>
-      <h2 className="text-[21px] font-semibold tracking-[-0.02em]">{title}</h2>
+      <h2 className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{title}</h2>
       {children}
     </div>
   );

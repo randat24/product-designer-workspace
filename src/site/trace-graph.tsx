@@ -78,7 +78,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
 
   return (
     <div className="flex flex-col gap-4">
-      <p aria-live="polite" className="min-h-[4.5em] rounded-[8px] bg-subtle px-4 py-3 text-[14px] leading-[1.5]">
+      <p aria-live="polite" className="min-h-[4.5em] rounded-[8px] bg-subtle px-4 py-3 text-[0.875rem] leading-[1.5]">
         {active && chain ? (
           <>
             <b className="font-label font-medium">{active}</b>{titles.get(active) ? ` · ${titles.get(active)}` : ""}<br />
@@ -110,7 +110,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
           </svg>
           {columns.map(({ stage, nodes }) => (
             <div key={stage} className="relative flex min-w-0 flex-col gap-2" style={{ "--c": COLOR[stage] } as React.CSSProperties}>
-              <h3 className="mb-1 flex items-center gap-2 font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary">
+              <h3 className="mb-1 flex items-center gap-2 font-label text-[0.6875rem] uppercase tracking-[0.04em] text-fg-secondary">
                 <i aria-hidden className="size-[9px] rounded-[2px] bg-(--c)" />{labels.stages[stage]} · {nodes.length}
               </h3>
               {nodes.map((n) => (
@@ -125,12 +125,12 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
                   onBlur={() => setHover(null)}
                   onClick={() => setPinned((p) => (p === n.code ? null : n.code))}
                   className={cn(
-                    "relative grid gap-0.5 rounded-[4px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[12.5px] leading-[1.3] transition-opacity duration-150 hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
+                    "relative grid gap-0.5 rounded-[4px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[0.7812rem] leading-[1.3] transition-opacity duration-150 hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
                     lit && !lit.has(n.code) && "opacity-30",
                     active === n.code && "ring-2 ring-fg",
                   )}
                 >
-                  <b className="font-label text-[11px] font-medium">{n.code}</b>
+                  <b className="font-label text-[0.6875rem] font-medium">{n.code}</b>
                   {n.title && <span className="line-clamp-2" lang="uk">{n.title}</span>}
                 </button>
               ))}
@@ -138,7 +138,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
           ))}
         </div>
       </div>
-      {labels.titlesNote && <p className="text-[13px] text-fg-secondary">{labels.titlesNote}</p>}
+      {labels.titlesNote && <p className="text-[0.8125rem] text-fg-secondary">{labels.titlesNote}</p>}
     </div>
   );
 }

@@ -29,7 +29,7 @@ export function CaseFigma({ url, poster, labels, caseSlug }: {
           <i className="size-2.5 rounded-full bg-line" />
           <i className="size-2.5 rounded-full bg-line" />
         </span>
-        <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-fg-secondary">{fileName}</span>
+        <span className="min-w-0 flex-1 truncate text-[0.8125rem] font-semibold text-fg-secondary">{fileName}</span>
         <a
           href={url}
           target="_blank"

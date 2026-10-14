@@ -102,9 +102,9 @@ export default async function SiteLayout({
             <div className={`${container} flex h-16 items-center gap-3 sm:h-20 sm:gap-4`}>
               <Link href={`/${locale}`} className="group hit flex shrink-0 items-center gap-3.5 whitespace-nowrap" aria-label={d.name}>
                 <BrandMark />
-                <span aria-hidden className="flex flex-col text-[14px] font-semibold leading-[1.35]">
+                <span aria-hidden className="flex flex-col text-[0.875rem] font-semibold leading-[1.35]">
                   {d.name}
-                  <small className="mt-0.5 hidden font-label text-[11px] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
+                  <small className="mt-0.5 hidden font-label text-[0.6875rem] font-normal uppercase tracking-[0.06em] text-fg-secondary sm:block">{s.role}</small>
                 </span>
               </Link>
               <SiteNav locale={locale} labels={{ work: d.nav.work, about: d.nav.about, discuss: s.discuss }} ariaLabel={d.ui.mainNav} />
@@ -124,7 +124,7 @@ export default async function SiteLayout({
           </main>
 
           {/* SIGNAL footer: one mono line under a rule. */}
-          <footer className={`${container} mt-16 flex flex-col gap-4 border-t border-line py-7 font-label text-[11px] uppercase leading-[1.6] tracking-[0.04em] text-fg-secondary md:flex-row md:items-center md:justify-between`}>
+          <footer className={`${container} mt-16 flex flex-col gap-4 border-t border-line py-7 font-label text-[0.6875rem] uppercase leading-[1.6] tracking-[0.04em] text-fg-secondary md:flex-row md:items-center md:justify-between`}>
             <span>© {year} {d.name}</span>
             <ul className="flex flex-wrap gap-x-5 gap-y-1" aria-label={d.ui.footerNav}>
               {SOCIAL.map(({ key, href, label, event }) => (

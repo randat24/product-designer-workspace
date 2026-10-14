@@ -50,7 +50,7 @@ export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: 
           )}>
           {tab.label}
           {tab.badge > 0 && (
-            <span className="rounded-[4px] bg-accent-hover px-1.5 text-[12px] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
+            <span className="rounded-[4px] bg-accent-hover px-1.5 text-[0.75rem] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
               {tab.badge}
             </span>
           )}

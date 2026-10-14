@@ -26,16 +26,16 @@ export default async function Privacy({ params }: { params: Promise<{ locale: st
       <article className="flex max-w-[760px] flex-col gap-8">
         <header className="flex flex-col gap-4">
           <h1 className="page-title">{p.title}</h1>
-          <p className="text-[clamp(17px,2vw,20px)] leading-[1.55] text-fg-secondary">{p.lede}</p>
+          <p className="text-[clamp(1.0625rem,2vw,1.25rem)] leading-[1.55] text-fg-secondary">{p.lede}</p>
         </header>
         {p.sections.map((s) => (
           <section key={s.title} id={s.id} className="flex scroll-mt-24 flex-col gap-2 border-t border-line pt-5">
-            <h2 className="text-[21px] font-semibold tracking-[-0.02em]">{s.title}</h2>
-            <p className="text-[17px] leading-[1.6]">{s.body}</p>
+            <h2 className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{s.title}</h2>
+            <p className="text-[1.0625rem] leading-[1.6]">{s.body}</p>
           </section>
         ))}
         {gaId() && <ConsentControls labels={p} />}
-        <p className="text-[13px] text-fg-secondary">{p.updated}</p>
+        <p className="text-[0.8125rem] text-fg-secondary">{p.updated}</p>
       </article>
     </div>
   );

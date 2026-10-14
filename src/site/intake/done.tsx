@@ -76,15 +76,15 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
         <h1 ref={heading} tabIndex={-1} className="t-page outline-none">
           {t.title}
         </h1>
-        <p className="text-[18px] leading-[1.55] text-fg-secondary">{t.lead}</p>
-        {done.duplicate && <p className="text-[15px] text-fg-secondary">{t.duplicate}</p>}
+        <p className="text-[1.125rem] leading-[1.55] text-fg-secondary">{t.lead}</p>
+        {done.duplicate && <p className="text-[0.9375rem] text-fg-secondary">{t.duplicate}</p>}
       </div>
 
       <dl className="sg-panel grid max-w-[680px] gap-4 p-5 sm:grid-cols-3 sm:p-6">
         {[[t.code, done.code], [t.date, date], [t.project, done.projectName ?? t.noName]].map(([k, v]) => (
           <div key={k} className="flex flex-col gap-1">
             <dt className="sg-eyebrow text-fg-secondary">{k}</dt>
-            <dd className="text-[17px] font-semibold">{v}</dd>
+            <dd className="text-[1.0625rem] font-semibold">{v}</dd>
           </div>
         ))}
       </dl>
@@ -104,16 +104,16 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
             </button>
           )}
         </div>
-        <p className="text-[14px] text-fg-secondary">{t.tokenNote}</p>
-        {failed && <p role="alert" className="text-[15px] font-semibold text-danger">{INTAKE[locale].failed.server}</p>}
+        <p className="text-[0.875rem] text-fg-secondary">{t.tokenNote}</p>
+        {failed && <p role="alert" className="text-[0.9375rem] font-semibold text-danger">{INTAKE[locale].failed.server}</p>}
       </div>
 
       <section aria-labelledby="next-h" className="flex max-w-[680px] flex-col gap-4 border-t border-line pt-6">
-        <h2 id="next-h" className="text-[21px] font-semibold tracking-[-0.02em]">{t.nextTitle}</h2>
+        <h2 id="next-h" className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{t.nextTitle}</h2>
         <ol className="flex flex-col gap-3">
           {t.next.map((s, i) => (
-            <li key={s} className="flex gap-3 text-[16px] leading-snug">
-              <span className="w-7 shrink-0 pt-0.5 font-label text-[12px] text-accent-text">{String(i + 1).padStart(2, "0")}</span>
+            <li key={s} className="flex gap-3 text-[1rem] leading-snug">
+              <span className="w-7 shrink-0 pt-0.5 font-label text-[0.75rem] text-accent-text">{String(i + 1).padStart(2, "0")}</span>
               <span className="pt-0.5">{s}</span>
             </li>
           ))}

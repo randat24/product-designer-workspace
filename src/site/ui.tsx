@@ -132,12 +132,12 @@ export function ProcessStrip({ process, locale, full }: { process: CaseProcess; 
         {stages.map((s) => (
           // A stage with no records keeps readable text; only its rule stays grey.
           <div key={s.key} className={cn("flex min-w-0 flex-col-reverse justify-end gap-1 border-t pt-2.5", process[s.key] === 0 ? "border-line" : "border-accent-text")}>
-            <dt className="truncate font-label text-[11px] uppercase tracking-[0.04em] text-fg-secondary" title={p.stages[s.key]}>{p.stages[s.key]}</dt>
-            <dd className={cn("font-medium leading-none tracking-[-0.04em] tabular-nums", full ? "text-[clamp(24px,2.4vw,34px)]" : "text-[20px]")}>{process[s.key]}</dd>
+            <dt className="truncate font-label text-[0.6875rem] uppercase tracking-[0.04em] text-fg-secondary" title={p.stages[s.key]}>{p.stages[s.key]}</dt>
+            <dd className={cn("font-medium leading-none tracking-[-0.04em] tabular-nums", full ? "text-[clamp(1.5rem,2.4vw,2.125rem)]" : "text-[1.25rem]")}>{process[s.key]}</dd>
           </div>
         ))}
       </dl>
-      {full && <p className="text-[12px] text-fg-secondary">{p.note}</p>}
+      {full && <p className="text-[0.75rem] text-fg-secondary">{p.note}</p>}
     </div>
   );
 }

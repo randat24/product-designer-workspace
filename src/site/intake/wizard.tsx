@@ -253,11 +253,11 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         <div className="flex max-w-[680px] flex-col gap-4">
           <p className="sg-eyebrow text-fg-secondary">{t.intro.eyebrow}</p>
           <h1 className="t-page">{t.intro.title}</h1>
-          <p className="text-[clamp(17px,2vw,19px)] leading-[1.55] text-fg-secondary">{t.intro.lead}</p>
+          <p className="text-[clamp(1.0625rem,2vw,1.1875rem)] leading-[1.55] text-fg-secondary">{t.intro.lead}</p>
         </div>
         <ul className="flex max-w-[680px] flex-col gap-2.5">
           {t.intro.points.map((p) => (
-            <li key={p} className="flex gap-3 text-[16px] leading-snug">
+            <li key={p} className="flex gap-3 text-[1rem] leading-snug">
               <Check aria-hidden className="mt-0.5 size-5 shrink-0 text-success" />
               {p}
             </li>
@@ -265,8 +265,8 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         </ul>
         {draftFound ? (
           <section aria-labelledby="draft-h" className="sg-panel flex max-w-[680px] flex-col gap-4 p-5 sm:p-6">
-            <h2 id="draft-h" className="text-[21px] font-semibold tracking-[-0.02em]">{t.draft.title}</h2>
-            <p className="text-[15px] text-fg-secondary">{t.draft.text}</p>
+            <h2 id="draft-h" className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{t.draft.title}</h2>
+            <p className="text-[0.9375rem] text-fg-secondary">{t.draft.text}</p>
             <div className="flex flex-wrap gap-3">
               <PrimaryButton onClick={() => start(true)} icon={<ArrowRight aria-hidden className="size-4" />}>{t.draft.resume}</PrimaryButton>
               <SecondaryButton onClick={() => start(false)}>{t.draft.restart}</SecondaryButton>
@@ -275,7 +275,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         ) : (
           <div className="flex flex-wrap items-center gap-4">
             <PrimaryButton onClick={() => start(false)} icon={<ArrowRight aria-hidden className="size-4" />}>{t.intro.start}</PrimaryButton>
-            <span className="inline-flex items-center gap-2 text-[15px] text-fg-secondary">
+            <span className="inline-flex items-center gap-2 text-[0.9375rem] text-fg-secondary">
               <Clock aria-hidden className="size-4" />
               {t.intro.time}
             </span>
@@ -422,7 +422,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
                       error={err(`competitors.${i}.why`)} value={x.why} onChange={(v) => setC(i, { why: v })} />
                   </ItemCard>
                 ))}
-                {err("competitors") && <p className="text-[14px] font-semibold text-danger">{err("competitors")}</p>}
+                {err("competitors") && <p className="text-[0.875rem] font-semibold text-danger">{err("competitors")}</p>}
                 <AddButton disabled={d.competitors.length >= LIMITS.competitors}
                   onClick={() => set("competitors", { competitors: [...d.competitors, { name: "", url: "", likes: "", dislikes: "", why: "" }] })}>
                   {c.add}
@@ -431,8 +431,8 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
             )}
             <div className="flex flex-col gap-4 border-t border-line pt-6">
               <div>
-                <h3 className="text-[15px] font-semibold">{c.references.label} <span className="font-normal text-fg-secondary">({opt})</span></h3>
-                <p className="mt-1 text-[14px] text-fg-secondary">{c.references.hint}</p>
+                <h3 className="text-[0.9375rem] font-semibold">{c.references.label} <span className="font-normal text-fg-secondary">({opt})</span></h3>
+                <p className="mt-1 text-[0.875rem] text-fg-secondary">{c.references.hint}</p>
               </div>
               {d.references.map((x, i) => (
                 <ItemCard key={i} title={`${i + 1}`} removeLabel={t.removeItem(i + 1)}
@@ -582,13 +582,13 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         <h1 ref={heading} tabIndex={-1} className="t-chapter scroll-mt-28 outline-none">
           {title}
         </h1>
-        <p className="max-w-[640px] text-[17px] leading-[1.55] text-fg-secondary">{lead}</p>
+        <p className="max-w-[640px] text-[1.0625rem] leading-[1.55] text-fg-secondary">{lead}</p>
       </div>
 
       {errorList.length > 0 && (
         <div ref={summary} tabIndex={-1} role="alert" className="sg-alert border-l-danger outline-none">
           <p className="font-semibold">{t.errors.summary}</p>
-          <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-[15px]">
+          <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-[0.9375rem]">
             {errorList.map((p) => (
               <li key={p}>
                 <a href={`#${fieldId(id ?? "project", p)}`} className="text-danger underline underline-offset-4"
@@ -640,7 +640,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
               {submitting ? t.review.submitting : t.review.submit}
             </PrimaryButton>
           )}
-          <span className="ml-auto text-[13px] text-fg-secondary" aria-live="polite">{t.draft.saved}</span>
+          <span className="ml-auto text-[0.8125rem] text-fg-secondary" aria-live="polite">{t.draft.saved}</span>
         </div>
       </form>
     </div>
@@ -650,7 +650,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
 function Progress({ n, total, label: text, review }: { n: number; total: number; label: string; review: boolean }) {
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-[14px] font-semibold text-fg-secondary" aria-hidden>{text}</p>
+      <p className="text-[0.875rem] font-semibold text-fg-secondary" aria-hidden>{text}</p>
       <div role="progressbar" aria-label={text} aria-valuemin={0} aria-valuemax={total} aria-valuenow={review ? total : n - 1}
         className="h-[3px] w-full overflow-hidden bg-line">
         <div className="h-full bg-accent-text transition-[width] duration-300" style={{ width: `${((review ? total : n - 1) / total) * 100}%` }} />
@@ -668,8 +668,8 @@ function LinkList({ step, title, hint, addLabel, kinds, links, errors, locale, o
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <h3 className="text-[15px] font-semibold">{title} <span className="font-normal text-fg-secondary">({t.optional})</span></h3>
-        {hint && <p className="mt-1 text-[14px] text-fg-secondary">{hint}</p>}
+        <h3 className="text-[0.9375rem] font-semibold">{title} <span className="font-normal text-fg-secondary">({t.optional})</span></h3>
+        {hint && <p className="mt-1 text-[0.875rem] text-fg-secondary">{hint}</p>}
       </div>
       {links.map((l, i) => (
         <div key={i} className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:grid-cols-[180px_minmax(0,1fr)_auto]">
@@ -752,7 +752,7 @@ function Review({ locale, data, onEdit }: { locale: Locale; data: FormState; onE
         return (
           <section key={sec.key} aria-labelledby={`rv-${sec.key}`} className="sg-panel p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <h2 id={`rv-${sec.key}`} className="text-[19px] font-semibold tracking-[-0.02em]">{t.review.sections[sec.key]}</h2>
+              <h2 id={`rv-${sec.key}`} className="text-[1.1875rem] font-semibold tracking-[-0.02em]">{t.review.sections[sec.key]}</h2>
               <button type="button" onClick={() => onEdit(sec.step)} aria-label={`${t.review.edit}: ${t.review.sections[sec.key]}`}
                 className={button({ variant: "ghost", size: "sm" }, "underline underline-offset-4")}>
                 {t.review.edit}
@@ -762,8 +762,8 @@ function Review({ locale, data, onEdit }: { locale: Locale; data: FormState; onE
               <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-[180px_1fr]">
                 {rows.map(([k, v], i) => (
                   <div key={i} className="contents">
-                    <dt className="text-[14px] font-semibold text-fg-secondary">{k}</dt>
-                    <dd className="whitespace-pre-line break-words text-[15px] leading-[1.5]">{v}</dd>
+                    <dt className="text-[0.875rem] font-semibold text-fg-secondary">{k}</dt>
+                    <dd className="whitespace-pre-line break-words text-[0.9375rem] leading-[1.5]">{v}</dd>
                   </div>
                 ))}
               </dl>

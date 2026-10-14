@@ -130,7 +130,7 @@ export function ChoiceGroup({ id, legend, hint, error, optional, required, optio
         {options.map((o) => {
           const on = selected.includes(o.value);
           return (
-            <label key={o.value} className={cn(sg.chip, "relative text-[14px]", error && !on && "border-danger")}>
+            <label key={o.value} className={cn(sg.chip, "relative text-[0.875rem]", error && !on && "border-danger")}>
               <input
                 type={multiple ? "checkbox" : "radio"}
                 name={id}
@@ -160,7 +160,7 @@ export function Checkbox({ id, label, hint, checked, onChange, error }: {
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-[15px] leading-snug">
+      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-[0.9375rem] leading-snug">
         <input
           id={id}
           type="checkbox"
@@ -206,7 +206,7 @@ export function ItemCard({ title, removeLabel, onRemove, children }: {
   return (
     <section aria-labelledby={hid} className={cn(sg.panel, "flex flex-col gap-4 p-4 sm:p-5")}>
       <div className="flex items-center justify-between gap-3">
-        <h3 id={hid} className="text-[17px] font-semibold tracking-[-0.02em]">{title}</h3>
+        <h3 id={hid} className="text-[1.0625rem] font-semibold tracking-[-0.02em]">{title}</h3>
         <button type="button" onClick={onRemove} aria-label={removeLabel}
           className={button({ variant: "ghost", size: "sm", icon: true }, "text-fg-secondary hover:text-fg")}>
           <X aria-hidden className="size-4" />

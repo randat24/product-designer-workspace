@@ -15,7 +15,7 @@ export function NotFoundView({ labels }: { labels: Record<Locale, NotFoundLabels
       <title>{t.title}</title>
       <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">404 /</span>{t.title}</p>
       <h1 className="t-page">{t.heading}</h1>
-      <p className="max-w-[560px] text-[18px] text-fg-secondary">{t.body}</p>
+      <p className="max-w-[560px] text-[1.125rem] text-fg-secondary">{t.body}</p>
       <nav className="flex flex-wrap gap-3" aria-label={t.nav}>
         <Link
           href={`/${locale}`}

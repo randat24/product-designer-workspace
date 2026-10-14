@@ -97,7 +97,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
         className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" />
       {phoneFrom >= 0 && (
         <>
-          <h3 className="mt-10 mb-4 text-[18px] font-semibold">{labels.phone}</h3>
+          <h3 className="mt-10 mb-4 text-[1.125rem] font-semibold">{labels.phone}</h3>
           <Thumbs items={ordered.slice(phoneFrom)} offset={phoneFrom} total={total} labels={labels} onOpen={openAt}
             className="grid-cols-2 sm:grid-cols-4 lg:grid-cols-6" />
         </>
@@ -117,7 +117,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
           className="sg-viewer flex h-full flex-col items-center gap-2 sm:gap-4 sm:p-4"
           onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
         >
-          <div className="sg-viewer-bar flex w-full max-w-[1800px] items-center justify-between gap-3 px-4 pt-2 text-[14px] sm:px-0 sm:pt-0">
+          <div className="sg-viewer-bar flex w-full max-w-[1800px] items-center justify-between gap-3 px-4 pt-2 text-[0.875rem] sm:px-0 sm:pt-0">
             <span aria-live="polite" className="min-w-0 truncate">{counter(labels.open, index + 1, total)}{item.caption ? ` · ${item.caption}` : ""}</span>
             <button type="button" onClick={() => dialog.current?.close()} className={button({ variant: "on-dark", size: "sm" }, "shrink-0")}>
               {labels.close} ✕
@@ -164,7 +164,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
           {/* A phone has no room beside the page: the arrows sit under it, where the thumb is. */}
           <div className="sg-viewer-bar flex w-full items-center justify-between gap-3 px-4 pb-2 sm:hidden">
             <NavButton label={labels.prev} onClick={() => go(-1)} hidden={total < 2}><ChevronLeft aria-hidden className="size-6" strokeWidth={1.75} /></NavButton>
-            <span aria-hidden className="text-center text-[13px] text-white/70">{canZoom(item) ? (zoomed ? labels.zoomOut : labels.zoomIn) : null}</span>
+            <span aria-hidden className="text-center text-[0.8125rem] text-white/70">{canZoom(item) ? (zoomed ? labels.zoomOut : labels.zoomIn) : null}</span>
             <NavButton label={labels.next} onClick={() => go(1)} hidden={total < 2}><ChevronRight aria-hidden className="size-6" strokeWidth={1.75} /></NavButton>
           </div>
         </div>
@@ -190,7 +190,7 @@ function Thumbs({ items, offset, total, labels, onOpen, className }: {
               {/* eslint-disable-next-line @next/next/no-img-element -- project pages of any origin, sizes known */}
               <img {...responsive(it.src, it.width, SIZES.thumb)} alt="" width={it.width} height={it.height} loading="lazy" decoding="async" className="h-auto w-full" />
             </span>
-            {it.caption && <span className="text-[13px] font-semibold">{it.caption}</span>}
+            {it.caption && <span className="text-[0.8125rem] font-semibold">{it.caption}</span>}
           </button>
         </li>
       ))}

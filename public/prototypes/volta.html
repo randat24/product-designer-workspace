@@ -34,7 +34,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body { background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+body { background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 0.875rem; line-height: 1.45; -webkit-font-smoothing: antialiased; }
 button { font: inherit; color: inherit; cursor: pointer; }
 a { color: inherit; }
 .mono { font-family: var(--mono); }
@@ -45,48 +45,48 @@ a { color: inherit; }
 /* ---------------------------------------------------------------- page chrome */
 .stage { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 360px) auto; justify-content: center; align-items: start; gap: 56px; padding: 48px 32px; }
 .side { position: sticky; top: 48px; display: flex; flex-direction: column; gap: 28px; }
-.back { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; color: var(--ink-2); }
+.back { font-family: var(--mono); font-size: 0.6875rem; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; color: var(--ink-2); }
 .back:hover { color: var(--ink); }
-.side h1 { font-size: 40px; font-weight: 800; letter-spacing: -.02em; line-height: 1; margin: 0 0 12px; }
+.side h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -.02em; line-height: 1; margin: 0 0 12px; }
 .side p { margin: 0; color: var(--ink-2); max-width: 34ch; }
-.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 10px; }
+.eyebrow { font-family: var(--mono); font-size: 0.6875rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 10px; }
 .group { display: flex; flex-direction: column; gap: 8px; }
 .seg { display: inline-flex; border: 1px solid #CFCFCA; border-radius: var(--r); background: #F4F3EF; padding: 2px; gap: 2px; flex-wrap: wrap; }
-.seg button { border: 0; background: transparent; padding: 6px 10px; border-radius: 3px; font-size: 13px; font-weight: 500; }
+.seg button { border: 0; background: transparent; padding: 6px 10px; border-radius: 3px; font-size: 0.8125rem; font-weight: 500; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-.toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; cursor: pointer; }
+.toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 0.8125rem; cursor: pointer; }
 .toggle input { margin: 2px 0 0; accent-color: var(--ink); width: 15px; height: 15px; }
-.toggle small { display: block; color: var(--ink-2); font-size: 12px; }
-.legend { display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--ink-2); }
+.toggle small { display: block; color: var(--ink-2); font-size: 0.75rem; }
+.legend { display: flex; flex-direction: column; gap: 8px; font-size: 0.75rem; color: var(--ink-2); }
 .legend div { display: flex; gap: 10px; align-items: center; }
-.sample { font-family: var(--mono); font-size: 11px; color: var(--ink-2); border-top: 1px solid #D6D5D0; padding-top: 14px; }
+.sample { font-family: var(--mono); font-size: 0.6875rem; color: var(--ink-2); border-top: 1px solid #D6D5D0; padding-top: 14px; }
 
 /* ---------------------------------------------------------------- phone */
 .phone { width: 390px; height: 800px; background: var(--bg); border-radius: 36px; border: 10px solid #101213; box-shadow: 0 30px 60px -30px rgba(16,18,19,.45); overflow: hidden; position: relative; display: flex; flex-direction: column; }
-.status { height: 36px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.status { height: 36px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; font-family: var(--mono); font-size: 0.75rem; font-weight: 500; }
 .screen { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
 .screen::-webkit-scrollbar { display: none; }
 .tabs { flex: none; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--bg); padding: 6px 4px 14px; }
-.tabs button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; font-size: 11px; font-weight: 600; color: var(--ink-3); }
+.tabs button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; font-size: 0.6875rem; font-weight: 600; color: var(--ink-3); }
 .tabs button svg { width: 20px; height: 20px; }
 .tabs button[aria-current="page"] { color: var(--blue); }
 
 /* ---------------------------------------------------------------- app */
 .bar { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px 10px; gap: 8px; }
-.bar h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+.bar h2 { margin: 0; font-size: 1.375rem; font-weight: 700; letter-spacing: -.01em; }
 .icon-btn { width: 36px; height: 36px; border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); display: grid; place-items: center; }
 .icon-btn svg { width: 18px; height: 18px; }
 .locs { display: flex; gap: 6px; padding: 0 16px 12px; overflow-x: auto; scrollbar-width: none; }
-.locs button { border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); padding: 6px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.locs button { border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); padding: 6px 12px; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
 .locs button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
 .pad { padding: 0 16px; }
 .section { padding: 18px 16px; border-top: 1px solid var(--line); }
-.label { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; }
-.big { font-size: 44px; font-weight: 800; letter-spacing: -.03em; line-height: 1; margin: 0; }
-.mid { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0; }
-.sub { color: var(--ink-2); margin: 6px 0 0; font-size: 13px; }
+.label { font-family: var(--mono); font-size: 0.6875rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; }
+.big { font-size: 2.75rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; margin: 0; }
+.mid { font-size: 1.375rem; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.sub { color: var(--ink-2); margin: 6px 0 0; font-size: 0.8125rem; }
 .row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .03em; padding: 2px 6px; border-radius: var(--r); white-space: nowrap; line-height: 1.5; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 0.6562rem; letter-spacing: .03em; padding: 2px 6px; border-radius: var(--r); white-space: nowrap; line-height: 1.5; }
 .chip.measured { background: var(--blue-soft); color: var(--blue); }
 .chip.estimate { background: var(--bg); color: var(--ink-2); border: 1px dashed #A9AEB4; padding: 1px 5px; }
 .chip.stale { background: var(--orange-soft); color: var(--orange-text); }
@@ -98,20 +98,20 @@ a { color: inherit; }
 .card.alert:hover { background: #FFF8F8; }
 .card.warn { border-color: var(--orange); background: var(--orange-soft); }
 .card.info { background: var(--surface); border-color: var(--surface); }
-.card h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
-.card p { margin: 0; color: var(--ink-2); font-size: 13px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: var(--r); border: 1px solid var(--ink); background: var(--ink); color: #fff; padding: 10px 14px; font-weight: 600; font-size: 14px; }
+.card h3 { margin: 0 0 4px; font-size: 1rem; font-weight: 700; }
+.card p { margin: 0; color: var(--ink-2); font-size: 0.8125rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: var(--r); border: 1px solid var(--ink); background: var(--ink); color: #fff; padding: 10px 14px; font-weight: 600; font-size: 0.875rem; }
 .btn.blue { background: var(--blue); border-color: var(--blue); }
 .btn.ghost { background: var(--bg); color: var(--ink); border-color: var(--line); }
 .btn.block { width: 100%; }
 .btn[disabled] { opacity: .45; cursor: not-allowed; }
-.link { border: 0; background: none; padding: 0; color: var(--blue); font-weight: 600; font-size: 13px; }
+.link { border: 0; background: none; padding: 0; color: var(--blue); font-weight: 600; font-size: 0.8125rem; }
 .list { display: flex; flex-direction: column; }
 .item { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
 .item:first-child { border-top: 0; }
 .item .name { font-weight: 600; }
 .item .val { text-align: right; font-weight: 600; }
-.item .meta { color: var(--ink-2); font-size: 12px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.item .meta { color: var(--ink-2); font-size: 0.75rem; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .track { grid-column: 1 / -1; height: 8px; background: var(--surface); border-radius: 2px; overflow: hidden; }
 .fill { height: 100%; background: var(--blue); border-radius: 2px; }
 .fill.est { background: repeating-linear-gradient(135deg, var(--blue) 0 3px, #B9B8F4 3px 6px); }
@@ -122,25 +122,25 @@ a { color: inherit; }
 .back-row button { border: 0; background: none; padding: 6px 0; display: flex; gap: 6px; align-items: center; font-weight: 600; color: var(--blue); }
 .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: s; }
 .steps li { counter-increment: s; display: grid; grid-template-columns: 24px 1fr; gap: 10px; }
-.steps li::before { content: counter(s); font-family: var(--mono); font-size: 11px; width: 22px; height: 22px; border: 1px solid var(--line); border-radius: var(--r); display: grid; place-items: center; }
-.kv { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: 13px; }
+.steps li::before { content: counter(s); font-family: var(--mono); font-size: 0.6875rem; width: 22px; height: 22px; border: 1px solid var(--line); border-radius: var(--r); display: grid; place-items: center; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: 0.8125rem; }
 .kv dt { color: var(--ink-2); }
 .kv dd { margin: 0; text-align: right; font-weight: 600; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-th { font-family: var(--mono); font-weight: 400; font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); text-align: right; padding: 6px 4px; border-bottom: 1px solid var(--ink); }
+table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+th { font-family: var(--mono); font-weight: 400; font-size: 0.6562rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); text-align: right; padding: 6px 4px; border-bottom: 1px solid var(--ink); }
 th:first-child, td:first-child { text-align: left; }
 td { padding: 7px 4px; border-bottom: 1px solid var(--line); text-align: right; }
 tfoot td { font-weight: 700; border-bottom: 0; border-top: 1px solid var(--ink); }
 input[type="range"] { width: 100%; accent-color: var(--blue); }
-select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: var(--r); padding: 7px 8px; background: var(--bg); }
+select { font: inherit; font-size: 0.8125rem; border: 1px solid var(--line); border-radius: var(--r); padding: 7px 8px; background: var(--bg); }
 .progress { height: 6px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-top: 10px; }
 .progress span { display: block; height: 100%; background: var(--ink); }
 .choice { display: flex; flex-direction: column; gap: 8px; }
 .choice button { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: var(--r); padding: 12px; }
 .choice button[aria-pressed="true"] { border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
-.choice b { display: block; font-size: 14px; }
-.choice span { color: var(--ink-2); font-size: 12px; }
-.toast { position: absolute; left: 16px; right: 16px; bottom: 84px; background: var(--ink); color: #fff; padding: 12px 14px; border-radius: var(--r); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
+.choice b { display: block; font-size: 0.875rem; }
+.choice span { color: var(--ink-2); font-size: 0.75rem; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 84px; background: var(--ink); color: #fff; padding: 12px 14px; border-radius: var(--r); font-size: 0.8125rem; opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
 .toast.on { opacity: 1; transform: none; }
 .spin { width: 16px; height: 16px; border: 2px solid var(--blue-soft); border-top-color: var(--blue); border-radius: 50%; animation: spin 1s linear infinite; flex: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -152,7 +152,7 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
   .phone { width: 100%; height: 100svh; border: 0; border-radius: 0; box-shadow: none; }
   .status { display: none; }
   .side { position: static; padding: 28px 16px 40px; background: var(--page); }
-  .side h1 { font-size: 30px; }
+  .side h1 { font-size: 1.875rem; }
   .toast { bottom: 76px; }
 }
 </style>
@@ -439,7 +439,7 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
       <div class="back-row"><button type="button" data-back>${I.back}Back</button></div>
       <div class="pad">
         <span class="chip over">+40% since Oct 3</span> ${chip.measured()}
-        <h2 style="font-size:24px;line-height:1.15;margin:10px 0 6px;font-weight:700">Walk-in fridge at Soborna uses more than usual</h2>
+        <h2 style="font-size:1.5rem;line-height:1.15;margin:10px 0 6px;font-weight:700">Walk-in fridge at Soborna uses more than usual</h2>
         <p class="sub" style="margin:0">Own meter, so this is measured, not estimated.</p>
       </div>
       <section class="section" style="margin-top:16px">
@@ -492,9 +492,9 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
       ${state.role !== "owner" ? "" : `
       <section class="section" aria-label="Scenario">
         <p class="label"><span>Scenario · Soborna</span></p>
-        <h3 style="margin:0 0 6px;font-size:18px">Bake the first batch at night</h3>
-        <p class="sub" style="margin:0 0 14px">Start the deck oven earlier, so its first hours fall in the night zone.</p>
-        <label for="shift" class="row" style="font-size:13px;font-weight:600"><span>Hours moved to before 07:00</span><span class="num">${state.shiftHours} h</span></label>
+        <h3 style="margin:0 0 6px;font-size:1.125rem">Bake the first batch at night</h3>
+        <p class="sub" style="margin:0 0 0.875rem">Start the deck oven earlier, so its first hours fall in the night zone.</p>
+        <label for="shift" class="row" style="font-size:0.8125rem;font-weight:600"><span>Hours moved to before 07:00</span><span class="num">${state.shiftHours} h</span></label>
         <input id="shift" type="range" min="0" max="4" step="1" value="${state.shiftHours}">
         <div style="margin-top:14px" class="card">
           <p class="label" style="margin-bottom:4px"><span>Saving per month</span>${chip.estimate()}</p>
@@ -502,7 +502,7 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
           <p class="sub">${s ? `About ${Math.round(s / 26100 * 100)}% of the usual Soborna bill.` : "Move at least one hour to see the effect."}</p>
         </div>
         <p class="label" style="margin-top:16px"><span>Calculated on these assumptions</span></p>
-        <ul style="margin:0;padding-left:18px;color:var(--ink-2);font-size:13px;display:grid;gap:4px">
+        <ul style="margin:0;padding-left:18px;color:var(--ink-2);font-size:0.8125rem;display:grid;gap:4px">
           <li>The oven draws about 10 kW while baking (measured average, Oct 1–7).</li>
           <li>26 baking days a month.</li>
           <li>Moved hours cost the night rate instead of the day rate: ₴ ${TARIFF.day.toFixed(2)} → ₴ ${TARIFF.night.toFixed(2)}.</li>
@@ -531,7 +531,7 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
     }
     const pp = podilPriced();
     const ts = sum(rows.map((r) => r.s)), tp = sum(rows.map((r) => r.p));
-    return `${header("Report", `<button type="button" class="btn ghost" data-export style="padding:7px 10px;font-size:13px">Export CSV</button>`)}
+    return `${header("Report", `<button type="button" class="btn ghost" data-export style="padding:7px 10px;font-size:0.8125rem">Export CSV</button>`)}
       <div class="pad row" style="margin-bottom:12px;align-items:center">
         <label class="sr" for="period">Period</label>
         <select id="period"><option value="oct" ${state.period === "oct" ? "selected" : ""}>October 2026 (to date)</option><option value="sep" ${state.period === "sep" ? "selected" : ""}>September 2026</option></select>
@@ -566,9 +566,9 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
 
   function pair() {
     const p = state.pair;
-    const head = `<div class="back-row"><button type="button" data-back>${I.back}${p.step > 1 && p.step < 4 ? "Back" : "Close"}</button><span class="mono muted" style="margin-left:auto;font-size:11px">STEP ${Math.min(p.step, 3)} OF 3</span></div>`;
+    const head = `<div class="back-row"><button type="button" data-back>${I.back}${p.step > 1 && p.step < 4 ? "Back" : "Close"}</button><span class="mono muted" style="margin-left:auto;font-size:0.6875rem">STEP ${Math.min(p.step, 3)} OF 3</span></div>`;
     if (p.step === 1) return `${head}<div class="pad">
-      <h2 style="font-size:24px;margin:4px 0 6px">What are you connecting?</h2>
+      <h2 style="font-size:1.5rem;margin:4px 0 6px">What are you connecting?</h2>
       <p class="sub" style="margin:0 0 16px">Look at the label on the device. Not sure? Take a photo of it, we'll tell you.</p>
       <div class="choice">
         ${[["shelly", "Shelly or another Wi-Fi meter", "Sits in the panel, measures one appliance or a line"], ["utility", "Utility smart meter", "The main meter from your electricity company"], ["other", "Something else", "We'll check if it's supported"]].map(([k, t, d]) =>
@@ -576,23 +576,23 @@ select { font: inherit; font-size: 13px; border: 1px solid var(--line); border-r
       </div>
       <button type="button" class="btn blue block" data-pnext style="margin-top:16px" ${p.type ? "" : "disabled"}>Continue</button></div>`;
     if (p.step === 2) return `${head}<div class="pad">
-      <h2 style="font-size:24px;margin:4px 0 6px">Enter the device code</h2>
+      <h2 style="font-size:1.5rem;margin:4px 0 6px">Enter the device code</h2>
       <p class="sub" style="margin:0 0 16px">${p.type === "utility" ? "It's the 8-digit account number on your bill." : "It's on the sticker: 6 characters after «ID»."}</p>
       <label class="label" for="pcode"><span>Code</span></label>
-      <input id="pcode" value="${esc(p.code)}" inputmode="text" autocomplete="off" maxlength="12" style="width:100%;font:500 20px var(--mono);letter-spacing:.1em;padding:10px;border:1px solid var(--line);border-radius:var(--r)">
+      <input id="pcode" value="${esc(p.code)}" inputmode="text" autocomplete="off" maxlength="12" style="width:100%;font:500 1.25rem var(--mono);letter-spacing:.1em;padding:10px;border:1px solid var(--line);border-radius:var(--r)">
       <p class="sub">Which location? <b>${state.role === "manager" || state.loc !== "podil" ? "Soborna St." : "Podil"}</b></p>
       <button type="button" class="btn blue block" data-pnext style="margin-top:16px" ${p.code.trim().length >= 6 ? "" : "disabled"}>Connect</button></div>`;
     if (p.step === 3) return `${head}<div class="pad">
-      <h2 style="font-size:24px;margin:4px 0 6px">Connected. Waiting for the first reading</h2>
+      <h2 style="font-size:1.5rem;margin:4px 0 6px">Connected. Waiting for the first reading</h2>
       <p class="sub" style="margin:0 0 16px">Meters report every 15 minutes, so the first number can take up to 15 minutes. You don't need to keep this screen open.</p>
-      <div class="card" style="display:flex;gap:12px;align-items:center"><span class="spin" aria-hidden="true"></span><span><b>Waiting for data</b><br><span class="muted" style="font-size:12px">Connected at ${NOW}</span></span></div>
-      <ul style="margin:16px 0 0;padding-left:18px;color:var(--ink-2);font-size:13px;display:grid;gap:4px">
+      <div class="card" style="display:flex;gap:12px;align-items:center"><span class="spin" aria-hidden="true"></span><span><b>Waiting for data</b><br><span class="muted" style="font-size:0.75rem">Connected at ${NOW}</span></span></div>
+      <ul style="margin:16px 0 0;padding-left:18px;color:var(--ink-2);font-size:0.8125rem;display:grid;gap:4px">
         <li>The first useful number appears after one reading.</li>
         <li>Comparisons with the usual appear after 7 days, a forecast after 14.</li>
       </ul>
       <button type="button" class="btn ghost block" data-pnext style="margin-top:16px">Simulate the first reading</button></div>`;
     return `${head}<div class="pad">
-      <h2 style="font-size:24px;margin:4px 0 6px">First reading is in</h2>
+      <h2 style="font-size:1.5rem;margin:4px 0 6px">First reading is in</h2>
       <p class="sub" style="margin:0 0 16px">0.8 kWh in the last 15 minutes, about ${uah(7)}. It now counts as measured, so its share stops being an estimate.</p>
       <div class="card" style="display:flex;gap:10px;align-items:center">${chip.measured()}<span>Every 15 min</span></div>
       <button type="button" class="btn block" data-back style="margin-top:16px">Done</button></div>`;

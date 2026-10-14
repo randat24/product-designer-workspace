@@ -38,13 +38,13 @@ export function AdultGate({ labels, backHref, children }: {
       <div className="absolute inset-0 flex items-start justify-center px-4 pt-10 sm:pt-16">
         <section aria-labelledby="adult-h"
           className={cn(sg.panel, "flex w-full max-w-[520px] flex-col items-start gap-4 p-6 shadow-[var(--sg-shadow-float)] sm:p-8")}>
-          <span className="grid size-14 place-items-center rounded-[4px] border border-danger text-[20px] font-semibold tracking-[-0.02em] text-danger">
+          <span className="grid size-14 place-items-center rounded-[4px] border border-danger text-[1.25rem] font-semibold tracking-[-0.02em] text-danger">
             {labels.badge}
           </span>
-          <h2 id="adult-h" className="text-[clamp(24px,3vw,30px)] font-medium leading-[1.1] tracking-[-0.035em]">
+          <h2 id="adult-h" className="text-[clamp(1.5rem,3vw,1.875rem)] font-medium leading-[1.1] tracking-[-0.035em]">
             {labels.title}
           </h2>
-          <p className="text-[16px] leading-[1.55] text-fg-secondary">{labels.body}</p>
+          <p className="text-[1rem] leading-[1.55] text-fg-secondary">{labels.body}</p>
           <div className="flex flex-wrap gap-3">
             <button type="button" onClick={confirm}
               className={button({ variant: "primary" })}>

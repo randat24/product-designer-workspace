@@ -30,7 +30,7 @@ export default function SiteError({ reset }: { error: Error & { digest?: string 
       <title>{t.title}</title>
       <meta name="robots" content="noindex" />
       <h1 className="t-page">{t.title}</h1>
-      <p role="alert" className="max-w-[560px] text-[18px] text-fg-secondary">{t.body}</p>
+      <p role="alert" className="max-w-[560px] text-[1.125rem] text-fg-secondary">{t.body}</p>
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={reset}
           className={button({ variant: "primary" })}>

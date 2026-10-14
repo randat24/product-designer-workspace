@@ -33,14 +33,14 @@ export default async function GlobalNotFound() {
             <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-5 sm:h-20 sm:px-8 lg:px-12">
               <Link href={`/${locale}`} className="group flex items-center gap-3.5" aria-label={d.name}>
                 <BrandMark />
-                <span aria-hidden className="text-[14px] font-semibold">{d.name}</span>
+                <span aria-hidden className="text-[0.875rem] font-semibold">{d.name}</span>
               </Link>
             </div>
           </header>
           <main id="main" className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
             <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">404 /</span>{d.seo.notFound.title}</p>
             <h1 className="t-page">{d.ui.notFoundTitle}</h1>
-            <p className="max-w-[560px] text-[18px] text-fg-secondary">{d.ui.notFoundBody}</p>
+            <p className="max-w-[560px] text-[1.125rem] text-fg-secondary">{d.ui.notFoundBody}</p>
             <nav className="flex flex-wrap gap-3" aria-label={d.ui.mainNav}>
               <Link
                 href={`/${locale}`}

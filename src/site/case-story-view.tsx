@@ -136,12 +136,12 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
       {/* Named by its columns: the chapter around it is already the «competitors» landmark. */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
       <div tabIndex={0} role="region" aria-label={`${labels.competitors}: ${data.products.join(", ")}`} className="mt-8 overflow-x-auto border border-line bg-surface">
-        <table className="w-full min-w-[560px] border-collapse text-[14px]">
+        <table className="w-full min-w-[560px] border-collapse text-[0.875rem]">
           <thead>
             <tr>
               <td className="p-3" />
               {data.products.map((p, i) => (
-                <th key={p} className={cn("p-3 text-center font-label text-[11px] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
+                <th key={p} className={cn("p-3 text-center font-label text-[0.6875rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
                   {p}
                 </th>
               ))}
@@ -153,7 +153,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
                 <th scope="row" className="p-3 text-left font-medium">{r.feature}</th>
                 {r.marks.map((m, i) => (
                   <td key={i} className="p-1.5">
-                    <span className={cn("flex h-9 items-center justify-center rounded-[3px] text-[12px] font-semibold", MARK_CLASS[m])}>
+                    <span className={cn("flex h-9 items-center justify-center rounded-[3px] text-[0.75rem] font-semibold", MARK_CLASS[m])}>
                       {labels.marks[m]}
                     </span>
                   </td>
@@ -163,7 +163,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
           </tbody>
         </table>
       </div>
-      <div className="mt-3 flex items-center gap-2 font-label text-[11px] text-fg-secondary">
+      <div className="mt-3 flex items-center gap-2 font-label text-[0.6875rem] text-fg-secondary">
         <span className={cn("h-3 w-3 rounded-[2px]", MARK_CLASS.no)} aria-hidden="true" />
         {labels.redHint}
       </div>
@@ -197,7 +197,7 @@ function Flow({ data, labels }: { data: NonNullable<CaseStory["flow"]>; labels: 
       </ol>
       <div className="border-t border-line pt-6">
         <h3>{labels.edgeCases}</h3>
-        <ul className="flex flex-col gap-2 text-[15px]">
+        <ul className="flex flex-col gap-2 text-[0.9375rem]">
           {data.edgeCases.map((e) => (
             <li key={e} className="flex gap-3">
               <span className="font-label text-accent-text" aria-hidden="true">+</span>
@@ -238,10 +238,10 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
               )}
             </div>
             <h3 className="!mb-0">{sc.title}</h3>
-            <p className="sg-case-secondary !mb-0 !text-[15px]">{sc.caption}</p>
+            <p className="sg-case-secondary !mb-0 !text-[0.9375rem]">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-[3px] border border-line px-2 py-0.5 font-label text-[11px] text-fg-secondary">{st}</li>
+                <li key={st} className="rounded-[3px] border border-line px-2 py-0.5 font-label text-[0.6875rem] text-fg-secondary">{st}</li>
               ))}
             </ul>
           </li>

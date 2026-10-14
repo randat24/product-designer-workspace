@@ -45,7 +45,7 @@ export function ConsentBanner({ labels, privacyHref }: { labels: Labels; privacy
   return (
     <section ref={box} aria-label={labels.bannerLabel}
       className="sg-panel fixed inset-x-3 bottom-3 z-40 flex flex-col gap-3 p-4 shadow-[var(--sg-shadow-float)] sm:inset-x-4 sm:bottom-4 sm:right-auto sm:max-w-[420px] sm:gap-4 sm:p-5">
-      <p className="text-[14px] leading-[1.5] sm:text-[15px]">
+      <p className="text-[0.875rem] leading-[1.5] sm:text-[0.9375rem]">
         {labels.bannerText}{" "}
         <Link href={privacyHref} className="font-semibold underline underline-offset-4 hover:text-accent-text">{labels.more}</Link>
       </p>
