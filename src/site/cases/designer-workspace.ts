@@ -40,14 +40,14 @@ export const workspaceGalleryUk: GalleryItem[] = [
   shot("07-flow", "Редактор сценарію: кроки «Екран», «Дія», «Розвилка», «Помилка» на схемі", "Редактор сценарію"),
   shot("08-screen", "Специфікація екрана: «Де ми можемо бути кращими», превʼю й зв'язки", "Специфікація екрана"),
   shot("09-decision", "Рішення з журналу: контекст, що вирішили, чому, і докази в панелі «Зв'язки»", "Журнал рішень"),
-  phone("m01-overview", "Огляд проєкту на телефоні: розділи рядком угорі, готовність 78% і етапи", "Огляд проєкту"),
-  phone("m02-synthesis", "Дошка синтезу на телефоні: колонки гортаються вбік, картку можна перемістити з меню", "Дошка синтезу"),
-  phone("m03-insight-links", "Панель «Зв'язки» інсайту на телефоні: джерела, ланцюжок і на що перетворився", "Інсайт і зв'язки"),
-  phone("m04-competitors", "Матриця конкурентів на телефоні: перша колонка закріплена, продукти гортаються вбік", "Матриця конкурентів"),
-  phone("m05-flow", "Сценарій на телефоні: замість схеми — список кроків з розвилками й помилками", "Сценарій списком"),
-  phone("m06-screen-states", "Стани екрана на телефоні: основний, завантаження, порожньо, помилка", "Стани екрана"),
-  phone("m07-decision-evidence", "Докази рішення на телефоні: болі, інсайти й цитати користувачів", "Докази рішення"),
-  phone("m08-search", "Пошук на телефоні: за словом «ресторан» знаходяться інсайт, можливість, сценарій і екран", "Пошук"),
+  phone("m01-overview-en", "Огляд проєкту на телефоні: розділи рядком угорі, готовність 78% і етапи", "Огляд проєкту"),
+  phone("m02-synthesis-en", "Дошка синтезу на телефоні: колонки гортаються вбік, картку можна перемістити з меню", "Дошка синтезу"),
+  phone("m03-insight-links-en", "Панель Links інсайту на телефоні: джерела, ланцюжок і на що перетворився", "Інсайт і зв'язки"),
+  phone("m04-competitors-en", "Матриця конкурентів на телефоні: перша колонка закріплена, продукти гортаються вбік", "Матриця конкурентів"),
+  phone("m05-flow-en", "Сценарій на телефоні: замість схеми — список кроків з розвилками й помилками", "Сценарій списком"),
+  phone("m06-screen-states-en", "Стани екрана на телефоні: основний, завантаження, порожньо, помилка", "Стани екрана"),
+  phone("m07-decision-evidence-en", "Докази рішення на телефоні: болі, інсайти й цитати користувачів", "Докази рішення"),
+  phone("m08-search-en", "Пошук на телефоні: за словом «restaurant» знаходяться інсайт, можливість, сценарій і екран", "Пошук"),
 ];
 
 export const workspaceGalleryEn: GalleryItem[] = [
@@ -60,14 +60,14 @@ export const workspaceGalleryEn: GalleryItem[] = [
   shot("07-flow", "Flow editor: Screen, Action, Branch and Error steps on the canvas", "Flow editor"),
   shot("08-screen", "Screen spec: “Where we can do better”, preview and links", "Screen spec"),
   shot("09-decision", "A decision from the log: context, what was decided, why, and the evidence in the Links panel", "Decision log"),
-  phone("m01-overview", "Project overview on a phone: sections in a row at the top, 78% readiness and the stages", "Project overview"),
-  phone("m02-synthesis", "Synthesis board on a phone: columns scroll sideways, a card moves from its menu", "Synthesis board"),
-  phone("m03-insight-links", "An insight's Links panel on a phone: sources, the chain and what it turned into", "Insight and links"),
-  phone("m04-competitors", "Competitor matrix on a phone: the first column stays put, products scroll sideways", "Competitor matrix"),
-  phone("m05-flow", "A flow on a phone: a list of steps with branches and errors instead of the canvas", "Flow as a list"),
-  phone("m06-screen-states", "Screen states on a phone: default, loading, empty, error", "Screen states"),
-  phone("m07-decision-evidence", "A decision's evidence on a phone: pain points, insights and user quotes", "Decision evidence"),
-  phone("m08-search", "Search on a phone: “ресторан” (restaurant) finds an insight, an opportunity, a flow and a screen", "Search"),
+  phone("m01-overview-en", "Project overview on a phone: sections in a row at the top, 78% readiness and the stages", "Project overview"),
+  phone("m02-synthesis-en", "Synthesis board on a phone: columns scroll sideways, a card moves from its menu", "Synthesis board"),
+  phone("m03-insight-links-en", "An insight's Links panel on a phone: sources, the chain and what it turned into", "Insight and links"),
+  phone("m04-competitors-en", "Competitor matrix on a phone: the first column stays put, products scroll sideways", "Competitor matrix"),
+  phone("m05-flow-en", "A flow on a phone: a list of steps with branches and errors instead of the canvas", "Flow as a list"),
+  phone("m06-screen-states-en", "Screen states on a phone: default, loading, empty, error", "Screen states"),
+  phone("m07-decision-evidence-en", "A decision's evidence on a phone: pain points, insights and user quotes", "Decision evidence"),
+  phone("m08-search-en", "Search on a phone: “restaurant” finds an insight, an opportunity, a flow and a screen", "Search"),
 ];
 
 export const workspaceUk: CaseStory = {
@@ -156,11 +156,11 @@ export const workspaceUk: CaseStory = {
   screens: {
     intro: "Ключові екрани інструмента. У кожного є стани, які легко забути: порожньо, завантаження, помилка. Кожен працює й на телефоні — скриншоти обох версій у «Сторінках проєкту» вище.",
     items: [
-      { title: "Огляд проєкту", caption: "Прогрес по етапах і наступні кроки — що саме не дороблено", states: ["Новий проєкт", "У роботі", "Усе готово"], image: screen("m01-overview", "uk") },
-      { title: "Дошка синтезу", caption: "Цитати й спостереження перетягуються в колонки-патерни; з колонки — інсайт", states: ["Порожня", "Без патерну", "Готовий до інсайту"], image: screen("m02-synthesis", "uk") },
-      { title: "Панель «Зв'язки»", caption: "Джерела, ланцюжок і у що перетворився артефакт", states: ["Немає зв'язків", "Прямі", "Через ланцюжок"], image: screen("m03-insight-links", "uk") },
-      { title: "Редактор сценарію", caption: "8 типів кроків, розвилки й edge cases, прив'язані до кроків", states: ["Порожня схема", "Крок вибрано", "Не продумано"], image: screen("m05-flow", "uk") },
-      { title: "Журнал рішень", caption: "Контекст, рішення, чому, відкинуті варіанти й докази", states: ["Чернетка", "Прийнято", "Замінено новим"], image: screen("m07-decision-evidence", "uk") },
+      { title: "Огляд проєкту", caption: "Прогрес по етапах і наступні кроки — що саме не дороблено", states: ["Новий проєкт", "У роботі", "Усе готово"], image: screen("m01-overview-en", "uk") },
+      { title: "Дошка синтезу", caption: "Цитати й спостереження перетягуються в колонки-патерни; з колонки — інсайт", states: ["Порожня", "Без патерну", "Готовий до інсайту"], image: screen("m02-synthesis-en", "uk") },
+      { title: "Панель «Зв'язки»", caption: "Джерела, ланцюжок і у що перетворився артефакт", states: ["Немає зв'язків", "Прямі", "Через ланцюжок"], image: screen("m03-insight-links-en", "uk") },
+      { title: "Редактор сценарію", caption: "8 типів кроків, розвилки й edge cases, прив'язані до кроків", states: ["Порожня схема", "Крок вибрано", "Не продумано"], image: screen("m05-flow-en", "uk") },
+      { title: "Журнал рішень", caption: "Контекст, рішення, чому, відкинуті варіанти й докази", states: ["Чернетка", "Прийнято", "Замінено новим"], image: screen("m07-decision-evidence-en", "uk") },
     ],
   },
   decisions: [
@@ -298,11 +298,11 @@ export const workspaceEn: CaseStory = {
   screens: {
     intro: "Key screens of the tool. Each has the states that are easy to forget: empty, loading, error. Each also works on a phone: screenshots of both versions are in Project pages above.",
     items: [
-      { title: "Project overview", caption: "Progress by stage and next steps — exactly what is unfinished", states: ["New project", "In progress", "All done"], image: screen("m01-overview", "en") },
-      { title: "Synthesis board", caption: "Quotes and observations are dragged into pattern columns; a column becomes an insight", states: ["Empty", "No pattern", "Ready for an insight"], image: screen("m02-synthesis", "en") },
-      { title: "Links panel", caption: "Sources, the chain and what the artifact turned into", states: ["No links", "Direct", "Through the chain"], image: screen("m03-insight-links", "en") },
-      { title: "Flow editor", caption: "8 step types, branches and edge cases attached to steps", states: ["Empty canvas", "Step selected", "Not thought through"], image: screen("m05-flow", "en") },
-      { title: "Decision log", caption: "Context, decision, why, rejected options and evidence", states: ["Draft", "Accepted", "Superseded"], image: screen("m07-decision-evidence", "en") },
+      { title: "Project overview", caption: "Progress by stage and next steps — exactly what is unfinished", states: ["New project", "In progress", "All done"], image: screen("m01-overview-en", "en") },
+      { title: "Synthesis board", caption: "Quotes and observations are dragged into pattern columns; a column becomes an insight", states: ["Empty", "No pattern", "Ready for an insight"], image: screen("m02-synthesis-en", "en") },
+      { title: "Links panel", caption: "Sources, the chain and what the artifact turned into", states: ["No links", "Direct", "Through the chain"], image: screen("m03-insight-links-en", "en") },
+      { title: "Flow editor", caption: "8 step types, branches and edge cases attached to steps", states: ["Empty canvas", "Step selected", "Not thought through"], image: screen("m05-flow-en", "en") },
+      { title: "Decision log", caption: "Context, decision, why, rejected options and evidence", states: ["Draft", "Accepted", "Superseded"], image: screen("m07-decision-evidence-en", "en") },
     ],
   },
   decisions: [
