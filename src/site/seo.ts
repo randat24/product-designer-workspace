@@ -43,7 +43,8 @@ type PageMeta = {
 export function clampDescription(text: string, max = 160): string {
   const t = text.trim().replace(/\s+/g, " ");
   if (t.length <= max) return t;
-  const sentences = t.match(/[^.!?]+[.!?]+(?=\s|$)/g) ?? [];
+  // A sentence ends at . ! ? followed by a space or the end, so «acme.com» or «2.5M» stay inside it.
+  const sentences = t.match(/[\s\S]*?[.!?]+(?=\s|$)/g) ?? [];
   let out = "";
   for (const s of sentences) {
     if ((out + s).trim().length > max) break;
@@ -53,6 +54,9 @@ export function clampDescription(text: string, max = 160): string {
   const cut = t.slice(0, max - 1);
   return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:—–-]+$/, "").trim()}…`;
 }
+
+/** The title template of the site layout («page | name»); pageMetadata measures with the same one. */
+export const titleTemplate = (name: string) => `%s | ${name}`;
 
 export function pageMetadata(p: PageMeta): Metadata {
   const d = dict(p.locale);
@@ -65,7 +69,7 @@ export function pageMetadata(p: PageMeta): Metadata {
 
   // Search results cut a title at about 60 characters: when «title | name» would not fit, the title goes alone
   // (the name is still in the site name, the breadcrumbs and the structured data).
-  const fits = `${p.title} | ${d.name}`.length <= 60;
+  const fits = titleTemplate(d.name).replace("%s", () => p.title).length <= 60;
   const description = clampDescription(p.description);
 
   return {

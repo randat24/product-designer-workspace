@@ -144,7 +144,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- full-size project page */}
                 <img
-                  {...responsive(item.src, item.width, SIZES.full)}
+                  src={item.src}
                   alt={item.alt}
                   width={item.width}
                   height={item.height}

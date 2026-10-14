@@ -7,6 +7,7 @@ import "../../globals.css";
 // SIGNAL design system (trial): re-skins the public site only; the tool keeps globals.css as is.
 import "@/site/signal/signal.css";
 import { getSiteUrl } from "@/shared/lib/site-url";
+import { titleTemplate } from "@/site/seo";
 import { CONTACTS, LOCALES, dict, isLocale, type Locale } from "@/site/content";
 import { AnalyticsClickListener } from "@/site/analytics/click-listener";
 import { GoogleAnalytics, gaId } from "@/site/analytics/google-analytics";
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const d = dict(locale);
   return {
     metadataBase: new URL(getSiteUrl()),
-    title: { default: d.seo.home.title, template: `%s | ${d.name}` },
+    title: { default: d.seo.home.title, template: titleTemplate(d.name) },
     description: d.seo.home.description,
     applicationName: d.name,
     authors: [{ name: d.name, url: `${getSiteUrl()}/${locale}/about` }],

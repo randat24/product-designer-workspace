@@ -34,7 +34,9 @@ const config: NextConfig = {
   // Case pictures go through the image optimizer (src/site/img.ts): files in /public and case media uploaded
   // to Supabase Storage (public bucket only).
   images: {
-    formats: ["image/avif", "image/webp"],
+    // WebP only: AVIF is smaller but slow to encode on demand, and the first visitor after a deploy would wait for
+    // the cover (the largest paint) to be encoded.
+    formats: ["image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "**.supabase.co", pathname: "/storage/v1/object/public/**" }],
   },
   // A case renamed after it went live keeps its old address working.

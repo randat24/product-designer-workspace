@@ -34,3 +34,18 @@ describe("clampDescription", () => {
     expect(out.endsWith("word…")).toBe(true);
   });
 });
+
+describe("responsive: what stays as it is", () => {
+  it("keeps other hosts, protocol-relative URLs and Storage URLs outside the public bucket", () => {
+    for (const src of ["https://cdn.example.com/a.png", "//cdn.example.com/a.png", "https://ref.supabase.co/storage/v1/object/sign/case-media/a.png?token=x"])
+      expect(responsive(src, 1200, SIZES.card)).toEqual({ src });
+  });
+});
+
+describe("clampDescription: dots inside a sentence", () => {
+  it("keeps «acme.com» and «2.5M» inside the first sentence", () => {
+    const a = "Redesign of the acme.com checkout for 2.5M users, from research to the handoff of every screen state.";
+    const out = clampDescription(a + " " + "More text follows here to push it past the limit of one hundred and sixty characters.");
+    expect(out).toBe(a);
+  });
+});
