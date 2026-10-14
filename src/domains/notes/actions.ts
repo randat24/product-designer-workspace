@@ -91,15 +91,3 @@ export async function deleteNote(formData: FormData) {
   revalidatePath(`/w/${ws}/notes`);
   redirect(`/w/${ws}/notes`);
 }
-
-/** Marks a reply read, or unread again. */
-export async function markReplyRead(replyId: string, read: boolean): Promise<{ ok: true } | Failure> {
-  if (!z.uuid().safeParse(replyId).success) return invalid();
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("note_replies")
-    .update({ read_at: read ? new Date().toISOString() : null }).eq("id", replyId).select("id");
-  if (error) return transient();
-  if (!data.length) return denied(n.ownerOnly);
-  revalidatePath("/w/[ws]", "layout");
-  return { ok: true };
-}

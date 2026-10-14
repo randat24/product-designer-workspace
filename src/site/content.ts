@@ -108,7 +108,7 @@ export type Dictionary = {
   /** The veteran badge beside the name (src/site/signal/badges.tsx). */
   veteran: string;
   nav: { work: string; about: string; contact: string; notes: string };
-  /** «Нотатки»: short posts on design, a feed with reactions and private replies. */
+  /** «Нотатки»: short posts on design, a feed with reactions. */
   notes: {
     title: string;
     lead: string;
@@ -122,17 +122,6 @@ export type Dictionary = {
     reactionsLabel: string;
     reactions: { agree: string; disagree: string; new: string };
     reactionFailed: string;
-    reply: {
-      title: string;
-      lead: string;
-      body: string;
-      contact: string;
-      contactHint: string;
-      send: string;
-      sending: string;
-      sent: string;
-      errors: { validation: string; spam: string; captcha: string; rate_limit: string; unavailable: string };
-    };
   };
   home: {
     hello: string;
@@ -309,7 +298,7 @@ const uk: Dictionary = {
   nav: { work: "Роботи", about: "Про мене", contact: "Контакт", notes: "Нотатки" },
   notes: {
     title: "Нотатки",
-    lead: "Короткі думки про дизайн, поки свіжі: що помітив у роботі, з чим не згоден, що спрацювало. Відреагуйте або напишіть мені — відповідь бачу тільки я.",
+    lead: "Короткі думки про дизайн, поки свіжі: що помітив у роботі, з чим не згоден, що спрацювало.",
     empty: "Тут скоро з'являться перші нотатки.",
     open: "Відкрити нотатку",
     thread: "Тред",
@@ -320,23 +309,6 @@ const uk: Dictionary = {
     reactionsLabel: "Реакції на нотатку",
     reactions: { agree: "Згоден", disagree: "Сперечаюсь", new: "Не знав" },
     reactionFailed: "Реакцію не збережено. Спробуйте ще раз за хвилину.",
-    reply: {
-      title: "Відповісти автору",
-      lead: "Питання, заперечення чи свій приклад. Бачу тільки я; цікаве можу взяти в наступну нотатку — без вашого імені.",
-      body: "Ваша відповідь",
-      contact: "Як вам відповісти (необов'язково)",
-      contactHint: "E-mail або Telegram, якщо хочете відповідь.",
-      send: "Надіслати",
-      sending: "Надсилаємо…",
-      sent: "Дякую! Відповідь у мене.",
-      errors: {
-        validation: "Напишіть відповідь — до 1000 символів.",
-        spam: "Не вдалося надіслати. Зачекайте кілька секунд і спробуйте ще раз.",
-        captcha: "Не вдалося перевірити, що ви людина. Оновіть сторінку й спробуйте ще раз.",
-        rate_limit: "Забагато відповідей поспіль. Спробуйте пізніше.",
-        unavailable: "Відповіді зараз не приймаються. Напишіть мені в Telegram або на пошту.",
-      },
-    },
   },
   home: {
     hello: "Привіт, я Геннадій —",
@@ -777,7 +749,7 @@ const en: Dictionary = {
   nav: { work: "Work", about: "About", contact: "Contact", notes: "Notes" },
   notes: {
     title: "Notes",
-    lead: "Short thoughts on design while they are fresh: what I noticed at work, what I disagree with, what worked. React, or write to me — only I see your reply.",
+    lead: "Short thoughts on design while they are fresh: what I noticed at work, what I disagree with, what worked.",
     empty: "The first notes are coming soon.",
     open: "Open the note",
     thread: "Thread",
@@ -788,23 +760,6 @@ const en: Dictionary = {
     reactionsLabel: "Reactions to the note",
     reactions: { agree: "Agree", disagree: "Disagree", new: "Didn't know" },
     reactionFailed: "The reaction was not saved. Try again in a minute.",
-    reply: {
-      title: "Reply to the author",
-      lead: "A question, an objection or your own example. Only I see it; I may pick up a good one in a later note — without your name.",
-      body: "Your reply",
-      contact: "How to answer you (optional)",
-      contactHint: "E-mail or Telegram, if you want an answer.",
-      send: "Send",
-      sending: "Sending…",
-      sent: "Thank you! I have your reply.",
-      errors: {
-        validation: "Write a reply — up to 1000 characters.",
-        spam: "Could not send. Wait a few seconds and try again.",
-        captcha: "Could not check that you are human. Reload the page and try again.",
-        rate_limit: "Too many replies in a row. Try again later.",
-        unavailable: "Replies are not accepted right now. Write to me on Telegram or by e-mail.",
-      },
-    },
   },
   home: {
     hello: "Hi, I'm Hennadii —",
