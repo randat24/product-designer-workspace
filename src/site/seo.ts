@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getSiteUrl, isIndexable } from "@/shared/lib/site-url";
 import { CONTACTS, LOCALES, dict, type Case, type Locale } from "./content";
 import { signalCopy } from "./signal/home-content";
+import { PHOTO } from "./photo";
 
 // SEO for the public site. Every page builds its metadata here, so canonical URLs, hreflang,
 // Open Graph, Twitter and robots stay consistent. Paths are locale-less: "" (home), "/about",
@@ -136,6 +137,7 @@ export function personLd(locale: Locale): Json {
         recognizedBy: { "@type": "EducationalOrganization", name: e.place.split(" · ")[0] },
         url: e.certificate,
       })),
+    image: { "@type": "ImageObject", url: absoluteUrl(PHOTO.portrait.src), width: PHOTO.portrait.width, height: PHOTO.portrait.height, caption: PHOTO.alt[locale] },
     sameAs: [CONTACTS.linkedin, CONTACTS.dribbble, CONTACTS.telegram],
     // The services from the home page, so search and AI answers can match «hire a UX designer»-type queries.
     makesOffer: signalCopy(locale).services.items.map((s) => ({

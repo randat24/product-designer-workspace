@@ -14,6 +14,8 @@ import { INTAKE } from "@/site/intake/content";
 import { Eyebrow, PrimaryLink, container } from "@/site/ui";
 import { cn } from "@/shared/lib/cn";
 import { ExternalIcon } from "@/site/social-icons";
+import { PHOTO } from "@/site/photo";
+import { SIZES, responsive } from "@/site/img";
 import { VeteranBadge } from "@/site/signal/badges";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -87,6 +89,15 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           </div>
         </header>
       </section>
+
+      {/* The photo sits in the content column, at about its own width (1088 px), so it stays sharp. */}
+      <figure className={`${container} mt-4 mb-20 grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:gap-[clamp(48px,7vw,112px)]`}>
+        <span aria-hidden className="hidden md:block" />
+        {/* eslint-disable-next-line @next/next/no-img-element -- the owner's photo, size known */}
+        <img {...responsive(PHOTO.wide.src, PHOTO.wide.width, SIZES.figure)} alt={PHOTO.alt[locale]}
+          width={PHOTO.wide.width} height={PHOTO.wide.height} fetchPriority="high" decoding="async"
+          className="h-auto w-full max-w-[1088px] rounded-[8px]" />
+      </figure>
 
       {/* The design career as an index of roles: each row opens to what was done there. */}
       <section className={`${container} grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:gap-[clamp(48px,7vw,112px)]`} aria-labelledby="experience-h">

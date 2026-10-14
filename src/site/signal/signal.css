@@ -416,6 +416,7 @@
 
 /* ---------- about, process, contact ---------- */
 .signal .sg-about { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; }
+.signal .sg-about-photo { width: 100%; max-width: 380px; height: auto; aspect-ratio: 486 / 608; object-fit: cover; border-radius: var(--sg-radius-md); }
 .signal .sg-about-title { font-size: clamp(32px, 4vw, 58px); margin-bottom: 28px; }
 .signal .sg-about-text { color: var(--sg-fg-secondary); font-size: 18px; line-height: 1.7; max-width: 60ch; }
 .signal .sg-about-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; border-top: 1px solid var(--sg-border); margin-top: 44px; padding-top: 28px; }
@@ -558,6 +559,7 @@
   .signal .sg-project-visual, .signal .sg-project--full .sg-project-visual { height: 270px; }
   .signal .sg-project-meta :is(h2, h3) { font-size: 18px; }
   .signal .sg-about { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .signal .sg-about-photo { max-width: 300px; }
   .signal .sg-process-grid { grid-template-columns: 1fr 1fr; gap: 32px 0; }
   .signal .sg-process-step:nth-child(3) { border-left: 0; padding-left: 0; }
   .signal .sg-contact-bottom { align-items: start; }

@@ -6,6 +6,8 @@ import { CONTACTS, type Locale } from "@/site/content";
 import { container } from "@/site/ui";
 import { APPROACH_ANCHOR } from "./hero";
 import { signalCopy } from "./home-content";
+import { PHOTO } from "@/site/photo";
+import { SIZES, responsive } from "@/site/img";
 
 /** «02 /» before a section's eyebrow, in the accent. */
 export function SectionEyebrow({ index, children, className }: { index: string; children: React.ReactNode; className?: string }) {
@@ -55,7 +57,12 @@ export function SignalAbout({ locale }: { locale: Locale }) {
   const a = signalCopy(locale).about;
   return (
     <section id="about" className={`${container} sg-section sg-about`} aria-labelledby="about-heading">
-      <SectionEyebrow index={a.index}>{a.eyebrow}</SectionEyebrow>
+      <div className="flex flex-col gap-8">
+        <SectionEyebrow index={a.index}>{a.eyebrow}</SectionEyebrow>
+        {/* eslint-disable-next-line @next/next/no-img-element -- the owner's photo, size known */}
+        <img className="sg-about-photo" {...responsive(PHOTO.portrait.src, PHOTO.portrait.width, SIZES.thumb)}
+          alt={PHOTO.alt[locale]} width={PHOTO.portrait.width} height={PHOTO.portrait.height} loading="lazy" decoding="async" />
+      </div>
       <div className="min-w-0">
         <h2 className="sg-heading sg-about-title" id="about-heading">{a.title[0]}<br />{a.title[1]}</h2>
         <p className="sg-about-text">{a.text}</p>
