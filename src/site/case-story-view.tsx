@@ -2,6 +2,7 @@ import { cn } from "@/shared/lib/cn";
 import type { CaseStory, Mark, StoryLabels } from "./case-story";
 import { CaseContents } from "./case-contents";
 import { container } from "./ui";
+import { SIZES, responsive } from "@/site/img";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -216,8 +217,15 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
       <ul className="mt-8 grid gap-8 sm:grid-cols-3">
         {data.items.map((sc) => (
           <li key={sc.title} className="flex flex-col gap-3">
-            {/* Phone mock-up placeholder until real screens are published */}
+            {/* A real phone screen in the frame when the case has one; a placeholder mock-up until then. */}
             <div className="mx-auto w-full max-w-[220px] rounded-[26px] border border-line bg-surface p-2">
+              {sc.image ? (
+                <div className="aspect-[9/17] overflow-hidden rounded-[18px] bg-canvas">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- case screens of any origin, sizes known */}
+                  <img {...responsive(sc.image.src, sc.image.width, SIZES.thumb)} alt={sc.image.alt} width={sc.image.width} height={sc.image.height}
+                    loading="lazy" decoding="async" className="size-full object-cover object-top" />
+                </div>
+              ) : (
               <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[18px] p-3 text-on-sticky" style={{ background: sticker }}>
                 <div className="mx-auto h-1.5 w-12 rounded-full bg-current/25" />
                 <div className="mt-2 h-4 w-2/3 rounded-full bg-current/30" />
@@ -227,6 +235,7 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
                 <div className="h-14 rounded-[6px] bg-white/40" />
                 <div className="mt-auto h-9 rounded-[4px] bg-current/80" />
               </div>
+              )}
             </div>
             <h3 className="!mb-0">{sc.title}</h3>
             <p className="sg-case-secondary !mb-0 !text-[15px]">{sc.caption}</p>
