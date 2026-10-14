@@ -24,6 +24,12 @@ const phone = (file: string, alt: string, caption: string): GalleryItem => ({
   height: 1688,
 });
 
+// The same phone screens in the frames of the Screens section, alt text from the phone gallery of each locale.
+const screen = (file: string, locale: "uk" | "en") => {
+  const it = (locale === "uk" ? workspaceGalleryUk : workspaceGalleryEn).find((g) => g.src.endsWith(`/${file}.webp`))!;
+  return { src: it.src, alt: it.alt, width: it.width, height: it.height };
+};
+
 export const workspaceGalleryUk: GalleryItem[] = [
   shot("01-overview", "Огляд проєкту: дев'ять етапів з прогресом і список «Що зробити далі»", "Огляд проєкту"),
   shot("02-brief", "Бриф: продукт, бізнес-модель і вимоги, зберігається автоматично", "Бриф"),
@@ -150,11 +156,11 @@ export const workspaceUk: CaseStory = {
   screens: {
     intro: "Ключові екрани інструмента. У кожного є стани, які легко забути: порожньо, завантаження, помилка. Кожен працює й на телефоні — скриншоти обох версій у «Сторінках проєкту» вище.",
     items: [
-      { title: "Огляд проєкту", caption: "Прогрес по етапах і наступні кроки — що саме не дороблено", states: ["Новий проєкт", "У роботі", "Усе готово"] },
-      { title: "Дошка синтезу", caption: "Цитати й спостереження перетягуються в колонки-патерни; з колонки — інсайт", states: ["Порожня", "Без патерну", "Готовий до інсайту"] },
-      { title: "Панель «Зв'язки»", caption: "Джерела, ланцюжок і у що перетворився артефакт", states: ["Немає зв'язків", "Прямі", "Через ланцюжок"] },
-      { title: "Редактор сценарію", caption: "8 типів кроків, розвилки й edge cases, прив'язані до кроків", states: ["Порожня схема", "Крок вибрано", "Не продумано"] },
-      { title: "Журнал рішень", caption: "Контекст, рішення, чому, відкинуті варіанти й докази", states: ["Чернетка", "Прийнято", "Замінено новим"] },
+      { title: "Огляд проєкту", caption: "Прогрес по етапах і наступні кроки — що саме не дороблено", states: ["Новий проєкт", "У роботі", "Усе готово"], image: screen("m01-overview", "uk") },
+      { title: "Дошка синтезу", caption: "Цитати й спостереження перетягуються в колонки-патерни; з колонки — інсайт", states: ["Порожня", "Без патерну", "Готовий до інсайту"], image: screen("m02-synthesis", "uk") },
+      { title: "Панель «Зв'язки»", caption: "Джерела, ланцюжок і у що перетворився артефакт", states: ["Немає зв'язків", "Прямі", "Через ланцюжок"], image: screen("m03-insight-links", "uk") },
+      { title: "Редактор сценарію", caption: "8 типів кроків, розвилки й edge cases, прив'язані до кроків", states: ["Порожня схема", "Крок вибрано", "Не продумано"], image: screen("m05-flow", "uk") },
+      { title: "Журнал рішень", caption: "Контекст, рішення, чому, відкинуті варіанти й докази", states: ["Чернетка", "Прийнято", "Замінено новим"], image: screen("m07-decision-evidence", "uk") },
     ],
   },
   decisions: [
@@ -292,11 +298,11 @@ export const workspaceEn: CaseStory = {
   screens: {
     intro: "Key screens of the tool. Each has the states that are easy to forget: empty, loading, error. Each also works on a phone: screenshots of both versions are in Project pages above.",
     items: [
-      { title: "Project overview", caption: "Progress by stage and next steps — exactly what is unfinished", states: ["New project", "In progress", "All done"] },
-      { title: "Synthesis board", caption: "Quotes and observations are dragged into pattern columns; a column becomes an insight", states: ["Empty", "No pattern", "Ready for an insight"] },
-      { title: "Links panel", caption: "Sources, the chain and what the artifact turned into", states: ["No links", "Direct", "Through the chain"] },
-      { title: "Flow editor", caption: "8 step types, branches and edge cases attached to steps", states: ["Empty canvas", "Step selected", "Not thought through"] },
-      { title: "Decision log", caption: "Context, decision, why, rejected options and evidence", states: ["Draft", "Accepted", "Superseded"] },
+      { title: "Project overview", caption: "Progress by stage and next steps — exactly what is unfinished", states: ["New project", "In progress", "All done"], image: screen("m01-overview", "en") },
+      { title: "Synthesis board", caption: "Quotes and observations are dragged into pattern columns; a column becomes an insight", states: ["Empty", "No pattern", "Ready for an insight"], image: screen("m02-synthesis", "en") },
+      { title: "Links panel", caption: "Sources, the chain and what the artifact turned into", states: ["No links", "Direct", "Through the chain"], image: screen("m03-insight-links", "en") },
+      { title: "Flow editor", caption: "8 step types, branches and edge cases attached to steps", states: ["Empty canvas", "Step selected", "Not thought through"], image: screen("m05-flow", "en") },
+      { title: "Decision log", caption: "Context, decision, why, rejected options and evidence", states: ["Draft", "Accepted", "Superseded"], image: screen("m07-decision-evidence", "en") },
     ],
   },
   decisions: [

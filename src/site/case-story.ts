@@ -17,6 +17,7 @@ export const STAGE_COLOR: Record<Stage, string> = {
 };
 
 export type Fact = { value: string; label: string };
+export type StoryImage = { src: string; alt: string; width: number; height: number };
 export type Quote = { text: string; who: string };
 export type Mark = "yes" | "partial" | "no";
 
@@ -38,7 +39,8 @@ export type CaseStory = {
     steps: { kind: "start" | "screen" | "action" | "end"; label: string }[];
     edgeCases: string[];
   };
-  screens?: { intro: string; items: { title: string; caption: string; states: string[] }[] };
+  /** `image`: a real phone screen in the frame; without it the frame shows a placeholder. */
+  screens?: { intro: string; items: { title: string; caption: string; states: string[]; image?: StoryImage }[] };
   decisions?: { code: string; title: string; why: string; rejected: string[]; evidence: string[] }[];
   results?: { intro: string; metrics: Fact[]; quote?: Quote };
 };
