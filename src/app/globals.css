@@ -24,6 +24,9 @@
   --warning-bg: #F9EED2;
   --success: #27603B;
   --success-bg: #E7F0E6;
+  /* Khaki of the veteran badge (the site's «Ветеран» mark): 8:1 text on its fill. */
+  --veteran: #45441F;
+  --veteran-bg: #E8E6C6;
   /* Text on solid danger / warning / success fills (white in light, ink in dark: 4.5:1 in both). */
   --on-status: #FFFFFF;
   /* Lucide chevron-down in fg-secondary: the select arrow. */
@@ -72,6 +75,8 @@
     --warning-bg: #433B25;
     --success: #AAD8AA;
     --success-bg: #273B2A;
+    --veteran: #E2DFB1;
+    --veteran-bg: #393923;
     --on-status: #191B18;
     --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     --rail: #22251F;
@@ -104,6 +109,8 @@
   --warning-bg: #433B25;
   --success: #AAD8AA;
   --success-bg: #273B2A;
+  --veteran: #E2DFB1;
+  --veteran-bg: #393923;
   --on-status: #191B18;
   --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   --rail: #22251F;

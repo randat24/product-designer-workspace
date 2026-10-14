@@ -3,6 +3,7 @@ import { button } from "./ui";
 import { dict, type Case, type Locale } from "@/site/content";
 import { container } from "@/site/ui";
 import { HeroTrace } from "./hero-trace";
+import { VeteranBadge } from "./badges";
 
 /** SIGNAL hero copy (uk, en). Kept here while the redesign is on trial, so content.ts stays untouched. */
 const HERO = {
@@ -38,7 +39,10 @@ export function SignalHero({ locale, traceCase }: { locale: Locale; traceCase: C
     <div className="sg-first-screen">
       <section className={`${container} sg-hero`} aria-labelledby="hero-heading">
         <div className="sg-hero-copy">
-          <p className="sg-availability">{d.home.available}</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="sg-availability">{d.home.available}</p>
+            <VeteranBadge locale={locale} />
+          </div>
           <h1 id="hero-heading">
             <span className="sr-only">{d.name}. </span>
             {first}<br />{second}<br /><em>{last}</em>
