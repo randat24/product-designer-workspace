@@ -256,6 +256,8 @@ export type Dictionary = {
     conceptNote: string;
     pages: string;
     pagesLead: string;
+    /** Heading over the phone screens of the gallery. */
+    phone: string;
     figma: string;
     figmaLead: string;
     figmaLoad: string;
@@ -266,6 +268,8 @@ export type Dictionary = {
     close: string;
     prev: string;
     next: string;
+    zoomIn: string;
+    zoomOut: string;
   };
   cases_list: Case[];
 };
@@ -686,7 +690,8 @@ const uk: Dictionary = {
     noLive: "Живого сайту немає — сторінки проєкту можна переглянути нижче.",
     conceptNote: "Це дизайн-концепт: продукт не запускався, сторінки проєкту можна переглянути нижче.",
     pages: "Сторінки проєкту",
-    pagesLead: "Натисніть на сторінку, щоб переглянути її на весь екран. Гортати — стрілками.",
+    pagesLead: "Натисніть на сторінку, щоб переглянути її на весь екран. Гортати — стрілками або свайпом.",
+    phone: "Версія для телефона",
     figma: "Дизайн у Figma",
     figmaLead: "Робочий файл проєкту: макети, компоненти й прототип у тому вигляді, в якому я з ними працюю.",
     figmaLoad: "Завантажити файл тут",
@@ -696,6 +701,8 @@ const uk: Dictionary = {
     close: "Закрити",
     prev: "Попередня сторінка",
     next: "Наступна сторінка",
+    zoomIn: "Збільшити сторінку",
+    zoomOut: "Показати сторінку цілком",
   },
   cases_list: [],
 };
@@ -1115,7 +1122,8 @@ const en: Dictionary = {
     noLive: "There is no live site — browse the project pages below.",
     conceptNote: "This is a design concept: the product was not launched, browse the project pages below.",
     pages: "Project pages",
-    pagesLead: "Click a page to view it full screen. Use the arrow keys to flip through.",
+    pagesLead: "Click a page to view it full screen. Flip through with the arrow keys or a swipe.",
+    phone: "On a phone",
     figma: "Design in Figma",
     figmaLead: "The working file of the project: mockups, components and the prototype as I work with them.",
     figmaLoad: "Load the file here",
@@ -1125,6 +1133,8 @@ const en: Dictionary = {
     close: "Close",
     prev: "Previous page",
     next: "Next page",
+    zoomIn: "Zoom in",
+    zoomOut: "Show the whole page",
   },
   cases_list: [],
 };
@@ -1222,7 +1232,7 @@ uk.cases_list = [
     metrics: [
       { value: "9", label: "етапів у ланцюжку проєкту" },
       { value: "8", label: "типів кроків у редакторі сценаріїв" },
-      { value: "196", label: "автоматичних перевірок бази" },
+      { value: "276", label: "автоматичних перевірок бази" },
     ],
     sections: [
       { title: "Задача", body: workspaceUk.overview.challenge },
@@ -1308,7 +1318,7 @@ en.cases_list = [
     metrics: [
       { value: "9", label: "stages in the project chain" },
       { value: "8", label: "step types in the flow editor" },
-      { value: "196", label: "automated database checks" },
+      { value: "276", label: "automated database checks" },
     ],
     sections: [
       { title: "Problem", body: workspaceEn.overview.challenge },
