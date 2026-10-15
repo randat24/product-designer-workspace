@@ -61,6 +61,8 @@ CI (`.github/workflows/ci.yml`) runs on every PR: typecheck, lint, unit tests, b
 
 **Design system:** tokens in `src/app/globals.css`, components in `src/shared/ui/`, rules in `docs/DESIGN-SYSTEM.md` (SIGNAL: warm neutral base, one orange accent, Manrope for everything). `.design-sync/` + `ds-bundle/` package `src/shared/ui` for Claude Design (see `.design-sync/NOTES.md`). If you rename a token in `globals.css`, rename it in `.design-sync/tailwind.css` and `.design-sync/conventions.md` too.
 
+**Error reporting:** `src/instrumentation.ts` sends server errors (render, server actions, route handlers, middleware) and every `console.error` to Sentry when `SENTRY_DSN` is set; it is server-only and without PII on purpose (the browser SDK would run before analytics consent). Vercel Hobby keeps runtime logs for one hour, so Sentry is where production failures are kept.
+
 **Next.js patch:** `patches/next+15.5.27.patch` does two things: it fixes a vendored-React bug where server action results / `<Link>` navigations never commit, and it hydrates in one pass instead of inside `startTransition` (time-sliced hydration threw random React #418 on the site). Remove both only after upgrading Next, and re-run the repeated e2e check (see `patches/README.md`). After editing anything under `node_modules/next`, delete `.next/cache` before building: webpack otherwise keeps the old module and the change silently has no effect.
 
 ## Conventions
