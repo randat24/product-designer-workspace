@@ -50,7 +50,7 @@ Middleware (`src/shared/lib/supabase/middleware.ts`) ходит в Supabase то
 ## Open Graph картинки
 
 `/og?locale=uk` — карточка сайта, `/og?locale=uk&case=<slug>` — карточка кейса (1200×630, `next/og`).
-Шрифты Oswald и Manrope (латиница + кириллица) лежат в `src/site/og/fonts/`. Кеш: сутки + stale-while-revalidate неделя.
+Шрифт Manrope (Medium и Bold, латиница + кириллица) лежат в `src/site/og/fonts/`. Кеш: сутки + stale-while-revalidate неделя.
 Проверка: открыть URL картинки в браузере или вставить страницу в <https://www.opengraph.xyz/>.
 
 ## Структурированные данные (JSON-LD)

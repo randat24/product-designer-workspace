@@ -5,17 +5,6 @@
 
 export type Stage = "research" | "synthesis" | "competitors" | "opportunities" | "flows" | "screens" | "decisions";
 
-/** Entity colours of the tool, so the site speaks the same visual language. */
-export const STAGE_COLOR: Record<Stage, string> = {
-  research: "var(--entity-research)",
-  synthesis: "var(--entity-synthesis)",
-  competitors: "var(--entity-problem)",
-  opportunities: "var(--entity-opportunity)",
-  flows: "var(--entity-structure)",
-  screens: "var(--entity-design)",
-  decisions: "var(--entity-decision)",
-};
-
 export type Fact = { value: string; label: string };
 export type StoryImage = { src: string; alt: string; width: number; height: number };
 export type Quote = { text: string; who: string };

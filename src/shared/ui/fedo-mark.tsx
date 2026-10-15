@@ -20,15 +20,6 @@ export function FedoMark({ className, title, tap }: { className?: string; title?
   );
 }
 
-/** The cursor of the mark alone, in the current text colour: the site's sign for «open». */
-export function CursorIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="192 192 96 96" fill="currentColor" aria-hidden className={cn("shrink-0", className)}>
-      <path d={FEDO_CURSOR} />
-    </svg>
-  );
-}
-
 /** The F as a dashed outline with its cursor: an empty place («nothing here yet»), or with `miss` a cursor that
  *  missed the notch (a page that does not exist). */
 export function FedoOutline({ className, miss }: { className?: string; miss?: boolean }) {

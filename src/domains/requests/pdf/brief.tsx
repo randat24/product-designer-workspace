@@ -31,8 +31,6 @@ function registerFonts() {
   registered = true;
 }
 
-export const BRIEF_TEMPLATE_VERSION = 1;
-
 type Copy = {
   title: string; requestId: string; date: string; version: string; versionValue: (n: number) => string; noName: string;
   sections: Record<"client" | "project" | "overview" | "existing" | "audience" | "competitors" | "references" | "scope" | "materials" | "budget" | "timeline" | "additional", string>;
