@@ -105,7 +105,9 @@ export default async function SiteLayout({
               then theme and language. */}
           <header className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:h-20 sm:gap-4`}>
-              <Link href={`/${locale}`} className="group hit flex shrink-0 items-center gap-3.5 whitespace-nowrap" aria-label={d.name}>
+              {/* The name may break onto two lines when the row is short of room (a phone with a large browser font);
+                  otherwise it stays on one. */}
+              <Link href={`/${locale}`} className="group hit flex min-w-0 items-center gap-3.5" aria-label={d.name}>
                 <BrandMark />
                 <span aria-hidden className="flex flex-col text-[0.875rem] font-semibold leading-[1.35]">
                   {d.name}

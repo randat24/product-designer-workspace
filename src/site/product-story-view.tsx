@@ -103,11 +103,11 @@ function Overview({ body, facts }: { body: string[]; facts: { label: string; val
 
 function Challenge({ body, behaviors }: { body: string[]; behaviors: { who: string; goal: string }[] }) {
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
       <Paragraphs body={body} />
       <ul className="flex flex-col gap-3">
         {behaviors.map((b, i) => (
-          <li key={b.who} className="nw-rise grid grid-cols-[auto_1fr] items-baseline gap-x-5 rounded-[0.5rem] border border-line bg-surface p-6">
+          <li key={b.who} className="nw-rise grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-5 rounded-[0.5rem] border border-line bg-surface p-6">
             <span className="display-num text-[1.75rem] leading-none text-[var(--nw-ink)]">{num(i)}</span>
             <div className="flex flex-col gap-1">
               <p className="text-[1.25rem] font-semibold tracking-[-0.02em] leading-[1.1]">{b.who}</p>
@@ -161,7 +161,7 @@ function Ecosystem({ center, nodes }: { center: string; nodes: string[] }) {
 
 function Roles({ items }: { items: { name: string; summary: string; can: string[] }[] }) {
   return (
-    <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <ol className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2 xl:grid-cols-4">
       {items.map((r, i) => (
         <li key={r.name} className="nw-rise relative flex flex-col gap-4 rounded-[0.5rem] border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-(--duration-base) hover:border-[var(--nw-blue)] hover:shadow-[0_12px_32px_-18px_var(--nw-blue)]">
           <div className="flex items-center justify-between">
@@ -325,11 +325,11 @@ function Glyph({ shape }: { shape: BrandShape }) {
 function Brand({ body, parts, formula, image }: { body: string[]; parts: { shape: BrandShape; title: string; meaning: string }[]; formula: string; image?: GalleryItem }) {
   return (
     <div className="flex flex-col gap-10">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
         <Paragraphs body={body} className="text-white/90" />
         <ul className="flex flex-col gap-3">
           {parts.map((p) => (
-            <li key={p.shape} className="nw-rise grid grid-cols-[auto_1fr] items-center gap-5 rounded-[0.5rem] border border-white/15 bg-white/[0.04] p-5">
+            <li key={p.shape} className="nw-rise grid grid-cols-[auto_minmax(0,1fr)] items-center gap-5 rounded-[0.5rem] border border-white/15 bg-white/[0.04] p-5">
               <span className="text-[var(--nw-glow)]"><Glyph shape={p.shape} /></span>
               <div className="flex flex-col gap-1">
                 <p className="text-[1.25rem] font-semibold tracking-[-0.02em]">{p.title}</p>

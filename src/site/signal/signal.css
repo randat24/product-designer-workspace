@@ -57,7 +57,8 @@
 :root[data-theme="dark"] { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
 
 /* The public site reads at 16 px (SIGNAL body-sm); the tool keeps its 15 px. */
-.signal { font-size: 1rem; letter-spacing: -0.01em; }
+/* A word longer than its line (a narrow phone with a large browser font) breaks instead of widening the page. */
+.signal { font-size: 1rem; letter-spacing: -0.01em; overflow-wrap: break-word; }
 
 /* ---------- components (SIGNAL components.css, without its resets: Tailwind's preflight does those) ---------- */
 @layer components {
@@ -72,6 +73,8 @@
     text-decoration: none; white-space: nowrap; cursor: pointer;
     transition: background var(--sg-duration-fast), border-color var(--sg-duration-fast), color var(--sg-duration-fast), transform var(--sg-duration-fast) var(--ease-standard);
   }
+  /* A label too long for a narrow phone with a large browser font wraps inside the button instead of widening the page. */
+  @media (max-width: 30rem) { .signal .sg-button { max-width: 100%; white-space: normal; text-align: center; } }
   /* Pressed: the button gives a pixel under the finger, so a tap is felt before the page answers. */
   .signal .sg-button:active:not(:disabled, [aria-disabled="true"]) { transform: translateY(1px); }
   .signal .sg-button svg { width: 1rem; height: 1rem; flex-shrink: 0; }
@@ -578,7 +581,7 @@
   .signal .sg-about { gap: 3rem; }
 }
 @media (max-width: 56.25rem) {
-  .signal .sg-case-hero-bottom { grid-template-columns: 1fr; gap: 2.25rem; }
+  .signal .sg-case-hero-bottom { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; }
   .signal .sg-about-top { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .signal .sg-about-top-photo { max-width: 40rem; margin-bottom: 2.25rem; }
   .signal .sg-case-meta { grid-template-columns: repeat(3, 1fr); }

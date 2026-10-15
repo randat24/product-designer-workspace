@@ -54,8 +54,8 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
         const Issuer = ISSUER_ICON[a.issuerKind];
         return (
           <section key={a.icon} id={`${id}-panel-${i}`} role="tabpanel" aria-labelledby={`${id}-tab-${i}`} hidden={i !== active}
-            className="grid gap-6 rounded-[0.5rem] border border-line bg-surface p-6 text-fg sm:p-8 md:grid-cols-[minmax(13.75rem,18.75rem)_1fr] md:items-center md:gap-10">
-            <div className="relative mx-auto flex h-64 w-52 items-center justify-center sm:h-80 sm:w-64">
+            className="grid grid-cols-[minmax(0,1fr)] gap-6 rounded-[0.5rem] border border-line bg-surface p-6 text-fg sm:p-8 md:grid-cols-[minmax(13.75rem,18.75rem)_1fr] md:items-center md:gap-10">
+            <div className="relative mx-auto flex h-64 w-52 max-w-full items-center justify-center sm:h-80 sm:w-64">
               <span aria-hidden className="absolute aspect-square h-52 rounded-full border border-line bg-[radial-gradient(var(--line)_0.7px,transparent_0.7px)] [background-size:16px_16px] sm:h-64" />
               <AwardSvg icon={a.icon} className="relative h-[88%]" />
             </div>
