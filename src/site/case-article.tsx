@@ -44,7 +44,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
   // 18+ cases: everything below the facts waits for the visitor's age confirmation. A product case is
   // diagrams and brand work only (no product imagery of the audience), so it is not hidden behind the gate.
   const cover = (
-    <figure className="sg-case-cover">
+    <figure className="sg-case-cover" style={{ viewTransitionName: `case-${item.slug}` }}>
       {item.cover ? (
         // eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known
         <img {...responsive(item.cover.src, item.cover.width, SIZES.cover)} alt={item.cover.alt} width={item.cover.width} height={item.cover.height} fetchPriority="high" decoding="async" />

@@ -655,3 +655,8 @@
   .signal .sg-case-contents a { font-size: 0.75rem; gap: 8px; }
   .signal .sg-case-chain li { font-size: 0.75rem; padding: 10px 12px; }
 }
+
+/* Page transitions (src/site/page-transitions.tsx): a short cross-fade between pages, and a case cover that
+   moves from its card into the case a little slower, so the eye can follow it. */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--duration-base); }
+::view-transition-group(*) { animation-duration: 360ms; animation-timing-function: var(--ease-standard); }
