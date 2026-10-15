@@ -53,7 +53,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
         {label}
         <span className="flex items-center gap-1.5">
           <Send aria-hidden className="size-4" />
-          <ChevronDown aria-hidden className={cn("-mr-1 size-4 transition-transform duration-[120ms]", open && "rotate-180")} />
+          <ChevronDown aria-hidden className={cn("-mr-1 size-4 transition-transform duration-(--duration-fast)", open && "rotate-180")} />
         </span>
       </button>
       <div id={id} hidden={!open}

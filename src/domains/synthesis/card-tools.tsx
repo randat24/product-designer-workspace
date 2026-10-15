@@ -30,7 +30,7 @@ export function QuoteToObservation({ projectId, quoteId, text }: { projectId: st
   return (
     <div className="flex flex-wrap items-end gap-3">
       <ChipGroup label={t.synthesis.board.kind} options={OBSERVATION_KINDS} value={kind} onChange={setKind} size="sm" />
-      <Button disabled={pending} onClick={() => startTransition(async () => {
+      <Button busy={pending} disabled={pending} onClick={() => startTransition(async () => {
         const res = await createObservation({ projectId, interviewId: null, quoteId, kind, text });
         if (res.ok) router.refresh();
       })}>{t.synthesis.quotes.toObservation}</Button>

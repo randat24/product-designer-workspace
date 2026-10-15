@@ -20,8 +20,8 @@
   --sg-control-height: 48px;
   --sg-control-height-sm: 44px;
   --sg-text-label: 0.875rem;
-  --sg-duration-fast: 120ms;
-  --sg-duration-base: 220ms;
+  --sg-duration-fast: var(--duration-fast);
+  --sg-duration-base: var(--duration-base);
   --sg-layer-popover: 30;
   --sg-layer-toast: 60;
   --sg-bg: var(--canvas);
@@ -55,7 +55,6 @@
   :root:not([data-theme="light"]) { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
 }
 :root[data-theme="dark"] { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
-@media (prefers-reduced-motion: reduce) { :root { --sg-duration-fast: 0ms; --sg-duration-base: 0ms; } }
 
 /* The public site reads at 16 px (SIGNAL body-sm); the tool keeps its 15 px. */
 .signal { font-size: 1rem; letter-spacing: -0.01em; }
@@ -71,8 +70,10 @@
     border: 1px solid transparent; border-radius: var(--sg-radius-sm);
     font-weight: var(--sg-weight-semibold); font-size: var(--sg-text-label); line-height: 1.4; letter-spacing: 0;
     text-decoration: none; white-space: nowrap; cursor: pointer;
-    transition: background var(--sg-duration-fast), border-color var(--sg-duration-fast), color var(--sg-duration-fast), transform var(--sg-duration-fast);
+    transition: background var(--sg-duration-fast), border-color var(--sg-duration-fast), color var(--sg-duration-fast), transform var(--sg-duration-fast) var(--ease-standard);
   }
+  /* Pressed: the button gives a pixel under the finger, so a tap is felt before the page answers. */
+  .signal .sg-button:active:not(:disabled, [aria-disabled="true"]) { transform: translateY(1px); }
   .signal .sg-button svg { width: 16px; height: 16px; flex-shrink: 0; }
   .signal .sg-button--primary { background: var(--sg-accent); color: var(--sg-on-accent); border-color: var(--sg-accent-text); }
   .signal .sg-button--primary:hover { background: var(--sg-accent-hover); }
@@ -110,8 +111,9 @@
     display: inline-flex; align-items: center; gap: 8px; min-height: var(--sg-control-height-sm); padding: 10px 15px;
     border: 1px solid var(--sg-border); border-radius: var(--sg-radius-sm); background: transparent;
     color: var(--sg-fg-secondary); font-size: 0.8125rem; line-height: 1.4; cursor: pointer;
-    transition: background var(--sg-duration-fast), color var(--sg-duration-fast), border-color var(--sg-duration-fast);
+    transition: background var(--sg-duration-fast), color var(--sg-duration-fast), border-color var(--sg-duration-fast), transform var(--sg-duration-fast) var(--ease-standard);
   }
+  .signal .sg-chip:active { transform: scale(.97); }
   .signal .sg-chip:hover { color: var(--sg-fg); border-color: var(--sg-control-border); }
   .signal .sg-chip[aria-pressed="true"], .signal .sg-chip:has(input:checked) { color: var(--sg-bg); background: var(--sg-fg); border-color: var(--sg-fg); }
   .signal .sg-chip:has(input:focus-visible) { outline: var(--sg-focus-width) solid var(--sg-focus); outline-offset: var(--sg-focus-offset); }
@@ -292,7 +294,7 @@
 
 /* Motion: the records come in one after another, then the signal runs down the line. None under reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-  .signal .sg-trace-node { animation: sg-rise .5s cubic-bezier(.2, .7, .3, 1) both; }
+  .signal .sg-trace-node { animation: sg-rise .5s var(--ease-standard) both; }
   .signal .sg-trace-node:nth-child(2) { animation-delay: .15s; }
   .signal .sg-trace-node:nth-child(3) { animation-delay: .3s; }
   .signal .sg-trace-node:nth-child(4) { animation-delay: .45s; }

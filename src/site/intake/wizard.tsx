@@ -653,7 +653,7 @@ function Progress({ n, total, label: text, review }: { n: number; total: number;
       <p className="text-[0.875rem] font-semibold text-fg-secondary" aria-hidden>{text}</p>
       <div role="progressbar" aria-label={text} aria-valuemin={0} aria-valuemax={total} aria-valuenow={review ? total : n - 1}
         className="h-[3px] w-full overflow-hidden bg-line">
-        <div className="h-full bg-accent-text transition-[width] duration-300" style={{ width: `${((review ? total : n - 1) / total) * 100}%` }} />
+        <div className="h-full bg-accent-text transition-[width] duration-(--duration-base)" style={{ width: `${((review ? total : n - 1) / total) * 100}%` }} />
       </div>
     </div>
   );

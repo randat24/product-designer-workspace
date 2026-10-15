@@ -86,9 +86,9 @@ export function NotePublish({ noteId, number, published }: { noteId: string; num
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {published ? (
-          <Button variant="secondary" disabled={pending} onClick={() => run(() => setNoteStatus(noteId, "draft"))}>{n.unpublish}</Button>
+          <Button variant="secondary" busy={pending} disabled={pending} onClick={() => run(() => setNoteStatus(noteId, "draft"))}>{n.unpublish}</Button>
         ) : (
-          <Button disabled={pending} onClick={() => run(() => setNoteStatus(noteId, "published"))}>{pending ? n.publishing : n.publish}</Button>
+          <Button busy={pending} disabled={pending} onClick={() => run(() => setNoteStatus(noteId, "published"))}>{pending ? n.publishing : n.publish}</Button>
         )}
         {published && (
           <a href={`/uk/notes/${number}`} target="_blank" rel="noreferrer" className="text-sm font-semibold underline underline-offset-2">{n.onSite}</a>

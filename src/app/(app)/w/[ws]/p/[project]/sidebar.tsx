@@ -56,7 +56,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
           </span>
           <Link href={`${base}/settings`} aria-current={pathname === `${base}/settings` ? "page" : undefined}
             aria-label={t.project.settings} title={t.project.settings}
-            className="hit grid size-8 shrink-0 place-items-center rounded-control border border-rail-fg/30 transition-colors duration-[120ms] hover:border-rail-fg/70 hover:bg-rail-fg/10 aria-[current=page]:border-rail-fg aria-[current=page]:bg-rail-fg aria-[current=page]:text-rail">
+            className="hit grid size-8 shrink-0 place-items-center rounded-control border border-rail-fg/30 transition-colors duration-(--duration-fast) hover:border-rail-fg/70 hover:bg-rail-fg/10 aria-[current=page]:border-rail-fg aria-[current=page]:bg-rail-fg aria-[current=page]:text-rail">
             <Settings aria-hidden className="size-4" />
           </Link>
         </div>
@@ -81,7 +81,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
                   <li key={item.segment || "overview"}>
                     <Link href={href} aria-current={active ? "page" : undefined}
                       className={cn(
-                        "relative flex min-h-9 items-center gap-2 rounded-control px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-[120ms]",
+                        "relative flex min-h-9 items-center gap-2 rounded-control px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-(--duration-fast)",
                         // Current section: filled pill plus a bar on the rail edge, so it reads even at a glance.
                         active ? "bg-canvas text-fg lg:before:absolute lg:before:inset-y-1.5 lg:before:-left-3 lg:before:w-[3px] lg:before:rounded-r-full lg:before:bg-rail-fg"
                           : "hover:bg-rail-fg/10",

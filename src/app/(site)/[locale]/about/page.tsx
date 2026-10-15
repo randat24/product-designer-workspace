@@ -109,7 +109,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                   <span className="font-label text-[0.6875rem] uppercase tracking-[0.08em] text-fg-secondary">{job.period}</span>
                   <h3 className="col-start-1 text-[clamp(1.25rem,2vw,1.625rem)] font-medium leading-[1.25] tracking-[-0.03em]">{job.title}</h3>
                   <span className="col-start-1 text-[0.9375rem] text-fg-secondary">{job.place}</span>
-                  <span aria-hidden className="col-start-2 row-span-3 row-start-1 self-center font-label text-[1.25rem] leading-none text-accent-text transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none">+</span>
+                  <span aria-hidden className="col-start-2 row-span-3 row-start-1 self-center font-label text-[1.25rem] leading-none text-accent-text transition-transform duration-(--duration-base) group-open:rotate-45 motion-reduce:transition-none">+</span>
                 </summary>
                 <div className="flex max-w-[72ch] flex-col gap-3 pb-7">
                   <ul className="flex flex-wrap gap-1.5">

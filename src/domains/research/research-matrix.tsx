@@ -58,7 +58,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
             ))}
             {canEdit && (
               <th className="min-w-[120px] border-b border-line p-2.5 align-middle">
-                <Button variant="secondary" disabled={pending} onClick={() => run(() => addRespondent(projectId, guideId))}>
+                <Button variant="secondary" busy={pending} disabled={pending} onClick={() => run(() => addRespondent(projectId, guideId))}>
                   <Plus aria-hidden className="size-4" />{mx.addRespondent}
                 </Button>
               </th>

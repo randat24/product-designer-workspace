@@ -72,7 +72,7 @@ export default async function CompetitorsPage({ params, searchParams }: {
             <li key={c.id}>
               <Link href={`${base}/competitors/${c.code}`}
                 className={cn(
-                  "flex h-full flex-col gap-3 overflow-hidden rounded-panel border border-line bg-surface transition-colors duration-[120ms] hover:border-fg",
+                  "flex h-full flex-col gap-3 overflow-hidden rounded-panel border border-line bg-surface transition-colors duration-(--duration-fast) hover:border-fg",
                   c.is_own_product && "border border-control",
                 )}>
                 {covers.get(c.id) && (

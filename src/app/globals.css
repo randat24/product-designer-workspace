@@ -53,6 +53,12 @@
   --entity-structure: #1971c2;
   --entity-design: #3b5bdb;
   --entity-decision: #495057;
+
+  /* Motion, shared by the tool and the site (signal.css reads these): a quick reply to a press or hover, a
+     calmer one for something appearing, and one curve that starts fast and settles. Zero under reduced motion. */
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --ease-standard: cubic-bezier(.2, .7, .3, 1);
 }
 /* Dark: follows the system unless someone picked a theme (data-theme on <html>, set by the theme switch). */
 @media (prefers-color-scheme: dark) {
@@ -125,6 +131,7 @@
 }
 
 @theme inline {
+  --ease-standard: var(--ease-standard);
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-subtle: var(--subtle);
@@ -263,7 +270,10 @@ body {
 }
 .flow-canvas .react-flow__node:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; border-radius: 10px; }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 0ms; --duration-base: 0ms; }
+  * { transition: none !important; animation: none !important; }
+}
 
 /* Signature on the home page: revealed left to right once, like it is being written. */
 .signature-draw { animation: signature-reveal 1.6s cubic-bezier(0.45, 0, 0.2, 1) 0.3s both; }

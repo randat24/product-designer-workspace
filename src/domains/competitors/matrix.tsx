@@ -101,7 +101,9 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
   }
 
   const rows = useAction();
-  const addTemplate = (tpl: UxTemplate) => rows.run(() => addUxTemplate(projectId, tpl));
+  // Which template is being added, so only its button shows the spinner.
+  const [adding, setAdding] = useState<UxTemplate | null>(null);
+  const addTemplate = (tpl: UxTemplate) => { setAdding(tpl); rows.run(() => addUxTemplate(projectId, tpl)); };
 
   // Group rows, keeping first-appearance order of groups.
   const groups: { name: string | null; rows: Feature[] }[] = [];
@@ -234,10 +236,10 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
         <div className="flex flex-wrap items-end gap-2">
           {kind === "ux" && (
             <>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("nielsen")}><Plus aria-hidden className="size-4" />{ux.addNielsen}</Button>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("laws")}><Plus aria-hidden className="size-4" />{ux.addLaws}</Button>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("gestalt")}><Plus aria-hidden className="size-4" />{ux.addGestalt}</Button>
-              <Button type="button" variant="secondary" disabled={pending || rows.pending} onClick={() => addTemplate("memory")}><Plus aria-hidden className="size-4" />{ux.addMemory}</Button>
+              <Button type="button" variant="secondary" busy={rows.pending && adding === "nielsen"} disabled={pending || rows.pending} onClick={() => addTemplate("nielsen")}><Plus aria-hidden className="size-4" />{ux.addNielsen}</Button>
+              <Button type="button" variant="secondary" busy={rows.pending && adding === "laws"} disabled={pending || rows.pending} onClick={() => addTemplate("laws")}><Plus aria-hidden className="size-4" />{ux.addLaws}</Button>
+              <Button type="button" variant="secondary" busy={rows.pending && adding === "gestalt"} disabled={pending || rows.pending} onClick={() => addTemplate("gestalt")}><Plus aria-hidden className="size-4" />{ux.addGestalt}</Button>
+              <Button type="button" variant="secondary" busy={rows.pending && adding === "memory"} disabled={pending || rows.pending} onClick={() => addTemplate("memory")}><Plus aria-hidden className="size-4" />{ux.addMemory}</Button>
               <Link href="/app/ux-laws" target="_blank" className="inline-flex h-9 items-center gap-1 px-2 text-sm font-semibold underline underline-offset-4">
                 {t.uxLaws.open}<ArrowUpRight aria-hidden className="size-4" />
               </Link>

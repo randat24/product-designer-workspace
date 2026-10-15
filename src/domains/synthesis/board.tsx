@@ -69,7 +69,7 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
                 if (card) move(card, p?.id ?? null);
               }}
               className={cn(
-                "flex w-[290px] shrink-0 flex-col gap-2.5 rounded-panel border bg-surface/60 p-3 transition-colors duration-[120ms]",
+                "flex w-[290px] shrink-0 flex-col gap-2.5 rounded-panel border bg-surface/60 p-3 transition-colors duration-(--duration-fast)",
                 over === key ? "border border-dashed border-fg bg-subtle" : "border-line",
                 !p && "bg-transparent",
               )}>

@@ -108,7 +108,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
       </header>
 
       <div className="h-1 bg-line" aria-hidden>
-        <div className="h-full bg-fg transition-[width] duration-[240ms]" style={{ width: `${((i + 1) / steps.length) * 100}%` }} />
+        <div className="h-full bg-fg transition-[width] duration-(--duration-base)" style={{ width: `${((i + 1) / steps.length) * 100}%` }} />
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-10 sm:py-10">
