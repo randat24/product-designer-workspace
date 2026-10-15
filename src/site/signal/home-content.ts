@@ -9,9 +9,8 @@ export const SIGNAL_COPY = {
     role: "Product & UI/UX designer",
     discuss: "Обговорити проєкт",
     work: { index: "01", eyebrow: "Від задачі до рішення", title: "Вибрані роботи" },
-    notes: { index: "02", eyebrow: "Думки по ходу роботи", title: "Нотатки", all: "Усі нотатки" },
     services: {
-      index: "03",
+      index: "02",
       eyebrow: "Послуги",
       title: ["Чим можу", "допомогти"],
       lead: "Не знаєте, який формат вам потрібен? Опишіть задачу у формі, і я підкажу.",
@@ -41,7 +40,7 @@ export const SIGNAL_COPY = {
       cta: "Обговорити задачу",
     },
     about: {
-      index: "04",
+      index: "03",
       eyebrow: "Хто я",
       title: ["Привіт,", "я Геннадій."],
       text: "Продуктовий дизайнер з Миколаєва. Сім років працюю у вебстудіях і продуктових командах: досліджую, проєктую інтерфейси, збираю дизайн-системи й менторю дизайнерів. Найкраще мені вдаються продукти, де багато ролей і логіки, а розібратися в них треба так, щоб користувач цього не помітив.",
@@ -53,7 +52,7 @@ export const SIGNAL_COPY = {
       more: "Досвід і резюме",
     },
     process: {
-      index: "05",
+      index: "04",
       eyebrow: "Мій підхід",
       title: ["Спершу розбираюся,", "потім малюю."],
       lead: "Кожен етап лишає артефакт, тож до будь-якого рішення можна повернутися й побачити, звідки воно взялося.",
@@ -65,7 +64,7 @@ export const SIGNAL_COPY = {
       ],
     },
     contact: {
-      index: "06",
+      index: "05",
       eyebrow: "Контакт",
       title: ["Розкажіть", "про задачу."],
       text: ["Коротка форма з кількох кроків або лист напряму.", "Відповідаю протягом доби."],
@@ -79,9 +78,8 @@ export const SIGNAL_COPY = {
     role: "Product & UI/UX designer",
     discuss: "Discuss a project",
     work: { index: "01", eyebrow: "From problem to solution", title: "Selected work" },
-    notes: { index: "02", eyebrow: "Thinking out loud", title: "Notes", all: "All notes" },
     services: {
-      index: "03",
+      index: "02",
       eyebrow: "Services",
       title: ["How I", "can help"],
       lead: "Not sure which format you need? Describe the problem in the form and I’ll suggest one.",
@@ -111,7 +109,7 @@ export const SIGNAL_COPY = {
       cta: "Discuss your project",
     },
     about: {
-      index: "04",
+      index: "03",
       eyebrow: "About me",
       title: ["Hi,", "I’m Hennadii."],
       text: "A product designer from Mykolaiv, Ukraine. For seven years I’ve worked in web studios and product teams: researching, designing interfaces, building design systems and mentoring designers. I do my best work on products with many roles and a lot of logic, where the job is to sort it out so the user never notices.",
@@ -123,7 +121,7 @@ export const SIGNAL_COPY = {
       more: "Experience and CV",
     },
     process: {
-      index: "05",
+      index: "04",
       eyebrow: "My approach",
       title: ["I figure it out first,", "then I draw."],
       lead: "Every stage leaves an artifact, so any decision can be traced back to where it came from.",
@@ -135,7 +133,7 @@ export const SIGNAL_COPY = {
       ],
     },
     contact: {
-      index: "06",
+      index: "05",
       eyebrow: "Contact",
       title: ["Tell me", "about your project."],
       text: ["A short form in a few steps, or write to me directly.", "I reply within a day."],

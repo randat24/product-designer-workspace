@@ -23,7 +23,7 @@ export function NoteEntry({ note, locale, link, current, followUps, location }: 
   current?: boolean;
   /** How many notes continue this one, shown in a list. */
   followUps?: number;
-  location: "home" | "notes" | "note";
+  location: "notes" | "note";
 }) {
   const d = dict(locale);
   const href = `/${locale}/notes/${note.number}`;

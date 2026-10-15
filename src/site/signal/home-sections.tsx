@@ -8,8 +8,6 @@ import { APPROACH_ANCHOR } from "./hero";
 import { signalCopy } from "./home-content";
 import { PHOTO } from "@/site/photo";
 import { SIZES, responsive } from "@/site/img";
-import { NoteEntry } from "@/site/note-entry";
-import type { Note } from "@/site/notes-source";
 
 /** «02 /» before a section's eyebrow, in the accent. */
 export function SectionEyebrow({ index, children, className }: { index: string; children: React.ReactNode; className?: string }) {
@@ -17,35 +15,6 @@ export function SectionEyebrow({ index, children, className }: { index: string; 
     <p className={`sg-eyebrow text-fg-secondary ${className ?? ""}`}>
       <span className="sg-section-index">{index} /</span>{children}
     </p>
-  );
-}
-
-/** «Нотатки»: the three newest notes, so the home page shows what is new, and the way to the feed. */
-export function SignalNotes({ locale, notes }: { locale: Locale; notes: Note[] }) {
-  const v = signalCopy(locale).notes;
-  if (notes.length === 0) return null;
-  const shown = notes.slice(0, 3);
-  return (
-    <section id="notes" className="sg-section" aria-labelledby="notes-heading">
-      <div className={container}>
-        <div className="sg-section-header">
-          <div>
-            <SectionEyebrow index={v.index}>{v.eyebrow}</SectionEyebrow>
-            <h2 className="sg-heading" id="notes-heading">
-              {v.title}<span className="sg-heading-count">[{String(shown.length).padStart(2, "0")}]</span>
-            </h2>
-          </div>
-        </div>
-        <div className="sg-notes">
-          {shown.map((note) => <NoteEntry key={note.number} note={note} locale={locale} link location="home" />)}
-        </div>
-        {notes.length > shown.length && (
-          <p className="mt-10">
-            <Link href={`/${locale}/notes`} className="sg-link">{v.all} →</Link>
-          </p>
-        )}
-      </div>
-    </section>
   );
 }
 
