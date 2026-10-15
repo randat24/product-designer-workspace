@@ -46,7 +46,7 @@ export function ErrorState({ error, reset, back, className }: {
       <h1 className="page-title">{online ? t.status.errorTitle : t.status.offlineTitle}</h1>
       <p className="text-fg-secondary">{online ? t.status.errorBody : t.status.offlineBody}</p>
       <div className="flex flex-wrap items-center gap-3">
-        <Button onClick={retry} disabled={pending}>{t.status.retry}</Button>
+        <Button onClick={retry} busy={pending} disabled={pending}>{t.status.retry}</Button>
         <Link href={back.href} className="inline-flex h-9 items-center px-2 text-sm font-semibold underline underline-offset-4">
           {back.label}
         </Link>

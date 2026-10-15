@@ -37,7 +37,7 @@ export function PublishBar({ caseId, slug, published, hasUnpublished, canEdit }:
       <p className="text-fg-secondary">{c.draftNote}</p>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {canEdit && (
-          <Button type="button" disabled={pending || (published && !hasUnpublished)}
+          <Button type="button" busy={pending} disabled={pending || (published && !hasUnpublished)}
             onClick={() => act(() => publishCase(caseId), c.publishedNow)}>
             {pending ? c.publishing : published ? c.republish : c.publish}
           </Button>

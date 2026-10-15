@@ -103,7 +103,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
               const hit = onChain(p.a, p.b);
               return (
                 <path key={`${p.a}-${p.b}`} d={p.d} fill="none"
-                  className={cn("transition-opacity duration-150 motion-reduce:transition-none", hit ? "stroke-fg" : "stroke-fg-secondary")}
+                  className={cn("transition-opacity duration-(--duration-fast) motion-reduce:transition-none", hit ? "stroke-fg" : "stroke-fg-secondary")}
                   strokeWidth={hit ? 1.6 : 1.2} opacity={active ? (hit ? 1 : 0.06) : 0.32} />
               );
             })}
@@ -125,7 +125,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
                   onBlur={() => setHover(null)}
                   onClick={() => setPinned((p) => (p === n.code ? null : n.code))}
                   className={cn(
-                    "relative grid gap-0.5 rounded-[4px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[0.7812rem] leading-[1.3] transition-opacity duration-150 hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
+                    "relative grid gap-0.5 rounded-[4px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[0.7812rem] leading-[1.3] transition-opacity duration-(--duration-fast) hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
                     lit && !lit.has(n.code) && "opacity-30",
                     active === n.code && "ring-2 ring-fg",
                   )}

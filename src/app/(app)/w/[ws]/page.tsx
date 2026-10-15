@@ -73,7 +73,7 @@ function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: Pr
         return (
           <li key={p.id} className="relative">
             <Link href={`/w/${wsSlug}/p/${p.slug}`}
-              className="flex h-full min-h-24 flex-col gap-1 rounded-panel border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg">
+              className="flex h-full min-h-24 flex-col gap-1 rounded-panel border border-line bg-surface p-5 transition-colors duration-(--duration-fast) hover:border-fg">
               <span className={`line-clamp-2 text-base leading-snug font-bold ${c ? "pr-28" : ""}`}>{p.name}</span>
               {(p.description || p.platforms.length > 0) && (
                 <span className="line-clamp-2 text-meta text-fg-secondary">

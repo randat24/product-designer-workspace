@@ -20,8 +20,8 @@
   --sg-control-height: 48px;
   --sg-control-height-sm: 44px;
   --sg-text-label: 0.875rem;
-  --sg-duration-fast: 120ms;
-  --sg-duration-base: 220ms;
+  --sg-duration-fast: var(--duration-fast);
+  --sg-duration-base: var(--duration-base);
   --sg-layer-popover: 30;
   --sg-layer-toast: 60;
   --sg-bg: var(--canvas);
@@ -55,7 +55,6 @@
   :root:not([data-theme="light"]) { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
 }
 :root[data-theme="dark"] { --sg-inverse-bg: #F1F1E9; --sg-inverse-fg: #191B18; --sg-shadow-float: 0 12px 32px rgb(0 0 0 / 32%); }
-@media (prefers-reduced-motion: reduce) { :root { --sg-duration-fast: 0ms; --sg-duration-base: 0ms; } }
 
 /* The public site reads at 16 px (SIGNAL body-sm); the tool keeps its 15 px. */
 .signal { font-size: 1rem; letter-spacing: -0.01em; }
@@ -71,8 +70,10 @@
     border: 1px solid transparent; border-radius: var(--sg-radius-sm);
     font-weight: var(--sg-weight-semibold); font-size: var(--sg-text-label); line-height: 1.4; letter-spacing: 0;
     text-decoration: none; white-space: nowrap; cursor: pointer;
-    transition: background var(--sg-duration-fast), border-color var(--sg-duration-fast), color var(--sg-duration-fast), transform var(--sg-duration-fast);
+    transition: background var(--sg-duration-fast), border-color var(--sg-duration-fast), color var(--sg-duration-fast), transform var(--sg-duration-fast) var(--ease-standard);
   }
+  /* Pressed: the button gives a pixel under the finger, so a tap is felt before the page answers. */
+  .signal .sg-button:active:not(:disabled, [aria-disabled="true"]) { transform: translateY(1px); }
   .signal .sg-button svg { width: 16px; height: 16px; flex-shrink: 0; }
   .signal .sg-button--primary { background: var(--sg-accent); color: var(--sg-on-accent); border-color: var(--sg-accent-text); }
   .signal .sg-button--primary:hover { background: var(--sg-accent-hover); }
@@ -110,12 +111,16 @@
     display: inline-flex; align-items: center; gap: 8px; min-height: var(--sg-control-height-sm); padding: 10px 15px;
     border: 1px solid var(--sg-border); border-radius: var(--sg-radius-sm); background: transparent;
     color: var(--sg-fg-secondary); font-size: 0.8125rem; line-height: 1.4; cursor: pointer;
-    transition: background var(--sg-duration-fast), color var(--sg-duration-fast), border-color var(--sg-duration-fast);
+    transition: background var(--sg-duration-fast), color var(--sg-duration-fast), border-color var(--sg-duration-fast), transform var(--sg-duration-fast) var(--ease-standard);
   }
+  .signal .sg-chip:active { transform: scale(.97); }
   .signal .sg-chip:hover { color: var(--sg-fg); border-color: var(--sg-control-border); }
   .signal .sg-chip[aria-pressed="true"], .signal .sg-chip:has(input:checked) { color: var(--sg-bg); background: var(--sg-fg); border-color: var(--sg-fg); }
   .signal .sg-chip:has(input:focus-visible) { outline: var(--sg-focus-width) solid var(--sg-focus); outline-offset: var(--sg-focus-offset); }
   .signal .sg-chip-count { font-family: var(--sg-font-mono); font-size: 0.6875rem; opacity: .75; }
+  /* A count that just changed pops once (note reactions). */
+  .signal .sg-bump { display: inline-block; }
+  @media (prefers-reduced-motion: no-preference) { .signal .sg-bump { animation: sg-bump var(--duration-base) var(--ease-standard); } }
 
   /* Segmented switch (UA / EN): one bordered control, the current option inked. */
   .signal .sg-segmented {
@@ -292,13 +297,25 @@
 
 /* Motion: the records come in one after another, then the signal runs down the line. None under reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-  .signal .sg-trace-node { animation: sg-rise .5s cubic-bezier(.2, .7, .3, 1) both; }
+  .signal .sg-trace-node { animation: sg-rise .5s var(--ease-standard) both; }
   .signal .sg-trace-node:nth-child(2) { animation-delay: .15s; }
   .signal .sg-trace-node:nth-child(3) { animation-delay: .3s; }
   .signal .sg-trace-node:nth-child(4) { animation-delay: .45s; }
   .signal .sg-trace-list::after { animation: sg-on .3s 1s forwards, sg-signal 3.2s 1s ease-in-out infinite; }
 }
+/* Scroll reveal: a block rises into place as it scrolls into view (scroll-driven animation, no JS). Movement
+   only, no fade, so text is never half-transparent when checked or read; browsers without view timelines and
+   reduced motion show the page as it is. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .signal :is(.sg-section-header, .sg-project, .sg-service, .sg-process-step, .sg-contact-title, .sg-about-photo) {
+      animation: sg-reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 60%;
+    }
+  }
+}
+@keyframes sg-reveal { from { transform: translateY(32px); } }
 @keyframes sg-rise { from { opacity: 0; transform: translateY(8px); } }
+@keyframes sg-bump { 40% { transform: translateY(-3px) scale(1.25); } }
 @keyframes sg-on { to { opacity: 1; } }
 @keyframes sg-signal { to { background-position: 0 calc(100% + 48px); } }
 
@@ -638,3 +655,8 @@
   .signal .sg-case-contents a { font-size: 0.75rem; gap: 8px; }
   .signal .sg-case-chain li { font-size: 0.75rem; padding: 10px 12px; }
 }
+
+/* Page transitions (src/site/page-transitions.tsx): a short cross-fade between pages, and a case cover that
+   moves from its card into the case a little slower, so the eye can follow it. */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--duration-base); }
+::view-transition-group(*) { animation-duration: 360ms; animation-timing-function: var(--ease-standard); }

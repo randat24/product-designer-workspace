@@ -53,6 +53,12 @@
   --entity-structure: #1971c2;
   --entity-design: #3b5bdb;
   --entity-decision: #495057;
+
+  /* Motion, shared by the tool and the site (signal.css reads these): a quick reply to a press or hover, a
+     calmer one for something appearing, and one curve that starts fast and settles. Zero under reduced motion. */
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --ease-standard: cubic-bezier(.2, .7, .3, 1);
 }
 /* Dark: follows the system unless someone picked a theme (data-theme on <html>, set by the theme switch). */
 @media (prefers-color-scheme: dark) {
@@ -125,6 +131,7 @@
 }
 
 @theme inline {
+  --ease-standard: var(--ease-standard);
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-subtle: var(--subtle);
@@ -263,7 +270,10 @@ body {
 }
 .flow-canvas .react-flow__node:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; border-radius: 10px; }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 0ms; --duration-base: 0ms; }
+  * { transition: none !important; animation: none !important; }
+}
 
 /* Signature on the home page: revealed left to right once, like it is being written. */
 .signature-draw { animation: signature-reveal 1.6s cubic-bezier(0.45, 0, 0.2, 1) 0.3s both; }
@@ -343,6 +353,34 @@ body {
 /* Work filter (src/site/signal/work-filter.tsx): hide the cards of the other kind. */
 .case-filter[data-filter="real"] [data-kind="concept"],
 .case-filter[data-filter="concept"] [data-kind="real"] { display: none; }
+
+/* ---------- Soft entry ----------
+   A message that appears (an error, «Збережено», «опубліковано») fades in instead of popping; `.enter` also
+   rises a few pixels, for a new item in a list. @starting-style runs only when an element is inserted, so a
+   live region whose text changes in place is not re-animated. In the base layer: a component's own
+   transition utilities still win. */
+@layer base {
+  @media (prefers-reduced-motion: no-preference) {
+    [role="alert"], [role="status"] { transition: opacity var(--duration-base) var(--ease-standard); }
+    .enter { transition: opacity var(--duration-base) var(--ease-standard), translate var(--duration-base) var(--ease-standard); }
+    @starting-style {
+      [role="alert"], [role="status"], .enter { opacity: 0; }
+      .enter { translate: 0 6px; }
+    }
+  }
+}
+
+/* ---------- Navigation progress (src/shared/ui/nav-progress.tsx) ----------
+   Grows quickly, then ever slower while the page loads; runs to the end and fades once it is there. */
+.nav-progress {
+  position: fixed; inset: 0 auto auto 0; z-index: 100; height: 2px; width: 0; opacity: 0;
+  background: var(--accent-text); pointer-events: none;
+}
+.nav-progress[data-state="loading"] { width: 85%; opacity: 1; transition: width 8s cubic-bezier(.1, .7, .2, 1), opacity var(--duration-fast); }
+.nav-progress[data-state="done"] {
+  width: 100%; opacity: 0;
+  transition: width var(--duration-base) var(--ease-standard), opacity var(--duration-base) var(--duration-base);
+}
 
 /* ---------- FEDO mark ---------- */
 .fedo-mark .fedo-box { fill: var(--fedo-box, var(--fg)); }

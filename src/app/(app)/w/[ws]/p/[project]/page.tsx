@@ -200,7 +200,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
             <li key={s.segment}>
               <Link href={`${base}/${s.segment}`}
                 className={cn(
-                  "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-4 transition-colors duration-[120ms] hover:border-fg",
+                  "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-4 transition-colors duration-(--duration-fast) hover:border-fg",
                   s.state === "done" && "border-success",
                   s.state === "soon" && "bg-transparent text-fg-secondary",
                 )}>

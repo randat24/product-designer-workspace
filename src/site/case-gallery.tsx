@@ -186,7 +186,7 @@ function Thumbs({ items, offset, total, labels, onOpen, className }: {
             className="group flex w-full flex-col gap-2 text-left"
             aria-label={`${counter(labels.open, offset + i + 1, total)}: ${it.alt}`}
           >
-            <span className="block overflow-hidden rounded-[8px] border border-line bg-surface transition-transform duration-200 group-hover:-translate-y-1">
+            <span className="block overflow-hidden rounded-[8px] border border-line bg-surface transition-transform duration-(--duration-base) group-hover:-translate-y-1">
               {/* eslint-disable-next-line @next/next/no-img-element -- project pages of any origin, sizes known */}
               <img {...responsive(it.src, it.width, SIZES.thumb)} alt="" width={it.width} height={it.height} loading="lazy" decoding="async" className="h-auto w-full" />
             </span>

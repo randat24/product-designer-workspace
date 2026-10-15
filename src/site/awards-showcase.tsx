@@ -41,7 +41,7 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === active} tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)} onKeyDown={onKey}
             className={cn(
-              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[8px] border bg-surface p-3 text-fg transition-colors duration-[120ms] sm:w-auto",
+              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[8px] border bg-surface p-3 text-fg transition-colors duration-(--duration-fast) sm:w-auto",
               i === active ? "border-accent-text shadow-[inset_0_0_0_1px_var(--accent-text)]" : "border-line hover:border-control",
             )}>
             <span className={cn("self-start font-label text-[0.6875rem] tabular-nums", i === active ? "text-accent-text" : "text-fg-secondary")}>{num(i)}</span>

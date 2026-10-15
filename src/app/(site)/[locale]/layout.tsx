@@ -19,6 +19,9 @@ import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
 import { container } from "@/site/ui";
 import { BrandMark } from "@/site/brand";
 import { SiteNav } from "@/site/site-nav";
+import { Suspense } from "react";
+import { NavProgress } from "@/shared/ui/nav-progress";
+import { PageTransitions } from "@/site/page-transitions";
 import { signalCopy } from "@/site/signal/home-content";
 
 // Root layout of the public site: <html lang> follows the locale. The private workspace has its
@@ -87,6 +90,8 @@ export default async function SiteLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="signal">
+        <Suspense><NavProgress /></Suspense>
+        <PageTransitions />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-[4px] focus:bg-fg focus:px-4 focus:py-2 focus:text-canvas"

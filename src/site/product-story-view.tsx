@@ -163,7 +163,7 @@ function Roles({ items }: { items: { name: string; summary: string; can: string[
   return (
     <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {items.map((r, i) => (
-        <li key={r.name} className="nw-rise relative flex flex-col gap-4 rounded-[8px] border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-200 hover:border-[var(--nw-blue)] hover:shadow-[0_12px_32px_-18px_var(--nw-blue)]">
+        <li key={r.name} className="nw-rise relative flex flex-col gap-4 rounded-[8px] border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-(--duration-base) hover:border-[var(--nw-blue)] hover:shadow-[0_12px_32px_-18px_var(--nw-blue)]">
           <div className="flex items-center justify-between">
             <span className="display-num text-[0.875rem] text-[var(--nw-ink)]">{num(i)}</span>
             {i < items.length - 1 && <ArrowRight aria-hidden className="hidden size-5 text-[var(--nw-ink)] xl:block" />}

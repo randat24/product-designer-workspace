@@ -45,7 +45,7 @@ export function GuideBuilder({ projectId, guideId, meta, questions, canEdit, ver
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-fg-secondary">{g.total(questions.length)}</p>
         {canEdit && (
-          <Button variant="secondary" disabled={pending} onClick={() => run(() => applyGuideTemplate(projectId, guideId))}>{g.template}</Button>
+          <Button variant="secondary" busy={pending} disabled={pending} onClick={() => run(() => applyGuideTemplate(projectId, guideId))}>{g.template}</Button>
         )}
       </div>
 

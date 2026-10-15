@@ -18,7 +18,10 @@ export function NoteComposer({ workspaceId, wsSlug }: { workspaceId: string; wsS
   const [done, setDone] = useState<{ number: number; published: boolean } | null>(null);
   const { pending, run, error } = useAction();
 
+  // Which button was pressed: only it shows the spinner.
+  const [publishing, setPublishing] = useState(true);
   const submit = (publish: boolean) => {
+    setPublishing(publish);
     setDone(null);
     let number = 0;
     run(async () => {
@@ -43,8 +46,8 @@ export function NoteComposer({ workspaceId, wsSlug }: { workspaceId: string; wsS
         <p id={`${id}-hint`} className="max-w-prose text-caption text-fg-secondary">{n.composerHint(NOTE_MAX)}</p>
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-caption text-fg-secondary tabular-nums" aria-hidden>{n.count(body.length, NOTE_MAX)}</span>
-          <Button variant="secondary" disabled={pending || !body.trim()} onClick={() => submit(false)}>{n.saveDraft}</Button>
-          <Button type="submit" disabled={pending || !body.trim()}>{pending ? n.publishing : n.publish}</Button>
+          <Button variant="secondary" busy={pending && !publishing} disabled={pending || !body.trim()} onClick={() => submit(false)}>{n.saveDraft}</Button>
+          <Button type="submit" busy={pending && publishing} disabled={pending || !body.trim()}>{pending && publishing ? n.publishing : n.publish}</Button>
         </div>
       </div>
       <p role="status" aria-live="polite" className="text-meta text-success empty:hidden">

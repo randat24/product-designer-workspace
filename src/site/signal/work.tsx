@@ -59,7 +59,9 @@ function ProjectCard({ item, index, locale, location, variant }: {
     <article className={cn("sg-project", variant !== "half" && "sg-project--full")} data-kind={item.kind ?? "real"}>
       {/* The picture repeats the title link for the pointer; keyboard and screen readers get the one in the title. */}
       <Link href={href} tabIndex={-1} aria-hidden="true" {...track}
-        className={cn("sg-project-visual", variant === "lead" && "sg-project-visual--lead")} style={{ background: tone }}>
+        className={cn("sg-project-visual", variant === "lead" && "sg-project-visual--lead")}
+        // The same name as the cover on the case page: it moves from here into the case (src/site/page-transitions.tsx).
+        style={{ background: tone, viewTransitionName: `case-${item.slug}` }}>
         {variant === "lead" && (
           <span className="sg-cover-type">
             <small>{item.client}</small>

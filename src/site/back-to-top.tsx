@@ -46,7 +46,7 @@ export function BackToTop({ label }: { label: string }) {
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
       }}
       className={cn(
-        buttonClass({ variant: "secondary", icon: true }, "fixed right-4 bottom-[calc(var(--consent-space,0px)+1rem)] z-30 overflow-hidden bg-surface transition-[opacity,transform,background-color] duration-200 hover:bg-subtle sm:right-6 sm:bottom-6"),
+        buttonClass({ variant: "secondary", icon: true }, "fixed right-4 bottom-[calc(var(--consent-space,0px)+1rem)] z-30 overflow-hidden bg-surface transition-[opacity,transform,background-color] duration-(--duration-base) hover:bg-subtle sm:right-6 sm:bottom-6"),
         visible ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0",
       )}>
       <ArrowUp aria-hidden className="size-5" strokeWidth={1.75} />

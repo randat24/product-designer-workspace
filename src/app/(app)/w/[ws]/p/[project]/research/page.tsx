@@ -17,7 +17,7 @@ import { ResearchTabs } from "./tabs";
 export const metadata: Metadata = { title: t.research.title };
 
 const dateFmt = new Intl.DateTimeFormat("uk", { day: "numeric", month: "short" });
-const card = "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-5 transition-colors duration-[120ms] hover:border-fg";
+const card = "flex h-full flex-col gap-2 rounded-panel border border-line bg-surface p-5 transition-colors duration-(--duration-fast) hover:border-fg";
 const empty = "rounded-panel border border-dashed border-line p-6 text-center text-fg-secondary";
 
 export default async function ResearchPage({ params }: { params: Promise<{ ws: string; project: string }> }) {
