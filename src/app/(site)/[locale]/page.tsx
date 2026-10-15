@@ -43,7 +43,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             location="home"
             heading={
               <div>
-                <SectionEyebrow index={s.work.index}>{s.work.eyebrow}</SectionEyebrow>
+                <SectionEyebrow index={1}>{s.work.eyebrow}</SectionEyebrow>
                 <h2 className="sg-heading" id="work-heading">
                   {s.work.title}<span className="sg-heading-count">[{String(shown.length).padStart(2, "0")}]</span>
                 </h2>
@@ -57,10 +57,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           )}
         </div>
       </section>
-      <SignalServices locale={locale} />
-      <SignalAbout locale={locale} />
-      <SignalProcess locale={locale} />
-      <SignalContact locale={locale} />
+      {/* Sections after the work, in page order; their «NN /» numbers come from this order. */}
+      {[SignalServices, SignalAbout, SignalProcess, SignalContact].map((Section, i) => (
+        <Section key={i} locale={locale} index={i + 2} />
+      ))}
     </>
   );
 }
