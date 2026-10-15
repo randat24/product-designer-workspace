@@ -9,24 +9,24 @@ import { signalCopy } from "./home-content";
 import { PHOTO } from "@/site/photo";
 import { SIZES, responsive } from "@/site/img";
 
-/** «02 /» before a section's eyebrow, in the accent. */
-export function SectionEyebrow({ index, children, className }: { index: string; children: React.ReactNode; className?: string }) {
+/** «02 /» before a section's eyebrow, in the accent: the section's place on the page, counted by the page. */
+export function SectionEyebrow({ index, children, className }: { index: number; children: React.ReactNode; className?: string }) {
   return (
     <p className={`sg-eyebrow text-fg-secondary ${className ?? ""}`}>
-      <span className="sg-section-index">{index} /</span>{children}
+      <span className="sg-section-index">{String(index).padStart(2, "0")} /</span>{children}
     </p>
   );
 }
 
 /** «Чим можу допомогти»: the four formats people hire for, each with what they get, and the way to the brief. */
-export function SignalServices({ locale }: { locale: Locale }) {
+export function SignalServices({ locale, index }: { locale: Locale; index: number }) {
   const v = signalCopy(locale).services;
   return (
     <section id="services" className="sg-section" aria-labelledby="services-heading">
       <div className={container}>
         <div className="sg-section-header">
           <div>
-            <SectionEyebrow index={v.index}>{v.eyebrow}</SectionEyebrow>
+            <SectionEyebrow index={index}>{v.eyebrow}</SectionEyebrow>
             <h2 className="sg-heading" id="services-heading">{v.title[0]}<br />{v.title[1]}</h2>
           </div>
           <p className="sg-process-lead">{v.lead}</p>
@@ -53,12 +53,12 @@ export function SignalServices({ locale }: { locale: Locale }) {
 }
 
 /** «Хто я»: who is behind the work, three facts and the way to the full story. */
-export function SignalAbout({ locale }: { locale: Locale }) {
+export function SignalAbout({ locale, index }: { locale: Locale; index: number }) {
   const a = signalCopy(locale).about;
   return (
     <section id="about" className={`${container} sg-section sg-about`} aria-labelledby="about-heading">
       <div className="flex flex-col gap-8">
-        <SectionEyebrow index={a.index}>{a.eyebrow}</SectionEyebrow>
+        <SectionEyebrow index={index}>{a.eyebrow}</SectionEyebrow>
         {/* eslint-disable-next-line @next/next/no-img-element -- the owner's photo, size known */}
         <img className="sg-about-photo" {...responsive(PHOTO.portrait.src, PHOTO.portrait.width, SIZES.thumb)}
           alt={PHOTO.alt[locale]} width={PHOTO.portrait.width} height={PHOTO.portrait.height} loading="lazy" decoding="async" />
@@ -82,14 +82,14 @@ export function SignalAbout({ locale }: { locale: Locale }) {
 }
 
 /** «Мій підхід»: four steps from discover to deliver. */
-export function SignalProcess({ locale }: { locale: Locale }) {
+export function SignalProcess({ locale, index }: { locale: Locale; index: number }) {
   const p = signalCopy(locale).process;
   return (
     <section id={APPROACH_ANCHOR} className="sg-section sg-process" aria-labelledby="process-heading">
       <div className={container}>
         <div className="sg-section-header">
           <div>
-            <SectionEyebrow index={p.index}>{p.eyebrow}</SectionEyebrow>
+            <SectionEyebrow index={index}>{p.eyebrow}</SectionEyebrow>
             <h2 className="sg-heading" id="process-heading">{p.title[0]}<br />{p.title[1]}</h2>
           </div>
           <p className="sg-process-lead">{p.lead}</p>
@@ -109,7 +109,7 @@ export function SignalProcess({ locale }: { locale: Locale }) {
 }
 
 /** «Контакт»: the big line and the button open the brief, the links write directly. */
-export function SignalContact({ locale }: { locale: Locale }) {
+export function SignalContact({ locale, index }: { locale: Locale; index: number }) {
   const c = signalCopy(locale).contact;
   const links = [
     { label: "Email", href: `mailto:${CONTACTS.email}`, event: "contact_email_click" },
@@ -118,7 +118,7 @@ export function SignalContact({ locale }: { locale: Locale }) {
   ] as const;
   return (
     <section id="contact" className={`${container} sg-contact`} aria-labelledby="contact-heading">
-      <SectionEyebrow index={c.index}>{c.eyebrow}</SectionEyebrow>
+      <SectionEyebrow index={index}>{c.eyebrow}</SectionEyebrow>
       <h2 className="sg-contact-title" id="contact-heading">
         <Link href={`/${locale}/start-project`} {...trackAttrs("project_request_cta", { location: "contact" })}>
           {c.title[0]}<br />{c.title[1]}<span aria-hidden> ↗</span>
