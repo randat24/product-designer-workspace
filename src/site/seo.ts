@@ -199,6 +199,16 @@ export function caseLd(locale: Locale, c: Case): Json {
   };
 }
 
+/** The selected work on the home page, in its order: the cases it links to, as a list search engines can read. */
+export function homeWorkLd(locale: Locale, cases: Case[], name: string): Json {
+  return {
+    "@type": "ItemList",
+    "@id": `${localeUrl(locale, "")}#work`,
+    name,
+    itemListElement: cases.map((c, i) => ({ "@type": "ListItem", position: i + 1, url: localeUrl(locale, `/cases/${c.slug}`), name: c.title })),
+  };
+}
+
 /** The case list page: a collection whose items are the published cases (samples are noindex, so left out). */
 export function casesCollectionLd(locale: Locale, cases: Case[], name: string, description: string): Json {
   const url = localeUrl(locale, "/cases");

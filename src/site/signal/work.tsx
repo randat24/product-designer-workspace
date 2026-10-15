@@ -89,12 +89,16 @@ function ProjectCard({ item, index, locale, location, variant }: {
   );
 }
 
-/** The case's own screen, two phone pages from its gallery, or the type cover when there is neither. */
+/**
+ * The case's own screen, two phone pages from its gallery, or the type cover when there is neither. The pictures keep
+ * their alt text: the link around them is hidden from screen readers (the title link reads the case), but search
+ * engines read it as the link's anchor and index the screenshots.
+ */
 function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare: boolean }) {
   if (item.cover) {
     const c = item.cover;
     // eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known
-    return <img className="sg-shot" {...responsive(c.src, c.width, SIZES.card)} alt="" width={c.width} height={c.height} loading="lazy" decoding="async" />;
+    return <img className="sg-shot" {...responsive(c.src, c.width, SIZES.card)} alt={c.alt || item.title} width={c.width} height={c.height} loading="lazy" decoding="async" />;
   }
   const phones = (item.gallery ?? []).filter((g) => g.device === "mobile" || g.height > g.width).slice(0, 2);
   if (phones.length === 2) {
@@ -102,7 +106,7 @@ function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare:
       <>
         {phones.map((g) => (
           // eslint-disable-next-line @next/next/no-img-element -- static page, sizes known
-          <img key={g.src} className="sg-phone" {...responsive(g.src, g.width, SIZES.thumb)} alt="" width={g.width} height={g.height} loading="lazy" decoding="async" />
+          <img key={g.src} className="sg-phone" {...responsive(g.src, g.width, SIZES.thumb)} alt={g.alt || item.title} width={g.width} height={g.height} loading="lazy" decoding="async" />
         ))}
       </>
     );
@@ -110,7 +114,7 @@ function Shots({ item, kindLabel, bare }: { item: Case; kindLabel: string; bare:
   const page = item.gallery?.[0];
   if (page) {
     // eslint-disable-next-line @next/next/no-img-element -- static page, sizes known
-    return <img className="sg-shot" {...responsive(page.src, page.width, SIZES.card)} alt="" width={page.width} height={page.height} loading="lazy" decoding="async" />;
+    return <img className="sg-shot" {...responsive(page.src, page.width, SIZES.card)} alt={page.alt || item.title} width={page.width} height={page.height} loading="lazy" decoding="async" />;
   }
   return <span className="sg-abstract"><CaseCover item={item} kindLabel={kindLabel} bare={bare} /></span>;
 }
