@@ -668,7 +668,7 @@ const uk: Dictionary = {
   },
   seo: {
     home: {
-      title: "Геннадій Федоров — продуктовий дизайнер, UI/UX",
+      title: "Геннадій Федоров — продуктовий дизайнер, UI/UX · портфоліо",
       description:
         "Портфоліо продуктового дизайнера Геннадія Федорова: UX-дослідження, інтерфейси, дизайн-системи, веб і мобільні застосунки. 7 років у продуктових командах.",
     },
@@ -1118,7 +1118,7 @@ const en: Dictionary = {
   },
   seo: {
     home: {
-      title: "Hennadii Fedorov — Product Designer, UI/UX",
+      title: "Hennadii Fedorov — Product Designer, UI/UX · Portfolio",
       description:
         "Portfolio of product designer Hennadii Fedorov: UX research, interface design, design systems, web and mobile app design. 7 years in web and product teams.",
     },
