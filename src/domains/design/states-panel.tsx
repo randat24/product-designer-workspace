@@ -12,6 +12,9 @@ import { IconButton } from "@/shared/ui/button";
 
 const st = t.screens.states;
 const STANDARD = ["default", "loading", "empty", "error", "success"];
+/** Id of a state shown before the database has created it. */
+const PENDING = "pending:";
+const isPending = (id: string) => id.startsWith(PENDING);
 const STATUS_STYLE: Record<StateStatus, string> = {
   missing: "border-warning bg-warning text-on-status",
   designed: "border-success bg-success text-on-status",
@@ -48,7 +51,9 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
         {states.map((s) => {
           const label = st.kinds[s.kind as StateKind] ?? s.kind;
           return (
-            <li key={s.id} className="flex flex-col gap-2.5 rounded-panel border border-line bg-surface p-3.5">
+            // A state just added shows at once; until the database answers with its id it cannot be edited.
+            <li key={s.kind} aria-busy={isPending(s.id) || undefined}
+              className={cn("enter flex flex-col gap-2.5 rounded-panel border border-line bg-surface p-3.5", isPending(s.id) && "pointer-events-none opacity-60")}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-bold">
                   {label}
@@ -68,8 +73,11 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                   {canEdit && !STANDARD.includes(s.kind) && (
                     <IconButton tone="danger" size="sm" label={`${st.remove}: ${label}`}
                       onClick={async () => {
+                        // Gone at once; back in its place if the database refuses.
+                        const before = states;
+                        setStates((ss) => ss.filter((x) => x.id !== s.id));
                         const res = await deleteState(s.id);
-                        if (res.ok) setStates((ss) => ss.filter((x) => x.id !== s.id)); else setError(res.error);
+                        if (res.ok) setError(null); else { setStates(before); setError(res.error); }
                       }}><X className="size-4" /></IconButton>
                   )}
                 </div>
@@ -90,9 +98,11 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
           {addable.map((k) => (
             <button key={k.value} type="button"
               onClick={async () => {
+                const temp = `${PENDING}${k.value}`;
+                setStates((ss) => [...ss, { id: temp, kind: k.value, description: null, figma_url: null, status: "missing" }]);
                 const res = await addState(screenId, k.value);
-                if (res.ok && res.id) setStates((ss) => [...ss, { id: res.id!, kind: k.value, description: null, figma_url: null, status: "missing" }]);
-                else if (!res.ok) setError(res.error);
+                if (res.ok && res.id) { setStates((ss) => ss.map((x) => (x.id === temp ? { ...x, id: res.id! } : x))); setError(null); }
+                else { setStates((ss) => ss.filter((x) => x.id !== temp)); if (!res.ok) setError(res.error); }
               }}
               className="rounded-[4px] border border-dashed border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary hover:border-fg hover:text-fg">
               <Plus aria-hidden className="size-4" />{k.label}

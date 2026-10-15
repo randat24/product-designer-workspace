@@ -15,6 +15,9 @@ import { createInsightFromPattern, createObservation, createPattern, deletePatte
 import { kindOf, OBSERVATION_KINDS, participantColor, type ObservationKind } from "./schema";
 import type { BoardCard } from "./queries";
 
+/** Id of a card shown before the database has created it. */
+const PENDING = "pending:";
+
 const b = t.synthesis.board;
 type Pattern = { id: string; code: string; title: string; color: string | null };
 const NONE = "__none__";
@@ -76,7 +79,11 @@ export function SynthesisBoard({ projectId, base, patterns, cards: initialCards,
               <ColumnHeader pattern={p} count={list.length} canEdit={canEdit}
                 onDelete={() => p && columnsAction.run(() => deletePattern(p.id))} />
 
-              {!p && canEdit && <AddObservation projectId={projectId} participants={participants} onAdded={() => router.refresh()} />}
+              {!p && canEdit && (
+                <AddObservation projectId={projectId} participants={participants} onAdded={() => router.refresh()}
+                  onStart={(card) => setCards((cs) => [...cs, card])}
+                  onFailed={(id) => setCards((cs) => cs.filter((c) => c.id !== id))} />
+              )}
 
               <ul className="flex min-h-16 flex-col gap-2">
                 {list.length === 0 && <li className="rounded-control border border-dashed border-line p-4 text-center text-meta text-fg-secondary">{b.empty}</li>}
@@ -152,8 +159,10 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
 }) {
   const k = card.kind === "observation" ? kindOf(card.obsKind ?? "behavior") : null;
   const href = `${base}/synthesis/${card.kind === "quote" ? "quotes" : "observations"}/${card.code}`;
+  // Shown before the database has it: no code, link or drag yet.
+  const saving = card.id.startsWith(PENDING);
   return (
-    <li draggable={canEdit} onDragEnd={onDragEnd}
+    <li draggable={canEdit && !saving} onDragEnd={onDragEnd} aria-busy={saving || undefined}
       onDragStart={(e) => {
         e.dataTransfer.effectAllowed = "move";
         // Firefox starts a drag only when some data is set.
@@ -161,8 +170,8 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
         onDragStart();
       }}
       className={cn(
-        "enter flex flex-col gap-1.5 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.04)]",
-        canEdit && "cursor-grab active:cursor-grabbing", dragging && "opacity-40",
+        "flex flex-col gap-1.5 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.04)]",
+        canEdit && "cursor-grab active:cursor-grabbing", dragging && "opacity-40", saving && "enter pointer-events-none opacity-60",
       )}
       style={{ borderLeft: `5px solid ${participantColor(card.participant?.code)}` }}>
       <div className="flex items-center justify-between gap-2 text-caption font-semibold">
@@ -191,10 +200,13 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
   );
 }
 
-function AddObservation({ projectId, participants, onAdded }: {
+function AddObservation({ projectId, participants, onAdded, onStart, onFailed }: {
   projectId: string;
   participants: { id: string; code: string; role: string | null }[];
   onAdded: () => void;
+  /** The card shows in the column at once, marked as saving; the refresh after the save replaces it. */
+  onStart: (card: BoardCard) => void;
+  onFailed: (id: string) => void;
 }) {
   const [text, setText] = useState("");
   const [kind, setKind] = useState<ObservationKind>("behavior");
@@ -205,9 +217,17 @@ function AddObservation({ projectId, participants, onAdded }: {
       onSubmit={(e) => {
         e.preventDefault();
         if (!text.trim()) return;
+        const p = participants.find((x) => x.id === participantId);
+        const temp: BoardCard = {
+          kind: "observation", id: `${PENDING}${Date.now()}`, code: "…", text: text.trim(), obsKind: kind,
+          patternId: null, position: Number.MAX_SAFE_INTEGER, participant: p ? { code: p.code, role: p.role } : null,
+        };
+        onStart(temp);
+        setText("");
         startTransition(async () => {
           const res = await createObservation({ projectId, interviewId: null, participantId: participantId || null, kind, text });
-          if (res.ok) { setText(""); onAdded(); }
+          if (res.ok) onAdded();
+          else { onFailed(temp.id); setText(temp.text); }
         });
       }}>
       <textarea aria-label={b.addObservation} value={text} maxLength={2000} rows={2} placeholder={b.observationPlaceholder}
