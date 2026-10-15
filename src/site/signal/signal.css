@@ -665,3 +665,10 @@
    moves from its card into the case a little slower, so the eye can follow it. */
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--duration-base); }
 ::view-transition-group(*) { animation-duration: 360ms; animation-timing-function: var(--ease-standard); }
+
+/* Phone header: slides up while reading down, back on scroll up or keyboard focus (src/site/header-autohide.tsx).
+   --duration-base is 0 with reduced motion, so it then just appears and disappears. */
+@media (max-width: 39.99rem) {
+  header[data-autohide] { transition: transform var(--duration-base) var(--ease-standard); }
+  header[data-autohide][data-hidden]:not(:focus-within) { transform: translateY(-100%); }
+}

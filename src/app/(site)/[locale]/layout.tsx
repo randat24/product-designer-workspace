@@ -14,6 +14,7 @@ import { GoogleAnalytics, gaId } from "@/site/analytics/google-analytics";
 import { ConsentBanner } from "@/site/consent-banner";
 import { trackAttrs } from "@/site/analytics/track";
 import { BackToTop } from "@/site/back-to-top";
+import { HeaderAutoHide } from "@/site/header-autohide";
 import { LangSwitch } from "@/site/lang-switch";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/site/theme-toggle";
 import { container } from "@/site/ui";
@@ -103,7 +104,7 @@ export default async function SiteLayout({
         <div className="flex min-h-dvh flex-col">
           {/* SIGNAL header: the FEDO mark with the name and role, two text links and «Обговорити проєкт ↗»,
               then theme and language. */}
-          <header className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
+          <header data-autohide className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
             <div className={`${container} flex h-16 items-center gap-3 sm:h-20 sm:gap-4`}>
               {/* The name may break onto two lines when the row is short of room (a phone with a large browser font);
                   otherwise it stays on one. */}
@@ -151,6 +152,7 @@ export default async function SiteLayout({
           </footer>
         </div>
         <BackToTop label={d.ui.toTop} />
+        <HeaderAutoHide />
         <AnalyticsClickListener />
         <GoogleAnalytics />
         {/* Vercel serves /_vercel/speed-insights only on its own deployments. */}
