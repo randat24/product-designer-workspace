@@ -38,10 +38,14 @@ export function NoteReactions({ number, initial, labels, groupLabel, failed }: {
   failed: string;
 }) {
   const [counts, setCounts] = useState<Counts>(initial);
+  // Reactions this visitor changed on this page: only their numbers animate.
+  const [touched, setTouched] = useState<Reaction[]>([]);
   const [mine, setMine] = useState<Reaction[]>([]);
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState<Reaction | null>(null);
   useEffect(() => setMine(readMine()[number] ?? []), [number]);
+
+  const shown = (kind: Reaction) => Math.max(counts[kind] ?? 0, mine.includes(kind) ? 1 : 0);
 
   async function toggle(kind: Reaction) {
     const on = !mine.includes(kind);
@@ -49,6 +53,7 @@ export function NoteReactions({ number, initial, labels, groupLabel, failed }: {
     const before = { counts, mine };
     setError(false);
     setBusy(kind);
+    setTouched((t) => (t.includes(kind) ? t : [...t, kind]));
     setMine(nextMine);
     setCounts({ ...counts, [kind]: Math.max(0, (counts[kind] ?? 0) + (on ? 1 : -1)) });
     try {
@@ -73,7 +78,9 @@ export function NoteReactions({ number, initial, labels, groupLabel, failed }: {
           <button key={kind} type="button" aria-pressed={mine.includes(kind)} disabled={busy === kind}
             onClick={() => void toggle(kind)} className={sg.chip}>
             {/* The page is cached for up to a minute: its count may not have this visitor's reaction yet. */}
-            {labels[kind]} <span className={sg.chipCount}>{Math.max(counts[kind] ?? 0, mine.includes(kind) ? 1 : 0)}</span>
+            {labels[kind]}{" "}
+            {/* A new key per value: the number pops each time it changes (sg-bump), not on the first paint. */}
+            <span key={shown(kind)} className={`${sg.chipCount} ${touched.includes(kind) ? "sg-bump" : ""}`}>{shown(kind)}</span>
           </button>
         ))}
       </div>

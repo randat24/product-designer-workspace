@@ -118,6 +118,9 @@
   .signal .sg-chip[aria-pressed="true"], .signal .sg-chip:has(input:checked) { color: var(--sg-bg); background: var(--sg-fg); border-color: var(--sg-fg); }
   .signal .sg-chip:has(input:focus-visible) { outline: var(--sg-focus-width) solid var(--sg-focus); outline-offset: var(--sg-focus-offset); }
   .signal .sg-chip-count { font-family: var(--sg-font-mono); font-size: 0.6875rem; opacity: .75; }
+  /* A count that just changed pops once (note reactions). */
+  .signal .sg-bump { display: inline-block; }
+  @media (prefers-reduced-motion: no-preference) { .signal .sg-bump { animation: sg-bump var(--duration-base) var(--ease-standard); } }
 
   /* Segmented switch (UA / EN): one bordered control, the current option inked. */
   .signal .sg-segmented {
@@ -300,7 +303,19 @@
   .signal .sg-trace-node:nth-child(4) { animation-delay: .45s; }
   .signal .sg-trace-list::after { animation: sg-on .3s 1s forwards, sg-signal 3.2s 1s ease-in-out infinite; }
 }
+/* Scroll reveal: a block rises into place as it scrolls into view (scroll-driven animation, no JS). Movement
+   only, no fade, so text is never half-transparent when checked or read; browsers without view timelines and
+   reduced motion show the page as it is. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .signal :is(.sg-section-header, .sg-project, .sg-service, .sg-process-step, .sg-contact-title, .sg-about-photo) {
+      animation: sg-reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 60%;
+    }
+  }
+}
+@keyframes sg-reveal { from { transform: translateY(32px); } }
 @keyframes sg-rise { from { opacity: 0; transform: translateY(8px); } }
+@keyframes sg-bump { 40% { transform: translateY(-3px) scale(1.25); } }
 @keyframes sg-on { to { opacity: 1; } }
 @keyframes sg-signal { to { background-position: 0 calc(100% + 48px); } }
 
