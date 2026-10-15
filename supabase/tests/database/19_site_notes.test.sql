@@ -1,7 +1,7 @@
--- Site notes: the owner writes them; visitors read the site's published notes, react and reply only through the functions.
+-- Site notes: the owner writes them; visitors read the site's published notes, and react only through a function.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(22);
+select plan(20);
 
 create function pg_temp.login(uid uuid) returns void language sql as $$
   select set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated')::text, true);
@@ -71,19 +71,11 @@ select is(note_react(1, 'agree', true, 's3cret', repeat('a', 64)) ->> 'agree', '
 select is(note_react(1, 'agree', true, 's3cret', repeat('a', 64)) ->> 'agree', '1', 'the same visitor counts once');
 select is(note_react(1, 'agree', false, 's3cret', repeat('a', 64)), '{}'::jsonb, 'a reaction can be taken back');
 select throws_ok($$ select note_react(3, 'agree', true, 's3cret', repeat('a', 64)) $$, 'P0002', null, 'no reactions on a draft');
-select lives_ok($$ select submit_note_reply(2, 'Цікаво, а як ви…', 'tg @someone', 'uk', 's3cret', repeat('b', 64)) $$,
-  'a visitor replies privately');
-select throws_ok($$ select submit_note_reply(2, '   ', null, 'uk', 's3cret', repeat('b', 64)) $$, '22023', 'invalid:body', 'an empty reply is refused');
 reset role;
 
-select pg_temp.login('00000000-0000-0000-0000-00000000000a');
-set local role authenticated;
-select is((select body from note_replies), 'Цікаво, а як ви…', 'the owner reads the reply');
-reset role;
-select pg_temp.login('00000000-0000-0000-0000-00000000000c');
-set local role authenticated;
-select is((select count(*)::int from note_replies), 0, 'the editor does not');
-reset role;
+-- Replies were removed (migration 026): nothing of them is left to call.
+select hasnt_function('public', 'submit_note_reply', 'visitors cannot reply any more');
+select hasnt_table('public', 'note_replies', 'no replies table');
 
 select * from finish();
 rollback;
