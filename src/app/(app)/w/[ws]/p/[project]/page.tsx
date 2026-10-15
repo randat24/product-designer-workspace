@@ -213,7 +213,7 @@ export default async function ProjectOverview({ params }: { params: Promise<{ ws
                   {s.detail ?? (s.state === "soon" ? t.project.stageSoon(s.phase) : t.project.stageTodo)}
                 </span>
                 {s.percent !== undefined && (
-                  <span className="mt-auto block h-[3px] overflow-hidden rounded-chip bg-line" aria-hidden>
+                  <span className="mt-auto block h-[0.1875rem] overflow-hidden rounded-chip bg-line" aria-hidden>
                     <i className={cn("block h-full", s.state === "done" ? "bg-success" : "bg-fg")} style={{ width: `${s.percent}%` }} />
                   </span>
                 )}

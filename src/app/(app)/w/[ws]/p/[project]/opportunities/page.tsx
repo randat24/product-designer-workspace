@@ -41,7 +41,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
             <h2 id="opp-matrix-h" className="text-heading font-semibold">{s.matrix}</h2>
             <p className="text-meta text-fg-secondary">{s.matrixHint}</p>
             <div className="relative overflow-x-auto">
-              <table className="w-full min-w-[640px] table-fixed border-separate border-spacing-2">
+              <table className="w-full min-w-[40rem] table-fixed border-separate border-spacing-2">
                 <thead>
                   <tr>
                     <th className="w-24" />

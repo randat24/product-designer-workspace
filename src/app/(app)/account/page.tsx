@@ -13,7 +13,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-6 px-[clamp(18px,4vw,56px)] py-10">
+    <main className="mx-auto flex max-w-md flex-col gap-6 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
       <BackLink href="/app" className="mb-0">{t.auth.back}</BackLink>
       <PageHeader title={t.auth.account} />
       <p className="text-fg-secondary">{user?.email}</p>

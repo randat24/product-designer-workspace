@@ -19,7 +19,7 @@ export default async function SynthesisPage({ params }: { params: Promise<{ ws: 
   const clustered = board.cards.filter((c) => c.patternId).length;
 
   return (
-    <div className="max-w-[1600px]">
+    <div className="max-w-[100rem]">
       <PageHeader title={t.synthesis.title} lede={t.synthesis.board.lede}
         progress={{ value: board.cards.length ? (clustered / board.cards.length) * 100 : 0, caption: `${clustered} / ${board.cards.length}` }} />
       <dl className="mb-6 flex flex-wrap gap-x-8 gap-y-2">

@@ -29,7 +29,7 @@ export default async function SiteProfilePage({ params }: { params: Promise<{ ws
   return (
     <div className="min-h-screen">
       <WorkspaceHeader current={workspace.slug} />
-      <main className="mx-auto flex max-w-4xl flex-col gap-8 px-[clamp(18px,4vw,56px)] py-10">
+      <main className="mx-auto flex max-w-4xl flex-col gap-8 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
         <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="site" />
         <div className="flex flex-col gap-2">
           <h1 className="page-title">{s.title}</h1>

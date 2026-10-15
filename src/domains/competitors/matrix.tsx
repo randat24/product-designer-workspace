@@ -135,11 +135,11 @@ export function ComparisonMatrix({ projectId, base, products: rawProducts, featu
               {canEdit && <th aria-hidden className="w-10" />}
             </tr>
             <tr>
-              <th scope="col" className="sticky left-0 z-[1] min-w-[170px] sm:min-w-[280px] sm:max-w-[320px] border-r border-b border-line bg-surface p-3 text-left align-bottom text-meta font-bold">
+              <th scope="col" className="sticky left-0 z-[1] min-w-[10.625rem] sm:min-w-[17.5rem] sm:max-w-[20rem] border-r border-b border-line bg-surface p-3 text-left align-bottom text-meta font-bold">
                 {kind === "ux" ? ux.criterion : m.feature}
               </th>
               {products.map((p, i) => (
-                <th key={p.id} scope="col" className="min-w-[150px] border-b border-line p-2.5 align-bottom" style={{ "--c": STICKY[i % 7] } as React.CSSProperties}>
+                <th key={p.id} scope="col" className="min-w-[9.375rem] border-b border-line p-2.5 align-bottom" style={{ "--c": STICKY[i % 7] } as React.CSSProperties}>
                   <Link href={`${base}/competitors/${p.code}`}
                     className={cn(
                       "flex flex-col gap-0.5 rounded-chip bg-[var(--c)] px-2.5 pt-3 pb-2 text-center text-on-sticky shadow-[0_6px_10px_-6px_rgba(0,0,0,.35)] transition-transform hover:rotate-0",

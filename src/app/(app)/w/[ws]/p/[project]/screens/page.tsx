@@ -43,7 +43,7 @@ export default async function ScreensPage({ params }: { params: Promise<{ ws: st
         <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{sc.empty}</p>
       ) : (
         <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
-          <table className="w-full min-w-[720px] text-left text-sm">
+          <table className="w-full min-w-[45rem] text-left text-sm">
             <thead className="border-b border-line text-caption font-semibold text-fg-secondary">
               <tr>
                 <th scope="col" className="px-4 py-2.5">{sc.columns.screen}</th>

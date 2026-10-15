@@ -66,10 +66,10 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
                     <span className="text-caption font-semibold text-fg-secondary">{p.code}</span>
                   </span>
                   <span className="flex flex-wrap gap-1.5">
-                    <span className="rounded-[4px] bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
+                    <span className="rounded-[0.25rem] bg-fg px-2.5 py-0.5 text-caption font-semibold text-canvas">
                       {RESEARCH_STATUSES.find((s) => s.value === p.status)?.label}
                     </span>
-                    <span className="rounded-[4px] border border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary">
+                    <span className="rounded-[0.25rem] border border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary">
                       {RESEARCH_METHODS.find((m) => m.value === p.method)?.label}
                     </span>
                   </span>
@@ -127,7 +127,7 @@ export default async function ResearchPage({ params }: { params: Promise<{ ws: s
             {interviews.map((i) => (
               <li key={i.id}>
                 <Link href={`${base}/research/interviews/${i.code}`}
-                  className="grid grid-cols-[64px_1fr_auto] items-center gap-3 px-4 py-2.5 hover:bg-subtle sm:grid-cols-[64px_1fr_140px_80px]">
+                  className="grid grid-cols-[4rem_1fr_auto] items-center gap-3 px-4 py-2.5 hover:bg-subtle sm:grid-cols-[4rem_1fr_8.75rem_5rem]">
                   <span className="text-caption font-semibold text-fg-secondary tabular-nums">{i.code}</span>
                   <span className="truncate font-semibold">
                     {i.participants ? `${i.participants.code} · ${participantTitle(i.participants)}` : "—"}

@@ -50,16 +50,16 @@ export default async function InsightsPage({ params }: { params: Promise<{ ws: s
                   <span className="text-base leading-snug font-bold">{i.title}</span>
                   {i.statement && <span className="line-clamp-3 text-meta text-fg-secondary">{i.statement}</span>}
                   <span className="mt-auto flex flex-wrap items-center gap-1.5 text-caption font-semibold">
-                    <span className="rounded-[4px] bg-fg px-2.5 py-0.5 text-canvas">{s.fields.confidence}: {labelOf(LEVELS, i.confidence).toLowerCase()}</span>
+                    <span className="rounded-[0.25rem] bg-fg px-2.5 py-0.5 text-canvas">{s.fields.confidence}: {labelOf(LEVELS, i.confidence).toLowerCase()}</span>
                     {unsupported ? (
-                      <span className="inline-flex items-center gap-1 rounded-[4px] bg-warning/10 px-2.5 py-0.5 text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{t.trace.unsupported}</span>
+                      <span className="inline-flex items-center gap-1 rounded-[0.25rem] bg-warning/10 px-2.5 py-0.5 text-warning"><TriangleAlert aria-hidden className="size-4 shrink-0" />{t.trace.unsupported}</span>
                     ) : (
-                      <span className="rounded-[4px] border border-line px-2.5 py-0.5 text-fg-secondary">
+                      <span className="rounded-[0.25rem] border border-line px-2.5 py-0.5 text-fg-secondary">
                         {s.columns.sources}: {st?.sources} · {s.participants(st?.participants ?? 0)}
                       </span>
                     )}
                     {!unsupported && st?.participants === 1 && (
-                      <span className="inline-flex items-center gap-1 rounded-[4px] bg-warning/10 px-2.5 py-0.5 text-warning" title={s.singleSourceHint}><TriangleAlert aria-hidden className="size-4 shrink-0" />{s.singleSource}</span>
+                      <span className="inline-flex items-center gap-1 rounded-[0.25rem] bg-warning/10 px-2.5 py-0.5 text-warning" title={s.singleSourceHint}><TriangleAlert aria-hidden className="size-4 shrink-0" />{s.singleSource}</span>
                     )}
                   </span>
                 </Link>

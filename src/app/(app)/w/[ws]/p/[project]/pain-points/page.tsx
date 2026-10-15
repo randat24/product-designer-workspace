@@ -39,7 +39,7 @@ export default async function PainPointsPage({ params }: { params: Promise<{ ws:
         <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{s.empty}</p>
       ) : (
         <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
-          <table className="w-full min-w-[640px] border-collapse text-sm">
+          <table className="w-full min-w-[40rem] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-meta text-fg-secondary">
                 {Object.values(s.columns).map((c) => <th key={c} scope="col" className="px-4 py-2.5 font-semibold">{c}</th>)}
@@ -51,7 +51,7 @@ export default async function PainPointsPage({ params }: { params: Promise<{ ws:
                   <td className="px-4 py-3 font-semibold tabular-nums"><Link href={`${ctx.base}/pain-points/${p.code}`} className="hover:underline">{p.code}</Link></td>
                   <td className="px-4 py-3"><Link href={`${ctx.base}/pain-points/${p.code}`} className="font-bold">{p.title}</Link></td>
                   <td className="px-4 py-3">
-                    <span className={cn("rounded-[4px] px-2.5 py-0.5 text-caption font-bold", SEV_CLASS[p.severity])}>{labelOf(SEVERITIES, p.severity)}</span>
+                    <span className={cn("rounded-[0.25rem] px-2.5 py-0.5 text-caption font-bold", SEV_CLASS[p.severity])}>{labelOf(SEVERITIES, p.severity)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-2">

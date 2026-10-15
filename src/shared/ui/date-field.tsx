@@ -85,7 +85,7 @@ export function DateField({
             "w-full text-fg placeholder:font-normal placeholder:text-fg-secondary focus:outline-none",
             size === "md"
               ? "h-9 rounded-control border border-transparent bg-subtle pr-10 pl-3 text-body font-medium hover:border-line focus:border-fg focus:bg-surface aria-[invalid=true]:border-danger"
-              : "h-12 rounded-[4px] border border-line bg-surface pr-12 pl-3.5 text-[1rem] transition-colors duration-(--duration-fast) hover:border-fg-secondary focus:border-fg aria-[invalid=true]:border-danger",
+              : "h-12 rounded-[0.25rem] border border-line bg-surface pr-12 pl-3.5 text-[1rem] transition-colors duration-(--duration-fast) hover:border-fg-secondary focus:border-fg aria-[invalid=true]:border-danger",
           )}
         />
         {!readOnly && (
@@ -177,7 +177,7 @@ function CalendarPopover({ id, locale, value, onPick, onClose }: {
       role="dialog"
       aria-modal="false"
       aria-labelledby={titleId}
-      className="absolute top-full left-0 z-50 mt-1.5 w-[min(296px,calc(100vw-32px))] rounded-panel border border-line bg-surface p-3 text-fg shadow-lg"
+      className="absolute top-full left-0 z-50 mt-1.5 w-[min(18.5rem,calc(100vw-2rem))] rounded-panel border border-line bg-surface p-3 text-fg shadow-lg"
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <button type="button" aria-label={tx.prev} onClick={() => setFocus(addMonths(focus, -1))}

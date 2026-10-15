@@ -99,13 +99,13 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       </section>
 
       {/* The design career as an index of roles: each row opens to what was done there. */}
-      <section className={`${container} grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:gap-[clamp(48px,7vw,112px)]`} aria-labelledby="experience-h">
+      <section className={`${container} grid gap-6 md:grid-cols-[12.5rem_minmax(0,1fr)] md:gap-[clamp(3rem,7vw,7rem)]`} aria-labelledby="experience-h">
         <h2 id="experience-h" className="sg-eyebrow text-fg-secondary">{d.about.experience}</h2>
         <ol className="flex flex-col border-b border-line">
           {designJobs.map((job, i) => (
             <li key={`${i}`} className="border-t border-line">
               <details className="group" open={i === 0}>
-                <summary className="hit grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_24px] gap-x-4 gap-y-1 py-6 [&::-webkit-details-marker]:hidden">
+                <summary className="hit grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_1.5rem] gap-x-4 gap-y-1 py-6 [&::-webkit-details-marker]:hidden">
                   <span className="font-label text-[0.6875rem] uppercase tracking-[0.08em] text-fg-secondary">{job.period}</span>
                   <h3 className="col-start-1 text-[clamp(1.25rem,2vw,1.625rem)] font-medium leading-[1.25] tracking-[-0.03em]">{job.title}</h3>
                   <span className="col-start-1 text-[0.9375rem] text-fg-secondary">{job.place}</span>
@@ -114,7 +114,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                 <div className="flex max-w-[72ch] flex-col gap-3 pb-7">
                   <ul className="flex flex-wrap gap-1.5">
                     {job.points.map((p, k) => (
-                      <li key={k} className="rounded-[4px] border border-line px-3 py-1 text-[0.8125rem]">{p}</li>
+                      <li key={k} className="rounded-[0.25rem] border border-line px-3 py-1 text-[0.8125rem]">{p}</li>
                     ))}
                   </ul>
                   {job.details?.map((p, k) => <p key={k} className="leading-[1.7] text-fg-secondary">{p}</p>)}
@@ -168,7 +168,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           <ul className="flex flex-col gap-2">
             {d.availability.map((a, i) => (
               <li key={i} className="flex gap-2">
-                <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
+                <span className="mt-[0.5625rem] h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
                 {a}
               </li>
             ))}
@@ -216,7 +216,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       {/* Service and awards: after the design story */}
       <section id="service" className={`${container} mt-20 scroll-mt-24`}>
         <div className="flex flex-col gap-10 border-t border-line pt-10">
-          <div className="grid gap-6 md:grid-cols-[220px_1fr]">
+          <div className="grid gap-6 md:grid-cols-[13.75rem_1fr]">
             <div className="flex flex-col gap-3">
               {serviceJob && <Eyebrow className="text-accent-text">{serviceJob.period}</Eyebrow>}
               <h2 className="t-section">{d.about.serviceTitle}</h2>
@@ -240,7 +240,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       <section aria-labelledby="cta-h" className={`${container} mt-20`}>
         <div className="flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-end md:justify-between">
           <h2 id="cta-h" className={bigTitle}>{d.about.ctaTitle}</h2>
-          <div className="flex max-w-[460px] flex-col gap-4">
+          <div className="flex max-w-[28.75rem] flex-col gap-4">
             <p className="text-[1.0625rem] leading-[1.55] text-fg-secondary">{d.about.ctaText}</p>
             <div className="flex flex-wrap gap-3">
               <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "about" })}>

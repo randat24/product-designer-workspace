@@ -23,7 +23,7 @@ export default async function StartProject({ params }: { params: Promise<{ local
   if (!isLocale(locale)) notFound();
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || undefined;
   return (
-    <div className={`${container} max-w-[800px] pb-20 pt-10 sm:pt-14`}>
+    <div className={`${container} max-w-[50rem] pb-20 pt-10 sm:pt-14`}>
       <JsonLd data={pageLd(locale, "/start-project", "ContactPage", INTAKE[locale].seo.title, INTAKE[locale].seo.description)} />
       <IntakeWizard locale={locale} turnstileSiteKey={siteKey} privacyHref={`/${locale}/privacy#requests`} />
     </div>

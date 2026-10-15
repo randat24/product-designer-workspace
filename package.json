@@ -10,7 +10,7 @@
     "db:start": "npx supabase start",
     "db:reset": "npx supabase db reset",
     "db:test": "npx supabase test db",
-    "db:types": "npx supabase gen types typescript --local > src/types/database.ts",
+    "db:types": "npx supabase gen types typescript --local > src/types/database.generated.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "e2e": "playwright test",

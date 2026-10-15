@@ -12,7 +12,7 @@ import { ThemeSwitch } from "@/shared/ui/theme-switch";
 export async function WorkspaceHeader({ current }: { current: string }) {
   const [workspaces, user] = await Promise.all([listMyWorkspaces(), getCurrentUser()]);
   return (
-    <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
+    <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(1.125rem,4vw,3.5rem)] text-rail-fg">
       <span className="flex min-w-0 items-center gap-4">
         <span className="flex min-w-0 items-center gap-2.5"><FedoMark className="size-7 shrink-0 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" /><span className="min-w-0 truncate font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span></span>
         <WorkspaceSwitcher current={current} workspaces={workspaces} />
@@ -49,12 +49,12 @@ export async function WorkspaceTabs({ wsSlug, workspaceId, current }: { wsSlug: 
       {tabs.map((tab) => (
         <Link key={tab.key} href={tab.href} aria-current={tab.key === current ? "page" : undefined}
           className={cn(
-            "inline-flex items-center gap-2 rounded-[4px] border px-4 py-1.5 text-sm font-semibold",
+            "inline-flex items-center gap-2 rounded-[0.25rem] border px-4 py-1.5 text-sm font-semibold",
             tab.key === current ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg hover:text-fg",
           )}>
           {tab.label}
           {tab.badge > 0 && (
-            <span className="rounded-[4px] bg-accent-hover px-1.5 text-[0.75rem] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
+            <span className="rounded-[0.25rem] bg-accent-hover px-1.5 text-[0.75rem] leading-5 text-on-accent" aria-label={t.requests.newCount(tab.badge)}>
               {tab.badge}
             </span>
           )}

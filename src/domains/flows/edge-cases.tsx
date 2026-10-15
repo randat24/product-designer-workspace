@@ -66,14 +66,14 @@ export function EdgeCasesPanel({ flowId, initial, nodes, canEdit, onFocusNode }:
                   {EDGE_CASE_STATUSES.map((s) => (
                     <button key={s.value} type="button" aria-pressed={c.status === s.value} disabled={!canEdit}
                       onClick={() => c.status !== s.value && patch(c.id, { status: s.value })}
-                      className={cn("rounded-[4px] border px-2.5 py-0.5 text-caption font-semibold disabled:cursor-default",
+                      className={cn("rounded-[0.25rem] border px-2.5 py-0.5 text-caption font-semibold disabled:cursor-default",
                         c.status === s.value ? STATUS_STYLE[s.value] : "border-line text-fg-secondary hover:border-fg")}>
                       {s.label}
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_13.75rem]">
                 {c.kind !== "custom" ? (
                   <NoteInput id={c.id} label={`${ec.note}: ${title}`} initial={c.description ?? ""} readOnly={!canEdit}
                     onSave={(description) => patch(c.id, { description })} />

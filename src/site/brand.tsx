@@ -6,5 +6,5 @@ import { FedoMark } from "@/shared/ui/fedo-mark";
  * Inside a `.group` link the cursor taps once on hover.
  */
 export function BrandMark({ className }: { className?: string }) {
-  return <FedoMark tap className={cn("size-9 sm:size-10", className)} />;
+  return <FedoMark tap className={cn("size-9 shrink-0 sm:size-10", className)} />;
 }

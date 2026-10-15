@@ -50,7 +50,7 @@ export default async function FlowPage({ params }: { params: Promise<Params> }) 
           viewport={isViewport(flow.viewport) ? flow.viewport : null} canEdit={ctx.canEdit} base={ctx.base} />
       </div>
 
-      <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_21.25rem]">
         <FlowMetaEditor key={flow.id} id={flow.id} canEdit={ctx.canEdit}
           initial={{ name: flow.name, description: flow.description, status: flow.status }} />
         <TracePanel projectId={ctx.project.id} base={ctx.base} entity={{ type: "user_flow", id: flow.id, code: flow.code }}
