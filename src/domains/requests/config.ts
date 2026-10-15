@@ -102,5 +102,3 @@ export const LIMITS = {
 
 /** Bump when the questions change; stored with each request. */
 export const FORM_VERSION = 1;
-/** Date of the privacy notice edition shown next to the consent checkbox. */
-export const PRIVACY_POLICY_VERSION = "2026-10-01";

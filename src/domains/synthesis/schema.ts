@@ -86,5 +86,3 @@ export const participantColor = (code: string | null | undefined) => {
   const n = Number((code ?? "").replace(/\D/g, ""));
   return n ? `var(--s${((n - 1) % 7) + 1})` : "var(--line)";
 };
-
-export const INSIGHT_TYPES = ["insight", "pain_point", "opportunity"] as const;
