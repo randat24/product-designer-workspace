@@ -639,3 +639,40 @@ test("site profile: the About text written in the tool shows on the site", async
   await expect(page.locator("#uk-summary-text")).toHaveValue(summary);
   expect(errors).toEqual([]);
 });
+
+test("notes: a draft written in the tool keeps its English text and tags after reload, and can be deleted", async ({ page }, testInfo) => {
+  savesSharedRecord(testInfo);
+  const errors = watchErrors(page);
+  await page.goto("/app");
+  await expect(page).toHaveURL(/\/w\/[^/]+$/);
+  await page.getByRole("link", { name: "Нотатки", exact: true }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Нотатки" })).toBeVisible();
+
+  // A draft, so the test never puts anything on the site.
+  const uk = `Чернетка з тесту ${Date.now()}`;
+  await page.getByLabel("Нова нотатка").fill(uk);
+  await page.getByRole("button", { name: "У чернетки" }).click();
+  const done = page.getByRole("status").filter({ hasText: "збережено в чернетках" });
+  await expect(done).toBeVisible();
+  await done.getByRole("link", { name: "Відкрити" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: /N-\d+ · Чернетка/ })).toBeVisible();
+  await expectAccessible(page, testInfo);
+
+  await expect(page.getByLabel("Текст українською")).toHaveValue(uk);
+  await page.getByText("Текст англійською", { exact: true }).click();
+  const en = `Draft from the test ${Date.now()}`;
+  await page.getByLabel("Текст англійською").fill(en);
+  await page.getByLabel("Теги", { exact: true }).fill("#E2E, перевірка");
+  await expect(page.getByRole("status").filter({ hasText: "Збережено" })).toBeVisible({ timeout: 10_000 });
+
+  await page.reload();
+  await expect(page.getByLabel("Текст англійською")).toHaveValue(en);
+  await expect(page.getByLabel("Теги", { exact: true })).toHaveValue("e2e, перевірка");
+
+  const remove = page.getByRole("button", { name: "Видалити нотатку" });
+  await remove.click();
+  await page.getByRole("button", { name: /Точно видалити/ }).click();
+  await expect(page).toHaveURL(/\/notes$/);
+  await expect(page.getByText(uk)).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
