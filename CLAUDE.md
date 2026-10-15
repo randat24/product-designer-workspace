@@ -9,7 +9,7 @@ One Next.js 15 app (App Router, React 19, TS strict, Tailwind 4, Supabase) holdi
 - **Public site** (portfolio + CV) at `/[locale]` (`uk` / `en`), in `src/app/(site)` and `src/site/`. Needs no login.
 - **Product designer tool** at `/app` and `/w/[ws]/…`, in `src/app/(app)` and `src/domains/`. Its core is end-to-end traceability: `Interview → Quote → Insight → Pain Point → Opportunity → Flow → Screen → Decision`.
 
-The README, docs and many code comments are in Russian. The tool UI is Ukrainian (strings in `src/shared/i18n/uk.ts`); site copy is uk/en in `src/site/content.ts`, except the home page and site frame of the SIGNAL redesign: `src/site/signal/home-content.ts`, `src/site/signal/hero.tsx` and the hero's decision trail `src/site/signal/hero-trace.tsx` (its records come from the published `designer-workspace` case; without it the block is hidden). The «01 /», «02 /» before home sections come from their order in `src/app/(site)/[locale]/page.tsx`, not from the copy. Product and architecture docs are in `docs/` (PRD, ARCHITECTURE, DATABASE, IA, DESIGN-SYSTEM, QUALITY_REVIEW, UX_LAWS, ADRs in `docs/adr/`).
+The README, docs and many code comments are in Russian. The tool UI is Ukrainian (strings in `src/shared/i18n/uk.ts`); site copy is uk/en in `src/site/content.ts`, except the home page and site frame of the SIGNAL redesign: `src/site/signal/home-content.ts`, `src/site/signal/hero.tsx` and the hero's decision trail `src/site/signal/hero-trace.tsx` (its records come from the published `designer-workspace` case; without it the block is hidden). The «01 /», «02 /» before home sections come from their order in `src/app/(site)/[locale]/page.tsx`, not from the copy. Product and architecture docs are in `docs/` (PRD, ARCHITECTURE, DATABASE, IA, DESIGN-SYSTEM, MOTION, QUALITY_REVIEW, UX_LAWS, ADRs in `docs/adr/`); site release steps are in `docs/RELEASE_CHECKLIST.md` (with SEO, ANALYTICS, DOMAIN_SWITCH), and the planned AI layer is in `docs/AI.md` (draft, not built).
 
 ## Commands
 
@@ -17,7 +17,7 @@ Node 22. Docker is needed for local Supabase.
 
 ```bash
 npm install                 # also runs patch-package (patches/next+15.5.27.patch, fails loudly if it no longer applies)
-npx supabase start          # local Postgres/Auth/Storage/Mailpit; applies migrations. Copy API URL + anon key into .env.local (see .env.example)
+npm run db:start            # = npx supabase start: local Postgres/Auth/Storage/Mailpit; applies migrations. Copy API URL + anon key into .env.local (see .env.example)
 npm run dev                 # http://localhost:3000; magic-link mail goes to Mailpit at http://127.0.0.1:54324
 
 npm run typecheck           # tsc --noEmit
