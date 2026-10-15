@@ -27,7 +27,7 @@ export function NoteEntry({ note, locale, link, current, followUps, location }: 
 }) {
   const d = dict(locale);
   const href = `/${locale}/notes/${note.number}`;
-  const open = trackAttrs("note_open", { note_number: note.number, location: location === "note" ? "note" : location });
+  const open = trackAttrs("note_open", { note_number: note.number, location });
   return (
     <article className={cn("sg-note", current && "sg-note--current")} aria-current={current ? "true" : undefined}
       aria-labelledby={`note-${note.number}-h`}>

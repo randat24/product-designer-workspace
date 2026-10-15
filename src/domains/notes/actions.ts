@@ -13,10 +13,10 @@ import { NOTE_MAX, noteSchema, type NoteInput } from "./schema";
 
 const n = t.notes;
 
-/** The feed, the note pages, home, RSS and the sitemap show the change within a request. */
+/** The feed, the note pages, RSS and the sitemap show the change within a request; nothing else on the site reads notes. */
 function refreshSite() {
   revalidateTag(NOTES_TAG);
-  revalidatePath("/[locale]", "layout");
+  revalidatePath("/[locale]/notes", "layout");
   revalidatePath("/sitemap.xml");
 }
 
