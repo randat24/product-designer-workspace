@@ -5,7 +5,7 @@ import { dict, type Case, type Locale } from "./content";
 import { button } from "./signal/ui";
 import { SIZES, responsive } from "@/site/img";
 
-export const container = "mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12";
+export const container = "mx-auto w-full max-w-[90rem] px-5 sm:px-8 lg:px-12";
 
 export function Eyebrow({
   children,
@@ -82,7 +82,7 @@ export function CaseCover({
   if (item.cover) {
     return (
       <div
-        className={cn("relative overflow-hidden rounded-[4px]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
+        className={cn("relative overflow-hidden rounded-[0.25rem]", large ? "aspect-[16/8]" : "aspect-[4/3]")}
         style={{ background: item.sticker }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- static screenshot, sizes known */}
@@ -93,7 +93,7 @@ export function CaseCover({
           height={item.cover.height}
           loading={large ? "eager" : "lazy"}
           decoding="async"
-          className="absolute left-[8%] top-[12%] w-[92%] rounded-[4px] border-2 border-black/15 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)]"
+          className="absolute left-[8%] top-[12%] w-[92%] rounded-[0.25rem] border-2 border-black/15 shadow-[0_24px_60px_-20px_rgba(0,0,0,.35)]"
         />
       </div>
     );

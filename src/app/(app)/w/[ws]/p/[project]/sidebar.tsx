@@ -83,7 +83,7 @@ export function Sidebar({ wsSlug, wsName, projectSlug, projectName, commands, lo
                       className={cn(
                         "relative flex min-h-9 items-center gap-2 rounded-control px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors duration-(--duration-fast)",
                         // Current section: filled pill plus a bar on the rail edge, so it reads even at a glance.
-                        active ? "bg-canvas text-fg lg:before:absolute lg:before:inset-y-1.5 lg:before:-left-3 lg:before:w-[3px] lg:before:rounded-r-full lg:before:bg-rail-fg"
+                        active ? "bg-canvas text-fg lg:before:absolute lg:before:inset-y-1.5 lg:before:-left-3 lg:before:w-[0.1875rem] lg:before:rounded-r-full lg:before:bg-rail-fg"
                           : "hover:bg-rail-fg/10",
                         pending && !active && "font-medium opacity-55",
                       )}>

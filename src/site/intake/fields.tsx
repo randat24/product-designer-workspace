@@ -96,7 +96,7 @@ export function TextArea({ id, label, hint, error, optional, value, onChange, ro
         aria-required={optional ? undefined : true}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
-        className={cn(sg.input, "min-h-[96px] resize-y leading-[1.5]")}
+        className={cn(sg.input, "min-h-[6rem] resize-y leading-[1.5]")}
       />
     </FieldShell>
   );
@@ -142,7 +142,7 @@ export function ChoiceGroup({ id, legend, hint, error, optional, required, optio
                 }}
                 className="absolute inset-0 size-full cursor-pointer opacity-0"
               />
-              <span aria-hidden className={cn("grid size-4 shrink-0 place-items-center border border-current", multiple ? "rounded-[2px]" : "rounded-full")}>
+              <span aria-hidden className={cn("grid size-4 shrink-0 place-items-center border border-current", multiple ? "rounded-[0.125rem]" : "rounded-full")}>
                 {on && <span className={cn("size-2 bg-current", multiple ? "rounded-[1px]" : "rounded-full")} />}
               </span>
               {o.label}

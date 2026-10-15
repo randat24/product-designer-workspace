@@ -14,18 +14,18 @@ export const metadata: Metadata = { title: l.title };
 export default function UxLawsPage() {
   return (
     <div className="min-h-screen">
-      <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(18px,4vw,56px)] text-rail-fg">
+      <header className="flex h-14 items-center justify-between gap-4 bg-rail px-[clamp(1.125rem,4vw,3.5rem)] text-rail-fg">
         <span className="flex min-w-0 items-center gap-2.5"><FedoMark className="size-7 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" /><span className="min-w-0 truncate font-display text-lg leading-[1.1] font-bold whitespace-nowrap uppercase">{t.auth.brand}</span></span>
         <Link href="/app" className="inline-flex shrink-0 items-center gap-1 text-meta font-semibold opacity-80 hover:opacity-100 hover:underline"><ArrowLeft aria-hidden className="size-4" />{l.back}</Link>
       </header>
 
-      <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(18px,4vw,56px)] py-10">
+      <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
         <PageHeader title={l.title} lede={l.lede} stat={{ value: UX_LAWS.length, caption: l.count }} />
 
         <nav aria-label={l.groups} className="-mt-4 flex flex-wrap gap-2">
           {UX_LAW_GROUPS.map((g) => (
             <a key={g.id} href={`#${g.id}`}
-              className="rounded-[4px] border border-line px-3.5 py-1.5 text-meta font-semibold hover:border-fg">
+              className="rounded-[0.25rem] border border-line px-3.5 py-1.5 text-meta font-semibold hover:border-fg">
               {g.title} <span className="text-fg-secondary tabular-nums">{UX_LAWS.filter((x) => x.group === g.id).length}</span>
             </a>
           ))}

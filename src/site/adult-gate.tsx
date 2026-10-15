@@ -30,15 +30,15 @@ export function AdultGate({ labels, backHref, children }: {
 
   if (ok) return <>{children}</>;
   return (
-    <div className="relative min-h-[540px] sm:min-h-[460px]">
+    <div className="relative min-h-[33.75rem] sm:min-h-[28.75rem]">
       {/* Only a slice of the case is kept under the blur, so the page is not a long blurred scroll. */}
-      <div inert aria-hidden className="pointer-events-none max-h-[560px] overflow-hidden blur-2xl select-none">
+      <div inert aria-hidden className="pointer-events-none max-h-[35rem] overflow-hidden blur-2xl select-none">
         {children}
       </div>
       <div className="absolute inset-0 flex items-start justify-center px-4 pt-10 sm:pt-16">
         <section aria-labelledby="adult-h"
-          className={cn(sg.panel, "flex w-full max-w-[520px] flex-col items-start gap-4 p-6 shadow-[var(--sg-shadow-float)] sm:p-8")}>
-          <span className="grid size-14 place-items-center rounded-[4px] border border-danger text-[1.25rem] font-semibold tracking-[-0.02em] text-danger">
+          className={cn(sg.panel, "flex w-full max-w-[32.5rem] flex-col items-start gap-4 p-6 shadow-[var(--sg-shadow-float)] sm:p-8")}>
+          <span className="grid size-14 place-items-center rounded-[0.25rem] border border-danger text-[1.25rem] font-semibold tracking-[-0.02em] text-danger">
             {labels.badge}
           </span>
           <h2 id="adult-h" className="text-[clamp(1.5rem,3vw,1.875rem)] font-medium leading-[1.1] tracking-[-0.035em]">

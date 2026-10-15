@@ -71,7 +71,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex max-w-[680px] flex-col gap-4">
+      <div className="flex max-w-[42.5rem] flex-col gap-4">
         <CheckCircle2 aria-hidden className="size-12 text-success" />
         <h1 ref={heading} tabIndex={-1} className="t-page outline-none">
           {t.title}
@@ -80,7 +80,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
         {done.duplicate && <p className="text-[0.9375rem] text-fg-secondary">{t.duplicate}</p>}
       </div>
 
-      <dl className="sg-panel grid max-w-[680px] gap-4 p-5 sm:grid-cols-3 sm:p-6">
+      <dl className="sg-panel grid max-w-[42.5rem] gap-4 p-5 sm:grid-cols-3 sm:p-6">
         {[[t.code, done.code], [t.date, date], [t.project, done.projectName ?? t.noName]].map(([k, v]) => (
           <div key={k} className="flex flex-col gap-1">
             <dt className="sg-eyebrow text-fg-secondary">{k}</dt>
@@ -108,7 +108,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
         {failed && <p role="alert" className="text-[0.9375rem] font-semibold text-danger">{INTAKE[locale].failed.server}</p>}
       </div>
 
-      <section aria-labelledby="next-h" className="flex max-w-[680px] flex-col gap-4 border-t border-line pt-6">
+      <section aria-labelledby="next-h" className="flex max-w-[42.5rem] flex-col gap-4 border-t border-line pt-6">
         <h2 id="next-h" className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{t.nextTitle}</h2>
         <ol className="flex flex-col gap-3">
           {t.next.map((s, i) => (

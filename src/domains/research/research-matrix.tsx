@@ -45,11 +45,11 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
       <table className="min-w-full border-collapse">
         <thead>
           <tr>
-            <th scope="col" className="sticky left-0 z-[1] min-w-[170px] max-w-[210px] border-r border-b border-line bg-surface p-3 text-left align-bottom text-meta font-bold sm:min-w-[210px]">
+            <th scope="col" className="sticky left-0 z-[1] min-w-[10.625rem] max-w-[13.125rem] border-r border-b border-line bg-surface p-3 text-left align-bottom text-meta font-bold sm:min-w-[13.125rem]">
               {mx.question}
             </th>
             {interviews.map((iv, i) => (
-              <th key={iv.id} scope="col" className="min-w-[220px] max-w-[250px] border-b border-line p-2.5 align-bottom font-normal">
+              <th key={iv.id} scope="col" className="min-w-[13.75rem] max-w-[15.625rem] border-b border-line p-2.5 align-bottom font-normal">
                 {iv.participant && (
                   <StickyHeader color={STICKY[i % 7]!} tilt={i % 2 ? "rotate-[.7deg]" : "-rotate-[.6deg]"} participant={iv.participant}
                     href={`${base}/research/interviews/${iv.code}`} canEdit={canEdit} />
@@ -57,7 +57,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
               </th>
             ))}
             {canEdit && (
-              <th className="min-w-[120px] border-b border-line p-2.5 align-middle">
+              <th className="min-w-[7.5rem] border-b border-line p-2.5 align-middle">
                 <Button variant="secondary" busy={pending} disabled={pending} onClick={() => run(() => addRespondent(projectId, guideId))}>
                   <Plus aria-hidden className="size-4" />{mx.addRespondent}
                 </Button>
@@ -68,7 +68,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
         <tbody>
           {questions.map((q) => (
             <tr key={q.id}>
-              <th scope="row" className="sticky left-0 z-[1] max-w-[210px] border-r border-b border-line bg-surface p-3 text-left align-top text-meta font-bold">
+              <th scope="row" className="sticky left-0 z-[1] max-w-[13.125rem] border-r border-b border-line bg-surface p-3 text-left align-top text-meta font-bold">
                 {q.text}
               </th>
               {interviews.map((iv, i) => {
@@ -79,7 +79,7 @@ export function ResearchMatrix({ projectId, guideId, base, questions, interviews
                     style={{ background: `color-mix(in srgb, ${STICKY[i % 7]} 16%, var(--surface))` }}>
                     <AnswerField interviewId={iv.id} questionId={q.id} answerId={cell?.id ?? null} initial={cell?.text ?? ""}
                       readOnly={!canEdit} rows={4} label={mx.cellLabel(q.text, who)} placeholder={mx.answerPlaceholder}
-                      className="min-h-[90px] bg-transparent px-1.5 py-1 text-meta focus:bg-surface" />
+                      className="min-h-[5.625rem] bg-transparent px-1.5 py-1 text-meta focus:bg-surface" />
                   </td>
                 );
               })}

@@ -250,12 +250,12 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
   if (step === null) {
     return (
       <div className="flex flex-col gap-8">
-        <div className="flex max-w-[680px] flex-col gap-4">
+        <div className="flex max-w-[42.5rem] flex-col gap-4">
           <p className="sg-eyebrow text-fg-secondary">{t.intro.eyebrow}</p>
           <h1 className="t-page">{t.intro.title}</h1>
           <p className="text-[clamp(1.0625rem,2vw,1.1875rem)] leading-[1.55] text-fg-secondary">{t.intro.lead}</p>
         </div>
-        <ul className="flex max-w-[680px] flex-col gap-2.5">
+        <ul className="flex max-w-[42.5rem] flex-col gap-2.5">
           {t.intro.points.map((p) => (
             <li key={p} className="flex gap-3 text-[1rem] leading-snug">
               <Check aria-hidden className="mt-0.5 size-5 shrink-0 text-success" />
@@ -264,7 +264,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
           ))}
         </ul>
         {draftFound ? (
-          <section aria-labelledby="draft-h" className="sg-panel flex max-w-[680px] flex-col gap-4 p-5 sm:p-6">
+          <section aria-labelledby="draft-h" className="sg-panel flex max-w-[42.5rem] flex-col gap-4 p-5 sm:p-6">
             <h2 id="draft-h" className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{t.draft.title}</h2>
             <p className="text-[0.9375rem] text-fg-secondary">{t.draft.text}</p>
             <div className="flex flex-wrap gap-3">
@@ -483,7 +483,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         const ranges = BUDGET_RANGES[d.currency];
         return (
           <>
-            <Select id={f("currency")} label={b.currency.label} className="max-w-[200px]"
+            <Select id={f("currency")} label={b.currency.label} className="max-w-[12.5rem]"
               options={CURRENCIES.map((c) => ({ value: c, label: c }))} value={d.currency}
               onChange={(v) => set("budget", { currency: v as Currency, range: (BUDGET_SPECIAL as readonly string[]).includes(d.range) ? d.range : "" })} />
             <ChoiceGroup id={f("range")} legend={b.range.label} required={t.required} multiple={false} columns error={err("range")}
@@ -514,7 +514,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
               onChange={(v) => set("budget", { has_deadline: v === "yes" })} />
             {d.has_deadline && (
               <div className="sg-panel flex flex-col gap-4 p-4 sm:p-5">
-                <DateInput id={f("deadline_date")} {...b.deadlineDate} error={err("deadline_date")} locale={locale} className="max-w-[260px]"
+                <DateInput id={f("deadline_date")} {...b.deadlineDate} error={err("deadline_date")} locale={locale} className="max-w-[16.25rem]"
                   value={d.deadline_date} onChange={(v) => set("budget", { deadline_date: v })} />
                 <TextField id={f("deadline_reason")} {...b.deadlineReason} optional={opt} error={err("deadline_reason")} maxLength={1000}
                   value={d.deadline_reason} onChange={(v) => set("budget", { deadline_reason: v })} />
@@ -582,7 +582,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         <h1 ref={heading} tabIndex={-1} className="t-chapter scroll-mt-28 outline-none">
           {title}
         </h1>
-        <p className="max-w-[640px] text-[1.0625rem] leading-[1.55] text-fg-secondary">{lead}</p>
+        <p className="max-w-[40rem] text-[1.0625rem] leading-[1.55] text-fg-secondary">{lead}</p>
       </div>
 
       {errorList.length > 0 && (
@@ -603,7 +603,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
 
       <form noValidate onSubmit={(e) => { e.preventDefault(); if (step < REVIEW) next(); else void submit(); }} className="flex flex-col gap-7">
         {/* Honeypot: hidden from people and assistive tech; bots fill every field. */}
-        <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <div aria-hidden className="absolute -left-[624.9375rem] h-px w-px overflow-hidden">
           <label htmlFor="q-company-fax">Fax</label>
           <input ref={honeypot} id="q-company-fax" name="company_fax" tabIndex={-1} autoComplete="off" />
         </div>
@@ -652,7 +652,7 @@ function Progress({ n, total, label: text, review }: { n: number; total: number;
     <div className="flex flex-col gap-2">
       <p className="text-[0.875rem] font-semibold text-fg-secondary" aria-hidden>{text}</p>
       <div role="progressbar" aria-label={text} aria-valuemin={0} aria-valuemax={total} aria-valuenow={review ? total : n - 1}
-        className="h-[3px] w-full overflow-hidden bg-line">
+        className="h-[0.1875rem] w-full overflow-hidden bg-line">
         <div className="h-full bg-accent-text transition-[width] duration-(--duration-base)" style={{ width: `${((review ? total : n - 1) / total) * 100}%` }} />
       </div>
     </div>
@@ -672,7 +672,7 @@ function LinkList({ step, title, hint, addLabel, kinds, links, errors, locale, o
         {hint && <p className="mt-1 text-[0.875rem] text-fg-secondary">{hint}</p>}
       </div>
       {links.map((l, i) => (
-        <div key={i} className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:grid-cols-[180px_minmax(0,1fr)_auto]">
+        <div key={i} className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:grid-cols-[11.25rem_minmax(0,1fr)_auto]">
           <Select id={fieldId(step, `links.${i}.kind`)} label={t.linkKind} className="col-span-2 sm:col-span-1"
             options={kinds.map((k) => ({ value: k, label: label("linkKinds", k, locale) }))}
             value={l.kind} onChange={(v) => onChange(links.map((x, j) => (j === i ? { ...x, kind: v } : x)))} />
@@ -759,7 +759,7 @@ function Review({ locale, data, onEdit }: { locale: Locale; data: FormState; onE
               </button>
             </div>
             {rows.length === 0 ? <p className="text-fg-secondary">{t.review.empty}</p> : (
-              <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-[180px_1fr]">
+              <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-[11.25rem_1fr]">
                 {rows.map(([k, v], i) => (
                   <div key={i} className="contents">
                     <dt className="text-[0.875rem] font-semibold text-fg-secondary">{k}</dt>

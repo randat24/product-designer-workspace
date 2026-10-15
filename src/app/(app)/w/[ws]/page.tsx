@@ -25,7 +25,7 @@ export default async function WorkspacePage({ params }: { params: Promise<{ ws: 
     <div className="min-h-screen">
       <WorkspaceHeader current={workspace.slug} />
 
-      <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(18px,4vw,56px)] py-10">
+      <main className="mx-auto flex max-w-6xl flex-col gap-10 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
         <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="projects" />
         <section aria-labelledby="new-h" className="flex flex-col gap-4 rounded-hero border border-control bg-surface p-6 md:p-8">
           <h1 id="new-h" className="page-title">{t.workspace.newProject}</h1>
@@ -84,11 +84,11 @@ function ProjectList({ wsSlug, projects, cases }: { wsSlug: string; projects: Pr
             {/* The case badge sits over the card, not inside its link: a published case opens the site. */}
             {c && c.status === "published" ? (
               <a href={`/uk/cases/${c.slug}`} target="_blank" rel="noreferrer"
-                className="absolute top-4 right-4 rounded-[4px] bg-success px-2.5 py-1 text-caption font-semibold text-on-status hover:opacity-85">
+                className="absolute top-4 right-4 rounded-[0.25rem] bg-success px-2.5 py-1 text-caption font-semibold text-on-status hover:opacity-85">
                 {t.cases.badge.published}
               </a>
             ) : c ? (
-              <span className={`absolute top-4 right-4 rounded-[4px] border px-2.5 py-1 text-caption font-semibold ${
+              <span className={`absolute top-4 right-4 rounded-[0.25rem] border px-2.5 py-1 text-caption font-semibold ${
                 c.status === "review" ? "border-warning text-warning" : "border-line text-fg-secondary"}`}>
                 {t.cases.badge[c.status]}
               </span>

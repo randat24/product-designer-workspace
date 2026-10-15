@@ -23,7 +23,7 @@ export default async function Privacy({ params }: { params: Promise<{ locale: st
   return (
     <div className={`${container} pb-20 pt-12`}>
       <JsonLd data={pageLd(locale, "/privacy", "WebPage", p.title, p.lede)} />
-      <article className="flex max-w-[760px] flex-col gap-8">
+      <article className="flex max-w-[47.5rem] flex-col gap-8">
         <header className="flex flex-col gap-4">
           <h1 className="page-title">{p.title}</h1>
           <p className="text-[clamp(1.0625rem,2vw,1.25rem)] leading-[1.55] text-fg-secondary">{p.lede}</p>

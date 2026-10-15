@@ -26,11 +26,11 @@ export default function SiteError({ reset }: { error: Error & { digest?: string 
   const locale = usePathname()?.startsWith("/en") ? "en" : "uk";
   const t = TEXT[locale];
   return (
-    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
+    <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
       <title>{t.title}</title>
       <meta name="robots" content="noindex" />
       <h1 className="t-page">{t.title}</h1>
-      <p role="alert" className="max-w-[560px] text-[1.125rem] text-fg-secondary">{t.body}</p>
+      <p role="alert" className="max-w-[35rem] text-[1.125rem] text-fg-secondary">{t.body}</p>
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={reset}
           className={button({ variant: "primary" })}>

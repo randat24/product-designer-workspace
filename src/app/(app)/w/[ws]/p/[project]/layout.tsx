@@ -49,11 +49,11 @@ export default async function ProjectLayout({ children, params }: {
 
   // content-start: on a phone the rail is a row above the page, and a short page must not stretch it.
   return (
-    <div className="grid min-h-screen grid-cols-1 content-start lg:grid-cols-[264px_minmax(0,1fr)] lg:content-stretch">
+    <div className="grid min-h-screen grid-cols-1 content-start lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:content-stretch">
       <Sidebar wsSlug={workspace.slug} wsName={workspace.name} projectSlug={project.slug} projectName={project.name} commands={commands} loadEntities={loadPaletteEntities.bind(null, workspace.slug, project.slug)} progress={progress} />
-      <main className="min-w-0 px-[clamp(18px,4vw,56px)] pt-8 pb-20 lg:pt-10">
+      <main className="min-w-0 px-[clamp(1.125rem,4vw,3.5rem)] pt-8 pb-20 lg:pt-10">
         {/* Wide screens: the work area is centred and capped, so forms and lists do not hug the rail. */}
-        <div className="mx-auto w-full max-w-[1240px]">
+        <div className="mx-auto w-full max-w-[77.5rem]">
         {project.archived_at && (
           <form action={setProjectArchived} role="status"
             className="mb-6 flex max-w-3xl flex-wrap items-center justify-between gap-3 rounded-panel border border-dashed border-line px-4 py-2.5 text-meta">

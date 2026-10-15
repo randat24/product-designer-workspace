@@ -29,7 +29,7 @@ export function SiteNav({ locale, labels, ariaLabel, mobile }: {
         <Link key={it.href} href={it.href} aria-current={it.current ? "page" : undefined}
           className={cn(
             "hit relative whitespace-nowrap py-1.5 transition-colors duration-(--duration-fast)",
-            it.current ? "text-fg before:absolute before:inset-x-0 before:-bottom-px before:h-[2px] before:bg-accent-text" : "text-fg-secondary hover:text-fg",
+            it.current ? "text-fg before:absolute before:inset-x-0 before:-bottom-px before:h-[0.125rem] before:bg-accent-text" : "text-fg-secondary hover:text-fg",
           )}>
           {it.label}
         </Link>

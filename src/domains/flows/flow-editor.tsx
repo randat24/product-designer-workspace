@@ -71,16 +71,16 @@ function StepNodeView({ data, selected }: NodeProps<StepNode>) {
 
   if (k.shape === "diamond") {
     return (
-      <div className="relative grid size-[132px] place-items-center">
-        <div aria-hidden className={cn("absolute inset-[18px] rotate-45 rounded-control border bg-surface", ring)} style={{ borderColor: k.color }} />
-        <span className="relative max-w-[88px] text-center text-caption leading-tight font-bold">{label}</span>
+      <div className="relative grid size-[8.25rem] place-items-center">
+        <div aria-hidden className={cn("absolute inset-[1.125rem] rotate-45 rounded-control border bg-surface", ring)} style={{ borderColor: k.color }} />
+        <span className="relative max-w-[5.5rem] text-center text-caption leading-tight font-bold">{label}</span>
         {handles}
       </div>
     );
   }
   if (k.shape === "pill") {
     return (
-      <div className={cn("flex min-w-[150px] max-w-[220px] items-center gap-2 rounded-full border bg-surface px-4 py-2", ring)}
+      <div className={cn("flex min-w-[9.375rem] max-w-[13.75rem] items-center gap-2 rounded-full border bg-surface px-4 py-2", ring)}
         style={{ borderColor: k.color }}>
         <span aria-hidden className="size-2.5 shrink-0 rounded-full" style={{ background: k.color }} />
         <span className="text-meta leading-tight font-bold">{label}</span>
@@ -89,7 +89,7 @@ function StepNodeView({ data, selected }: NodeProps<StepNode>) {
     );
   }
   return (
-    <div className={cn("flex w-[188px] flex-col gap-1 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.05)]", ring)}
+    <div className={cn("flex w-[11.75rem] flex-col gap-1 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.05)]", ring)}
       style={{ borderTop: `4px solid ${k.color}` }}>
       <span className="text-caption font-semibold text-fg-secondary">{kindLabel}</span>
       <span className="text-meta leading-snug font-bold">{label}</span>
@@ -219,8 +219,8 @@ function Editor({ flowId, nodes: initialNodes, edges: initialEdges, edgeCases, s
         {editable && <p className="text-caption text-fg-secondary">{f.paletteHint}</p>}
         {error && <p role="alert" className="text-meta font-semibold text-danger">{error}</p>}
 
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <div ref={wrapper} className="flow-canvas h-[68vh] min-h-[460px] overflow-hidden rounded-panel border border-line bg-subtle">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18.75rem]">
+          <div ref={wrapper} className="flow-canvas h-[68vh] min-h-[28.75rem] overflow-hidden rounded-panel border border-line bg-subtle">
             <ReactFlow<StepNode, LinkEdge>
               nodes={nodes} edges={edges} nodeTypes={nodeTypes}
               onNodesChange={onNodesChange} onEdgesChange={onEdgesChange}

@@ -31,7 +31,7 @@ export default async function NotePage({ params }: { params: Promise<{ ws: strin
   return (
     <div className="min-h-screen">
       <WorkspaceHeader current={workspace.slug} />
-      <main className="mx-auto flex max-w-4xl flex-col gap-8 px-[clamp(18px,4vw,56px)] py-10">
+      <main className="mx-auto flex max-w-4xl flex-col gap-8 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
         <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="notes" />
         <div className="flex flex-col gap-2">
           <BackLink href={`/w/${ws}/notes`} className="mb-2">{s.back}</BackLink>
