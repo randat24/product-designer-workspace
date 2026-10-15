@@ -1425,54 +1425,6 @@ export type Database = {
           },
         ]
       }
-      note_replies: {
-        Row: {
-          body: string
-          contact: string | null
-          created_at: string
-          id: string
-          locale: string
-          note_id: string
-          read_at: string | null
-          workspace_id: string
-        }
-        Insert: {
-          body: string
-          contact?: string | null
-          created_at?: string
-          id?: string
-          locale: string
-          note_id: string
-          read_at?: string | null
-          workspace_id: string
-        }
-        Update: {
-          body?: string
-          contact?: string | null
-          created_at?: string
-          id?: string
-          locale?: string
-          note_id?: string
-          read_at?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "note_replies_note_id_fkey"
-            columns: ["note_id"]
-            isOneToOne: false
-            referencedRelation: "site_notes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "note_replies_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       observations: {
         Row: {
           body_text: string
@@ -3525,17 +3477,6 @@ export type Database = {
       seed_demo_synthesis: { Args: { p_project: string }; Returns: undefined }
       site_notes: { Args: never; Returns: Json }
       site_profile: { Args: never; Returns: Json }
-      submit_note_reply: {
-        Args: {
-          p_body: string
-          p_contact: string
-          p_ip_hash: string
-          p_locale: string
-          p_number: number
-          p_secret: string
-        }
-        Returns: undefined
-      }
       submit_project_request: {
         Args: {
           p_idempotency_key: string
