@@ -24,7 +24,7 @@ export default async function ResearchMatrixPage({ params, searchParams }: {
   const matrix = guide ? await getResearchMatrix(ctx.project.id, guide.id) : null;
 
   return (
-    <div className="max-w-[1400px]">
+    <div className="max-w-[87.5rem]">
       <PageHeader title={t.research.matrix.title} lede={t.research.matrix.lede} />
       <ResearchTabs base={ctx.base} current="matrix" />
       {guides.length > 1 && (
@@ -32,7 +32,7 @@ export default async function ResearchMatrixPage({ params, searchParams }: {
           <span className="mr-1 text-meta font-semibold text-fg-secondary">{t.research.matrix.guide}:</span>
           {guides.map((g) => (
             <Link key={g.id} href={`?guide=${g.id}`} aria-current={g.id === guide?.id ? "true" : undefined}
-              className={cn("rounded-[4px] border px-3 py-0.5 text-meta font-semibold",
+              className={cn("rounded-[0.25rem] border px-3 py-0.5 text-meta font-semibold",
                 g.id === guide?.id ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg")}>
               {g.title}
             </Link>

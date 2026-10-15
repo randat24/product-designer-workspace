@@ -35,7 +35,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
   const canZoom = (it: GalleryItem | undefined) => !!it && it.device !== "mobile" && it.width > it.height;
   // Upright phone: a wide page fitted to the width is a strip a quarter of the screen high, so it opens zoomed.
   const zoomFirst = (it: GalleryItem | undefined) =>
-    canZoom(it) && window.matchMedia("(max-width: 639px) and (orientation: portrait)").matches;
+    canZoom(it) && window.matchMedia("(max-width: 39.9375rem) and (orientation: portrait)").matches;
 
   const openAt = (i: number) => {
     setIndex(i);
@@ -92,7 +92,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
 
   return (
     <>
-      <p className="mb-5 max-w-[680px] text-fg-secondary">{labels.pagesLead}</p>
+      <p className="mb-5 max-w-[42.5rem] text-fg-secondary">{labels.pagesLead}</p>
       <Thumbs items={ordered.slice(0, phoneFrom < 0 ? total : phoneFrom)} offset={0} total={total} labels={labels} onOpen={openAt}
         className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" />
       {phoneFrom >= 0 && (
@@ -117,13 +117,13 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
           className="sg-viewer flex h-full flex-col items-center gap-2 sm:gap-4 sm:p-4"
           onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
         >
-          <div className="sg-viewer-bar flex w-full max-w-[1800px] items-center justify-between gap-3 px-4 pt-2 text-[0.875rem] sm:px-0 sm:pt-0">
+          <div className="sg-viewer-bar flex w-full max-w-[112.5rem] items-center justify-between gap-3 px-4 pt-2 text-[0.875rem] sm:px-0 sm:pt-0">
             <span aria-live="polite" className="min-w-0 truncate">{counter(labels.open, index + 1, total)}{item.caption ? ` · ${item.caption}` : ""}</span>
             <button type="button" onClick={() => dialog.current?.close()} className={button({ variant: "on-dark", size: "sm" }, "shrink-0")}>
               {labels.close} ✕
             </button>
           </div>
-          <div className="flex min-h-0 w-full max-w-[1800px] flex-1 items-center gap-3">
+          <div className="flex min-h-0 w-full max-w-[112.5rem] flex-1 items-center gap-3">
             <span className="hidden sm:contents">
               <NavButton label={labels.prev} onClick={() => go(-1)} hidden={total < 2}><ChevronLeft aria-hidden className="size-6" strokeWidth={1.75} /></NavButton>
             </span>
@@ -149,10 +149,10 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
                   width={item.width}
                   height={item.height}
                   className={cn(
-                    "rounded-[4px]",
+                    "rounded-[0.25rem]",
                     zoomed
                       ? "h-full w-auto max-w-none"
-                      : cn("max-h-full w-auto object-contain", item.device === "mobile" ? "max-w-full sm:max-w-[420px]" : "max-w-full"),
+                      : cn("max-h-full w-auto object-contain", item.device === "mobile" ? "max-w-full sm:max-w-[26.25rem]" : "max-w-full"),
                   )}
                 />
               </button>
@@ -186,7 +186,7 @@ function Thumbs({ items, offset, total, labels, onOpen, className }: {
             className="group flex w-full flex-col gap-2 text-left"
             aria-label={`${counter(labels.open, offset + i + 1, total)}: ${it.alt}`}
           >
-            <span className="block overflow-hidden rounded-[8px] border border-line bg-surface transition-transform duration-(--duration-base) group-hover:-translate-y-1">
+            <span className="block overflow-hidden rounded-[0.5rem] border border-line bg-surface transition-transform duration-(--duration-base) group-hover:-translate-y-1">
               {/* eslint-disable-next-line @next/next/no-img-element -- project pages of any origin, sizes known */}
               <img {...responsive(it.src, it.width, SIZES.thumb)} alt="" width={it.width} height={it.height} loading="lazy" decoding="async" className="h-auto w-full" />
             </span>

@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: t.auth.title };
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string }> }) {
   const { next, error } = await searchParams;
   return (
-    <div className="grid min-h-screen md:grid-cols-[minmax(280px,420px)_1fr]">
+    <div className="grid min-h-screen md:grid-cols-[minmax(17.5rem,26.25rem)_1fr]">
       <aside className="flex flex-col gap-6 bg-rail p-8 text-rail-fg md:p-10">
         <FedoMark className="size-14 [--fedo-box:var(--rail-fg)] [--fedo-sym:var(--rail)]" />
         <p className="font-display text-display-sm leading-[1.1] font-bold uppercase md:text-display-md">

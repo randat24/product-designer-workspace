@@ -41,7 +41,7 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === active} tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)} onKeyDown={onKey}
             className={cn(
-              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[8px] border bg-surface p-3 text-fg transition-colors duration-(--duration-fast) sm:w-auto",
+              "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[0.5rem] border bg-surface p-3 text-fg transition-colors duration-(--duration-fast) sm:w-auto",
               i === active ? "border-accent-text shadow-[inset_0_0_0_1px_var(--accent-text)]" : "border-line hover:border-control",
             )}>
             <span className={cn("self-start font-label text-[0.6875rem] tabular-nums", i === active ? "text-accent-text" : "text-fg-secondary")}>{num(i)}</span>
@@ -54,7 +54,7 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
         const Issuer = ISSUER_ICON[a.issuerKind];
         return (
           <section key={a.icon} id={`${id}-panel-${i}`} role="tabpanel" aria-labelledby={`${id}-tab-${i}`} hidden={i !== active}
-            className="grid gap-6 rounded-[8px] border border-line bg-surface p-6 text-fg sm:p-8 md:grid-cols-[minmax(220px,300px)_1fr] md:items-center md:gap-10">
+            className="grid gap-6 rounded-[0.5rem] border border-line bg-surface p-6 text-fg sm:p-8 md:grid-cols-[minmax(13.75rem,18.75rem)_1fr] md:items-center md:gap-10">
             <div className="relative mx-auto flex h-64 w-52 items-center justify-center sm:h-80 sm:w-64">
               <span aria-hidden className="absolute aspect-square h-52 rounded-full border border-line bg-[radial-gradient(var(--line)_0.7px,transparent_0.7px)] [background-size:16px_16px] sm:h-64" />
               <AwardSvg icon={a.icon} className="relative h-[88%]" />
@@ -62,13 +62,13 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap items-center gap-3 text-[0.875rem]">
                 <span className="font-label text-[0.75rem] tabular-nums text-fg-secondary"><span className="text-accent-text">{num(i)}</span> / {String(awards.length).padStart(2, "0")}</span>
-                <span className="inline-flex items-center gap-2 rounded-[4px] border border-line px-3 py-1 text-fg-secondary">
+                <span className="inline-flex items-center gap-2 rounded-[0.25rem] border border-line px-3 py-1 text-fg-secondary">
                   <Issuer aria-hidden className="size-4" strokeWidth={1.5} />
                   {a.issuer}
                 </span>
               </div>
               <h4 className="text-[1.5rem] font-medium leading-snug tracking-[-0.03em] sm:text-[1.75rem]">{a.title}</h4>
-              <span aria-hidden className="h-[2px] w-12 bg-accent-text" />
+              <span aria-hidden className="h-[0.125rem] w-12 bg-accent-text" />
               <p className="max-w-[62ch] text-[0.9375rem] leading-[1.65] text-fg-secondary sm:text-[1rem]">{a.description}</p>
             </div>
           </section>

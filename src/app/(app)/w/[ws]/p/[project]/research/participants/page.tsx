@@ -38,7 +38,7 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ w
         <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{pt.empty}</p>
       ) : (
         <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
-          <table className="w-full min-w-[720px] border-collapse text-sm">
+          <table className="w-full min-w-[45rem] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-meta text-fg-secondary">
                 {Object.values(pt.columns).map((c) => <th key={c} scope="col" className="px-4 py-2.5 font-semibold">{c}</th>)}
@@ -66,7 +66,7 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ w
                   <td className="px-4 py-2.5">{p.consent_at ? <span className="inline-flex items-center gap-1 text-success"><Check aria-hidden className="size-4 shrink-0" />{pt.consentYes}</span> : <span className="text-fg-secondary">{pt.consentNo}</span>}</td>
                   <td className="px-4 py-2.5">
                     <span className="flex flex-wrap gap-1">
-                      {p.tags.map((tag) => <span key={tag} className="rounded-[4px] border border-line px-2 py-0.5 text-caption font-semibold">{tag}</span>)}
+                      {p.tags.map((tag) => <span key={tag} className="rounded-[0.25rem] border border-line px-2 py-0.5 text-caption font-semibold">{tag}</span>)}
                     </span>
                   </td>
                 </tr>

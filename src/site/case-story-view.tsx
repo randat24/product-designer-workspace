@@ -136,7 +136,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
       {/* Named by its columns: the chapter around it is already the «competitors» landmark. */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
       <div tabIndex={0} role="region" aria-label={`${labels.competitors}: ${data.products.join(", ")}`} className="mt-8 overflow-x-auto border border-line bg-surface">
-        <table className="w-full min-w-[560px] border-collapse text-[0.875rem]">
+        <table className="w-full min-w-[35rem] border-collapse text-[0.875rem]">
           <thead>
             <tr>
               <td className="p-3" />
@@ -153,7 +153,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
                 <th scope="row" className="p-3 text-left font-medium">{r.feature}</th>
                 {r.marks.map((m, i) => (
                   <td key={i} className="p-1.5">
-                    <span className={cn("flex h-9 items-center justify-center rounded-[3px] text-[0.75rem] font-semibold", MARK_CLASS[m])}>
+                    <span className={cn("flex h-9 items-center justify-center rounded-[0.1875rem] text-[0.75rem] font-semibold", MARK_CLASS[m])}>
                       {labels.marks[m]}
                     </span>
                   </td>
@@ -164,7 +164,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
         </table>
       </div>
       <div className="mt-3 flex items-center gap-2 font-label text-[0.6875rem] text-fg-secondary">
-        <span className={cn("h-3 w-3 rounded-[2px]", MARK_CLASS.no)} aria-hidden="true" />
+        <span className={cn("h-3 w-3 rounded-[0.125rem]", MARK_CLASS.no)} aria-hidden="true" />
         {labels.redHint}
       </div>
     </>
@@ -218,22 +218,22 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
         {data.items.map((sc) => (
           <li key={sc.title} className="flex flex-col gap-3">
             {/* A real phone screen in the frame when the case has one; a placeholder mock-up until then. */}
-            <div className="mx-auto w-full max-w-[220px] rounded-[26px] border border-line bg-surface p-2">
+            <div className="mx-auto w-full max-w-[13.75rem] rounded-[1.625rem] border border-line bg-surface p-2">
               {sc.image ? (
-                <div className="aspect-[9/17] overflow-hidden rounded-[18px] bg-canvas">
+                <div className="aspect-[9/17] overflow-hidden rounded-[1.125rem] bg-canvas">
                   {/* eslint-disable-next-line @next/next/no-img-element -- case screens of any origin, sizes known */}
                   <img {...responsive(sc.image.src, sc.image.width, SIZES.thumb)} alt={sc.image.alt} width={sc.image.width} height={sc.image.height}
                     loading="lazy" decoding="async" className="size-full object-cover object-top" />
                 </div>
               ) : (
-              <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[18px] p-3 text-on-sticky" style={{ background: sticker }}>
+              <div className="flex aspect-[9/17] flex-col gap-2 overflow-hidden rounded-[1.125rem] p-3 text-on-sticky" style={{ background: sticker }}>
                 <div className="mx-auto h-1.5 w-12 rounded-full bg-current/25" />
                 <div className="mt-2 h-4 w-2/3 rounded-full bg-current/30" />
-                <div className="h-20 rounded-[6px] bg-white/50" />
+                <div className="h-20 rounded-[0.375rem] bg-white/50" />
                 <div className="h-3 w-4/5 rounded-full bg-current/20" />
                 <div className="h-3 w-3/5 rounded-full bg-current/15" />
-                <div className="h-14 rounded-[6px] bg-white/40" />
-                <div className="mt-auto h-9 rounded-[4px] bg-current/80" />
+                <div className="h-14 rounded-[0.375rem] bg-white/40" />
+                <div className="mt-auto h-9 rounded-[0.25rem] bg-current/80" />
               </div>
               )}
             </div>
@@ -241,7 +241,7 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
             <p className="sg-case-secondary !mb-0 !text-[0.9375rem]">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-[3px] border border-line px-2 py-0.5 font-label text-[0.6875rem] text-fg-secondary">{st}</li>
+                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.6875rem] text-fg-secondary">{st}</li>
               ))}
             </ul>
           </li>

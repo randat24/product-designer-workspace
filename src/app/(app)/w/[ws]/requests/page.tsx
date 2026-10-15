@@ -32,7 +32,7 @@ export default async function RequestsPage({ params, searchParams }: {
   return (
     <div className="min-h-screen">
       <WorkspaceHeader current={workspace.slug} />
-      <main className="mx-auto flex max-w-6xl flex-col gap-8 px-[clamp(18px,4vw,56px)] py-10">
+      <main className="mx-auto flex max-w-6xl flex-col gap-8 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
         <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="requests" />
         <div className="flex flex-col gap-2">
           <h1 className="page-title">{r.title}</h1>
@@ -43,7 +43,7 @@ export default async function RequestsPage({ params, searchParams }: {
           <nav aria-label={r.statusLabel} className="flex flex-wrap gap-1.5">
             {REQUEST_FILTERS.map((f) => (
               <Link key={f} href={href({ status: f })} aria-current={f === filter ? "page" : undefined}
-                className={cn("rounded-[4px] border px-3 py-1 text-sm font-semibold",
+                className={cn("rounded-[0.25rem] border px-3 py-1 text-sm font-semibold",
                   f === filter ? "border-fg bg-fg text-canvas" : "border-line text-fg-secondary hover:border-fg hover:text-fg")}>
                 {r.filters[f]}
               </Link>
@@ -71,7 +71,7 @@ export default async function RequestsPage({ params, searchParams }: {
               return (
                 <li key={row.id}>
                   <Link href={`/w/${ws}/requests/${row.code}`}
-                    className="grid gap-x-6 gap-y-2 rounded-panel border border-line bg-surface p-4 transition-colors hover:border-fg md:grid-cols-[150px_minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-center">
+                    className="grid gap-x-6 gap-y-2 rounded-panel border border-line bg-surface p-4 transition-colors hover:border-fg md:grid-cols-[9.375rem_minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-center">
                     <span className="flex flex-col">
                       <span className="font-mono text-sm font-semibold">{row.code}</span>
                       <span className="text-meta text-fg-secondary">{date(row.submitted_at)}</span>

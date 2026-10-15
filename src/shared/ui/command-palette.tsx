@@ -99,7 +99,7 @@ export function CommandPalette({ items: staticItems, load, triggerClassName }: {
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
       <dialog ref={dialog} aria-label={t.palette.open}
         onClick={(e) => e.target === dialog.current && dialog.current.close()}
-        className="mx-auto mt-[12vh] w-[min(560px,calc(100vw-32px))] rounded-panel border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
+        className="mx-auto mt-[12vh] w-[min(35rem,calc(100vw-2rem))] rounded-panel border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/30">
         <input autoFocus value={query} placeholder={t.palette.placeholder}
           onChange={(e) => { setQuery(e.target.value); setActive(0); }}
           onKeyDown={onInputKey}

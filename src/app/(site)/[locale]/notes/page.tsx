@@ -36,7 +36,7 @@ export default async function Notes({ params }: { params: Promise<{ locale: stri
           ]),
         )}
       />
-      <header className="mb-10 flex max-w-[640px] flex-col gap-5">
+      <header className="mb-10 flex max-w-[40rem] flex-col gap-5">
         <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{String(notes.length).padStart(2, "0")} /</span>{d.nav.notes}</p>
         <h1 className="sg-heading">{d.notes.title}</h1>
         <p className="sg-lead">{d.notes.lead}</p>

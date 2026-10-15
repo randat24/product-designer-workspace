@@ -31,7 +31,7 @@ function Rows({ rows }: { rows: [string, React.ReactNode][] }) {
   const shown = rows.filter(([, v]) => v !== null && v !== undefined && v !== "" && !(Array.isArray(v) && v.length === 0));
   if (!shown.length) return <p className="text-fg-secondary">{r.none}</p>;
   return (
-    <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-[200px_1fr]">
+    <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-[12.5rem_1fr]">
       {shown.map(([k, v], i) => (
         <div key={i} className="contents">
           <dt className="text-sm font-semibold text-fg-secondary">{k}</dt>
@@ -71,7 +71,7 @@ export default async function RequestPage({ params }: { params: Params }) {
   return (
     <div className="min-h-screen">
       <WorkspaceHeader current={workspace.slug} />
-      <main className="mx-auto grid max-w-6xl gap-10 px-[clamp(18px,4vw,56px)] py-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <main className="mx-auto grid max-w-6xl gap-10 px-[clamp(1.125rem,4vw,3.5rem)] py-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <article className="flex min-w-0 flex-col gap-6">
           <Link href={`/w/${ws}/requests`} className="text-sm font-semibold text-fg-secondary hover:text-fg">{r.back}</Link>
           <header className="flex flex-col gap-3">

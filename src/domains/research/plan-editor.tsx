@@ -38,7 +38,7 @@ export function PlanEditor({ id, initial, canEdit, version = null }: { id: strin
           <legend className="mb-1.5 text-meta font-semibold text-fg-secondary">{f.questions}</legend>
           <ol className="flex flex-col gap-1.5">
             {p.questions.map((q, i) => (
-              <li key={i} className="grid grid-cols-[28px_1fr_auto] items-center gap-1">
+              <li key={i} className="grid grid-cols-[1.75rem_1fr_auto] items-center gap-1">
                 <span className="display-num text-lg text-fg-secondary tabular-nums">{i + 1}</span>
                 <Input aria-label={`${f.questions} ${i + 1}`} value={q} readOnly={!canEdit} maxLength={500} placeholder={f.questionPlaceholder}
                   onChange={(e) => update({ questions: p.questions.map((x, j) => (j === i ? e.target.value : x)) })} />

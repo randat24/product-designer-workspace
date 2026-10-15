@@ -24,7 +24,7 @@ export default async function NotesPage({ params }: { params: Promise<{ ws: stri
   return (
     <div className="min-h-screen">
       <WorkspaceHeader current={workspace.slug} />
-      <main className="mx-auto flex max-w-4xl flex-col gap-8 px-[clamp(18px,4vw,56px)] py-10">
+      <main className="mx-auto flex max-w-4xl flex-col gap-8 px-[clamp(1.125rem,4vw,3.5rem)] py-10">
         <WorkspaceTabs wsSlug={workspace.slug} workspaceId={workspace.id} current="notes" />
         <div className="flex flex-col gap-2">
           <h1 className="page-title">{n.title}</h1>
@@ -48,7 +48,7 @@ export default async function NotesPage({ params }: { params: Promise<{ ws: stri
                   return (
                     <li key={note.id} className="enter">
                       <Link href={`/w/${ws}/notes/${note.number}`}
-                        className="grid gap-x-6 gap-y-2 rounded-panel border border-line bg-surface p-4 transition-colors hover:border-fg md:grid-cols-[120px_minmax(0,1fr)_auto] md:items-start">
+                        className="grid gap-x-6 gap-y-2 rounded-panel border border-line bg-surface p-4 transition-colors hover:border-fg md:grid-cols-[7.5rem_minmax(0,1fr)_auto] md:items-start">
                         <span className="flex flex-col">
                           <span className="font-mono text-sm font-semibold">N-{note.number}</span>
                           <span className="text-meta text-fg-secondary">{date(note.published_at ?? note.created_at)}</span>
@@ -60,7 +60,7 @@ export default async function NotesPage({ params }: { params: Promise<{ ws: stri
                               .filter(Boolean).join(" · ")}
                           </span>
                         </span>
-                        <span className={cn("inline-flex h-6 items-center self-start rounded-[4px] px-2.5 text-[0.75rem] font-semibold whitespace-nowrap",
+                        <span className={cn("inline-flex h-6 items-center self-start rounded-[0.25rem] px-2.5 text-[0.75rem] font-semibold whitespace-nowrap",
                           note.status === "published" ? "bg-success/15 text-success" : "bg-subtle text-fg-secondary")}>
                           {n.status[note.status]}
                         </span>

@@ -37,7 +37,7 @@ export default async function DecisionsPage({ params }: { params: Promise<{ ws: 
         <p className="rounded-panel border border-dashed border-line p-7 text-center text-fg-secondary">{dc.empty}</p>
       ) : (
         <div className="relative overflow-x-auto rounded-panel border border-line bg-surface">
-          <table className="w-full min-w-[680px] text-left text-sm">
+          <table className="w-full min-w-[42.5rem] text-left text-sm">
             <thead className="border-b border-line text-caption font-semibold text-fg-secondary">
               <tr>
                 <th scope="col" className="px-4 py-2.5">{dc.columns.decision}</th>

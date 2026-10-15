@@ -13,7 +13,7 @@ const TONE: Record<Enums<"request_status">, string> = {
 
 export function StatusBadge({ status }: { status: Enums<"request_status"> }) {
   return (
-    <span className={cn("inline-flex h-6 items-center rounded-[4px] px-2.5 text-[0.75rem] font-semibold whitespace-nowrap", TONE[status])}>
+    <span className={cn("inline-flex h-6 items-center rounded-[0.25rem] px-2.5 text-[0.75rem] font-semibold whitespace-nowrap", TONE[status])}>
       {t.requests.status[status]}
     </span>
   );

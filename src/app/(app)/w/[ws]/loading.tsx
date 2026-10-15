@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <div className="min-h-screen">
       <div className="h-14 bg-rail" aria-hidden="true" />
-      <div className="px-[clamp(18px,4vw,56px)] pt-8">
+      <div className="px-[clamp(1.125rem,4vw,3.5rem)] pt-8">
         <PageSkeleton rows={4} />
       </div>
     </div>

@@ -51,7 +51,7 @@ export function BackToTop({ label }: { label: string }) {
       )}>
       <ArrowUp aria-hidden className="size-5" strokeWidth={1.75} />
       {/* Drawn over the 1 px border (48 × 48 border box, radius 4): pathLength 100 makes the offset a percentage. */}
-      <svg aria-hidden viewBox="0 0 48 48" className="pointer-events-none absolute -inset-px size-[calc(100%+2px)]">
+      <svg aria-hidden viewBox="0 0 48 48" className="pointer-events-none absolute -inset-px size-[calc(100%+0.125rem)]">
         <rect ref={ring} x="1" y="1" width="46" height="46" rx="3" pathLength={100} fill="none" strokeWidth="2"
           strokeDasharray="100" strokeDashoffset="100" className="stroke-accent-text" />
       </svg>

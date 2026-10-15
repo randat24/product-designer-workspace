@@ -98,7 +98,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
                 <>
                   <ul className="flex flex-wrap gap-2">
                     {item.product.disciplines.map((x) => (
-                      <li key={x} className="rounded-[4px] border border-line px-3 py-1 text-[0.8125rem]">{x}</li>
+                      <li key={x} className="rounded-[0.25rem] border border-line px-3 py-1 text-[0.8125rem]">{x}</li>
                     ))}
                   </ul>
                   {item.product.note && <p className="text-[0.8125rem] text-fg-secondary">{item.product.note}</p>}
@@ -171,7 +171,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       {figma && (
         <section id="figma" aria-labelledby="figma-h" className={`${container} mt-16 scroll-mt-28`}>
           <h2 id="figma-h" className="sg-chapter-title mb-3">{d.project.figma}</h2>
-          <p className="mb-5 max-w-[680px] text-fg-secondary">{d.project.figmaLead}</p>
+          <p className="mb-5 max-w-[42.5rem] text-fg-secondary">{d.project.figmaLead}</p>
           <CaseFigma url={figma} poster={item.cover?.src} labels={d.project} caseSlug={item.slug} />
         </section>
       )}
@@ -185,14 +185,14 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       ) : (
       <div className={`${container} mt-20`}>
         {item.sections.map((sec, i) => (
-          <section key={`${i}-${sec.title}`} className="sg-chapter grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:gap-[clamp(48px,7vw,112px)]">
+          <section key={`${i}-${sec.title}`} className="sg-chapter grid gap-6 md:grid-cols-[12.5rem_minmax(0,1fr)] md:gap-[clamp(3rem,7vw,7rem)]">
             <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(item.sections.length)}</p>
             <div className="flex min-w-0 flex-col gap-6">
               <h2>{sec.title}</h2>
               <p className="whitespace-pre-line">{sec.body}</p>
               {/* Sample cases keep a dashed slot where a picture will go; real sections bring their own. */}
               {item.sample && !sec.image && i % 2 === 1 && (
-                <div className="flex aspect-[16/9] items-center justify-center rounded-[4px] border border-dashed border-line bg-subtle text-[0.875rem] text-fg-secondary">
+                <div className="flex aspect-[16/9] items-center justify-center rounded-[0.25rem] border border-dashed border-line bg-subtle text-[0.875rem] text-fg-secondary">
                   {d.cases.placeholder}
                 </div>
               )}

@@ -78,7 +78,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
 
   return (
     <div className="flex flex-col gap-4">
-      <p aria-live="polite" className="min-h-[4.5em] rounded-[8px] bg-subtle px-4 py-3 text-[0.875rem] leading-[1.5]">
+      <p aria-live="polite" className="min-h-[4.5em] rounded-[0.5rem] bg-subtle px-4 py-3 text-[0.875rem] leading-[1.5]">
         {active && chain ? (
           <>
             <b className="font-label font-medium">{active}</b>{titles.get(active) ? ` · ${titles.get(active)}` : ""}<br />
@@ -94,7 +94,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
       <div className="sg-panel overflow-x-auto" data-spec="Слід рішень">
         <div
           ref={box}
-          className="relative grid min-w-[max(100%,1080px)] gap-[26px] p-[18px]"
+          className="relative grid min-w-[max(100%,67.5rem)] gap-[1.625rem] p-[1.125rem]"
           style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(130px, 1fr))` }}
           onMouseLeave={() => setHover(null)}
         >
@@ -111,7 +111,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
           {columns.map(({ stage, nodes }) => (
             <div key={stage} className="relative flex min-w-0 flex-col gap-2" style={{ "--c": COLOR[stage] } as React.CSSProperties}>
               <h3 className="mb-1 flex items-center gap-2 font-label text-[0.6875rem] uppercase tracking-[0.04em] text-fg-secondary">
-                <i aria-hidden className="size-[9px] rounded-[2px] bg-(--c)" />{labels.stages[stage]} · {nodes.length}
+                <i aria-hidden className="size-[0.5625rem] rounded-[0.125rem] bg-(--c)" />{labels.stages[stage]} · {nodes.length}
               </h3>
               {nodes.map((n) => (
                 <button
@@ -125,7 +125,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
                   onBlur={() => setHover(null)}
                   onClick={() => setPinned((p) => (p === n.code ? null : n.code))}
                   className={cn(
-                    "relative grid gap-0.5 rounded-[4px] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[0.7812rem] leading-[1.3] transition-opacity duration-(--duration-fast) hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
+                    "relative grid gap-0.5 rounded-[0.25rem] border border-l-[3px] border-line border-l-(--c) bg-surface px-2.5 py-2 text-left text-[0.7812rem] leading-[1.3] transition-opacity duration-(--duration-fast) hover:border-fg hover:border-l-(--c) motion-reduce:transition-none",
                     lit && !lit.has(n.code) && "opacity-30",
                     active === n.code && "ring-2 ring-fg",
                   )}

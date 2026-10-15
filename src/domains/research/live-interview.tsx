@@ -126,7 +126,7 @@ export function LiveInterview({ interviewId, code, participant, status: initialS
               {step.q.probes.length > 0 && (
                 <ul className="flex flex-wrap gap-2">
                   {step.q.probes.map((p) => (
-                    <li key={p} className="rounded-[4px] border border-line px-3 py-1 text-sm font-semibold text-fg-secondary"><CornerDownRight aria-hidden className="mr-1 inline size-4 align-[-3px]" />{p}</li>
+                    <li key={p} className="rounded-[0.25rem] border border-line px-3 py-1 text-sm font-semibold text-fg-secondary"><CornerDownRight aria-hidden className="mr-1 inline size-4 align-[-0.1875rem]" />{p}</li>
                   ))}
                 </ul>
               )}
