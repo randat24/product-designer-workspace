@@ -4,6 +4,8 @@ import "../globals.css";
 import { t } from "@/shared/i18n/uk";
 import { NetworkBanner } from "@/shared/ui/network";
 import { THEME_INIT_SCRIPT } from "@/shared/ui/theme-switch";
+import { Suspense } from "react";
+import { NavProgress } from "@/shared/ui/nav-progress";
 
 // Root of the private workspace and its login: Ukrainian UI, never in search results.
 // The public site has its own root layout in (site)/[locale].
@@ -20,6 +22,7 @@ export function ToolRoot({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
+        <Suspense><NavProgress /></Suspense>
         <NetworkBanner />
         {children}
       </body>

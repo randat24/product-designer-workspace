@@ -161,7 +161,7 @@ function Card({ card, base, canEdit, patterns, onDragStart, onDragEnd, onMove, d
         onDragStart();
       }}
       className={cn(
-        "flex flex-col gap-1.5 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.04)]",
+        "enter flex flex-col gap-1.5 rounded-control border border-line bg-surface p-2.5 shadow-[0_1px_2px_rgba(0,0,0,.04)]",
         canEdit && "cursor-grab active:cursor-grabbing", dragging && "opacity-40",
       )}
       style={{ borderLeft: `5px solid ${participantColor(card.participant?.code)}` }}>

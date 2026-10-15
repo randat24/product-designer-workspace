@@ -46,7 +46,7 @@ export default async function NotesPage({ params }: { params: Promise<{ ws: stri
                 {notes.map((note) => {
                   const parent = note.parent_id ? notes.find((x) => x.id === note.parent_id) : null;
                   return (
-                    <li key={note.id}>
+                    <li key={note.id} className="enter">
                       <Link href={`/w/${ws}/notes/${note.number}`}
                         className="grid gap-x-6 gap-y-2 rounded-panel border border-line bg-surface p-4 transition-colors hover:border-fg md:grid-cols-[120px_minmax(0,1fr)_auto] md:items-start">
                         <span className="flex flex-col">

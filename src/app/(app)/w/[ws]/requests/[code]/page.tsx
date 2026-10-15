@@ -209,7 +209,7 @@ export default async function RequestPage({ params }: { params: Params }) {
                 <p className="text-sm">{r.docVersion(d.version, dt(d.generated_at))}</p>
                 <div className="flex flex-wrap gap-3 text-sm font-semibold">
                   {(["uk", "en"] as const).map((l) => (
-                    <a key={l} href={`/w/${ws}/requests/${req.code}/brief?locale=${l}&v=${d.version}`}
+                    <a key={l} href={`/w/${ws}/requests/${req.code}/brief?locale=${l}&v=${d.version}`} data-no-progress
                       className="inline-flex items-center gap-1.5 underline underline-offset-4">
                       <FileDown aria-hidden className="size-4" />{r.pdf(l.toUpperCase())}
                     </a>
