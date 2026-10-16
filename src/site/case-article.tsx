@@ -204,7 +204,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
         <div className="mt-20"><ProductStoryView story={item.product} cta={dockCta} /></div>
       ) : item.story ? (
         <div className="mt-20">
-          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} cta={dockCta} />
+          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} clips={videos.clips} videoLabels={d.project} locale={locale} cta={dockCta} />
         </div>
       ) : (
       <div className={`${container} mt-20`}>
