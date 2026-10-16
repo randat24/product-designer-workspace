@@ -15,7 +15,7 @@ import { CaseCover, PrimaryLink, ProcessStrip, SecondaryLink, container } from "
 import { TraceGraph } from "@/site/trace-graph";
 import { INTAKE } from "@/site/intake/content";
 import { signalCopy } from "@/site/signal/home-content";
-import { button } from "@/site/signal/ui";
+import { button, sg } from "@/site/signal/ui";
 import { KindBadge } from "@/site/signal/badges";
 import { SIZES, responsive } from "@/site/img";
 
@@ -95,6 +95,18 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           <div className="sg-case-hero-bottom">
             <div className="flex flex-col gap-5">
               <p className="sg-case-deck">{item.summary}</p>
+              {/* Each tag opens the work page narrowed to it (WorkFilter reads ?tag=). */}
+              {item.tags.length > 0 && (
+                <ul className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
+                    <li key={tag}>
+                      <Link href={`/${locale}/cases?tag=${encodeURIComponent(tag)}`} className={sg.tag}>
+                        #{tag}<span className="sr-only">: {d.cases.tagLink}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
               {item.product && (
                 <>
                   <ul className="flex flex-wrap gap-2">

@@ -151,6 +151,10 @@ export type Dictionary = {
     filterAll: string;
     filterReal: string;
     filterConcept: string;
+    /** Tag chips on the work page (WorkFilter) and the tag links on a case page, which open the work page on that tag. */
+    filterTags: string;
+    tagLink: string;
+    filterEmpty: string;
   };
   /** Records per stage from the workbook, on cards and case pages (src/site/case-process.ts). */
   process: {
@@ -337,6 +341,9 @@ const uk: Dictionary = {
     filterAll: "Усі",
     filterReal: "Реальні",
     filterConcept: "Концепти",
+    filterTags: "Теги",
+    tagLink: "усі кейси з цим тегом",
+    filterEmpty: "З цим тегом кейсів такого типу немає.",
   },
   process: {
     title: "Глибина процесу",
@@ -788,6 +795,9 @@ const en: Dictionary = {
     filterAll: "All",
     filterReal: "Real",
     filterConcept: "Concepts",
+    filterTags: "Tags",
+    tagLink: "all cases with this tag",
+    filterEmpty: "No cases of this kind carry this tag.",
   },
   process: {
     title: "Process depth",
