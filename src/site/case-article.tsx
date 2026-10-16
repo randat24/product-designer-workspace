@@ -4,6 +4,8 @@ import { CONTACTS, dict, type Case, type Locale } from "@/site/content";
 import { trackAttrs } from "@/site/analytics/track";
 import { CaseFigma } from "@/site/case-figma";
 import { CaseGallery } from "@/site/case-gallery";
+import { CaseVideo } from "@/site/case-video";
+import { caseVideos } from "@/site/case-videos";
 import { figmaFileUrl } from "@/shared/lib/figma";
 import { CaseStoryView } from "@/site/case-story-view";
 import { ProductStoryView } from "@/site/product-story-view";
@@ -41,6 +43,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
   const dockCta = { href: `/${locale}/start-project`, label: INTAKE[locale].cta, track: trackAttrs("project_request_cta", { location: "case", cta: "dock" }) };
   // The snapshot is data from the tool: show the window only for a real Figma file link.
   const figma = item.figma ? figmaFileUrl(item.figma) : null;
+  const videos = caseVideos(item.slug);
   const kind = item.kind === "concept" ? d.project.concept : item.kind === "real" ? d.project.real : null;
   // 18+ cases: everything below the facts waits for the visitor's age confirmation. A product case is
   // diagrams and brand work only (no product imagery of the audience), so it is not hidden behind the gate.
@@ -171,6 +174,14 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           </div>
           <TraceGraph trace={item.trace} locale={locale}
             labels={{ ...d.fedo.trace, stages: d.process.stages, forms: { records: d.fedo.forms.records, links: d.fedo.forms.links } }} />
+        </section>
+      )}
+
+      {videos.walkthrough && (
+        <section id="video" aria-labelledby="video-h" className={`${container} mt-16 scroll-mt-28`}>
+          <h2 id="video-h" className="sg-chapter-title mb-3">{d.project.video}</h2>
+          <p className="max-w-[42.5rem] text-fg-secondary">{d.project.videoLead}</p>
+          <CaseVideo video={videos.walkthrough} labels={d.project} locale={locale} />
         </section>
       )}
 

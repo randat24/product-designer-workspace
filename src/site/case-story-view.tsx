@@ -4,6 +4,9 @@ import { CaseContents } from "./case-contents";
 import type { CaseDockCta } from "./case-dock";
 import { container } from "./ui";
 import { SIZES, responsive } from "@/site/img";
+import type { Locale } from "./content";
+import { CaseVideo } from "./case-video";
+import type { CaseVideo as Video, ClipSection } from "./case-videos";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -37,6 +40,9 @@ export function CaseStoryView({ story, labels, sticker, cta }: { story: CaseStor
             <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
             <h2 id={`${s.id}-h`}>{s.title}</h2>
             {s.body}
+            {clips?.[s.id as ClipSection] && videoLabels && locale && (
+              <CaseVideo video={clips[s.id as ClipSection]!} labels={videoLabels} locale={locale} />
+            )}
           </section>
         ))}
       </div>
