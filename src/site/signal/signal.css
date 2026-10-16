@@ -120,6 +120,7 @@
   .signal .sg-chip:hover { color: var(--sg-fg); border-color: var(--sg-control-border); }
   .signal .sg-chip[aria-pressed="true"], .signal .sg-chip:has(input:checked) { color: var(--sg-bg); background: var(--sg-fg); border-color: var(--sg-fg); }
   .signal .sg-chip:has(input:focus-visible) { outline: var(--sg-focus-width) solid var(--sg-focus); outline-offset: var(--sg-focus-offset); }
+  .signal .sg-chip:disabled { opacity: .45; cursor: default; }
   .signal .sg-chip-count { font-family: var(--sg-font-mono); font-size: 0.6875rem; opacity: .75; }
   /* A count that just changed pops once (note reactions). */
   .signal .sg-bump { display: inline-block; }
@@ -144,6 +145,13 @@
     padding: 0.3125rem 0.625rem; font-size: 0.875rem; font-weight: var(--sg-weight-medium); line-height: 1.5;
   }
   .signal .sg-badge { padding: 0.125rem 0.5rem; font-size: 0.75rem; }
+  /* A tag that links (case page → the work page on that tag): the chip's hover, and finger-sized on a phone. */
+  .signal a.sg-tag {
+    color: var(--sg-fg-secondary); text-decoration: none;
+    transition: color var(--sg-duration-fast) var(--ease-standard), border-color var(--sg-duration-fast) var(--ease-standard);
+  }
+  .signal a.sg-tag:hover { color: var(--sg-fg); border-color: var(--sg-control-border); }
+  @media (max-width: 39.99rem) { .signal a.sg-tag { min-height: 2.75rem; } }
   .signal .sg-badge--success { color: var(--sg-success); background: var(--sg-success-bg); border-color: transparent; }
   .signal .sg-badge--warning { color: var(--sg-warning); background: var(--sg-warning-bg); border-color: transparent; }
   .signal .sg-badge--danger { color: var(--sg-danger); background: var(--sg-danger-bg); border-color: transparent; }
@@ -388,6 +396,9 @@
 /* ---------- work grid ---------- */
 .signal .sg-work { background: var(--sg-surface); border-top: 1px solid var(--sg-border); }
 .signal .sg-work-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+/* Kind chips, then tag chips (work-filter.tsx). On a phone the tags are one row that scrolls on its own, from edge
+   to edge of the screen, so a dozen tags do not push the work a screen down. */
+.signal .sg-work-filter-rows { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
 .signal .sg-project-grid { display: grid; gap: 2.75rem 1.75rem; grid-template-columns: 1fr 1fr; }
 .signal .sg-project { min-width: 0; }
 .signal .sg-project--full { grid-column: 1 / -1; }
@@ -610,7 +621,13 @@
 @media (max-width: 40rem) {
   .signal .sg-section-header { display: block; margin-bottom: 1.75rem; }
   .signal .sg-section-header .sg-process-lead { margin-top: 1rem; }
-  .signal .sg-work-filters { margin-top: 1.5rem; }
+  .signal .sg-work-filter-rows { margin-top: 1.5rem; }
+  .signal .sg-work-tags {
+    /* The padding keeps the chips' focus rings inside the scroller, which clips them; the margin takes it back. */
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: -0.25rem -1.25rem -0.5rem; padding: 0.5rem 1.25rem;
+  }
+  .signal .sg-work-tags::-webkit-scrollbar { display: none; }
+  .signal .sg-work-tags .sg-chip { flex-shrink: 0; }
   .signal .sg-project-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
   .signal .sg-project-visual--lead { display: flex; flex-direction: column; gap: 1.75rem; align-items: start; padding: 1.875rem 1.5rem 0; height: 25.625rem !important; }
   .signal .sg-cover-type { font-size: 2.25rem; }
@@ -671,4 +688,23 @@
 @media (max-width: 39.99rem) {
   header[data-autohide] { transition: transform var(--duration-base) var(--ease-standard); }
   header[data-autohide][data-hidden]:not(:focus-within) { transform: translateY(-100%); }
+}
+
+/* Phone case dock (src/site/case-dock.tsx): the chapter being read and «Обговорити проєкт» at the bottom of the
+   screen, left of «Вгору» (back-to-top.tsx: 3rem wide, 1rem from the edge, above the consent banner). Comes in like
+   «Вгору»; --duration-base is 0 with reduced motion. */
+.signal .sg-case-dock { display: none; }
+@media (max-width: 39.99rem) {
+  .signal .sg-case-dock {
+    display: flex; gap: 0.5rem; position: fixed; z-index: 30; left: 1rem; right: 4.5rem; bottom: calc(var(--consent-space, 0px) + 1rem);
+    transition: opacity var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
+  }
+  .signal .sg-case-dock:not([data-shown]) { opacity: 0; transform: translateY(0.75rem); pointer-events: none; }
+  .signal .sg-case-dock__toggle { flex-shrink: 0; gap: 0.25rem; padding-inline: 0.75rem; background: var(--sg-surface); font: 0.75rem/1 var(--sg-font-mono); }
+  .signal .sg-case-dock__toggle:hover { background: var(--sg-surface-subtle); }
+  .signal .sg-case-dock__cta { flex: 1; min-width: 0; padding-inline: 0.75rem; }
+  .signal .sg-case-dock nav { position: absolute; left: 0; right: -3.5rem; bottom: calc(100% + 0.5rem); max-height: calc(100dvh - 9rem); overflow-y: auto; }
+  .signal .sg-case-dock nav a span { min-width: 1.25rem; font: 0.6875rem/1.5 var(--sg-font-mono); color: var(--sg-fg-secondary); }
+  .signal .sg-case-dock nav a[aria-current] { background: var(--sg-surface-subtle); }
+  .signal .sg-case-dock nav a[aria-current] span { color: var(--sg-accent-text); }
 }

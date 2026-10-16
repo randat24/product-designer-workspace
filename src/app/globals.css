@@ -352,7 +352,8 @@ body {
 
 /* Work filter (src/site/signal/work-filter.tsx): hide the cards of the other kind. */
 .case-filter[data-filter="real"] [data-kind="concept"],
-.case-filter[data-filter="concept"] [data-kind="real"] { display: none; }
+.case-filter[data-filter="concept"] [data-kind="real"],
+.case-filter [data-tag-out] { display: none; }
 
 /* ---------- Soft entry ----------
    A message that appears (an error, «Збережено», «опубліковано») fades in instead of popping; `.enter` also

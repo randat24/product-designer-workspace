@@ -28,7 +28,9 @@ export function SignalWork({ cases, locale, heading, location }: {
     <WorkFilter
       heading={heading}
       counts={{ all: cases.length, real, concept: cases.length - real }}
-      labels={{ group: d.cases.filter, all: d.cases.filterAll, real: d.cases.filterReal, concept: d.cases.filterConcept }}
+      labels={{ group: d.cases.filter, all: d.cases.filterAll, real: d.cases.filterReal, concept: d.cases.filterConcept, tags: d.cases.filterTags, empty: d.cases.filterEmpty }}
+      // Tags only on the work page: the home shows a selection, not the whole list.
+      tagged={location === "cases" ? cases.map((c) => ({ slug: c.slug, kind: c.kind ?? "real", tags: c.tags })) : undefined}
     >
       <div className="sg-project-grid">
         {cases.map((item, i) => (
@@ -56,7 +58,7 @@ function ProjectCard({ item, index, locale, location, variant }: {
   // The grid keeps to the SIGNAL ground: a case colour outside the sticker palette (a brand tint) falls back to stone.
   const tone = item.sticker.startsWith("var(--s") ? item.sticker : "var(--s7)";
   return (
-    <article className={cn("sg-project", variant !== "half" && "sg-project--full")} data-kind={item.kind ?? "real"}>
+    <article className={cn("sg-project", variant !== "half" && "sg-project--full")} data-kind={item.kind ?? "real"} data-slug={item.slug}>
       {/* The picture repeats the title link for the pointer; keyboard and screen readers get the one in the title. */}
       <Link href={href} tabIndex={-1} aria-hidden="true" {...track}
         className={cn("sg-project-visual", variant === "lead" && "sg-project-visual--lead")}

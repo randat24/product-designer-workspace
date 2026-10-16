@@ -2,11 +2,12 @@ import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjectContext } from "@/domains/projects";
-import { asEvents, asStrings, getScreenByCode, listScreenDecisions, DECISION_STATUSES } from "@/domains/design";
+import { getCurrentUser, getProjectContext } from "@/domains/projects";
+import { asEvents, asStrings, getScreenByCode, listScreenDecisions, listScreenReviews, reviewCriteria, DECISION_STATUSES } from "@/domains/design";
 import { createDecision } from "@/domains/design/actions";
 import { DeleteScreenButton, ScreenEditor } from "@/domains/design/editors";
 import { StatesPanel } from "@/domains/design/states-panel";
+import { ReviewPanel } from "@/domains/design/review-panel";
 import { listReminders } from "@/domains/competitors";
 import { RemindersPanel } from "@/domains/competitors/reminders";
 import { Screenshots } from "@/domains/competitors/screenshots";
@@ -31,7 +32,9 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
   if (!ctx) notFound();
   const s = await getScreenByCode(ctx.project.id, decodeURIComponent(code));
   if (!s) notFound();
-  const [decisions, reminders] = await Promise.all([listScreenDecisions(s.id), listReminders(ctx.project.id)]);
+  const [decisions, reminders, reviews, user] = await Promise.all([
+    listScreenDecisions(s.id), listReminders(ctx.project.id), listScreenReviews(s.id), getCurrentUser(),
+  ]);
   const missing = s.states.filter((x) => ["loading", "empty", "error"].includes(x.kind) && x.status === "missing").length;
 
   return (
@@ -53,6 +56,8 @@ export default async function ScreenPage({ params }: { params: Promise<Params> }
         }} />
 
         <StatesPanel screenId={s.id} initial={s.states} canEdit={ctx.canEdit} />
+
+        <ReviewPanel screenId={s.id} criteria={reviewCriteria()} initial={reviews} userId={user?.id ?? null} canEdit={ctx.canEdit} />
 
         <section aria-labelledby="used-h" className="flex flex-col gap-3">
           <h2 id="used-h" className="text-heading font-semibold">{sc.usedIn}</h2>

@@ -15,6 +15,27 @@ export const SCREEN_STATUSES = opts(t.screens.statuses);
 export const STATE_KINDS = opts(t.screens.states.kinds);
 export const STATE_STATUSES = opts(t.screens.states.statuses);
 export const DECISION_STATUSES = opts(t.decisions.statuses);
+/**
+ * Criteria of a screen review: the ids of the six groups of the laws of UX (src/domains/ux-laws), each a column of
+ * `screen_reviews` (migration 027) scored 1–10. Their titles and questions come from the groups on the server
+ * (reviewCriteria in queries.ts), so the laws' text stays out of the browser bundle.
+ */
+export const REVIEW_KEYS = ["familiar", "choice", "memory", "gestalt", "motion", "quality"] as const;
+export type ReviewCriterion = (typeof REVIEW_KEYS)[number];
+export type ReviewCriterionInfo = { key: ReviewCriterion; title: string; question: string };
+export type ReviewScores = Partial<Record<ReviewCriterion, number | null>>;
+const score = z.number().int().min(1).max(10).nullable();
+export const reviewPatchSchema = z.object({
+  familiar: score, choice: score, memory: score, gestalt: score, motion: score, quality: score,
+  note: z.string().trim().max(1000).transform((v) => v || null),
+}).partial();
+
+/** The average of the scored criteria, one decimal; null when none is scored. */
+export function reviewOverall(scores: ReviewScores): number | null {
+  const filled = Object.values(scores).filter((v): v is number => typeof v === "number");
+  return filled.length ? Math.round((filled.reduce((a, b) => a + b, 0) / filled.length) * 10) / 10 : null;
+}
+
 /** States whose absence the overview reports (docs/MVP.md §3). */
 export const KEY_STATES: StateKind[] = ["loading", "empty", "error"];
 

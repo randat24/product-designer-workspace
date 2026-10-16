@@ -17,7 +17,7 @@ import { CaseCover, PrimaryLink, ProcessStrip, SecondaryLink, container } from "
 import { TraceGraph } from "@/site/trace-graph";
 import { INTAKE } from "@/site/intake/content";
 import { signalCopy } from "@/site/signal/home-content";
-import { button } from "@/site/signal/ui";
+import { button, sg } from "@/site/signal/ui";
 import { KindBadge } from "@/site/signal/badges";
 import { SIZES, responsive } from "@/site/img";
 
@@ -40,6 +40,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
 }) {
   const d = dict(locale);
   const s = signalCopy(locale);
+  const dockCta = { href: `/${locale}/start-project`, label: INTAKE[locale].cta, track: trackAttrs("project_request_cta", { location: "case", cta: "dock" }) };
   // The snapshot is data from the tool: show the window only for a real Figma file link.
   const figma = item.figma ? figmaFileUrl(item.figma) : null;
   const videos = caseVideos(item.slug);
@@ -97,6 +98,18 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           <div className="sg-case-hero-bottom">
             <div className="flex flex-col gap-5">
               <p className="sg-case-deck">{item.summary}</p>
+              {/* Each tag opens the work page narrowed to it (WorkFilter reads ?tag=). */}
+              {item.tags.length > 0 && (
+                <ul className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
+                    <li key={tag}>
+                      <Link href={`/${locale}/cases?tag=${encodeURIComponent(tag)}`} className={sg.tag}>
+                        #{tag}<span className="sr-only">: {d.cases.tagLink}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
               {item.product && (
                 <>
                   <ul className="flex flex-wrap gap-2">
@@ -188,10 +201,10 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       )}
 
       {item.product ? (
-        <div className="mt-20"><ProductStoryView story={item.product} /></div>
+        <div className="mt-20"><ProductStoryView story={item.product} cta={dockCta} /></div>
       ) : item.story ? (
         <div className="mt-20">
-          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} clips={videos.clips} videoLabels={d.project} locale={locale} />
+          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} cta={dockCta} />
         </div>
       ) : (
       <div className={`${container} mt-20`}>
@@ -222,7 +235,8 @@ export function CaseArticle({ item, locale, next, position, banner }: {
 
       </>)}
 
-      <div className={container}>
+      {/* data-case-end: the phone case dock (case-dock.tsx) steps aside while the closing call to action is on screen. */}
+      <div className={container} data-case-end="">
         {next && (
           // The next case: the way out of a case is into the next piece of work.
           <section className="sg-case-next" aria-labelledby="case-next-title">

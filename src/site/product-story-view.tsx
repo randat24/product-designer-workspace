@@ -5,6 +5,7 @@ import {
 import { cn } from "@/shared/lib/cn";
 import type { GalleryItem } from "./content";
 import { CaseContents } from "./case-contents";
+import type { CaseDockCta } from "./case-dock";
 import type { BrandShape, ProductSection, ProductStory, TrustIcon } from "./product-story";
 import { container } from "./ui";
 import { SIZES, responsive } from "@/site/img";
@@ -16,11 +17,11 @@ const num = (i: number) => String(i + 1).padStart(2, "0");
  * (diagrams for roles, architecture, flows and money; a navy band for the brand). The case's own
  * accent (`.nw` in globals.css) comes from the product's logo blue.
  */
-export function ProductStoryView({ story }: { story: ProductStory }) {
+export function ProductStoryView({ story, cta }: { story: ProductStory; cta?: CaseDockCta }) {
   const sections = story.sections.filter((s) => s.kind !== "screens" || s.items.length > 0);
   return (
     <div className={`nw ${container} sg-case-body`}>
-      <CaseContents label={story.contents} sections={sections} />
+      <CaseContents label={story.contents} sections={sections} cta={cta} />
       <div className="min-w-0">
         {sections.map((s, i) => <Section key={s.id} section={s} index={i} total={sections.length} />)}
       </div>
