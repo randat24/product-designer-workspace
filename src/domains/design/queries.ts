@@ -4,6 +4,8 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { listScreenshots } from "@/domains/competitors";
 import { resolveEntities } from "@/domains/trace/queries";
 import type { EntityType } from "@/shared/entities";
+import { UX_LAW_GROUPS } from "@/domains/ux-laws";
+import { REVIEW_KEYS, type ReviewCriterion, type ReviewCriterionInfo } from "./schema";
 
 /** Screens of a project with list numbers: missing key states, flows, upstream links, decisions. */
 export const listScreens = cache(async (projectId: string) => {
@@ -55,6 +57,38 @@ export const getScreenByCode = cache(async (projectId: string, code: string) => 
   }
   return { ...screen, states: states.data as ScreenState[], flows: [...flows.values()], previews };
 });
+
+export type ScreenReview = {
+  id: string;
+  reviewerId: string;
+  name: string | null;
+  scores: Record<ReviewCriterion, number | null>;
+  note: string | null;
+};
+
+/** The review's criteria: each group of the laws of UX, its title, and its lede as the question. */
+export function reviewCriteria(): ReviewCriterionInfo[] {
+  return REVIEW_KEYS.map((key) => {
+    const g = UX_LAW_GROUPS.find((x) => x.id === key)!;
+    return { key, title: g.title, question: g.lede };
+  });
+}
+
+/** Reviews of a screen (migration 027), oldest first, with the reviewer's name. */
+export async function listScreenReviews(screenId: string): Promise<ScreenReview[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("screen_reviews")
+    .select("id, reviewer_id, familiar, choice, memory, gestalt, motion, quality, note, profiles!screen_reviews_reviewer_id_fkey(full_name)")
+    .eq("screen_id", screenId).order("created_at");
+  if (error) throw error;
+  return data.map((r) => ({
+    id: r.id,
+    reviewerId: r.reviewer_id,
+    name: r.profiles?.full_name ?? null,
+    scores: { familiar: r.familiar, choice: r.choice, memory: r.memory, gestalt: r.gestalt, motion: r.motion, quality: r.quality },
+    note: r.note,
+  }));
+}
 
 /** Decisions that implement a screen (upstream design_decision → screen). */
 export async function listScreenDecisions(screenId: string) {

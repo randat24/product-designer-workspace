@@ -2753,6 +2753,106 @@ export type Database = {
           },
         ]
       }
+      screen_reviews: {
+        Row: {
+          choice: number | null
+          created_at: string
+          created_by: string | null
+          familiar: number | null
+          gestalt: number | null
+          id: string
+          memory: number | null
+          motion: number | null
+          note: string | null
+          project_id: string
+          quality: number | null
+          reviewer_id: string
+          screen_id: string
+          updated_at: string
+          updated_by: string | null
+          workspace_id: string
+        }
+        Insert: {
+          choice?: number | null
+          created_at?: string
+          created_by?: string | null
+          familiar?: number | null
+          gestalt?: number | null
+          id?: string
+          memory?: number | null
+          motion?: number | null
+          note?: string | null
+          project_id: string
+          quality?: number | null
+          reviewer_id?: string
+          screen_id: string
+          updated_at?: string
+          updated_by?: string | null
+          workspace_id: string
+        }
+        Update: {
+          choice?: number | null
+          created_at?: string
+          created_by?: string | null
+          familiar?: number | null
+          gestalt?: number | null
+          id?: string
+          memory?: number | null
+          motion?: number | null
+          note?: string | null
+          project_id?: string
+          quality?: number | null
+          reviewer_id?: string
+          screen_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "screen_reviews_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screen_reviews_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screen_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screen_reviews_screen_id_fkey"
+            columns: ["screen_id"]
+            isOneToOne: false
+            referencedRelation: "screens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screen_reviews_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screen_reviews_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       screen_states: {
         Row: {
           created_at: string

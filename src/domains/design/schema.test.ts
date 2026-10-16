@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { decisionSchema, screenSpecSchema } from "./schema";
+import { UX_LAW_GROUPS } from "@/domains/ux-laws";
+import { decisionSchema, REVIEW_KEYS, reviewOverall, reviewPatchSchema, screenSpecSchema } from "./schema";
 
 const screen = (figma_url: string | null) => ({
   name: "Checkout", content_hierarchy: [], analytics_events: [], status: "sketch" as const, figma_url,
@@ -40,5 +41,23 @@ describe("decisionSchema", () => {
   });
   it("rejects a malformed date", () => {
     expect(decisionSchema.safeParse({ title: "x", alternatives: [], status: "proposed", decided_at: "30.09.2026" }).success).toBe(false);
+  });
+});
+
+describe("screen review", () => {
+  it("averages only the scored criteria", () => {
+    expect(reviewOverall({ familiar: 8, choice: 7, memory: null })).toBe(7.5);
+    expect(reviewOverall({ familiar: 7, choice: 7, memory: 8 })).toBe(7.3);
+    expect(reviewOverall({})).toBeNull();
+  });
+  it("takes scores 1–10 or empty, and an empty note as none", () => {
+    expect(reviewPatchSchema.safeParse({ familiar: 10, quality: null }).success).toBe(true);
+    expect(reviewPatchSchema.safeParse({ familiar: 11 }).success).toBe(false);
+    expect(reviewPatchSchema.safeParse({ choice: 0 }).success).toBe(false);
+    expect(reviewPatchSchema.safeParse({ motion: 7.5 }).success).toBe(false);
+    expect(reviewPatchSchema.parse({ note: "   " }).note).toBeNull();
+  });
+  it("scores each group of the laws of UX, in their order (the columns of migration 027)", () => {
+    expect([...REVIEW_KEYS]).toEqual(UX_LAW_GROUPS.map((g) => g.id));
   });
 });

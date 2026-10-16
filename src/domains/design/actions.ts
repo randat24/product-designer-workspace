@@ -10,7 +10,7 @@ import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update
 import { t } from "@/shared/i18n/uk";
 import { optionalHttpUrl } from "@/shared/lib/url";
 import { parseKeepingStored } from "@/shared/lib/keep-stored";
-import { decisionSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
+import { decisionSchema, reviewPatchSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
 
 const refresh = () => revalidatePath("/w/[ws]/p/[project]", "layout");
 type Result = { ok: true; id?: string; version?: string | null } | Failure;
@@ -84,6 +84,37 @@ export async function saveState(id: string, patch: z.input<typeof statePatch>): 
   // Row-level security filters instead of failing: no row back means nothing was written.
   if (error || !data.length) return denied();
   if (p.data.status) refresh();
+  return { ok: true };
+}
+
+/** Writes the caller's own review of a screen: created on the first score, then updated (one per reviewer). */
+export async function saveReview(screenId: string, patch: z.input<typeof reviewPatchSchema>): Promise<Result> {
+  const p = reviewPatchSchema.safeParse(patch);
+  if (!uuid.safeParse(screenId).success || !p.success) return invalid();
+  const supabase = await createClient();
+  const [{ data: screen }, { data: auth }] = await Promise.all([
+    supabase.from("screens").select("project_id").eq("id", screenId).maybeSingle(),
+    supabase.auth.getUser(),
+  ]);
+  if (!auth.user) return denied();
+  if (!screen) return invalid();
+  const { data, error } = await supabase.from("screen_reviews")
+    .upsert({ project_id: screen.project_id, screen_id: screenId, reviewer_id: auth.user.id, ...p.data }, { onConflict: "screen_id,reviewer_id" })
+    .select("id").single();
+  // 42501: row-level security (not an editor); 23xxx: a constraint the same values will break again.
+  if (error) return error.code === "42501" ? denied() : error.code?.startsWith("23") ? invalid() : transient();
+  return { ok: true, id: data.id };
+}
+
+/** Removes the caller's own review of a screen; row-level security keeps everyone else's out of reach. */
+export async function deleteReview(screenId: string): Promise<Result> {
+  if (!uuid.safeParse(screenId).success) return invalid();
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return denied();
+  const { data, error } = await supabase.from("screen_reviews").delete()
+    .eq("screen_id", screenId).eq("reviewer_id", auth.user.id).select("id");
+  if (error || !data.length) return denied();
   return { ok: true };
 }
 
