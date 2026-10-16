@@ -16,7 +16,17 @@ type Section = { id: string; title: string; body: React.ReactNode };
  * Sections of a published case, in the order of the tool's chain; missing blocks are skipped. Laid out as the
  * SIGNAL case: contents in a sticky column, chapters under a rule, the accent only on codes and numbers.
  */
-export function CaseStoryView({ story, labels, sticker, cta }: { story: CaseStory; labels: StoryLabels; sticker: string; cta?: CaseDockCta }) {
+export function CaseStoryView({ story, labels, sticker, clips, videoLabels, locale, cta }: {
+  story: CaseStory;
+  labels: StoryLabels;
+  sticker: string;
+  /** Screen recordings shown at the end of their chapter (src/site/case-videos.ts). */
+  clips?: Partial<Record<ClipSection, Video>>;
+  videoLabels?: { videoPlay: string; videoPause: string };
+  locale?: Locale;
+  /** The phone case dock's call to action (case-dock.tsx). */
+  cta?: CaseDockCta;
+}) {
   const sections: Section[] = [
     { id: "overview", title: labels.overview, body: <Overview story={story} labels={labels} /> },
     { id: "process", title: labels.process, body: <Process story={story} /> },
