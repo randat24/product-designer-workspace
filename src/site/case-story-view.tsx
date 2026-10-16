@@ -3,6 +3,9 @@ import type { CaseStory, Mark, StoryLabels } from "./case-story";
 import { CaseContents } from "./case-contents";
 import { container } from "./ui";
 import { SIZES, responsive } from "@/site/img";
+import type { Locale } from "./content";
+import { CaseVideo } from "./case-video";
+import type { CaseVideo as Video, ClipSection } from "./case-videos";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -12,7 +15,15 @@ type Section = { id: string; title: string; body: React.ReactNode };
  * Sections of a published case, in the order of the tool's chain; missing blocks are skipped. Laid out as the
  * SIGNAL case: contents in a sticky column, chapters under a rule, the accent only on codes and numbers.
  */
-export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; labels: StoryLabels; sticker: string }) {
+export function CaseStoryView({ story, labels, sticker, clips, videoLabels, locale }: {
+  story: CaseStory;
+  labels: StoryLabels;
+  sticker: string;
+  /** Screen recordings shown at the end of their chapter (src/site/case-videos.ts). */
+  clips?: Partial<Record<ClipSection, Video>>;
+  videoLabels?: { videoPlay: string; videoPause: string };
+  locale?: Locale;
+}) {
   const sections: Section[] = [
     { id: "overview", title: labels.overview, body: <Overview story={story} labels={labels} /> },
     { id: "process", title: labels.process, body: <Process story={story} /> },
@@ -36,6 +47,9 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
             <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
             <h2 id={`${s.id}-h`}>{s.title}</h2>
             {s.body}
+            {clips?.[s.id as ClipSection] && videoLabels && locale && (
+              <CaseVideo video={clips[s.id as ClipSection]!} labels={videoLabels} locale={locale} />
+            )}
           </section>
         ))}
       </div>

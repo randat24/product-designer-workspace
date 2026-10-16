@@ -279,6 +279,11 @@ export type Dictionary = {
     figmaLoad: string;
     figmaOpen: string;
     figmaFrame: string;
+    /** The walkthrough recording above the project pages (src/site/case-videos.ts). */
+    video: string;
+    videoLead: string;
+    videoPlay: string;
+    videoPause: string;
     /** "{n}" and "{total}" are filled in by the gallery. */
     open: string;
     close: string;
@@ -731,6 +736,10 @@ const uk: Dictionary = {
     figmaLoad: "Завантажити файл тут",
     figmaOpen: "Відкрити у Figma",
     figmaFrame: "Файл проєкту у Figma",
+    video: "Як це працює",
+    videoLead: "Запис інструмента з демо-проєктом, без звуку. Інтерфейс англійською, як на скриншотах нижче.",
+    videoPlay: "Відтворити відео",
+    videoPause: "Зупинити відео",
     open: "Сторінка {n} з {total}",
     close: "Закрити",
     prev: "Попередня сторінка",
@@ -1181,6 +1190,10 @@ const en: Dictionary = {
     figmaLoad: "Load the file here",
     figmaOpen: "Open in Figma",
     figmaFrame: "Project file in Figma",
+    video: "How it works",
+    videoLead: "A recording of the tool with the demo project, no sound.",
+    videoPlay: "Play the video",
+    videoPause: "Pause the video",
     open: "Page {n} of {total}",
     close: "Close",
     prev: "Previous page",
