@@ -1,6 +1,7 @@
 import { cn } from "@/shared/lib/cn";
 import type { CaseStory, Mark, StoryLabels } from "./case-story";
 import { CaseContents } from "./case-contents";
+import type { CaseDockCta } from "./case-dock";
 import { container } from "./ui";
 import { SIZES, responsive } from "@/site/img";
 
@@ -12,7 +13,7 @@ type Section = { id: string; title: string; body: React.ReactNode };
  * Sections of a published case, in the order of the tool's chain; missing blocks are skipped. Laid out as the
  * SIGNAL case: contents in a sticky column, chapters under a rule, the accent only on codes and numbers.
  */
-export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; labels: StoryLabels; sticker: string }) {
+export function CaseStoryView({ story, labels, sticker, cta }: { story: CaseStory; labels: StoryLabels; sticker: string; cta?: CaseDockCta }) {
   const sections: Section[] = [
     { id: "overview", title: labels.overview, body: <Overview story={story} labels={labels} /> },
     { id: "process", title: labels.process, body: <Process story={story} /> },
@@ -29,7 +30,7 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
 
   return (
     <div className={`${container} sg-case-body`}>
-      <CaseContents label={labels.contents} sections={sections} />
+      <CaseContents label={labels.contents} sections={sections} cta={cta} />
       <div className="min-w-0">
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="sg-chapter" aria-labelledby={`${s.id}-h`}>

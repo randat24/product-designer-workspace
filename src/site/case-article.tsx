@@ -38,6 +38,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
 }) {
   const d = dict(locale);
   const s = signalCopy(locale);
+  const dockCta = { href: `/${locale}/start-project`, label: INTAKE[locale].cta, track: trackAttrs("project_request_cta", { location: "case", cta: "dock" }) };
   // The snapshot is data from the tool: show the window only for a real Figma file link.
   const figma = item.figma ? figmaFileUrl(item.figma) : null;
   const kind = item.kind === "concept" ? d.project.concept : item.kind === "real" ? d.project.real : null;
@@ -177,10 +178,10 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       )}
 
       {item.product ? (
-        <div className="mt-20"><ProductStoryView story={item.product} /></div>
+        <div className="mt-20"><ProductStoryView story={item.product} cta={dockCta} /></div>
       ) : item.story ? (
         <div className="mt-20">
-          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} />
+          <CaseStoryView story={item.story} labels={d.story} sticker={item.sticker} cta={dockCta} />
         </div>
       ) : (
       <div className={`${container} mt-20`}>
@@ -211,7 +212,8 @@ export function CaseArticle({ item, locale, next, position, banner }: {
 
       </>)}
 
-      <div className={container}>
+      {/* data-case-end: the phone case dock (case-dock.tsx) steps aside while the closing call to action is on screen. */}
+      <div className={container} data-case-end="">
         {next && (
           // The next case: the way out of a case is into the next piece of work.
           <section className="sg-case-next" aria-labelledby="case-next-title">

@@ -672,3 +672,22 @@
   header[data-autohide] { transition: transform var(--duration-base) var(--ease-standard); }
   header[data-autohide][data-hidden]:not(:focus-within) { transform: translateY(-100%); }
 }
+
+/* Phone case dock (src/site/case-dock.tsx): the chapter being read and «Обговорити проєкт» at the bottom of the
+   screen, left of «Вгору» (back-to-top.tsx: 3rem wide, 1rem from the edge, above the consent banner). Comes in like
+   «Вгору»; --duration-base is 0 with reduced motion. */
+.signal .sg-case-dock { display: none; }
+@media (max-width: 39.99rem) {
+  .signal .sg-case-dock {
+    display: flex; gap: 0.5rem; position: fixed; z-index: 30; left: 1rem; right: 4.5rem; bottom: calc(var(--consent-space, 0px) + 1rem);
+    transition: opacity var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
+  }
+  .signal .sg-case-dock:not([data-shown]) { opacity: 0; transform: translateY(0.75rem); pointer-events: none; }
+  .signal .sg-case-dock__toggle { flex-shrink: 0; gap: 0.25rem; padding-inline: 0.75rem; background: var(--sg-surface); font: 0.75rem/1 var(--sg-font-mono); }
+  .signal .sg-case-dock__toggle:hover { background: var(--sg-surface-subtle); }
+  .signal .sg-case-dock__cta { flex: 1; min-width: 0; padding-inline: 0.75rem; }
+  .signal .sg-case-dock nav { position: absolute; left: 0; right: -3.5rem; bottom: calc(100% + 0.5rem); max-height: calc(100dvh - 9rem); overflow-y: auto; }
+  .signal .sg-case-dock nav a span { min-width: 1.25rem; font: 0.6875rem/1.5 var(--sg-font-mono); color: var(--sg-fg-secondary); }
+  .signal .sg-case-dock nav a[aria-current] { background: var(--sg-surface-subtle); }
+  .signal .sg-case-dock nav a[aria-current] span { color: var(--sg-accent-text); }
+}
