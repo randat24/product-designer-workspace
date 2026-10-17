@@ -27,7 +27,7 @@ export function SignalServices({ locale, index }: { locale: Locale; index: numbe
         <div className="sg-section-header">
           <div>
             <SectionEyebrow index={index}>{v.eyebrow}</SectionEyebrow>
-            <h2 className="sg-heading" id="services-heading">{v.title[0]}<br />{v.title[1]}</h2>
+            <h2 className="sg-heading" id="services-heading"><span className="sg-line"><span>{v.title[0]}</span></span>{" "}<span className="sg-line"><span>{v.title[1]}</span></span></h2>
           </div>
           <p className="sg-process-lead">{v.lead}</p>
         </div>
@@ -64,7 +64,7 @@ export function SignalAbout({ locale, index }: { locale: Locale; index: number }
           alt={PHOTO.alt[locale]} width={PHOTO.portrait.width} height={PHOTO.portrait.height} loading="lazy" decoding="async" />
       </div>
       <div className="min-w-0">
-        <h2 className="sg-heading sg-about-title" id="about-heading">{a.title[0]}<br />{a.title[1]}</h2>
+        <h2 className="sg-heading sg-about-title" id="about-heading"><span className="sg-line"><span>{a.title[0]}</span></span>{" "}<span className="sg-line"><span>{a.title[1]}</span></span></h2>
         <p className="sg-about-text">{a.text}</p>
         <dl className="sg-about-facts">
           {a.facts.map((f) => (
@@ -90,7 +90,7 @@ export function SignalProcess({ locale, index }: { locale: Locale; index: number
         <div className="sg-section-header">
           <div>
             <SectionEyebrow index={index}>{p.eyebrow}</SectionEyebrow>
-            <h2 className="sg-heading" id="process-heading">{p.title[0]}<br />{p.title[1]}</h2>
+            <h2 className="sg-heading" id="process-heading"><span className="sg-line"><span>{p.title[0]}</span></span>{" "}<span className="sg-line"><span>{p.title[1]}</span></span></h2>
           </div>
           <p className="sg-process-lead">{p.lead}</p>
         </div>
