@@ -324,7 +324,33 @@
     }
   }
 }
+/* Headings line by line (the Awwwards Sites of the Day do it with GSAP SplitText): each line of the hero and
+   section headings slides up from under its own lower edge, the next one a step later. The copy already holds
+   the lines, so no script splits them. Movement only, like the reveal above. The clip exists only where a line
+   really moves (no clip in a browser without scroll-driven animations or with reduced motion), and leaves 0.35em
+   below each line for descenders (у, р, д); the line starts 140% down, below the clip. The hero plays on load (it
+   is on screen from the start), each line --duration-base long and --duration-fast after the one before;
+   section headings follow the scroll. */
+.signal .sg-line { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .signal .sg-hero h1 .sg-line { clip-path: inset(-1em -1em -0.35em); }
+  .signal .sg-hero h1 .sg-line > * { display: inline-block; animation: sg-line-rise var(--duration-base) var(--ease-standard) both; }
+  .signal .sg-hero h1 :nth-child(2 of .sg-line) > * { animation-delay: var(--duration-fast); }
+  .signal .sg-hero h1 :nth-child(3 of .sg-line) > * { animation-delay: calc(var(--duration-fast) * 2); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .signal .sg-heading { view-timeline: --sg-heading; }
+    .signal .sg-heading .sg-line { clip-path: inset(-1em -1em -0.35em); }
+    .signal .sg-heading .sg-line > * { display: inline-block; }
+    .signal .sg-heading .sg-line > * {
+      animation: sg-line-rise linear both; animation-timeline: --sg-heading; animation-range: entry 0% entry 70%;
+    }
+    .signal .sg-heading .sg-line + .sg-line > * { animation-range: entry 20% entry 100%; }
+  }
+}
 @keyframes sg-reveal { from { transform: translateY(2rem); } }
+@keyframes sg-line-rise { from { transform: translateY(140%); } }
 @keyframes sg-rise { from { opacity: 0; transform: translateY(0.5rem); } }
 @keyframes sg-bump { 40% { transform: translateY(-0.1875rem) scale(1.25); } }
 @keyframes sg-on { to { opacity: 1; } }
