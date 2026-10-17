@@ -306,13 +306,15 @@
 }
 @container (max-height: 9.375rem) { .signal .sg-hero-stage .sg-trace { display: none; } }
 
-/* Motion: the records come in one after another, then the signal runs down the line. None under reduced motion. */
+/* Motion: the records come in one after another (a short stagger, --duration-fast / 2 apart, so the decision at
+   the end is there within half a second), then the signal runs down the line three times and stops: endless
+   motion beside text keeps pulling the eye (WCAG 2.2.2). None under reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-  .signal .sg-trace-node { animation: sg-rise .5s var(--ease-standard) both; }
-  .signal .sg-trace-node:nth-child(2) { animation-delay: .15s; }
-  .signal .sg-trace-node:nth-child(3) { animation-delay: .3s; }
-  .signal .sg-trace-node:nth-child(4) { animation-delay: .45s; }
-  .signal .sg-trace-list::after { animation: sg-on .3s 1s forwards, sg-signal 3.2s 1s ease-in-out infinite; }
+  .signal .sg-trace-node { animation: sg-rise var(--duration-base) var(--ease-standard) both; }
+  .signal .sg-trace-node:nth-child(2) { animation-delay: calc(var(--duration-fast) / 2); }
+  .signal .sg-trace-node:nth-child(3) { animation-delay: var(--duration-fast); }
+  .signal .sg-trace-node:nth-child(4) { animation-delay: calc(var(--duration-fast) * 1.5); }
+  .signal .sg-trace-list::after { animation: sg-on var(--duration-base) .5s forwards, sg-signal 3.2s .5s ease-in-out 3; }
 }
 /* Scroll reveal: a block rises into place as it scrolls into view (scroll-driven animation, no JS). Movement
    only, no fade, so text is never half-transparent when checked or read; browsers without view timelines and
@@ -445,19 +447,24 @@
 .signal .sg-shots { display: flex; justify-content: center; gap: 1.25rem; width: 100%; height: 100%; min-width: 0; }
 .signal .sg-shot {
   align-self: flex-start; width: 92%; max-width: none; height: auto; border: 1px solid rgb(25 27 24 / .18); border-radius: 0.4375rem;
-  box-shadow: -16px 28px 48px rgb(25 27 24 / .16); transform: rotate(-4deg) translateY(6%); transition: transform .5s;
+  box-shadow: -16px 28px 48px rgb(25 27 24 / .16); transform: rotate(-4deg) translateY(6%); transition: transform var(--duration-base) var(--ease-standard);
 }
 .signal .sg-project-visual--lead .sg-shots { align-items: center; }
 .signal .sg-project-visual--lead .sg-shot { width: 118%; transform: rotate(-6deg) translateX(1%); }
-.signal .sg-project-visual:hover .sg-shot { transform: rotate(-2deg) translateY(4%); }
-.signal .sg-project-visual--lead:hover .sg-shot { transform: rotate(-3deg) translateX(-1%); }
+/* The tilt on hover only for a mouse: on a touch screen a tap would leave it stuck just as the case opens. */
+@media (hover: hover) and (pointer: fine) {
+  .signal .sg-project-visual:hover .sg-shot { transform: rotate(-2deg) translateY(4%); }
+  .signal .sg-project-visual--lead:hover .sg-shot { transform: rotate(-3deg) translateX(-1%); }
+}
 .signal .sg-phone {
   width: 35%; max-width: 11.875rem; height: auto; align-self: flex-start; border: 5px solid #302B27; border-radius: 1.375rem;
-  box-shadow: 0 20px 30px rgb(45 24 12 / .14); transform: rotate(-9deg); transition: transform .5s;
+  box-shadow: 0 20px 30px rgb(45 24 12 / .14); transform: rotate(-9deg); transition: transform var(--duration-base) var(--ease-standard);
 }
 .signal .sg-phone:nth-child(2) { margin-top: 2rem; transform: rotate(7deg); }
-.signal .sg-project-visual:hover .sg-phone { transform: rotate(-5deg); }
-.signal .sg-project-visual:hover .sg-phone:nth-child(2) { transform: rotate(4deg); }
+@media (hover: hover) and (pointer: fine) {
+  .signal .sg-project-visual:hover .sg-phone { transform: rotate(-5deg); }
+  .signal .sg-project-visual:hover .sg-phone:nth-child(2) { transform: rotate(4deg); }
+}
 .signal .sg-abstract { position: absolute; inset: 0; }
 .signal .sg-abstract > div { height: 100%; aspect-ratio: auto; border-radius: 0; }
 /* Type cover (src/site/ui.tsx, CaseCover): a case without a picture shows itself — kind and year, the title, its

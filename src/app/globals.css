@@ -372,15 +372,16 @@ body {
 }
 
 /* ---------- Navigation progress (src/shared/ui/nav-progress.tsx) ----------
-   Grows quickly, then ever slower while the page loads; runs to the end and fades once it is there. */
+   Grows quickly, then ever slower while the page loads; runs to the end and fades once it is there. It grows by
+   transform (scaleX from the left), not width, so it costs no layout while the next page is being loaded. */
 .nav-progress {
-  position: fixed; inset: 0 auto auto 0; z-index: 100; height: 0.125rem; width: 0; opacity: 0;
-  background: var(--accent-text); pointer-events: none;
+  position: fixed; inset: 0 auto auto 0; z-index: 100; height: 0.125rem; width: 100%; opacity: 0;
+  transform: scaleX(0); transform-origin: left; background: var(--accent-text); pointer-events: none;
 }
-.nav-progress[data-state="loading"] { width: 85%; opacity: 1; transition: width 8s cubic-bezier(.1, .7, .2, 1), opacity var(--duration-fast); }
+.nav-progress[data-state="loading"] { transform: scaleX(.85); opacity: 1; transition: transform 8s cubic-bezier(.1, .7, .2, 1), opacity var(--duration-fast); }
 .nav-progress[data-state="done"] {
-  width: 100%; opacity: 0;
-  transition: width var(--duration-base) var(--ease-standard), opacity var(--duration-base) var(--duration-base);
+  transform: scaleX(1); opacity: 0;
+  transition: transform var(--duration-base) var(--ease-standard), opacity var(--duration-base) var(--duration-base);
 }
 
 /* ---------- FEDO mark ---------- */
