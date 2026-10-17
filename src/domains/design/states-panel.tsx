@@ -64,7 +64,7 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                     {STATE_STATUSES.map((o) => (
                       <button key={o.value} type="button" aria-pressed={s.status === o.value} disabled={!canEdit}
                         onClick={() => s.status !== o.value && patch(s.id, { status: o.value })}
-                        className={cn("rounded-[0.25rem] border px-2.5 py-0.5 text-caption font-semibold disabled:cursor-default",
+                        className={cn("inline-flex min-h-11 items-center rounded-[0.25rem] border px-2.5 py-0.5 text-caption font-semibold disabled:cursor-default sm:min-h-0",
                           s.status === o.value ? STATUS_STYLE[o.value] : "border-line text-fg-secondary hover:border-fg")}>
                         {o.label}
                       </button>
@@ -104,7 +104,7 @@ export function StatesPanel({ screenId, initial, canEdit }: { screenId: string; 
                 if (res.ok && res.id) { setStates((ss) => ss.map((x) => (x.id === temp ? { ...x, id: res.id! } : x))); setError(null); }
                 else { setStates((ss) => ss.filter((x) => x.id !== temp)); if (!res.ok) setError(res.error); }
               }}
-              className="rounded-[0.25rem] border border-dashed border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary hover:border-fg hover:text-fg">
+              className="inline-flex min-h-11 items-center rounded-[0.25rem] border border-dashed border-line px-2.5 py-0.5 text-caption font-semibold text-fg-secondary hover:border-fg hover:text-fg sm:min-h-0">
               <Plus aria-hidden className="size-4" />{k.label}
             </button>
           ))}
