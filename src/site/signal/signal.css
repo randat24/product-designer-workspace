@@ -402,6 +402,9 @@
 .signal .sg-project-grid { display: grid; gap: 2.75rem 1.75rem; grid-template-columns: 1fr 1fr; }
 .signal .sg-project { min-width: 0; }
 .signal .sg-project--full { grid-column: 1 / -1; }
+.signal .case-filter[data-narrowed] .sg-project-grid { grid-template-columns: minmax(0, 1fr); }
+/* Wide screens only: below 50rem the grid is one column anyway and the cards keep their phone heights. */
+@media (min-width: 50.0625rem) { .signal .case-filter[data-narrowed] .sg-project-visual { height: 25rem; } }
 .signal .sg-project-visual {
   position: relative; display: flex; align-items: flex-start; justify-content: center; gap: 1.25rem; height: 21.25rem; overflow: hidden;
   padding: 2.375rem 1.5rem 0; border-radius: var(--sg-radius-sm); color: var(--on-sticky); text-decoration: none;

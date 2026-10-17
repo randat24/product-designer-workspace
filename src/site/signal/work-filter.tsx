@@ -68,7 +68,9 @@ export function WorkFilter({ heading, counts, labels, tagged, children }: {
   const none = !!tag && !(tagged ?? []).some((c) => c.tags.includes(tag) && (filter === "all" || c.kind === filter));
   const status = [filter === "all" ? "" : `${labels[filter]}: ${kindCounts[filter]}`, tag ? `${labels.tags}: ${tag}` : ""].filter(Boolean).join(" · ");
   return (
-    <div ref={root} data-filter={filter} className="case-filter">
+    // Narrowed, the cards keep the sizes of their places in the whole list (lead, full, pairs), which leaves holes:
+    // the grid then goes to one column (signal.css, .case-filter[data-narrowed]).
+    <div ref={root} data-filter={filter} data-narrowed={filter !== "all" || tag ? "" : undefined} className="case-filter">
       <div className="sg-section-header">
         {heading}
         {(both || tags.length > 0) && (
@@ -76,7 +78,8 @@ export function WorkFilter({ heading, counts, labels, tagged, children }: {
             {both && (
               <div role="group" aria-label={labels.group} className="sg-work-filters">
                 {(["all", "real", "concept"] as const).map((f) => (
-                  <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)} className={sg.chip}>
+                  <button key={f} type="button" aria-pressed={filter === f} disabled={kindCounts[f] === 0 && filter !== f}
+                    onClick={() => setFilter(f)} className={sg.chip}>
                     {labels[f]} <span className={sg.chipCount}>{kindCounts[f]}</span>
                   </button>
                 ))}
