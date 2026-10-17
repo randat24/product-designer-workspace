@@ -30,10 +30,14 @@ export const reviewPatchSchema = z.object({
   note: z.string().trim().max(1000).transform((v) => v || null),
 }).partial();
 
+/** The average of some scores to one decimal; null when there are none. The rounding of every average on the panel. */
+export function average1(values: readonly number[]): number | null {
+  return values.length ? Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 10) / 10 : null;
+}
+
 /** The average of the scored criteria, one decimal; null when none is scored. */
 export function reviewOverall(scores: ReviewScores): number | null {
-  const filled = Object.values(scores).filter((v): v is number => typeof v === "number");
-  return filled.length ? Math.round((filled.reduce((a, b) => a + b, 0) / filled.length) * 10) / 10 : null;
+  return average1(Object.values(scores).filter((v): v is number => typeof v === "number"));
 }
 
 /** States whose absence the overview reports (docs/MVP.md §3). */

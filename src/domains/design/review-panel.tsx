@@ -5,10 +5,11 @@ import { useRef, useState } from "react";
 import { cn } from "@/shared/lib/cn";
 import { t } from "@/shared/i18n/uk";
 import { IconButton } from "@/shared/ui/button";
+import { transient } from "@/shared/lib/action-result";
 import { ChipGroup } from "@/shared/ui/chips";
 import { Textarea } from "@/shared/ui/field";
 import { deleteReview, saveReview } from "./actions";
-import { reviewOverall, type ReviewCriterion, type ReviewCriterionInfo } from "./schema";
+import { average1, reviewOverall, type ReviewCriterion, type ReviewCriterionInfo } from "./schema";
 import type { ScreenReview } from "./queries";
 
 const rv = t.screens.review;
@@ -19,12 +20,14 @@ const PENDING = "pending";
 const fmt = (n: number | null) => (n === null ? rv.none : n.toFixed(1).replace(".0", ""));
 const scaleOf = (n: number) => rv.scale.find((s) => n >= s.from && n <= s.to)?.label ?? "";
 
-type Patch = Partial<Record<ReviewCriterion, number>> & { note?: string };
+type Patch = Partial<Record<ReviewCriterion, number | null>> & { note?: string };
 
 /**
  * A screen scored by the team (awwwards' jury votes, on the laws of UX): my own scores, one row of 1–10 per
- * group of laws with its question, saved as each is picked; then every reviewer's scores and the average.
- * Optimistic like StatesPanel: the choice shows at once, and only that choice goes back if the database refuses.
+ * group of laws with its question, saved as each is picked (picking the chosen score again takes it back);
+ * then every reviewer's scores and the average. Optimistic: a choice shows at once. The writes go to the
+ * database one after another, and when the last one answers the panel settles on my review as the database
+ * holds it, so quick clicks or a removal during a save can never leave the panel and the database apart.
  */
 export function ReviewPanel({ screenId, criteria, initial, userId, canEdit }: {
   screenId: string; criteria: ReviewCriterionInfo[]; initial: ScreenReview[]; userId: string | null; canEdit: boolean;
@@ -33,44 +36,61 @@ export function ReviewPanel({ screenId, criteria, initial, userId, canEdit }: {
   const [error, setError] = useState<string | null>(null);
   // The note field remounts (empty) only when my review is removed, never while it is being created.
   const [noteKey, setNoteKey] = useState(0);
+  // My review as the database last confirmed it, and the queue of writes not answered yet.
+  const stored = useRef<ScreenReview | null>(initial.find((r) => r.reviewerId === userId) ?? null);
+  const queue = useRef<Promise<unknown>>(Promise.resolve());
+  const waiting = useRef(0);
+  // The first refusal in a run of writes: shown when the run settles, even if later writes went through.
+  const refused = useRef<string | null>(null);
   const mine = reviews.find((r) => r.reviewerId === userId) ?? null;
-  const pending = mine?.id === PENDING;
   const scored = reviews.map((r) => reviewOverall(r.scores)).filter((n): n is number => n !== null);
-  const average = scored.length ? Math.round((scored.reduce((a, b) => a + b, 0) / scored.length) * 10) / 10 : null;
+  const average = average1(scored);
 
-  const apply = (rs: ScreenReview[], patch: Patch, id?: string): ScreenReview[] => {
-    const base = rs.find((r) => r.reviewerId === userId) ?? { id: PENDING, reviewerId: userId!, name: null, scores: EMPTY, note: null };
-    const { note, ...scores } = patch;
-    const next = { ...base, ...(id ? { id } : {}), scores: { ...base.scores, ...scores }, ...(note !== undefined ? { note: note || null } : {}) };
-    return rs.some((r) => r.reviewerId === userId) ? rs.map((r) => (r.reviewerId === userId ? next : r)) : [...rs, next];
+  /** The list with my review replaced by `next` (or taken out when null). */
+  const withMine = (rs: ScreenReview[], next: ScreenReview | null) =>
+    next ? (rs.some((r) => r.reviewerId === userId) ? rs.map((r) => (r.reviewerId === userId ? next : r)) : [...rs, next])
+      : rs.filter((r) => r.reviewerId !== userId);
+
+  /** Runs a write after the ones before it; when it is the last, the panel shows what the database holds. */
+  const enqueue = <T extends { ok: true } | { ok: false; error: string }>(write: () => Promise<T>, onOk: (res: T) => void): Promise<boolean> => {
+    waiting.current++;
+    const done = queue.current.then(async () => {
+      let ok = false;
+      try {
+        const res: T | ReturnType<typeof transient> = await write().catch(() => transient());
+        ok = res.ok;
+        if (res.ok) onOk(res as T); else refused.current ??= res.error;
+      } finally {
+        // Whatever happened above, this write is answered; the last one settles the panel on the database.
+        if (--waiting.current === 0) {
+          setReviews((rs) => withMine(rs, stored.current));
+          setError(refused.current);
+          refused.current = null;
+        }
+      }
+      return ok;
+    });
+    // A write that threw must not stop the ones after it.
+    queue.current = done.catch(() => false);
+    return done.catch(() => false);
   };
 
-  const save = async (patch: Patch): Promise<boolean> => {
-    if (!userId) return false;
-    // What to put back if this save is refused: only the fields it changed, as they were.
-    const was = mine;
-    const undo: Patch = Object.fromEntries(Object.keys(patch).map((k) => [k, k === "note" ? (was?.note ?? "") : (was?.scores[k as ReviewCriterion] ?? null)]));
-    setReviews((rs) => apply(rs, patch));
-    const res = await saveReview(screenId, patch);
-    if (!res.ok) {
-      // Put back only what this save changed; a review still being created goes only if nothing is left in it.
-      setReviews((rs) => apply(rs, undo).filter((r) => r.reviewerId !== userId || r.id !== PENDING
-        || r.note || Object.values(r.scores).some((v) => v !== null)));
-      setError(res.error);
-      return false;
-    }
-    setError(null);
-    if (res.id) setReviews((rs) => apply(rs, {}, res.id));
-    return true;
+  const save = (patch: Patch): Promise<boolean> => {
+    if (!userId) return Promise.resolve(false);
+    setReviews((rs) => {
+      const base = rs.find((r) => r.reviewerId === userId) ?? { id: PENDING, reviewerId: userId, name: null, scores: EMPTY, note: null };
+      const { note, ...scores } = patch;
+      return withMine(rs, { ...base, scores: { ...base.scores, ...scores }, ...(note !== undefined ? { note: note || null } : {}) });
+    });
+    return enqueue(() => saveReview(screenId, patch), (res) => {
+      if (res.ok) stored.current = res.review ? { reviewerId: userId, name: stored.current?.name ?? null, ...res.review } : null;
+    });
   };
 
-  const clear = async () => {
-    if (!mine || pending) return;
-    const was = mine;
-    setReviews((rs) => rs.filter((r) => r.reviewerId !== userId));
-    const res = await deleteReview(screenId);
-    if (res.ok) { setError(null); setNoteKey((k) => k + 1); }
-    else { setReviews((rs) => [...rs, was]); setError(res.error); }
+  const clear = () => {
+    if (!mine) return;
+    setReviews((rs) => withMine(rs, null));
+    void enqueue(() => deleteReview(screenId), () => { stored.current = null; setNoteKey((k) => k + 1); });
   };
 
   return (
@@ -91,8 +111,7 @@ export function ReviewPanel({ screenId, criteria, initial, userId, canEdit }: {
             <div className="flex items-center gap-1.5">
               {mine && <span className="text-meta font-semibold">{rv.overall}: {fmt(reviewOverall(mine.scores))}</span>}
               {mine && (
-                // Until the database has created my review there is nothing to remove yet.
-                <IconButton tone="danger" size="sm" label={rv.clear} disabled={pending} onClick={clear}><X className="size-4" /></IconButton>
+                <IconButton tone="danger" size="sm" label={rv.clear} onClick={clear}><X className="size-4" /></IconButton>
               )}
             </div>
           </div>
@@ -102,7 +121,7 @@ export function ReviewPanel({ screenId, criteria, initial, userId, canEdit }: {
               return (
                 <li key={c.key} className="flex flex-col gap-1">
                   <ChipGroup label={c.title} options={SCORES} value={value === null ? "" : String(value)} size="sm"
-                    onChange={(v) => Number(v) !== value && save({ [c.key]: Number(v) })} />
+                    onChange={(v) => save({ [c.key]: Number(v) === value ? null : Number(v) })} />
                   <p className="text-caption text-fg-secondary">
                     {c.question}{value !== null && <span className="font-semibold text-fg"> · {scaleOf(value)}</span>}
                   </p>

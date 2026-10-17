@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { UX_LAW_GROUPS } from "@/domains/ux-laws";
-import { decisionSchema, REVIEW_KEYS, reviewOverall, reviewPatchSchema, screenSpecSchema } from "./schema";
+import { average1, decisionSchema, REVIEW_KEYS, reviewOverall, reviewPatchSchema, screenSpecSchema } from "./schema";
 
 const screen = (figma_url: string | null) => ({
   name: "Checkout", content_hierarchy: [], analytics_events: [], status: "sketch" as const, figma_url,
@@ -49,6 +49,10 @@ describe("screen review", () => {
     expect(reviewOverall({ familiar: 8, choice: 7, memory: null })).toBe(7.5);
     expect(reviewOverall({ familiar: 7, choice: 7, memory: 8 })).toBe(7.3);
     expect(reviewOverall({})).toBeNull();
+  });
+  it("rounds every average the same way (a review's overall and the team's)", () => {
+    expect(average1([7.5, 8])).toBe(7.8);
+    expect(average1([])).toBeNull();
   });
   it("takes scores 1–10 or empty, and an empty note as none", () => {
     expect(reviewPatchSchema.safeParse({ familiar: 10, quality: null }).success).toBe(true);

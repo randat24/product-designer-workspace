@@ -10,7 +10,7 @@ import { trackedSave, updateTracked } from "@/shared/lib/supabase/tracked-update
 import { t } from "@/shared/i18n/uk";
 import { optionalHttpUrl } from "@/shared/lib/url";
 import { parseKeepingStored } from "@/shared/lib/keep-stored";
-import { decisionSchema, reviewPatchSchema, screenSpecSchema, type DecisionFields, type ScreenSpec } from "./schema";
+import { decisionSchema, reviewPatchSchema, screenSpecSchema, type DecisionFields, type ReviewCriterion, type ScreenSpec } from "./schema";
 
 const refresh = () => revalidatePath("/w/[ws]/p/[project]", "layout");
 type Result = { ok: true; id?: string; version?: string | null } | Failure;
@@ -87,8 +87,14 @@ export async function saveState(id: string, patch: z.input<typeof statePatch>): 
   return { ok: true };
 }
 
-/** Writes the caller's own review of a screen: created on the first score, then updated (one per reviewer). */
-export async function saveReview(screenId: string, patch: z.input<typeof reviewPatchSchema>): Promise<Result> {
+/** My review as the database holds it after a write: the panel takes it as the truth. */
+export type SavedReview = { id: string; scores: Record<ReviewCriterion, number | null>; note: string | null };
+
+/**
+ * Writes the caller's own review of a screen: created on the first score, then updated (one per reviewer).
+ * Returns the row as stored, so the panel can settle on it whatever order its saves finished in.
+ */
+export async function saveReview(screenId: string, patch: z.input<typeof reviewPatchSchema>): Promise<{ ok: true; review: SavedReview | null } | Failure> {
   const p = reviewPatchSchema.safeParse(patch);
   if (!uuid.safeParse(screenId).success || !p.success) return invalid();
   const supabase = await createClient();
@@ -100,10 +106,17 @@ export async function saveReview(screenId: string, patch: z.input<typeof reviewP
   if (!screen) return invalid();
   const { data, error } = await supabase.from("screen_reviews")
     .upsert({ project_id: screen.project_id, screen_id: screenId, reviewer_id: auth.user.id, ...p.data }, { onConflict: "screen_id,reviewer_id" })
-    .select("id").single();
+    .select("id, familiar, choice, memory, gestalt, motion, quality, note").single();
   // 42501: row-level security (not an editor); 23xxx: a constraint the same values will break again.
   if (error) return error.code === "42501" ? denied() : error.code?.startsWith("23") ? invalid() : transient();
-  return { ok: true, id: data.id };
+  const { id, note, ...scores } = data;
+  // Every score taken back and no note: nothing is left of the review, so it goes (null: no review).
+  if (!note && Object.values(scores).every((v) => v === null)) {
+    const { error: gone } = await supabase.from("screen_reviews").delete().eq("id", id);
+    if (gone) return transient();
+    return { ok: true, review: null };
+  }
+  return { ok: true, review: { id, note, scores } };
 }
 
 /** Removes the caller's own review of a screen; row-level security keeps everyone else's out of reach. */
@@ -112,10 +125,16 @@ export async function deleteReview(screenId: string): Promise<Result> {
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return denied();
+  const mineOnly = () => supabase.from("screen_reviews").select("id").eq("screen_id", screenId).eq("reviewer_id", auth.user!.id);
   const { data, error } = await supabase.from("screen_reviews").delete()
     .eq("screen_id", screenId).eq("reviewer_id", auth.user.id).select("id");
-  if (error || !data.length) return denied();
-  return { ok: true };
+  if (error) return error.code === "42501" ? denied() : transient();
+  if (data.length) return { ok: true };
+  // Nothing deleted: either it was already gone (removed in another tab, which is what was asked for), or
+  // row-level security hid it from the delete (no longer an editor), and then it is still there.
+  const { data: left, error: readError } = await mineOnly();
+  if (readError) return transient();
+  return left.length ? denied() : { ok: true };
 }
 
 const stateKind = z.enum(["default", "loading", "empty", "error", "success", "disabled", "permission_denied", "offline", "partial"]);
