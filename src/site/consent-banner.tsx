@@ -10,7 +10,9 @@ type Labels = { bannerLabel: string; bannerText: string; accept: string; decline
 /**
  * Google Analytics consent. Rendered only where GA4 runs (production with a Measurement ID); shown until the
  * visitor chooses, and again after «Змінити вибір» on the privacy page. Two equal buttons: declining is as easy
- * as allowing. Bottom left, so the floating «Вгору» stays reachable on wide screens.
+ * as allowing. A card at the bottom left on phones and tablets; on wide screens a single low bar along the bottom
+ * (text and buttons in one row), so it covers no more than the bottom strip of the first screen instead of the
+ * hero's buttons or a case's deck. Either way it ends left of the floating «Вгору».
  *
  * It floats over the page, so while it is open it reports its height as --consent-space: the page keeps that
  * strip free at the bottom and scrolls a focused control clear of it (globals.css; WCAG 2.4.11). The layout
@@ -44,12 +46,12 @@ export function ConsentBanner({ labels, privacyHref }: { labels: Labels; privacy
 
   return (
     <section ref={box} aria-label={labels.bannerLabel}
-      className="sg-panel fixed inset-x-3 bottom-3 z-40 flex flex-col gap-3 p-4 shadow-[var(--sg-shadow-float)] sm:inset-x-4 sm:bottom-4 sm:right-auto sm:max-w-[26.25rem] sm:gap-4 sm:p-5">
-      <p className="text-[0.875rem] leading-[1.5] sm:text-[0.9375rem]">
+      className="sg-panel fixed inset-x-3 bottom-3 z-40 flex flex-col gap-3 p-4 shadow-[var(--sg-shadow-float)] sm:inset-x-4 sm:bottom-4 sm:right-auto sm:max-w-[26.25rem] sm:gap-4 sm:p-5 lg:right-[5.5rem] lg:bottom-6 lg:left-6 lg:max-w-none lg:flex-row lg:items-center lg:gap-6 lg:py-3">
+      <p className="text-[0.875rem] leading-[1.5] sm:text-[0.9375rem] lg:flex-1">
         {labels.bannerText}{" "}
         <Link href={privacyHref} className="font-semibold underline underline-offset-4 hover:text-accent-text">{labels.more}</Link>
       </p>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 lg:shrink-0 lg:flex-nowrap">
         <button type="button" onClick={() => setConsent("granted")} className={button({ variant: "primary", size: "sm" }, "flex-1")}>
           {labels.accept}
         </button>

@@ -93,7 +93,7 @@ function Overview({ body, facts }: { body: string[]; facts: { label: string; val
       <dl className="flex flex-col divide-y divide-line self-start rounded-[0.5rem] border border-line bg-surface">
         {facts.map((f) => (
           <div key={f.label} className="flex flex-col gap-1 px-6 py-4">
-            <dt className="font-label text-[0.6875rem] uppercase tracking-[0.08em] text-fg-secondary">{f.label}</dt>
+            <dt className="font-label text-[0.75rem] uppercase tracking-[0.08em] text-fg-secondary">{f.label}</dt>
             <dd className="font-semibold leading-snug">{f.value}</dd>
           </div>
         ))}
@@ -255,7 +255,7 @@ function Monetization({ chain, actions, models }: { chain: string[]; actions: st
         {models.map((m) => (
           <li key={m.title} className="nw-rise flex flex-col gap-1.5 rounded-[0.5rem] border border-line bg-surface p-5">
             <p className="font-semibold">{m.title}</p>
-            <p className="text-[0.9375rem] leading-[1.55] text-fg-secondary">{m.body}</p>
+            <p className="text-[1rem] leading-[1.55] text-fg-secondary">{m.body}</p>
           </li>
         ))}
       </ul>

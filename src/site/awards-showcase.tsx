@@ -44,7 +44,7 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
               "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[0.5rem] border bg-surface p-3 text-fg transition-colors duration-(--duration-fast) sm:w-auto",
               i === active ? "border-accent-text shadow-[inset_0_0_0_1px_var(--accent-text)]" : "border-line hover:border-control",
             )}>
-            <span className={cn("self-start font-label text-[0.6875rem] tabular-nums", i === active ? "text-accent-text" : "text-fg-secondary")}>{num(i)}</span>
+            <span className={cn("self-start font-label text-[0.75rem] tabular-nums", i === active ? "text-accent-text" : "text-fg-secondary")}>{num(i)}</span>
             <AwardSvg icon={a.icon} className="h-20 sm:h-24" />
             <span className="sr-only">{a.title}</span>
           </button>
