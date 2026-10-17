@@ -106,7 +106,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             <li key={`${i}`} className="border-t border-line">
               <details className="group" open={i === 0}>
                 <summary className="hit grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_1.5rem] gap-x-4 gap-y-1 py-6 [&::-webkit-details-marker]:hidden">
-                  <span className="font-label text-[0.6875rem] uppercase tracking-[0.08em] text-fg-secondary">{job.period}</span>
+                  <span className="font-label text-[0.75rem] uppercase tracking-[0.08em] text-fg-secondary">{job.period}</span>
                   <h3 className="col-start-1 text-[clamp(1.25rem,2vw,1.625rem)] font-medium leading-[1.25] tracking-[-0.03em]">{job.title}</h3>
                   <span className="col-start-1 text-[0.9375rem] text-fg-secondary">{job.place}</span>
                   <span aria-hidden className="col-start-2 row-span-3 row-start-1 self-center font-label text-[1.25rem] leading-none text-accent-text transition-transform duration-(--duration-base) group-open:rotate-45 motion-reduce:transition-none">+</span>
@@ -137,7 +137,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               <p className="sg-eyebrow" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
-              <div className="mt-auto pt-5 font-label text-[0.6875rem] uppercase leading-[1.5] tracking-[0.04em] text-fg">
+              <div className="mt-auto pt-5 font-label text-[0.75rem] uppercase leading-[1.5] tracking-[0.04em] text-fg">
                 <span className="text-fg-secondary">{d.about.inWorkbook}:</span> {step.tie}
               </div>
             </li>

@@ -158,7 +158,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
             <tr>
               <td className="p-3" />
               {data.products.map((p, i) => (
-                <th key={p} className={cn("p-3 text-center font-label text-[0.6875rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
+                <th key={p} className={cn("p-3 text-center font-label text-[0.75rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
                   {p}
                 </th>
               ))}
@@ -180,7 +180,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
           </tbody>
         </table>
       </div>
-      <div className="mt-3 flex items-center gap-2 font-label text-[0.6875rem] text-fg-secondary">
+      <div className="mt-3 flex items-center gap-2 font-label text-[0.75rem] text-fg-secondary">
         <span className={cn("h-3 w-3 rounded-[0.125rem]", MARK_CLASS.no)} aria-hidden="true" />
         {labels.redHint}
       </div>
@@ -258,7 +258,7 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
             <p className="sg-case-secondary !mb-0 !text-[0.9375rem]">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.6875rem] text-fg-secondary">{st}</li>
+                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.75rem] text-fg-secondary">{st}</li>
               ))}
             </ul>
           </li>
