@@ -110,7 +110,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
           </svg>
           {columns.map(({ stage, nodes }) => (
             <div key={stage} className="relative flex min-w-0 flex-col gap-2" style={{ "--c": COLOR[stage] } as React.CSSProperties}>
-              <h3 className="mb-1 flex items-center gap-2 font-label text-[0.75rem] uppercase tracking-[0.04em] text-fg-secondary">
+              <h3 className="mb-1 flex items-center gap-2 font-label text-[0.75rem] uppercase tracking-[0.04em] text-fg">
                 <i aria-hidden className="size-[0.5625rem] rounded-[0.125rem] bg-(--c)" />{labels.stages[stage]} · {nodes.length}
               </h3>
               {nodes.map((n) => (
@@ -138,7 +138,7 @@ export function TraceGraph({ trace, locale, labels }: { trace: CaseTrace; locale
           ))}
         </div>
       </div>
-      {labels.titlesNote && <p className="text-[0.8125rem] text-fg-secondary">{labels.titlesNote}</p>}
+      {labels.titlesNote && <p className="text-[0.8125rem] text-fg">{labels.titlesNote}</p>}
     </div>
   );
 }

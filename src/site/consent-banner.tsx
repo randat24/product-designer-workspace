@@ -74,7 +74,7 @@ export function ConsentControls({ labels }: { labels: { manage: string; stateGra
   }, []);
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <p role="status" className="text-fg-secondary">
+      <p role="status" className="text-fg">
         {state === undefined ? " " : state === "granted" ? labels.stateGranted : state === "denied" ? labels.stateDenied : labels.stateUnset}
       </p>
       <button type="button" onClick={() => setConsent(null)}

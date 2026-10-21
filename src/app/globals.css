@@ -10,7 +10,9 @@
   /* Field and secondary-button borders: 3:1 against surface (WCAG 1.4.11); --line is decorative only. */
   --control-border: #797C72;
   --fg: #20221F;
-  --fg-secondary: #62645D;
+  /* APCA Bronze: Lc 79.6 on canvas, 87.9 on surface (WCAG 7.1:1). Enough for text from 15 px and body from 18 px;
+     smaller text and 16–17 px paragraphs on the site use --fg (docs/DESIGN-SYSTEM.md, «Контраст по APCA»). */
+  --fg-secondary: #4F514A;
   /* The one orange: fills (buttons, the current step). Text on it is dark (6.1:1); white would be 2.8:1. */
   --accent: #FF6B35;
   --accent-hover: #FF8254;
@@ -30,7 +32,7 @@
   /* Text on solid danger / warning / success fills (white in light, ink in dark: 4.5:1 in both). */
   --on-status: #FFFFFF;
   /* Lucide chevron-down in fg-secondary: the select arrow. */
-  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2362645D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234F514A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   /* Inverse surface (footer, the service block, the tool's navigation rail): dark in both themes. */
   --rail: #191B18;
@@ -69,7 +71,8 @@
     --line: #3D4237;
     --control-border: #818879;
     --fg: #F1F1E9;
-    --fg-secondary: #B2B5AA;
+    /* APCA Lc 77 on canvas and surface. */
+    --fg-secondary: #CFD2C7;
     --accent: #FF6B35;
     --accent-hover: #FF8254;
     --on-accent: #191B18;
@@ -84,7 +87,7 @@
     --veteran: #E2DFB1;
     --veteran-bg: #393923;
     --on-status: #191B18;
-    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23CFD2C7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     --rail: #22251F;
     --rail-fg: #F1F1E9;
     --entity-research: #3bc9db;
@@ -103,7 +106,7 @@
   --line: #3D4237;
   --control-border: #818879;
   --fg: #F1F1E9;
-  --fg-secondary: #B2B5AA;
+  --fg-secondary: #CFD2C7;
   --accent: #FF6B35;
   --accent-hover: #FF8254;
   --on-accent: #191B18;
@@ -118,7 +121,7 @@
   --veteran: #E2DFB1;
   --veteran-bg: #393923;
   --on-status: #191B18;
-  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23CFD2C7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   --rail: #22251F;
   --rail-fg: #F1F1E9;
   --entity-research: #3bc9db;
@@ -309,7 +312,7 @@ body {
 }
 
 /* Product case diagrams (src/site/product-story-view.tsx), in SIGNAL: --nw-blue fills (white text on it), --nw-ink is
-   the accent for text and icons on the page, --nw-glow draws lines on the dark panel, --nw-node fills its labels. */
+   the accent for icons and large numbers on the page (small text is --fg: APCA), --nw-glow draws lines on the dark panel, --nw-node fills its labels. */
 .nw {
   --nw-blue: #191B18;
   --nw-glow: #FF6B35;

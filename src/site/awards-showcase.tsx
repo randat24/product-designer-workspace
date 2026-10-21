@@ -44,7 +44,7 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
               "relative flex w-24 shrink-0 snap-start flex-col items-center gap-2 rounded-[0.5rem] border bg-surface p-3 text-fg transition-colors duration-(--duration-fast) sm:w-auto",
               i === active ? "border-accent-text shadow-[inset_0_0_0_1px_var(--accent-text)]" : "border-line hover:border-control",
             )}>
-            <span className={cn("self-start font-label text-[0.75rem] tabular-nums", i === active ? "text-accent-text" : "text-fg-secondary")}>{num(i)}</span>
+            <span className="self-start font-label text-[0.75rem] tabular-nums">{num(i)}</span>
             <AwardSvg icon={a.icon} className="h-20 sm:h-24" />
             <span className="sr-only">{a.title}</span>
           </button>
@@ -61,15 +61,15 @@ export function AwardsShowcase({ awards, label }: { awards: Award[]; label: stri
             </div>
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap items-center gap-3 text-[0.875rem]">
-                <span className="font-label text-[0.75rem] tabular-nums text-fg-secondary"><span className="text-accent-text">{num(i)}</span> / {String(awards.length).padStart(2, "0")}</span>
-                <span className="inline-flex items-center gap-2 rounded-[0.25rem] border border-line px-3 py-1 text-fg-secondary">
+                <span className="font-label text-[0.75rem] tabular-nums text-fg">{num(i)} / {String(awards.length).padStart(2, "0")}</span>
+                <span className="inline-flex items-center gap-2 rounded-[0.25rem] border border-line px-3 py-1 text-fg">
                   <Issuer aria-hidden className="size-4" strokeWidth={1.5} />
                   {a.issuer}
                 </span>
               </div>
               <h4 className="text-[1.5rem] font-medium leading-snug tracking-[-0.03em] sm:text-[1.75rem]">{a.title}</h4>
               <span aria-hidden className="h-[0.125rem] w-12 bg-accent-text" />
-              <p className="max-w-[62ch] text-[0.9375rem] leading-[1.65] text-fg-secondary sm:text-[1rem]">{a.description}</p>
+              <p className="max-w-[62ch] text-[0.9375rem] leading-[1.65] text-fg sm:text-[1rem]">{a.description}</p>
             </div>
           </section>
         );

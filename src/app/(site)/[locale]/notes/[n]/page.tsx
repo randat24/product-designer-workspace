@@ -72,7 +72,7 @@ export default async function NotePage({ params }: { params: Params }) {
         )}
       />
       <header className="mb-10 flex max-w-[40rem] flex-col gap-5">
-        <p className="sg-eyebrow text-fg-secondary">
+        <p className="sg-eyebrow text-fg">
           <Link href={`/${locale}/notes`} className="hover:text-fg">← {d.notes.back}</Link>
         </p>
         <h1 className="sg-heading">

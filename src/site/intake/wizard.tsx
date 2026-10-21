@@ -251,9 +251,9 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
     return (
       <div className="flex flex-col gap-8">
         <div className="flex max-w-[42.5rem] flex-col gap-4">
-          <p className="sg-eyebrow text-fg-secondary">{t.intro.eyebrow}</p>
+          <p className="sg-eyebrow text-fg">{t.intro.eyebrow}</p>
           <h1 className="t-page">{t.intro.title}</h1>
-          <p className="text-[clamp(1.0625rem,2vw,1.1875rem)] leading-[1.55] text-fg-secondary">{t.intro.lead}</p>
+          <p className="text-[clamp(1.0625rem,2vw,1.1875rem)] leading-[1.55] text-fg">{t.intro.lead}</p>
         </div>
         <ul className="flex max-w-[42.5rem] flex-col gap-2.5">
           {t.intro.points.map((p) => (
@@ -266,7 +266,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         {draftFound ? (
           <section aria-labelledby="draft-h" className="sg-panel flex max-w-[42.5rem] flex-col gap-4 p-5 sm:p-6">
             <h2 id="draft-h" className="text-[1.3125rem] font-semibold tracking-[-0.02em]">{t.draft.title}</h2>
-            <p className="text-[0.9375rem] text-fg-secondary">{t.draft.text}</p>
+            <p className="text-[0.9375rem] text-fg">{t.draft.text}</p>
             <div className="flex flex-wrap gap-3">
               <PrimaryButton onClick={() => start(true)} icon={<ArrowRight aria-hidden className="size-4" />}>{t.draft.resume}</PrimaryButton>
               <SecondaryButton onClick={() => start(false)}>{t.draft.restart}</SecondaryButton>
@@ -339,7 +339,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
                 <LinkList step="existing" title={s.existing.links.label} hint={s.existing.links.hint} addLabel={s.existing.addLink}
                   kinds={EXISTING_LINK_KINDS} links={d.links} errors={errors} locale={locale}
                   onChange={(links) => set("existing", { links })} />
-                <p className="sg-alert text-fg-secondary">{s.existing.noPasswords}</p>
+                <p className="sg-alert text-fg">{s.existing.noPasswords}</p>
               </>
             )}
           </>
@@ -432,7 +432,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
             <div className="flex flex-col gap-4 border-t border-line pt-6">
               <div>
                 <h3 className="text-[0.9375rem] font-semibold">{c.references.label} <span className="font-normal text-fg-secondary">({opt})</span></h3>
-                <p className="mt-1 text-[0.875rem] text-fg-secondary">{c.references.hint}</p>
+                <p className="mt-1 text-[0.875rem] text-fg">{c.references.hint}</p>
               </div>
               {d.references.map((x, i) => (
                 <ItemCard key={i} title={`${i + 1}`} removeLabel={t.removeItem(i + 1)}
@@ -473,7 +473,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
             <LinkList step="materials" title={s.materials.links.label} hint={s.materials.links.hint} addLabel={s.materials.addLink}
               kinds={MATERIAL_LINK_KINDS} links={d.links} errors={errors} locale={locale}
               onChange={(links) => set("materials", { links })} />
-            <p className="sg-alert text-fg-secondary">{s.materials.filesNote}</p>
+            <p className="sg-alert text-fg">{s.materials.filesNote}</p>
           </>
         );
       }
@@ -582,7 +582,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
         <h1 ref={heading} tabIndex={-1} className="t-chapter scroll-mt-28 outline-none">
           {title}
         </h1>
-        <p className="max-w-[40rem] text-[1.0625rem] leading-[1.55] text-fg-secondary">{lead}</p>
+        <p className="max-w-[40rem] text-[1.0625rem] leading-[1.55] text-fg">{lead}</p>
       </div>
 
       {errorList.length > 0 && (
@@ -640,7 +640,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
               {submitting ? t.review.submitting : t.review.submit}
             </PrimaryButton>
           )}
-          <span className="ml-auto text-[0.8125rem] text-fg-secondary" aria-live="polite">{t.draft.saved}</span>
+          <span className="ml-auto text-[0.8125rem] text-fg" aria-live="polite">{t.draft.saved}</span>
         </div>
       </form>
     </div>
@@ -650,7 +650,7 @@ export function IntakeWizard({ locale, turnstileSiteKey, privacyHref }: { locale
 function Progress({ n, total, label: text, review }: { n: number; total: number; label: string; review: boolean }) {
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-[0.875rem] font-semibold text-fg-secondary" aria-hidden>{text}</p>
+      <p className="text-[0.875rem] font-semibold text-fg" aria-hidden>{text}</p>
       <div role="progressbar" aria-label={text} aria-valuemin={0} aria-valuemax={total} aria-valuenow={review ? total : n - 1}
         className="h-[0.1875rem] w-full overflow-hidden bg-line">
         <div className="h-full bg-accent-text transition-[width] duration-(--duration-base)" style={{ width: `${((review ? total : n - 1) / total) * 100}%` }} />
@@ -669,7 +669,7 @@ function LinkList({ step, title, hint, addLabel, kinds, links, errors, locale, o
     <div className="flex flex-col gap-3">
       <div>
         <h3 className="text-[0.9375rem] font-semibold">{title} <span className="font-normal text-fg-secondary">({t.optional})</span></h3>
-        {hint && <p className="mt-1 text-[0.875rem] text-fg-secondary">{hint}</p>}
+        {hint && <p className="mt-1 text-[0.875rem] text-fg">{hint}</p>}
       </div>
       {links.map((l, i) => (
         <div key={i} className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:grid-cols-[11.25rem_minmax(0,1fr)_auto]">
@@ -762,7 +762,7 @@ function Review({ locale, data, onEdit }: { locale: Locale; data: FormState; onE
               <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-[11.25rem_1fr]">
                 {rows.map(([k, v], i) => (
                   <div key={i} className="contents">
-                    <dt className="text-[0.875rem] font-semibold text-fg-secondary">{k}</dt>
+                    <dt className="text-[0.875rem] font-semibold text-fg">{k}</dt>
                     <dd className="whitespace-pre-line break-words text-[0.9375rem] leading-[1.5]">{v}</dd>
                   </div>
                 ))}

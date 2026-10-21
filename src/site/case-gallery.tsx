@@ -92,7 +92,7 @@ export function CaseGallery({ items, labels, caseSlug }: { items: GalleryItem[];
 
   return (
     <>
-      <p className="mb-5 max-w-[42.5rem] text-fg-secondary">{labels.pagesLead}</p>
+      <p className="mb-5 max-w-[42.5rem] text-fg">{labels.pagesLead}</p>
       <Thumbs items={ordered.slice(0, phoneFrom < 0 ? total : phoneFrom)} offset={0} total={total} labels={labels} onOpen={openAt}
         className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" />
       {phoneFrom >= 0 && (

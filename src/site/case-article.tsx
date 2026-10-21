@@ -86,10 +86,10 @@ export function CaseArticle({ item, locale, next, position, banner }: {
         <header className="sg-case-hero">
           <Link href={`/${locale}/cases`} className="sg-case-back"><ArrowLeft aria-hidden className="size-4" />{s.back}</Link>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <p className="sg-eyebrow text-fg-secondary">
+            <p className="sg-eyebrow text-fg">
               {position && <span className="sg-section-index">{pad(position.index)} /</span>}
               {item.year}
-              {item.adult && <span className="ml-3 text-danger">{d.adult.badge}</span>}
+              {item.adult && <span className="ml-3 text-fg">{d.adult.badge}</span>}
             </p>
             {item.kind && <KindBadge item={item} locale={locale} />}
           </div>
@@ -117,7 +117,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
                       <li key={x} className="rounded-[0.25rem] border border-line px-3 py-1 text-[0.8125rem]">{x}</li>
                     ))}
                   </ul>
-                  {item.product.note && <p className="text-[0.8125rem] text-fg-secondary">{item.product.note}</p>}
+                  {item.product.note && <p className="text-[0.875rem] text-fg">{item.product.note}</p>}
                 </>
               )}
             </div>
@@ -170,7 +170,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
         <section aria-labelledby="trace-h" className={`${container} mt-16 flex flex-col gap-5`}>
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
             <h2 id="trace-h" className="sg-chapter-title">{d.fedo.trace.title}</h2>
-            <p className="max-w-[58ch] text-fg-secondary">{d.fedo.trace.lead}</p>
+            <p className="max-w-[58ch] text-fg">{d.fedo.trace.lead}</p>
           </div>
           <TraceGraph trace={item.trace} locale={locale}
             labels={{ ...d.fedo.trace, stages: d.process.stages, forms: { records: d.fedo.forms.records, links: d.fedo.forms.links } }} />
@@ -180,7 +180,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       {videos.walkthrough && (
         <section id="video" aria-labelledby="video-h" className={`${container} mt-16 scroll-mt-28`}>
           <h2 id="video-h" className="sg-chapter-title mb-3">{d.project.video}</h2>
-          <p className="max-w-[42.5rem] text-fg-secondary">{d.project.videoLead}</p>
+          <p className="max-w-[42.5rem] text-fg">{d.project.videoLead}</p>
           <CaseVideo video={videos.walkthrough} labels={d.project} locale={locale} />
         </section>
       )}
@@ -195,7 +195,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       {figma && (
         <section id="figma" aria-labelledby="figma-h" className={`${container} mt-16 scroll-mt-28`}>
           <h2 id="figma-h" className="sg-chapter-title mb-3">{d.project.figma}</h2>
-          <p className="mb-5 max-w-[42.5rem] text-fg-secondary">{d.project.figmaLead}</p>
+          <p className="mb-5 max-w-[42.5rem] text-fg">{d.project.figmaLead}</p>
           <CaseFigma url={figma} poster={item.cover?.src} labels={d.project} caseSlug={item.slug} />
         </section>
       )}
@@ -210,13 +210,13 @@ export function CaseArticle({ item, locale, next, position, banner }: {
       <div className={`${container} mt-20`}>
         {item.sections.map((sec, i) => (
           <section key={`${i}-${sec.title}`} className="sg-chapter grid gap-6 md:grid-cols-[12.5rem_minmax(0,1fr)] md:gap-[clamp(3rem,7vw,7rem)]">
-            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(item.sections.length)}</p>
+            <p className="sg-eyebrow text-fg"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(item.sections.length)}</p>
             <div className="flex min-w-0 flex-col gap-6">
               <h2>{sec.title}</h2>
               <p className="whitespace-pre-line">{sec.body}</p>
               {/* Sample cases keep a dashed slot where a picture will go; real sections bring their own. */}
               {item.sample && !sec.image && i % 2 === 1 && (
-                <div className="flex aspect-[16/9] items-center justify-center rounded-[0.25rem] border border-dashed border-line bg-subtle text-[0.875rem] text-fg-secondary">
+                <div className="flex aspect-[16/9] items-center justify-center rounded-[0.25rem] border border-dashed border-line bg-subtle text-[0.875rem] text-fg">
                   {d.cases.placeholder}
                 </div>
               )}
@@ -241,7 +241,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           // The next case: the way out of a case is into the next piece of work.
           <section className="sg-case-next" aria-labelledby="case-next-title">
             <div>
-              <p className="sg-eyebrow text-fg-secondary">
+              <p className="sg-eyebrow text-fg">
                 {d.cases.next}{position && ` · ${pad((position.index % position.total) + 1)} / ${pad(position.total)}`}
               </p>
               <h2 id="case-next-title">{next.title}</h2>
@@ -253,7 +253,7 @@ export function CaseArticle({ item, locale, next, position, banner }: {
           </section>
         )}
         <div className="flex flex-col gap-5 border-t border-line py-10 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-[46ch] text-[1.0625rem] text-fg-secondary">{d.contact.lead}</p>
+          <p className="max-w-[46ch] text-[1.0625rem] text-fg">{d.contact.lead}</p>
           <div className="flex flex-wrap gap-3">
             <PrimaryLink href={`/${locale}/start-project`} icon={<ArrowRight aria-hidden className="size-4" />} track={trackAttrs("project_request_cta", { location: "case" })}>
               {INTAKE[locale].cta}
