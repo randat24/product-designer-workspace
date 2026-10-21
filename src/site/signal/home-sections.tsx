@@ -12,7 +12,7 @@ import { SIZES, responsive } from "@/site/img";
 /** «02 /» before a section's eyebrow, in the accent: the section's place on the page, counted by the page. */
 export function SectionEyebrow({ index, children, className }: { index: number; children: React.ReactNode; className?: string }) {
   return (
-    <p className={`sg-eyebrow text-fg-secondary ${className ?? ""}`}>
+    <p className={`sg-eyebrow text-fg ${className ?? ""}`}>
       <span className="sg-section-index">{String(index).padStart(2, "0")} /</span>{children}
     </p>
   );

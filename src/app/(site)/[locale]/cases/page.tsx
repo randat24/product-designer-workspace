@@ -39,7 +39,7 @@ export default async function Cases({ params }: { params: Promise<{ locale: stri
         location="cases"
         heading={
           <header className="flex max-w-[40rem] flex-col gap-5">
-            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{String(cases.length).padStart(2, "0")} /</span>{d.nav.work}</p>
+            <p className="sg-eyebrow text-fg"><span className="sg-section-index">{String(cases.length).padStart(2, "0")} /</span>{d.nav.work}</p>
             <h1 className="sg-heading">{d.cases.title}</h1>
             <p className="sg-lead">{d.cases.lead}</p>
           </header>

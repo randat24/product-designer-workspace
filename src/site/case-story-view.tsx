@@ -47,7 +47,7 @@ export function CaseStoryView({ story, labels, sticker, clips, videoLabels, loca
       <div className="min-w-0">
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="sg-chapter" aria-labelledby={`${s.id}-h`}>
-            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
+            <p className="sg-eyebrow text-fg"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
             <h2 id={`${s.id}-h`}>{s.title}</h2>
             {s.body}
             {clips?.[s.id as ClipSection] && videoLabels && locale && (
@@ -141,8 +141,8 @@ function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
 const MARK_CLASS: Record<Mark, string> = {
   // The accent marks the gaps of the others (the opportunity); a match is plain ink, a partial one is muted.
   yes: "bg-subtle text-fg",
-  partial: "text-fg-secondary border border-dashed border-line",
-  no: "bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-accent-text",
+  partial: "text-fg border border-dashed border-line",
+  no: "bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-fg",
 };
 
 function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitors"]>; labels: StoryLabels }) {
@@ -158,7 +158,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
             <tr>
               <td className="p-3" />
               {data.products.map((p, i) => (
-                <th key={p} className={cn("p-3 text-center font-label text-[0.75rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
+                <th key={p} className={cn("p-3 text-center font-label text-[0.75rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg")}>
                   {p}
                 </th>
               ))}
@@ -180,7 +180,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
           </tbody>
         </table>
       </div>
-      <div className="mt-3 flex items-center gap-2 font-label text-[0.75rem] text-fg-secondary">
+      <div className="mt-3 flex items-center gap-2 font-label text-[0.75rem] text-fg">
         <span className={cn("h-3 w-3 rounded-[0.125rem]", MARK_CLASS.no)} aria-hidden="true" />
         {labels.redHint}
       </div>
@@ -258,7 +258,7 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
             <p className="sg-case-secondary !mb-0 !text-[0.9375rem]">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.75rem] text-fg-secondary">{st}</li>
+                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.75rem] text-fg">{st}</li>
               ))}
             </ul>
           </li>

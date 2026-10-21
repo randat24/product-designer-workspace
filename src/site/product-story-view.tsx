@@ -36,7 +36,7 @@ function Section({ section: s, index, total }: { section: ProductSection; index:
   const band = BAND.has(s.kind);
   return (
     <section id={s.id} aria-labelledby={`${s.id}-h`} className="sg-chapter">
-      <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{num(index)} /</span>{String(total).padStart(2, "0")}</p>
+      <p className="sg-eyebrow text-fg"><span className="sg-section-index">{num(index)} /</span>{String(total).padStart(2, "0")}</p>
       <h2 id={`${s.id}-h`}>{s.title}</h2>
       {s.lede && <p className="sg-case-secondary">{s.lede}</p>}
       <div className={cn("mt-8", band && "nw-band rounded-[0.5rem] p-6 sm:p-10")}><Body section={s} /></div>
@@ -93,7 +93,7 @@ function Overview({ body, facts }: { body: string[]; facts: { label: string; val
       <dl className="flex flex-col divide-y divide-line self-start rounded-[0.5rem] border border-line bg-surface">
         {facts.map((f) => (
           <div key={f.label} className="flex flex-col gap-1 px-6 py-4">
-            <dt className="font-label text-[0.75rem] uppercase tracking-[0.08em] text-fg-secondary">{f.label}</dt>
+            <dt className="font-label text-[0.75rem] uppercase tracking-[0.08em] text-fg">{f.label}</dt>
             <dd className="font-semibold leading-snug">{f.value}</dd>
           </div>
         ))}
@@ -109,10 +109,10 @@ function Challenge({ body, behaviors }: { body: string[]; behaviors: { who: stri
       <ul className="flex flex-col gap-3">
         {behaviors.map((b, i) => (
           <li key={b.who} className="nw-rise grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-5 rounded-[0.5rem] border border-line bg-surface p-6">
-            <span className="display-num text-[1.75rem] leading-none text-[var(--nw-ink)]">{num(i)}</span>
+            <span className="display-num text-[1.75rem] leading-none text-fg">{num(i)}</span>
             <div className="flex flex-col gap-1">
               <p className="text-[1.25rem] font-semibold tracking-[-0.02em] leading-[1.1]">{b.who}</p>
-              <p className="text-fg-secondary">{b.goal}</p>
+              <p className="text-fg">{b.goal}</p>
             </div>
           </li>
         ))}
@@ -166,12 +166,12 @@ function Roles({ items }: { items: { name: string; summary: string; can: string[
       {items.map((r, i) => (
         <li key={r.name} className="nw-rise relative flex flex-col gap-4 rounded-[0.5rem] border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-(--duration-base) hover:border-[var(--nw-blue)] hover:shadow-[0_12px_32px_-18px_var(--nw-blue)]">
           <div className="flex items-center justify-between">
-            <span className="display-num text-[0.875rem] text-[var(--nw-ink)]">{num(i)}</span>
+            <span className="display-num text-[0.875rem] text-fg">{num(i)}</span>
             {i < items.length - 1 && <ArrowRight aria-hidden className="hidden size-5 text-[var(--nw-ink)] xl:block" />}
           </div>
           <div className="flex flex-col gap-2">
             <h3 className="text-[1.5rem] font-semibold tracking-[-0.02em] leading-[1.05]">{r.name}</h3>
-            <p className="text-fg-secondary">{r.summary}</p>
+            <p className="text-fg">{r.summary}</p>
           </div>
           <ul className="mt-auto flex flex-col gap-1.5 border-t border-line pt-4 text-[0.9375rem]">
             {r.can.map((c) => (
@@ -191,7 +191,7 @@ function Ia({ groups }: { groups: { title: string; items: string[] }[] }) {
         <section key={g.title} aria-label={g.title} className="nw-rise overflow-hidden rounded-[0.5rem] border border-line bg-surface">
           <header className="flex items-baseline justify-between gap-3 bg-[var(--nw-blue)] px-5 py-3.5 text-white">
             <h3 className="text-[1.125rem] font-semibold tracking-[-0.02em]">{g.title}</h3>
-            <span className="display-num text-[0.75rem] opacity-80">{num(i)}</span>
+            <span className="display-num text-[0.75rem]">{num(i)}</span>
           </header>
           <ul className="flex flex-col divide-y divide-line px-5 text-[0.9375rem]">
             {g.items.map((it) => <li key={it} className="py-2.5">{it}</li>)}
@@ -208,14 +208,14 @@ function Flows({ items }: { items: { title: string; steps: string[] }[] }) {
       {items.map((f, i) => (
         <li key={f.title} className="nw-rise grid gap-4 rounded-[0.5rem] border border-line bg-surface p-5 sm:p-6 lg:grid-cols-[13.75rem_1fr] lg:items-center">
           <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
-            <span className="display-num text-[0.8125rem] text-[var(--nw-ink)]">FLOW {num(i)}</span>
+            <span className="display-num text-[0.8125rem] text-fg">FLOW {num(i)}</span>
             <h3 className="text-[1.25rem] font-semibold tracking-[-0.02em] leading-[1.1]">{f.title}</h3>
           </div>
           <ol className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             {f.steps.map((step, j) => (
               <li key={step} className="flex flex-col items-start gap-2 sm:contents">
                 <span className={cn("rounded-[0.5rem] border px-3.5 py-2 text-[0.9375rem] font-semibold",
-                  j === 0 ? "border-[var(--nw-blue)] bg-[var(--nw-tint)] text-[var(--nw-ink)]"
+                  j === 0 ? "border-[var(--nw-blue)] bg-[var(--nw-tint)] text-fg"
                     : j === f.steps.length - 1 ? "border-transparent bg-[var(--nw-blue)] text-white" : "border-line bg-canvas")}>
                   {step}
                 </span>
@@ -255,7 +255,7 @@ function Monetization({ chain, actions, models }: { chain: string[]; actions: st
         {models.map((m) => (
           <li key={m.title} className="nw-rise flex flex-col gap-1.5 rounded-[0.5rem] border border-line bg-surface p-5">
             <p className="font-semibold">{m.title}</p>
-            <p className="text-[1rem] leading-[1.55] text-fg-secondary">{m.body}</p>
+            <p className="text-[1rem] leading-[1.55] text-fg">{m.body}</p>
           </li>
         ))}
       </ul>
@@ -271,7 +271,7 @@ function Principles({ items }: { items: { title: string; body: string }[] }) {
           <span className="display-num text-[2.75rem] leading-none text-[var(--nw-ink)]">{num(i)}</span>
           <div className="flex flex-col gap-2">
             <h3 className="text-[1.5rem] font-semibold tracking-[-0.02em] leading-[1.05]">{p.title}</h3>
-            <p className="text-fg-secondary">{p.body}</p>
+            <p className="text-fg">{p.body}</p>
           </div>
         </li>
       ))}
@@ -301,8 +301,8 @@ function System({ body, groups }: { body: string[]; groups: { title: string; ite
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {groups.map((g) => (
           <li key={g.title} className="nw-rise flex flex-col gap-3 rounded-[0.5rem] border border-line bg-surface p-5">
-            <p className="text-[1.125rem] font-semibold tracking-[-0.02em] leading-[1.1] text-[var(--nw-ink)]">{g.title}</p>
-            <ul className="flex flex-col gap-1.5 text-[0.9375rem] text-fg-secondary">
+            <p className="text-[1.125rem] font-semibold tracking-[-0.02em] leading-[1.1] text-fg">{g.title}</p>
+            <ul className="flex flex-col gap-1.5 text-[0.9375rem] text-fg">
               {g.items.map((it) => <li key={it}>{it}</li>)}
             </ul>
           </li>
@@ -351,9 +351,9 @@ function Timeline({ steps }: { steps: { title: string; body: string }[] }) {
     <ol className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
         <li key={s.title} className="nw-rise flex flex-col gap-3 border-t-2 border-[var(--nw-blue)] pt-4">
-          <span className="display-num text-[0.875rem] text-[var(--nw-ink)]">{num(i)}</span>
+          <span className="display-num text-[0.875rem] text-fg">{num(i)}</span>
           <h3 className="text-[1.25rem] font-semibold tracking-[-0.02em] leading-[1.1]">{s.title}</h3>
-          <p className="text-[0.9375rem] leading-[1.6] text-fg-secondary">{s.body}</p>
+          <p className="text-[0.9375rem] leading-[1.6] text-fg">{s.body}</p>
         </li>
       ))}
     </ol>
@@ -368,7 +368,7 @@ function Figures({ images, dark }: { images: GalleryItem[]; dark?: boolean }) {
           {/* eslint-disable-next-line @next/next/no-img-element -- static case images with known size */}
           <img {...responsive(im.src, im.width, SIZES.figure)} alt={im.alt} width={im.width} height={im.height} loading="lazy" decoding="async"
             className={cn("h-auto w-full rounded-[0.5rem] border", dark ? "border-white/15" : "border-line")} />
-          {im.caption && <figcaption className={cn("text-[0.875rem]", dark ? "text-white/70" : "text-fg-secondary")}>{im.caption}</figcaption>}
+          {im.caption && <figcaption className={cn("text-[0.875rem]", dark ? "text-white" : "text-fg")}>{im.caption}</figcaption>}
         </figure>
       ))}
     </div>
@@ -391,7 +391,7 @@ function Trust({ items }: { items: { icon: TrustIcon; title: string; body: strin
               <Icon aria-hidden className="size-5" strokeWidth={1.75} />
             </span>
             <p className="font-semibold">{t.title}</p>
-            <p className="text-[0.9375rem] leading-[1.55] text-fg-secondary">{t.body}</p>
+            <p className="text-[0.9375rem] leading-[1.55] text-fg">{t.body}</p>
           </li>
         );
       })}

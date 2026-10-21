@@ -83,7 +83,7 @@ function ProjectCard({ item, index, locale, location, variant }: {
           {item.process && <div className="mt-5 max-w-[26.25rem]"><ProcessStrip process={item.process} locale={locale} /></div>}
         </div>
         <span className="sg-project-number">
-          {item.adult && <span className="mr-2 text-danger">{d.adult.badge}</span>}
+          {item.adult && <span className="mr-2 text-fg">{d.adult.badge}</span>}
           {pad(index)} / {item.year}
         </span>
       </div>
