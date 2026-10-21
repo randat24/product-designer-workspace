@@ -121,7 +121,8 @@
   .signal .sg-chip[aria-pressed="true"], .signal .sg-chip:has(input:checked) { color: var(--sg-bg); background: var(--sg-fg); border-color: var(--sg-fg); }
   .signal .sg-chip:has(input:focus-visible) { outline: var(--sg-focus-width) solid var(--sg-focus); outline-offset: var(--sg-focus-offset); }
   .signal .sg-chip:disabled { opacity: .45; cursor: default; }
-  .signal .sg-chip-count { font-family: var(--sg-font-mono); font-size: 0.75rem; opacity: .75; }
+  /* No opacity: at .75 the count fell to 3.2:1 on the page (WCAG 1.4.3); it takes the chip's own colour. */
+  .signal .sg-chip-count { font-family: var(--sg-font-mono); font-size: 0.75rem; }
   /* A count that just changed pops once (note reactions). */
   .signal .sg-bump { display: inline-block; }
   @media (prefers-reduced-motion: no-preference) { .signal .sg-bump { animation: sg-bump var(--duration-base) var(--ease-standard); } }
