@@ -334,7 +334,7 @@ CTA — одна формулировка: **«Обговорити проєкт
    Смена секрета — та же команда и новое значение в Vercel; старый перестаёт работать сразу.
 3. Принимающее пространство: `insert into intake_settings (workspace_id) values ('<id пространства>');`
    Выключить форму: `update intake_settings set enabled = false;` — сайт покажет «форма временно недоступна».
-4. Turnstile: Cloudflare → Turnstile → Add site (домен `fedorov-design.vercel.app`, режим Managed) →
+4. Turnstile: Cloudflare → Turnstile → Add site (домен `fedorov-design.com.ua`, режим Managed) →
    `NEXT_PUBLIC_TURNSTILE_SITE_KEY` и `TURNSTILE_SECRET_KEY` в Vercel.
 5. Resend: аккаунт на почту владельца → API key → `RESEND_API_KEY`, `INTAKE_NOTIFY_EMAIL` (та же почта).
 6. Redeploy production.

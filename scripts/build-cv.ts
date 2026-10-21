@@ -16,7 +16,7 @@ import { chromium } from "@playwright/test";
 import { CONTACTS, LOCALES, dict, type Locale } from "../src/site/content";
 
 const ROOT = resolve(__dirname, "..");
-const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://fedorov-design.vercel.app").replace(/\/+$/, "");
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://fedorov-design.com.ua").replace(/\/+$/, "");
 /** CV only: the phone is not published on the site pages. */
 const PHONE = "+38 063 314 37 55";
 

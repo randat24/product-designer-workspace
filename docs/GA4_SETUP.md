@@ -13,7 +13,7 @@
 
 ## 2. Поток данных (Data stream)
 
-1. **Website URL**: пока `https://fedorov-design.vercel.app` (ресурс уже создан с этим адресом),
+1. **Website URL**: `https://fedorov-design.com.ua` (поток создавали на `fedorov-design.vercel.app`; адрес меняется в нём же),
    **Stream name**: «Site». После перехода на свой домен адрес меняется в том же потоке (шестерёнка потока → URL) —
    новый поток не нужен, история сохраняется. См. [DOMAIN_SWITCH.md](DOMAIN_SWITCH.md).
 2. **Enhanced measurement** — оставить включённым. Внутри (значок шестерёнки) проверить, что включено
