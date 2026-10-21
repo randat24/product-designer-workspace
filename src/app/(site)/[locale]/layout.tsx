@@ -131,8 +131,8 @@ export default async function SiteLayout({
             {children}
           </main>
 
-          {/* SIGNAL footer: one mono line under a rule. */}
-          <footer className={`${container} mt-16 flex flex-col gap-4 border-t border-line py-7 font-label text-[0.75rem] uppercase leading-[1.6] tracking-[0.04em] text-fg-secondary md:flex-row md:items-center md:justify-between`}>
+          {/* SIGNAL footer: one mono line under a rule. md:pr-20 lg:pr-24 keep the last links clear of the floating «Вгору» (48 px, 24 px from the edge). */}
+          <footer className={`${container} mt-16 flex flex-col gap-4 border-t border-line py-7 font-label text-[0.75rem] uppercase leading-[1.6] tracking-[0.04em] text-fg-secondary md:flex-row md:pr-20 lg:pr-24 md:items-center md:justify-between`}>
             <span>© {year} {d.name}</span>
             <ul className="flex flex-wrap gap-x-5 gap-y-1" aria-label={d.ui.footerNav}>
               {SOCIAL.map(({ key, href, label, event }) => (
