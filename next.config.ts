@@ -45,6 +45,13 @@ const config: NextConfig = {
       { source: "/:locale(uk|en)/cases/subscription-platform", destination: "/:locale/cases/neural-webcam", permanent: true },
       // The project itself was renamed too: old bookmarks into the notebook keep working.
       { source: "/w/:ws/p/subscription-platform/:path*", destination: "/w/:ws/p/neural-webcam/:path*", permanent: true },
+      // The project's first Vercel address: one host for search engines (the other old ones redirect in Vercel → Domains).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "product-designer-workspace.vercel.app" }],
+        destination: "https://fedorov-design.com.ua/:path*",
+        permanent: true,
+      },
     ];
   },
   // Case prototypes are static pages in public/prototypes; /prototypes/volta serves volta.html.

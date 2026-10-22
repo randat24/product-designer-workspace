@@ -261,9 +261,14 @@ export function noteLd(locale: Locale, n: { number: number; body: string; publis
   };
 }
 
-/** A note's first line, cut to a title's length: notes have no title of their own. */
-export function noteHeadline(body: string, max = 70): string {
-  const first = body.trim().split(/\n/)[0]!.trim();
+/**
+ * A note's title: notes have none of their own, so it is the first line, or its first sentence when the line is
+ * longer than a search result shows (about 60 characters). A single closing period goes: a title, not a sentence.
+ */
+export function noteHeadline(body: string, max = 60): string {
+  const line = body.trim().split(/\n/)[0]!.trim();
+  const sentence = line.length > max ? (line.match(/^[\s\S]*?[.!?…]+(?=\s|$)/)?.[0] ?? line) : line;
+  const first = sentence.replace(/(?<!\.)\.$/, "").trim();
   if (first.length <= max) return first;
   const cut = first.slice(0, max - 1);
   return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max / 2)).replace(/[,;:—–-]+$/, "").trim()}…`;
