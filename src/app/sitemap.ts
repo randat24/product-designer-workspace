@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { LOCALES, type Locale } from "@/site/content";
 import { getCases } from "@/site/cases-source";
 import { getNotes } from "@/site/notes-source";
+import { getSiteUrl } from "@/shared/lib/site-url";
 import { absoluteUrl } from "@/site/seo";
 
 // Built from the real routes and the published cases, so a newly published case appears here on
@@ -15,10 +16,11 @@ const CONTENT_UPDATED = "2026-10-13";
 type Entry = MetadataRoute.Sitemap[number];
 
 function entry(path: string, lastModified: string, priority: number, changeFrequency: Entry["changeFrequency"], locales: readonly Locale[] = LOCALES): Entry[] {
-  // The same x-default as the page's own hreflang (pageMetadata): the language-picking root for home, uk elsewhere.
+  // The same x-default as the page's own hreflang (pageMetadata), written the same way: the language-picking root
+  // (no trailing slash, as Next prints it in the page) for home, uk elsewhere.
   const languages = {
     ...Object.fromEntries(locales.map((l) => [l, absoluteUrl(`/${l}${path}`)])),
-    "x-default": path === "" ? absoluteUrl("/") : absoluteUrl(`/uk${path}`),
+    "x-default": path === "" ? getSiteUrl() : absoluteUrl(`/uk${path}`),
   };
   return locales.map((l: Locale) => ({
     url: absoluteUrl(`/${l}${path}`),
