@@ -15,7 +15,11 @@ const CONTENT_UPDATED = "2026-10-13";
 type Entry = MetadataRoute.Sitemap[number];
 
 function entry(path: string, lastModified: string, priority: number, changeFrequency: Entry["changeFrequency"], locales: readonly Locale[] = LOCALES): Entry[] {
-  const languages = Object.fromEntries(locales.map((l) => [l, absoluteUrl(`/${l}${path}`)]));
+  // The same x-default as the page's own hreflang (pageMetadata): the language-picking root for home, uk elsewhere.
+  const languages = {
+    ...Object.fromEntries(locales.map((l) => [l, absoluteUrl(`/${l}${path}`)])),
+    "x-default": path === "" ? absoluteUrl("/") : absoluteUrl(`/uk${path}`),
+  };
   return locales.map((l: Locale) => ({
     url: absoluteUrl(`/${l}${path}`),
     lastModified,
