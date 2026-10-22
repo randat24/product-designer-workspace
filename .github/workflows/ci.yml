@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   app:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
@@ -29,7 +29,7 @@ jobs:
       - run: npm run build
 
   database:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
@@ -40,7 +40,7 @@ jobs:
   # End-to-end: the site and the signed-in tool on a local Supabase (docs/QUALITY_REVIEW.md, stage 0).
   # Keys and the test user exist only in this throwaway local stack.
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       NEXT_TELEMETRY_DISABLED: 1
       E2E_EMAIL: e2e@example.test
