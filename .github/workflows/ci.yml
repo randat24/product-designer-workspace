@@ -42,6 +42,7 @@ jobs:
   # Keys and the test user exist only in this throwaway local stack.
   e2e:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     env:
       NEXT_TELEMETRY_DISABLED: 1
       E2E_EMAIL: e2e@example.test
