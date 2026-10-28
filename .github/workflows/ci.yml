@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Runners pinned to 24.04: ubuntu-latest moved to 26.04, which Playwright 1.56 cannot install browsers on.
   app:
     runs-on: ubuntu-24.04
     env:
