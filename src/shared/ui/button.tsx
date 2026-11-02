@@ -46,7 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLBut
         disabled={disabled || busy}
         aria-busy={busy || undefined}
         className={cn(
-          "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-control font-semibold whitespace-nowrap transition-[color,background-color,border-color,transform] duration-(--duration-fast) ease-standard active:translate-y-px disabled:pointer-events-none disabled:not-aria-busy:opacity-50",
+          "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-control font-semibold whitespace-nowrap transition-[color,background-color,border-color,translate] duration-(--duration-fast) ease-standard active:translate-y-px disabled:pointer-events-none disabled:not-aria-busy:opacity-50",
           SIZES[size],
           busy && "cursor-progress",
           VARIANTS[variant],
@@ -71,7 +71,7 @@ export const IconButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTM
   return (
     <button ref={ref} type={type} aria-label={label} title={label}
       className={cn(
-        "hit grid shrink-0 place-items-center rounded-control text-fg-secondary transition-[color,background-color,transform] duration-(--duration-fast) ease-standard hover:bg-subtle active:scale-95 disabled:pointer-events-none disabled:opacity-50",
+        "hit grid shrink-0 place-items-center rounded-control text-fg-secondary transition-[color,background-color,scale] duration-(--duration-fast) ease-standard hover:bg-subtle active:scale-95 disabled:pointer-events-none disabled:opacity-50",
         size === "md" ? "size-9 text-body" : "size-8 text-meta",
         tone === "danger" ? "hover:text-danger" : "hover:text-fg",
         className,
