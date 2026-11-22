@@ -44,7 +44,7 @@ export function AdultGate({ labels, backHref, children }: {
           <h2 id="adult-h" className="text-[clamp(1.5rem,3vw,1.875rem)] font-medium leading-[1.1] tracking-[-0.035em]">
             {labels.title}
           </h2>
-          <p className="text-[1rem] leading-[1.55] text-fg-secondary">{labels.body}</p>
+          <p className="text-[1rem] leading-[1.55] text-fg">{labels.body}</p>
           <div className="flex flex-wrap gap-3">
             <button type="button" onClick={confirm}
               className={button({ variant: "primary" })}>

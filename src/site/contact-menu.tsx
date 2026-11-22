@@ -58,7 +58,7 @@ export function ContactMenu({ label, heading, copyLabel, copiedLabel, contacts, 
       </button>
       <div id={id} hidden={!open}
         className={cn(sg.menu, "absolute top-full left-0 mt-2 w-[min(18.75rem,calc(100vw-2rem))]")}>
-        <p className="sg-eyebrow px-2.5 pt-1 pb-2 text-fg-secondary">{heading}</p>
+        <p className="sg-eyebrow px-2.5 pt-1 pb-2 text-fg">{heading}</p>
         <ul className="flex flex-col">
           {items.map(({ key, href, label: text, Icon, event }, i) => (
             <li key={key} className="flex items-center gap-1">

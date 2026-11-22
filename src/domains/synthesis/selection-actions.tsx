@@ -73,7 +73,9 @@ export function SelectionActions({ selection, projectId, interviewId, base }: {
           {t.synthesis.quotes.observationFromSelection} <span className="font-normal opacity-60">⌥O</span>
         </button>
       </span>
-      <span role="status" aria-live="polite" className={cn("px-1 text-caption font-semibold", failed && "text-[#ffb4ab]")}>
+      {/* The bar is inverted (bg-fg), so the failure takes the danger tint of the other theme: --danger-bg is pale
+          on the dark bar of the light theme and deep on the light bar of the dark one, readable in both. */}
+      <span role="status" aria-live="polite" className={cn("px-1 text-caption font-semibold", failed && "text-danger-bg")}>
         {failed ? t.autosave.failed : created && <Link href={created.href} className="underline underline-offset-2">{t.synthesis.quotes.created(created.code)}</Link>}
       </span>
     </div>

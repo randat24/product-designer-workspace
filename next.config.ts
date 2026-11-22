@@ -45,11 +45,32 @@ const config: NextConfig = {
       { source: "/:locale(uk|en)/cases/subscription-platform", destination: "/:locale/cases/neural-webcam", permanent: true },
       // The project itself was renamed too: old bookmarks into the notebook keep working.
       { source: "/w/:ws/p/subscription-platform/:path*", destination: "/w/:ws/p/neural-webcam/:path*", permanent: true },
+      // The project's first Vercel address: one host for search engines (the other old ones redirect in Vercel → Domains).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "product-designer-workspace.vercel.app" }],
+        destination: "https://fedorov-design.com.ua/:path*",
+        permanent: true,
+      },
     ];
   },
   // Case prototypes are static pages in public/prototypes; /prototypes/volta serves volta.html.
+  // The site for AI agents (src/site/agents/markdown.ts, docs/SEO.md): every public page also as Markdown, at
+  // the page URL plus .md (/uk.md, /uk/cases/<slug>.md) or at the page URL itself asked for with
+  // `Accept: text/markdown`. Browsers never ask for Markdown, so visitors keep getting HTML. beforeFiles: checked
+  // before the prerendered pages, which would answer the plain URL otherwise.
   async rewrites() {
-    return [{ source: "/prototypes/:name([a-z0-9-]+)", destination: "/prototypes/:name.html" }];
+    const md = (page: string) => `/md/:locale${page}`;
+    const wantsMarkdown = [{ type: "header" as const, key: "accept", value: ".*text/markdown.*" }];
+    const pages: [string, string][] = [["", ""], ["/about", "/about"], ["/cases", "/cases"], ["/cases/:slug([a-z0-9-]+)", "/cases/:slug"], ["/notes", "/notes"]];
+    return {
+      beforeFiles: [
+        ...pages.map(([source, page]) => ({ source: `/:locale(uk|en)${source}.md`, destination: md(page) })),
+        ...pages.map(([source, page]) => ({ source: `/:locale(uk|en)${source}`, has: wantsMarkdown, destination: md(page) })),
+      ],
+      afterFiles: [{ source: "/prototypes/:name([a-z0-9-]+)", destination: "/prototypes/:name.html" }],
+      fallback: [],
+    };
   },
   async headers() {
     return [

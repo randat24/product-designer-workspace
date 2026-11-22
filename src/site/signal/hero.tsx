@@ -45,7 +45,9 @@ export function SignalHero({ locale, traceCase }: { locale: Locale; traceCase: C
           </div>
           <h1 id="hero-heading">
             <span className="sr-only">{d.name}. </span>
-            {first}<br />{second}<br /><em>{last}</em>
+            <span className="sg-line"><span>{first}</span></span>{" "}
+            <span className="sg-line"><span>{second}</span></span>{" "}
+            <span className="sg-line"><em>{last}</em></span>
           </h1>
           <p className="sg-hero-intro">{h.intro}</p>
           <div className="sg-hero-actions">

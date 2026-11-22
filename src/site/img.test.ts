@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SIZES, responsive } from "./img";
-import { clampDescription } from "./seo";
+import { clampDescription, noteHeadline } from "./seo";
 
 describe("responsive (case pictures through the image optimizer)", () => {
   it("offers the steps up to the first one that covers the original, never larger", () => {
@@ -47,5 +47,21 @@ describe("clampDescription: dots inside a sentence", () => {
     const a = "Redesign of the acme.com checkout for 2.5M users, from research to the handoff of every screen state.";
     const out = clampDescription(a + " " + "More text follows here to push it past the limit of one hundred and sixty characters.");
     expect(out).toBe(a);
+  });
+});
+
+describe("noteHeadline", () => {
+  it("keeps a short first line and drops its closing period", () => {
+    expect(noteHeadline("Продовжу думку про «чому».\nДалі текст.")).toBe("Продовжу думку про «чому»");
+    expect(noteHeadline("Why not?\nMore.")).toBe("Why not?");
+  });
+  it("takes the first sentence of a line too long for a search result", () => {
+    expect(noteHeadline("Генерувати екран тепер коштує десять секунд. Три варіанти — тридцять, а вибір — годину."))
+      .toBe("Генерувати екран тепер коштує десять секунд");
+  });
+  it("cuts a long first sentence at a word", () => {
+    const out = noteHeadline(("word ".repeat(30)).trim());
+    expect(out.length).toBeLessThanOrEqual(60);
+    expect(out.endsWith("word…")).toBe(true);
   });
 });

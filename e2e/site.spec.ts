@@ -40,6 +40,27 @@ test("site: first published case", async ({ page }, testInfo) => {
   await checkPage(page, testInfo, href!, "en");
 });
 
+// The version for AI agents (src/site/agents/markdown.ts): Markdown twins at .md and by Accept, the full file and JSON.
+// Browsers keep getting HTML from the same URLs.
+test("site for agents: Markdown, llms files and JSON", async ({ request }) => {
+  for (const path of ["/uk.md", "/en/about.md", "/en/cases.md", "/uk/notes.md"]) {
+    const res = await request.get(path);
+    expect(res.status(), path).toBe(200);
+    expect(res.headers()["content-type"], path).toContain("text/markdown");
+    expect(await res.text(), path).toMatch(/^# /);
+  }
+  const byAccept = await request.get("/en/about", { headers: { Accept: "text/markdown" } });
+  expect(byAccept.headers()["content-type"]).toContain("text/markdown");
+  const html = await request.get("/en/about", { headers: { Accept: "text/html" } });
+  expect(html.headers()["content-type"]).toContain("text/html");
+  expect(await html.text()).toContain('type="text/markdown"');
+  expect((await request.get("/en/cases/no-such-case.md")).status()).toBe(404);
+  expect((await request.get("/llms-full.txt")).status()).toBe(200);
+  const json = await (await request.get("/portfolio.json")).json();
+  expect(json.en.name).toBeTruthy();
+  expect(Array.isArray(json.uk.cases)).toBe(true);
+});
+
 test("site 404 is a real, localized page", async ({ page }) => {
   const res = await page.goto("/en/does-not-exist");
   expect(res?.status()).toBe(404);

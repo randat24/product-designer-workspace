@@ -26,6 +26,18 @@ export function ogImageUrl(locale: Locale, slug?: string, note?: number): string
   return absoluteUrl(`/og?${q.toString()}`);
 }
 
+/** The Markdown twin of a page for AI agents (src/site/agents/markdown.ts); pages that have one, by their locale-less path ("" is home). */
+export function markdownPath(locale: Locale, path: string): string | null {
+  if (path === "") return `/${locale}.md`;
+  if (["/about", "/cases", "/notes"].includes(path) || /^\/cases\/[a-z0-9-]+$/.test(path)) return `/${locale}${path}.md`;
+  return null;
+}
+
+export const markdownUrl = (locale: Locale, path: string) => {
+  const p = markdownPath(locale, path);
+  return p ? absoluteUrl(p) : null;
+};
+
 type PageMeta = {
   locale: Locale;
   path: string;
@@ -77,11 +89,13 @@ export function pageMetadata(p: PageMeta): Metadata {
   // (the name is still in the site name, the breadcrumbs and the structured data).
   const fits = titleTemplate(d.name).replace("%s", () => p.title).length <= 60;
   const description = clampDescription(p.description);
+  const markdown = markdownUrl(p.locale, p.path);
 
   return {
     title: p.absoluteTitle || !fits ? { absolute: p.title } : p.title,
     description,
-    alternates: { canonical: url, languages },
+    // The Markdown twin for AI agents (src/site/agents/markdown.ts), where the page has one.
+    alternates: { canonical: url, languages, ...(markdown ? { types: { "text/markdown": markdown } } : {}) },
     robots: index
       ? { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } }
       : // Sample pages on production: out of the index, links still followed. Previews: neither.
@@ -261,9 +275,14 @@ export function noteLd(locale: Locale, n: { number: number; body: string; publis
   };
 }
 
-/** A note's first line, cut to a title's length: notes have no title of their own. */
-export function noteHeadline(body: string, max = 70): string {
-  const first = body.trim().split(/\n/)[0]!.trim();
+/**
+ * A note's title: notes have none of their own, so it is the first line, or its first sentence when the line is
+ * longer than a search result shows (about 60 characters). A single closing period goes: a title, not a sentence.
+ */
+export function noteHeadline(body: string, max = 60): string {
+  const line = body.trim().split(/\n/)[0]!.trim();
+  const sentence = line.length > max ? (line.match(/^[\s\S]*?[.!?…]+(?=\s|$)/)?.[0] ?? line) : line;
+  const first = sentence.replace(/(?<!\.)\.$/, "").trim();
   if (first.length <= max) return first;
   const cut = first.slice(0, max - 1);
   return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max / 2)).replace(/[,;:—–-]+$/, "").trim()}…`;

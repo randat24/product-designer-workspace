@@ -1,8 +1,12 @@
 import { cn } from "@/shared/lib/cn";
 import type { CaseStory, Mark, StoryLabels } from "./case-story";
 import { CaseContents } from "./case-contents";
+import type { CaseDockCta } from "./case-dock";
 import { container } from "./ui";
 import { SIZES, responsive } from "@/site/img";
+import type { Locale } from "./content";
+import { CaseVideo } from "./case-video";
+import type { CaseVideo as Video, ClipSection } from "./case-videos";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -12,7 +16,17 @@ type Section = { id: string; title: string; body: React.ReactNode };
  * Sections of a published case, in the order of the tool's chain; missing blocks are skipped. Laid out as the
  * SIGNAL case: contents in a sticky column, chapters under a rule, the accent only on codes and numbers.
  */
-export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; labels: StoryLabels; sticker: string }) {
+export function CaseStoryView({ story, labels, sticker, clips, videoLabels, locale, cta }: {
+  story: CaseStory;
+  labels: StoryLabels;
+  sticker: string;
+  /** Screen recordings shown at the end of their chapter (src/site/case-videos.ts). */
+  clips?: Partial<Record<ClipSection, Video>>;
+  videoLabels?: { videoPlay: string; videoPause: string };
+  locale?: Locale;
+  /** The phone case dock's call to action (case-dock.tsx). */
+  cta?: CaseDockCta;
+}) {
   const sections: Section[] = [
     { id: "overview", title: labels.overview, body: <Overview story={story} labels={labels} /> },
     { id: "process", title: labels.process, body: <Process story={story} /> },
@@ -29,13 +43,16 @@ export function CaseStoryView({ story, labels, sticker }: { story: CaseStory; la
 
   return (
     <div className={`${container} sg-case-body`}>
-      <CaseContents label={labels.contents} sections={sections} />
+      <CaseContents label={labels.contents} sections={sections} cta={cta} />
       <div className="min-w-0">
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="sg-chapter" aria-labelledby={`${s.id}-h`}>
-            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
+            <p className="sg-eyebrow text-fg"><span className="sg-section-index">{pad(i + 1)} /</span>{pad(sections.length)}</p>
             <h2 id={`${s.id}-h`}>{s.title}</h2>
             {s.body}
+            {clips?.[s.id as ClipSection] && videoLabels && locale && (
+              <CaseVideo video={clips[s.id as ClipSection]!} labels={videoLabels} locale={locale} />
+            )}
           </section>
         ))}
       </div>
@@ -124,8 +141,8 @@ function Insights({ data }: { data: NonNullable<CaseStory["insights"]> }) {
 const MARK_CLASS: Record<Mark, string> = {
   // The accent marks the gaps of the others (the opportunity); a match is plain ink, a partial one is muted.
   yes: "bg-subtle text-fg",
-  partial: "text-fg-secondary border border-dashed border-line",
-  no: "bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-accent-text",
+  partial: "text-fg border border-dashed border-line",
+  no: "bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-fg",
 };
 
 function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitors"]>; labels: StoryLabels }) {
@@ -141,7 +158,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
             <tr>
               <td className="p-3" />
               {data.products.map((p, i) => (
-                <th key={p} className={cn("p-3 text-center font-label text-[0.6875rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg-secondary")}>
+                <th key={p} className={cn("p-3 text-center font-label text-[0.75rem] font-normal uppercase tracking-[0.06em]", i === 0 ? "text-fg" : "text-fg")}>
                   {p}
                 </th>
               ))}
@@ -163,7 +180,7 @@ function Competitors({ data, labels }: { data: NonNullable<CaseStory["competitor
           </tbody>
         </table>
       </div>
-      <div className="mt-3 flex items-center gap-2 font-label text-[0.6875rem] text-fg-secondary">
+      <div className="mt-3 flex items-center gap-2 font-label text-[0.75rem] text-fg">
         <span className={cn("h-3 w-3 rounded-[0.125rem]", MARK_CLASS.no)} aria-hidden="true" />
         {labels.redHint}
       </div>
@@ -241,7 +258,7 @@ function Screens({ data, sticker }: { data: NonNullable<CaseStory["screens"]>; s
             <p className="sg-case-secondary !mb-0 !text-[0.9375rem]">{sc.caption}</p>
             <ul className="flex flex-wrap gap-1.5">
               {sc.states.map((st) => (
-                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.6875rem] text-fg-secondary">{st}</li>
+                <li key={st} className="rounded-[0.1875rem] border border-line px-2 py-0.5 font-label text-[0.75rem] text-fg">{st}</li>
               ))}
             </ul>
           </li>

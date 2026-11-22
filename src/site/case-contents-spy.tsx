@@ -2,31 +2,37 @@
 
 import { useEffect } from "react";
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 /**
- * Goal-gradient (docs/UX_LAWS.md, UX-22): marks the section being read in the case contents
- * with aria-current, so the reader sees where they are and how much is left. No UI of its own.
+ * Goal-gradient (docs/UX_LAWS.md, UX-22): marks the section being read in every case contents list
+ * ([data-case-contents]: the one above the chapters and the phone dock's) with aria-current, and writes its number
+ * into the dock's [data-case-current], so the reader sees where they are and how much is left. No UI of its own.
  */
-export function CaseContentsSpy({ ids, navId }: { ids: string[]; navId: string }) {
+export function CaseContentsSpy({ ids }: { ids: string[] }) {
   useEffect(() => {
-    const nav = document.getElementById(navId);
+    const navs = [...document.querySelectorAll<HTMLElement>("[data-case-contents]")];
     const sections = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
-    if (!nav || !sections.length) return;
-    const links = new Map(ids.map((id) => [id, nav.querySelector<HTMLAnchorElement>(`a[href="#${id}"]`)]));
+    if (!navs.length || !sections.length) return;
     const visible = new Set<string>();
 
     const mark = () => {
       // The first section on screen (in document order) is the current one.
       const current = ids.find((id) => visible.has(id));
       if (!current) return;
-      links.forEach((a, id) => {
-        if (id === current) a?.setAttribute("aria-current", "location");
-        else a?.removeAttribute("aria-current");
-      });
-      const a = links.get(current);
-      const list = a?.closest("ol");
-      if (a && list && list.scrollWidth > list.clientWidth) {
-        list.scrollTo({ left: a.offsetLeft - list.clientWidth / 2 + a.offsetWidth / 2, behavior: "smooth" });
+      for (const nav of navs) {
+        for (const a of nav.querySelectorAll<HTMLAnchorElement>("a[href^='#']")) {
+          if (a.getAttribute("href") === `#${current}`) a.setAttribute("aria-current", "location");
+          else a.removeAttribute("aria-current");
+        }
+        const a = nav.querySelector<HTMLAnchorElement>(`a[href="#${current}"]`);
+        const list = a?.closest("ol");
+        if (a && list && list.scrollWidth > list.clientWidth) {
+          list.scrollTo({ left: a.offsetLeft - list.clientWidth / 2 + a.offsetWidth / 2, behavior: "smooth" });
+        }
       }
+      const number = `${pad(ids.indexOf(current) + 1)} / ${pad(ids.length)}`;
+      document.querySelectorAll("[data-case-current]").forEach((el) => { el.textContent = number; });
     };
 
     const io = new IntersectionObserver(
@@ -42,6 +48,6 @@ export function CaseContentsSpy({ ids, navId }: { ids: string[]; navId: string }
     );
     sections.forEach((s) => io.observe(s));
     return () => io.disconnect();
-  }, [ids, navId]);
+  }, [ids]);
   return null;
 }

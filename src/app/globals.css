@@ -10,7 +10,9 @@
   /* Field and secondary-button borders: 3:1 against surface (WCAG 1.4.11); --line is decorative only. */
   --control-border: #797C72;
   --fg: #20221F;
-  --fg-secondary: #62645D;
+  /* APCA Bronze: Lc 79.6 on canvas, 87.9 on surface (WCAG 7.1:1). Enough for text from 15 px and body from 18 px;
+     smaller text and 16–17 px paragraphs on the site use --fg (docs/DESIGN-SYSTEM.md, «Контраст по APCA»). */
+  --fg-secondary: #4F514A;
   /* The one orange: fills (buttons, the current step). Text on it is dark (6.1:1); white would be 2.8:1. */
   --accent: #FF6B35;
   --accent-hover: #FF8254;
@@ -30,7 +32,7 @@
   /* Text on solid danger / warning / success fills (white in light, ink in dark: 4.5:1 in both). */
   --on-status: #FFFFFF;
   /* Lucide chevron-down in fg-secondary: the select arrow. */
-  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2362645D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234F514A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   /* Inverse surface (footer, the service block, the tool's navigation rail): dark in both themes. */
   --rail: #191B18;
@@ -69,7 +71,8 @@
     --line: #3D4237;
     --control-border: #818879;
     --fg: #F1F1E9;
-    --fg-secondary: #B2B5AA;
+    /* APCA Lc 77 on canvas and surface. */
+    --fg-secondary: #CFD2C7;
     --accent: #FF6B35;
     --accent-hover: #FF8254;
     --on-accent: #191B18;
@@ -84,7 +87,7 @@
     --veteran: #E2DFB1;
     --veteran-bg: #393923;
     --on-status: #191B18;
-    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23CFD2C7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     --rail: #22251F;
     --rail-fg: #F1F1E9;
     --entity-research: #3bc9db;
@@ -103,7 +106,7 @@
   --line: #3D4237;
   --control-border: #818879;
   --fg: #F1F1E9;
-  --fg-secondary: #B2B5AA;
+  --fg-secondary: #CFD2C7;
   --accent: #FF6B35;
   --accent-hover: #FF8254;
   --on-accent: #191B18;
@@ -118,7 +121,7 @@
   --veteran: #E2DFB1;
   --veteran-bg: #393923;
   --on-status: #191B18;
-  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B2B5AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23CFD2C7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   --rail: #22251F;
   --rail-fg: #F1F1E9;
   --entity-research: #3bc9db;
@@ -309,7 +312,7 @@ body {
 }
 
 /* Product case diagrams (src/site/product-story-view.tsx), in SIGNAL: --nw-blue fills (white text on it), --nw-ink is
-   the accent for text and icons on the page, --nw-glow draws lines on the dark panel, --nw-node fills its labels. */
+   the accent for icons and large numbers on the page (small text is --fg: APCA), --nw-glow draws lines on the dark panel, --nw-node fills its labels. */
 .nw {
   --nw-blue: #191B18;
   --nw-glow: #FF6B35;
@@ -352,7 +355,8 @@ body {
 
 /* Work filter (src/site/signal/work-filter.tsx): hide the cards of the other kind. */
 .case-filter[data-filter="real"] [data-kind="concept"],
-.case-filter[data-filter="concept"] [data-kind="real"] { display: none; }
+.case-filter[data-filter="concept"] [data-kind="real"],
+.case-filter [data-tag-out] { display: none; }
 
 /* ---------- Soft entry ----------
    A message that appears (an error, «Збережено», «опубліковано») fades in instead of popping; `.enter` also
@@ -371,22 +375,26 @@ body {
 }
 
 /* ---------- Navigation progress (src/shared/ui/nav-progress.tsx) ----------
-   Grows quickly, then ever slower while the page loads; runs to the end and fades once it is there. */
+   Grows quickly, then ever slower while the page loads; runs to the end and fades once it is there. It grows by
+   transform (scaleX from the left), not width, so it costs no layout while the next page is being loaded. */
 .nav-progress {
-  position: fixed; inset: 0 auto auto 0; z-index: 100; height: 0.125rem; width: 0; opacity: 0;
-  background: var(--accent-text); pointer-events: none;
+  position: fixed; inset: 0 auto auto 0; z-index: 100; height: 0.125rem; width: 100%; opacity: 0;
+  transform: scaleX(0); transform-origin: left; background: var(--accent-text); pointer-events: none;
 }
-.nav-progress[data-state="loading"] { width: 85%; opacity: 1; transition: width 8s cubic-bezier(.1, .7, .2, 1), opacity var(--duration-fast); }
+.nav-progress[data-state="loading"] { transform: scaleX(.85); opacity: 1; transition: transform 8s cubic-bezier(.1, .7, .2, 1), opacity var(--duration-fast); }
 .nav-progress[data-state="done"] {
-  width: 100%; opacity: 0;
-  transition: width var(--duration-base) var(--ease-standard), opacity var(--duration-base) var(--duration-base);
+  transform: scaleX(1); opacity: 0;
+  transition: transform var(--duration-base) var(--ease-standard), opacity var(--duration-base) var(--duration-base);
 }
 
 /* ---------- FEDO mark ---------- */
 .fedo-mark .fedo-box { fill: var(--fedo-box, var(--fg)); }
 .fedo-mark .fedo-sym { fill: var(--fedo-sym, var(--canvas)); }
 .fedo-tap { transform-box: fill-box; transform-origin: 8% 8%; }
-.group:hover .fedo-tap, .group:focus-visible .fedo-tap { animation: fedo-tap 0.6s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.group:focus-visible .fedo-tap { animation: fedo-tap 0.6s var(--ease-standard); }
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .fedo-tap { animation: fedo-tap 0.6s var(--ease-standard); }
+}
 @keyframes fedo-tap {
   0% { transform: translate(14%, 14%); }
   55% { transform: translate(0, 0) scale(0.84); }
@@ -401,6 +409,6 @@ body {
   textarea, select { font-size: 1rem; }
 }
 
-.fedo-loading .fedo-tap { animation: fedo-tap 1.1s cubic-bezier(0.3, 0.7, 0.2, 1) infinite; }
+.fedo-loading .fedo-tap { animation: fedo-tap 1.1s var(--ease-standard) infinite; }
 .fedo-miss { transform-box: fill-box; transform-origin: 6% 6%; transform: translate(1.875rem, 1.75rem) rotate(20deg); }
 @media (prefers-reduced-motion: reduce) { .fedo-loading .fedo-tap { animation: none; } }

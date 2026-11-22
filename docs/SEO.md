@@ -85,6 +85,18 @@ Middleware (`src/shared/lib/supabase/middleware.ts`) ходит в Supabase то
   описанием, страницы и контакты. Сначала английский, затем то же по-украински. Собирается из тех же данных,
   что и страницы (`dict()`, «Профіль сайту», опубликованные кейсы), обновляется раз в час; примеры не входят.
   Новый кейс попадает туда сам. На превью отдаётся с `X-Robots-Tag: noindex`.
+- **Версия для агентов** (`src/site/agents/`): у каждой публичной страницы есть Markdown-двойник — главная,
+  «Про мене», «Роботи», каждый кейс целиком (сторія, продуктовый кейс или секции, цифры, слід рішень) и
+  «Нотатки». Адрес — URL страницы плюс `.md` (`/uk.md`, `/en/about.md`, `/en/cases/<slug>.md`) или сам URL
+  страницы с `Accept: text/markdown` (браузеры так не просят и получают HTML). Это rewrites в `next.config.ts`
+  (`beforeFiles`) на `app/md/[locale]/[[...path]]/route.ts`; прямой `/md/…` отдаёт 404. HTML-страница ссылается на
+  двойника `<link rel="alternate" type="text/markdown">` (`pageMetadata` → `markdownUrl` в `seo.ts`), двойник на
+  страницу — заголовком `Link: rel="canonical"`, так что в индексе нет дублей. Кейс-пример получает `noindex`,
+  макеты 18+ кейса в Markdown не перечисляются (на странице они за проверкой возраста).
+- **`/llms-full.txt`**: главная, «Про мене» и все опубликованные кейсы целиком одним файлом (англ., затем укр.),
+  для агентов, которые читают один раз и не ходят по ссылкам. **`/portfolio.json`**: профиль, услуги, контакты
+  и кейсы с адресами HTML и Markdown, для агентов с вызовами инструментов. Оба обновляются раз в час, без примеров.
+  `.md` и `.json` — в списке расширений матчера middleware, Supabase на них не вызывается.
 - **robots.txt**: поисковые и «по запросу пользователя» боты (`OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`,
   `Claude-User`, `PerplexityBot`, `Perplexity-User`, `Bingbot`) и боты обучения (`GPTBot`, `ClaudeBot`,
   `Google-Extended`, `Applebot-Extended`) разрешены явно: для портфолио важно, чтобы модели знали автора.
@@ -133,6 +145,9 @@ SITE=https://домен
 curl -sI $SITE/ | grep -iE "^(HTTP|location|vary)"          # 307 → /uk или /en
 curl -s  $SITE/robots.txt
 curl -sI $SITE/llms.txt | grep -i content-type                  # text/markdown
+curl -s  $SITE/en/about.md | head -3                           # # About… (Markdown)
+curl -s  -H 'Accept: text/markdown' $SITE/en/cases | head -1   # # Work
+curl -s  $SITE/portfolio.json | head -5
 curl -s  $SITE/sitemap.xml | head -40
 curl -sI $SITE/uk/nope | head -1                              # 404
 curl -sI $SITE/app | grep -i x-robots                          # noindex, nofollow

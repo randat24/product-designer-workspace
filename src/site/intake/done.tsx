@@ -77,13 +77,13 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
           {t.title}
         </h1>
         <p className="text-[1.125rem] leading-[1.55] text-fg-secondary">{t.lead}</p>
-        {done.duplicate && <p className="text-[0.9375rem] text-fg-secondary">{t.duplicate}</p>}
+        {done.duplicate && <p className="text-[0.9375rem] text-fg">{t.duplicate}</p>}
       </div>
 
       <dl className="sg-panel grid max-w-[42.5rem] gap-4 p-5 sm:grid-cols-3 sm:p-6">
         {[[t.code, done.code], [t.date, date], [t.project, done.projectName ?? t.noName]].map(([k, v]) => (
           <div key={k} className="flex flex-col gap-1">
-            <dt className="sg-eyebrow text-fg-secondary">{k}</dt>
+            <dt className="sg-eyebrow text-fg">{k}</dt>
             <dd className="text-[1.0625rem] font-semibold">{v}</dd>
           </div>
         ))}
@@ -104,7 +104,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
             </button>
           )}
         </div>
-        <p className="text-[0.875rem] text-fg-secondary">{t.tokenNote}</p>
+        <p className="text-[0.875rem] text-fg">{t.tokenNote}</p>
         {failed && <p role="alert" className="text-[0.9375rem] font-semibold text-danger">{INTAKE[locale].failed.server}</p>}
       </div>
 
@@ -113,7 +113,7 @@ export function Done({ locale, done, onNew }: { locale: Locale; done: DoneState;
         <ol className="flex flex-col gap-3">
           {t.next.map((s, i) => (
             <li key={s} className="flex gap-3 text-[1rem] leading-snug">
-              <span className="w-7 shrink-0 pt-0.5 font-label text-[0.75rem] text-accent-text">{String(i + 1).padStart(2, "0")}</span>
+              <span className="w-7 shrink-0 pt-0.5 font-label text-[0.75rem] text-fg">{String(i + 1).padStart(2, "0")}</span>
               <span className="pt-0.5">{s}</span>
             </li>
           ))}

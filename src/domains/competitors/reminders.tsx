@@ -30,11 +30,15 @@ export function RemindersPanel({ base, initial, canEdit, compact = false }: {
   };
 
   const row = (x: Reminder) => (
-    <li key={`${x.competitorId}:${x.featureId}`} className="flex items-start gap-2.5 py-2">
-      <Checkbox checked={x.done} disabled={!canEdit} onChange={() => toggle(x)}
-        aria-label={`${r.done}: ${x.note}`} className="mt-0.5" />
-      <div className="min-w-0 flex-1">
-        <p className={cn("text-sm leading-snug font-semibold", x.done && "text-fg-secondary line-through")}>{x.note}</p>
+    <li key={`${x.competitorId}:${x.featureId}`} className="py-2">
+      {/* The checkbox is 16 px; the note is its label, so a tap anywhere on it toggles (docs/UX_LAWS.md, UX-21).
+          The source links stay outside the label. */}
+      <label className={cn("flex items-start gap-2.5", canEdit && "cursor-pointer")}>
+        <Checkbox checked={x.done} disabled={!canEdit} onChange={() => toggle(x)}
+          aria-label={`${r.done}: ${x.note}`} className="mt-0.5" />
+        <span className={cn("min-w-0 flex-1 text-sm leading-snug font-semibold", x.done && "text-fg-secondary line-through")}>{x.note}</span>
+      </label>
+      <div className="min-w-0 pl-[1.625rem]">
         <p className="text-caption text-fg-secondary">
           <Link href={`${base}/competitors/${x.kind === "ux" ? "ux" : "matrix"}`} className="hover:underline">{r.source[x.kind]}</Link>
           {" · "}<Link href={`${base}/competitors/${x.competitorCode}`} className="hover:underline">{x.competitor}</Link>

@@ -1,10 +1,13 @@
 # Переход на свой домен
 
-Состояние: **отложено до команды владельца.** Домен не покупается без явного «да».
+Состояние: **22 октября 2026 переходим на `fedorov-design.com.ua`.** Владелец купил `fedorov-design.com.ua` (основной) и
+`fedorov-design.store` у украинского регистратора, DNS на `ns10–12.uadns.com`: `A @ 76.76.21.21`, `CNAME www cname.vercel-dns.com`.
+В Vercel `www.fedorov-design.com.ua`, `fedorov-design.store` и `www.fedorov-design.store` — Redirect 308 на основной.
+Шаг 1 ниже (покупка в Vercel) не понадобился.
 
 13 октября 2026 адрес на Vercel сменили с `product-designer-workspace.vercel.app` на `fedorov-design.vercel.app`: новый адрес добавлен к проекту, `NEXT_PUBLIC_SITE_URL` указывает на него, резюме пересобраны. Старый адрес пока тоже открывается (canonical ведёт на новый). В Supabase → Authentication → URL Configuration нужно добавить новый адрес (шаг 4 ниже).
 
-Кандидат: `hennadiifedorov.com` ($11.25 / год в Vercel, на 1 октября 2026 свободен). Ниже `домен` — выбранный домен.
+Ниже `домен` — `fedorov-design.com.ua`.
 
 Код к переходу готов: все абсолютные адреса (canonical, hreflang, sitemap, robots, JSON-LD, Open Graph)
 строятся из одной переменной `NEXT_PUBLIC_SITE_URL` (`src/shared/lib/site-url.ts`). В коде нет зашитого

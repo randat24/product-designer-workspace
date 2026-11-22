@@ -38,7 +38,7 @@ export default async function GlobalNotFound() {
             </div>
           </header>
           <main id="main" className="mx-auto flex w-full max-w-[90rem] flex-1 flex-col gap-6 px-5 py-24 sm:px-8 lg:px-12">
-            <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">404 /</span>{d.seo.notFound.title}</p>
+            <p className="sg-eyebrow text-fg"><span className="sg-section-index">404 /</span>{d.seo.notFound.title}</p>
             <h1 className="t-page">{d.ui.notFoundTitle}</h1>
             <p className="max-w-[35rem] text-[1.125rem] text-fg-secondary">{d.ui.notFoundBody}</p>
             <nav className="flex flex-wrap gap-3" aria-label={d.ui.mainNav}>

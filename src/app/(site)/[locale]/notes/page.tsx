@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const d = dict(locale);
   const meta = pageMetadata({ locale, path: "/notes", title: d.seo.notes.title, description: d.seo.notes.description });
-  return { ...meta, alternates: { ...meta.alternates, types: { "application/rss+xml": localeUrl(locale, "/notes/rss.xml") } } };
+  return { ...meta, alternates: { ...meta.alternates, types: { ...meta.alternates?.types, "application/rss+xml": localeUrl(locale, "/notes/rss.xml") } } };
 }
 
 /** «Нотатки»: short posts, newest first, each with its reactions and the way to its thread. */
@@ -37,7 +37,7 @@ export default async function Notes({ params }: { params: Promise<{ locale: stri
         )}
       />
       <header className="mb-10 flex max-w-[40rem] flex-col gap-5">
-        <p className="sg-eyebrow text-fg-secondary"><span className="sg-section-index">{String(notes.length).padStart(2, "0")} /</span>{d.nav.notes}</p>
+        <p className="sg-eyebrow text-fg"><span className="sg-section-index">{String(notes.length).padStart(2, "0")} /</span>{d.nav.notes}</p>
         <h1 className="sg-heading">{d.notes.title}</h1>
         <p className="sg-lead">{d.notes.lead}</p>
         <p><a href={`/${locale}/notes/rss.xml`} className="sg-link">{d.notes.rss}</a></p>
