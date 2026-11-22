@@ -55,8 +55,22 @@ const config: NextConfig = {
     ];
   },
   // Case prototypes are static pages in public/prototypes; /prototypes/volta serves volta.html.
+  // The site for AI agents (src/site/agents/markdown.ts, docs/SEO.md): every public page also as Markdown, at
+  // the page URL plus .md (/uk.md, /uk/cases/<slug>.md) or at the page URL itself asked for with
+  // `Accept: text/markdown`. Browsers never ask for Markdown, so visitors keep getting HTML. beforeFiles: checked
+  // before the prerendered pages, which would answer the plain URL otherwise.
   async rewrites() {
-    return [{ source: "/prototypes/:name([a-z0-9-]+)", destination: "/prototypes/:name.html" }];
+    const md = (page: string) => `/md/:locale${page}`;
+    const wantsMarkdown = [{ type: "header" as const, key: "accept", value: ".*text/markdown.*" }];
+    const pages: [string, string][] = [["", ""], ["/about", "/about"], ["/cases", "/cases"], ["/cases/:slug([a-z0-9-]+)", "/cases/:slug"], ["/notes", "/notes"]];
+    return {
+      beforeFiles: [
+        ...pages.map(([source, page]) => ({ source: `/:locale(uk|en)${source}.md`, destination: md(page) })),
+        ...pages.map(([source, page]) => ({ source: `/:locale(uk|en)${source}`, has: wantsMarkdown, destination: md(page) })),
+      ],
+      afterFiles: [{ source: "/prototypes/:name([a-z0-9-]+)", destination: "/prototypes/:name.html" }],
+      fallback: [],
+    };
   },
   async headers() {
     return [

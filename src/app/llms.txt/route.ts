@@ -3,7 +3,8 @@ import { getCases } from "@/site/cases-source";
 import { getSiteProfile } from "@/site/profile-source";
 import { applyProfile } from "@/site/site-profile";
 import { absoluteUrl, localeUrl } from "@/site/seo";
-import { isIndexable } from "@/shared/lib/site-url";
+import { agentIndex } from "@/site/agents/markdown";
+import { agentResponse } from "@/site/agents/source";
 
 // /llms.txt (llmstxt.org): a plain Markdown overview of the site for AI assistants (ChatGPT, Perplexity,
 // Claude…), so they can answer "who is this designer and what has he done" from one file and cite the
@@ -94,6 +95,7 @@ export async function GET() {
     `- Dribbble: ${CONTACTS.dribbble}`,
     `- Telegram: ${CONTACTS.telegram}`,
     "",
+    ...agentIndex(),
     await overview("en"),
     "",
     "---",
@@ -104,11 +106,5 @@ export async function GET() {
     "",
   ].join("\n");
 
-  return new Response(body, {
-    headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
-      // Previews stay out of every index, like the rest of the site.
-      ...(isIndexable() ? {} : { "X-Robots-Tag": "noindex" }),
-    },
-  });
+  return agentResponse(body, "text/markdown");
 }

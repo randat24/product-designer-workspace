@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const d = dict(locale);
   const meta = pageMetadata({ locale, path: "/notes", title: d.seo.notes.title, description: d.seo.notes.description });
-  return { ...meta, alternates: { ...meta.alternates, types: { "application/rss+xml": localeUrl(locale, "/notes/rss.xml") } } };
+  return { ...meta, alternates: { ...meta.alternates, types: { ...meta.alternates?.types, "application/rss+xml": localeUrl(locale, "/notes/rss.xml") } } };
 }
 
 /** «Нотатки»: short posts, newest first, each with its reactions and the way to its thread. */
